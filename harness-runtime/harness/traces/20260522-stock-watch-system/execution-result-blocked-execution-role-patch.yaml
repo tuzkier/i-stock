@@ -1,0 +1,29 @@
+patches:
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-CONTROL-001
+        role: execute-control-plane-executor
+        status: BLOCKED
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-result.contract.yaml
+        fulfilled_obligations: []
+        evidence_refs:
+          - EV-BASELINE-001
+          - EV-REGRESSION-001
+          - STOP-T001-A1-001
+        open_questions:
+          - 是否允许把 src/App.tsx 加入 T001-A1/T001-A2 写入范围，以完成用户可见接线。
+        concerns:
+          - 不修改 src/App.tsx 时，只能新增未接线组件，无法满足差量规格的用户可见场景。
+      - id: EXE-CONTROL-002
+        role: execute-control-plane-executor
+        status: BLOCKED
+        produced_artifacts: []
+        fulfilled_obligations: []
+        evidence_refs:
+          - RV-SPEC-T001-BLOCKED
+        open_questions: []
+        concerns:
+          - Scope blocker prevents execute completion certification.

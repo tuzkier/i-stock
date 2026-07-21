@@ -1,0 +1,25 @@
+operation_id: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane
+type: advance_lane
+node_id: REQ-STOCK-WATCH-SYSTEM
+mission_id: 20260522-stock-watch-system
+from_lane: product-definition-lane
+to_lane: solution-lane
+to_stage: solution
+status: ready
+work_graph_artifact:
+  node_id: REQ-STOCK-WATCH-SYSTEM
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md
+  supplementary_artifacts:
+  - id: visual_interaction_artifacts
+    required: true
+    source_stage_artifact_glob: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/**/*
+    strip_source_prefix: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction
+    canonical_artifact_dir: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction
+  - id: interaction_spec
+    required: true
+    source_stage_artifact_glob: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/**/*
+    strip_source_prefix: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec
+    canonical_artifact_dir: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec

@@ -1,0 +1,690 @@
+harness_template:
+  name: HarnessV2
+  version: 1.6.5
+  source_commit: 145930c
+project_name: ''
+language: Chinese
+default_mode: autonomous_execution
+brownfield: false
+execution_governance:
+  default_level: 专家确认
+  legacy_level_aliases:
+    A1: 快速执行
+    autonomous: 快速执行
+    A2: 专家确认
+    autonomous_with_checkpoints: 专家确认
+    A3: 受控推进
+    governed_execution: 受控推进
+  levels:
+    快速执行:
+      display_name: 快速执行
+      skippable_stages:
+      - discovery
+      - dependency-impact
+      - solution
+      - interaction
+      reviewer_pass_sufficient:
+      - intake
+      - prd
+      - solution
+      - interaction
+      - technical_analysis
+      - breakdown
+      - code-review
+      - verify
+      human_checkpoints:
+      - delivery
+    专家确认:
+      display_name: 专家确认
+      skippable_stages:
+      - discovery
+      - interaction
+      reviewer_pass_sufficient:
+      - intake
+      - discovery
+      - prd
+      - solution
+      - interaction
+      - technical_analysis
+      - dependency-impact
+      - breakdown
+      - code-review
+      - verify
+      - delivery
+      human_checkpoints:
+      - delivery
+    受控推进:
+      display_name: 受控推进
+      skippable_stages: []
+      reviewer_pass_sufficient:
+      - code-review
+      - verify
+      human_checkpoints:
+      - prd
+      - solution
+      - technical_analysis
+      - breakdown
+      - verify
+      - delivery
+pre_checkpoint_doc_review: true
+professional_roles:
+  enabled: true
+  active_phase: first_wave
+  role_file_checks:
+    first_wave: true
+    second_wave: false
+    execute: false
+  stage_policies:
+    intake:
+      required_execution_roles:
+      - mission-framing-expert
+      required_review_roles:
+      - mission-contract-effectiveness-reviewer
+    discovery:
+      required_execution_roles:
+      - discovery-analyst
+      required_review_roles:
+      - discovery-effectiveness-reviewer
+    prd:
+      required_execution_roles:
+      - business-domain-modeler
+      - acceptance-scenario-designer
+      - product-scope-strategist
+      - senior-product-expert
+      required_review_roles:
+      - product-definition-reviewer
+    dependency-impact:
+      required_execution_roles:
+      - integration-impact-expert
+      required_review_roles:
+      - dependency-validity-reviewer
+    breakdown:
+      required_execution_roles:
+      - delivery-slicer
+      - test-planning-expert
+      required_review_roles:
+      - execution-plan-effectiveness-reviewer
+    execute:
+      required_execution_roles:
+      - execute-control-plane-executor
+      required_review_roles:
+      - spec-reviewer
+      role_carriers:
+        execute-control-plane-executor: skill
+    code-review:
+      required_execution_roles:
+      - review-control-plane-executor
+      required_review_roles:
+      - correctness-reviewer
+      - tdd-reviewer
+      role_carriers:
+        review-control-plane-executor: skill
+    verify:
+      required_execution_roles:
+      - verification-engineer
+      required_review_roles:
+      - verification-effectiveness-reviewer
+    delivery:
+      required_execution_roles:
+      - release-readiness-expert
+      required_review_roles:
+      - acceptance-package-reviewer
+    solution:
+      required_execution_roles:
+      - solution-architect
+      required_review_roles:
+      - solution-effectiveness-reviewer
+      conditional_roles: &id001
+      - role: agent-capability-designer
+        kind: execution
+        when:
+        - agent_engineering
+        - agent_capability
+      - role: agent-capability-reviewer
+        kind: review
+        when:
+        - agent_engineering
+        - agent_capability
+    interaction:
+      required_execution_roles:
+      - interaction-designer
+      required_review_roles:
+      - interaction-reviewer
+      mode_variants:
+        interactive_prototype:
+          required_execution_roles:
+          - interaction-designer
+          required_review_roles:
+          - interaction-reviewer
+        frontend_engineering:
+          required_execution_roles:
+          - interaction-designer
+          - frontend-prototype-engineer
+          required_review_roles:
+          - interaction-reviewer
+          - frontend-reviewer
+    technical_analysis:
+      required_execution_roles:
+      - tech-designer
+      required_review_roles:
+      - technical-design-effectiveness-reviewer
+      conditional_roles: &id002
+      - role: agent-capability-designer
+        kind: execution
+        when:
+        - agent_engineering
+        - agent_capability
+      - role: agent-capability-reviewer
+        kind: review
+        when:
+        - agent_engineering
+        - agent_capability
+execute_mode: sdd
+prototype:
+  delivery_mode: interactive_prototype
+  interactive_prototype:
+    prototype_project_root: ''
+  frontend_engineering:
+    frontend_project_root: ''
+    api_contract_draft_required: true
+interaction:
+  reachability_gate_level: fail
+  composition_gate_level: warn
+  design_system_gate_level: warn
+dependency_impact:
+  require_on_brownfield: true
+  require_on_external_dependency: true
+  require_on_data_model_change: true
+  require_on_shared_interface: true
+project_lint:
+  enabled: true
+  mode: blocking
+  profile: project-knowledge/engineering/policies/project-lint.yaml
+  report_dir_template: harness-runtime/harness/traces/{mission_id}/project-lint
+  run_after_command_evidence: true
+  require_for_code_change: true
+  require_for_prototype: true
+work_graph:
+  root: harness-runtime/harness/work-graph
+  board: harness-runtime/harness/work-graph/boards/main.yaml
+  index: harness-runtime/harness/work-graph/_index.yaml
+  views_generated_by_script: true
+  delta_spec_location: harness-runtime/harness/artifacts/{mission_id}/product/specs
+  scripts:
+    apply_operation: .harness/common/skills/work-graph/scripts/apply_graph_operation.py
+    rebuild_index: .harness/common/skills/work-graph/scripts/rebuild_index.py
+    check_consistency: .harness/common/skills/work-graph/scripts/check_graph_consistency.py
+  node_kinds:
+    epic:
+      prefix: EPIC
+      directory: epics
+    requirement:
+      prefix: REQ
+      directory: requirements
+    prd:
+      prefix: PRD
+      directory: prds
+    solution:
+      prefix: SOL
+      directory: solutions
+    interaction:
+      prefix: INT
+      directory: interactions
+    technical_design:
+      prefix: TECH
+      directory: tech-designs
+    task:
+      prefix: TASK
+      directory: tasks
+    decision:
+      prefix: DEC
+      directory: decisions
+    bug:
+      prefix: BUG
+      directory: bugs
+    research:
+      prefix: RESEARCH
+      directory: research
+    follow_up:
+      prefix: FOLLOW
+      directory: follow-ups
+  selection_strategy:
+    relevance_first: true
+    status_order:
+    - ready
+    - active
+    relevance_sources:
+    - query
+    - primary_nodes
+    - related_nodes
+    - specs
+    - relations
+    - deferred
+    tie_breakers:
+    - node_priority
+    - lane_order
+    - stage_order
+    - updated_at
+    - node_id
+  stage_completion:
+    checkpoint_approval:
+      terminal: false
+      effect: unlock_gate_advance
+      required_next_controls:
+      - gate.run
+      - gate.advance
+      pause_boundary_when_user_defers_next_stage: after_graph_operation
+    gate_continue:
+      required_next_controls:
+      - gate.advance
+      state_sync_control: gate.advance
+      pause_boundary_when_user_defers_next_stage: after_graph_operation
+  lanes:
+    requirement-lane:
+      accepts_kinds:
+      - epic
+      - requirement
+      - bug
+      - research
+      stages:
+      - stage: intake
+        output_artifact: harness-runtime/harness/missions/{mission_id}/mission-contract.md
+        required_execution_roles:
+        - mission-framing-expert
+        required_review_roles:
+        - mission-contract-effectiveness-reviewer
+      - stage: discovery
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/discovery/discovery-brief.md
+        required_execution_roles:
+        - discovery-analyst
+        required_review_roles:
+        - discovery-effectiveness-reviewer
+    product-definition-lane:
+      accepts_kinds:
+      - epic
+      - requirement
+      - prd
+      - interaction
+      stages:
+      - stage: prd
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/product/product-definition.md
+        required_execution_roles:
+        - business-domain-modeler
+        - acceptance-scenario-designer
+        - product-scope-strategist
+        - senior-product-expert
+        required_review_roles:
+        - product-definition-reviewer
+      - stage: interaction
+        condition: ui_task
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/interaction/interaction.md
+        required_execution_roles:
+        - interaction-designer
+        required_review_roles:
+        - interaction-reviewer
+        mode_variants:
+          interactive_prototype:
+            skill: interaction
+            output_artifact: harness-runtime/harness/artifacts/{mission_id}/interaction/interaction.md
+            required_execution_roles:
+            - interaction-designer
+            required_review_roles:
+            - interaction-reviewer
+          frontend_engineering:
+            skill: prototype-as-frontend
+            output_artifact: '{frontend_project_root}/'
+            required_execution_roles:
+            - interaction-designer
+            - frontend-prototype-engineer
+            required_review_roles:
+            - interaction-reviewer
+            - frontend-reviewer
+    solution-lane:
+      accepts_kinds:
+      - epic
+      - requirement
+      - prd
+      - interaction
+      - solution
+      stages:
+      - stage: solution
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/solution/solution.md
+        required_execution_roles:
+        - solution-architect
+        required_review_roles:
+        - solution-effectiveness-reviewer
+        conditional_roles: *id001
+    technical-analysis-lane:
+      accepts_kinds:
+      - requirement
+      - prd
+      - solution
+      - interaction
+      - technical_design
+      stages:
+      - stage: technical_analysis
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/technical-analysis/tech-design.md
+        required_execution_roles:
+        - tech-designer
+        required_review_roles:
+        - technical-design-effectiveness-reviewer
+        conditional_roles: *id002
+    breakdown-lane:
+      accepts_kinds:
+      - requirement
+      - prd
+      - solution
+      - technical_design
+      - task
+      stages:
+      - stage: breakdown
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/breakdown/execution-brief.md
+        required_execution_roles:
+        - delivery-slicer
+        - test-planning-expert
+        required_review_roles:
+        - execution-plan-effectiveness-reviewer
+    development-lane:
+      accepts_kinds:
+      - task
+      - bug
+      stages:
+      - stage: execute
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/execute/execution-result.md
+        required_execution_roles:
+        - execute-control-plane-executor
+        required_review_roles:
+        - spec-reviewer
+        carrier: execute
+        skill: execute
+        role_carriers:
+          execute-control-plane-executor: skill
+      - stage: code-review
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/code-review/code-review.md
+        required_execution_roles:
+        - review-control-plane-executor
+        required_review_roles:
+        - correctness-reviewer
+        - tdd-reviewer
+        carrier: code-review
+        skill: code-review
+        role_carriers:
+          review-control-plane-executor: skill
+    verification-lane:
+      accepts_kinds:
+      - task
+      - bug
+      stages:
+      - stage: verify
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/verify/verification-report.md
+        required_execution_roles:
+        - verification-engineer
+        required_review_roles:
+        - verification-effectiveness-reviewer
+    delivery-lane:
+      accepts_kinds:
+      - task
+      - bug
+      - follow_up
+      stages:
+      - stage: delivery
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/delivery/delivery-package.md
+        required_execution_roles:
+        - release-readiness-expert
+        required_review_roles:
+        - acceptance-package-reviewer
+      - stage: retrospective
+        output_artifact: harness-runtime/harness/artifacts/{mission_id}/retrospective/retrospective.md
+        required_execution_roles:
+        - planning-analyst
+        required_review_roles: []
+      - stage: finishing-branch
+        output_artifact: null
+        required_execution_roles: []
+        required_review_roles: []
+escalation:
+  scope_change: true
+  high_risk_change: true
+  multi_option_tradeoff: true
+  external_dependency: true
+e2e:
+  enabled: true
+  framework: playwright
+  base_url: ''
+  test_dir: tests/e2e
+  toolchain:
+    resolver: e2e_resolver
+    runner: e2e_runner
+    normalizer: normalize_e2e_status
+    status_artifact: e2e-status.json
+  install_policy: auto_for_required_whitelist
+  evidence_dir: harness-runtime/harness/traces
+  approved_tools:
+    browser_flow:
+    - '@playwright/test'
+    - playwright
+    trace_video_screenshot:
+    - '@playwright/test'
+    - playwright
+    accessibility_smoke:
+    - axe-core
+    - '@axe-core/playwright'
+    api_backed_setup:
+    - '@playwright/test'
+    visual_regression_local:
+    - '@playwright/test'
+  capability_defaults:
+    low:
+    - browser_flow
+    - user_visible_assertion
+    - e2e_run_report
+    medium:
+    - browser_flow
+    - user_visible_assertion
+    - api_backed_state
+    - e2e_run_report
+    - trace_or_video
+    - screenshot_on_failure
+    high:
+    - browser_flow
+    - user_visible_assertion
+    - api_backed_state
+    - negative_path
+    - e2e_run_report
+    - trace_or_video
+    - screenshot_on_failure
+    - assertion_summary
+  surface_defaults:
+    web_ui:
+    - browser_flow
+    - user_visible_assertion
+    frontend_ui:
+    - browser_flow
+    - user_visible_assertion
+    frontend_component:
+    - browser_flow
+    - user_visible_assertion
+    frontend_visual:
+    - browser_flow
+    - user_visible_assertion
+    form:
+    - browser_flow
+    - user_visible_assertion
+    - negative_path
+    navigation:
+    - browser_flow
+    - user_visible_assertion
+    auth:
+    - browser_flow
+    - auth_state
+    - negative_path
+    permission:
+    - browser_flow
+    - auth_state
+    - negative_path
+    workspace_boundary:
+    - browser_flow
+    - auth_state
+    - negative_path
+    realtime:
+    - browser_flow
+    - realtime_or_refresh
+    query_invalidation:
+    - browser_flow
+    - realtime_or_refresh
+    critical_happy_path:
+    - full_user_journey
+    - user_visible_assertion
+    - api_backed_state
+    accessibility:
+    - accessibility_smoke
+  artifact_policy:
+    status_path_template: '{evidence_dir}/{mission_id}/e2e/e2e-status.json'
+    tools_dir_template: '{evidence_dir}/{mission_id}/e2e/tools'
+    require_html_report: true
+    require_trace_or_video: true
+    require_screenshot_on_failure: true
+    require_assertion_summary: true
+    retain_video: on_failure
+    retain_trace: on_failure
+    normalize_missing_report_as: BLOCKED
+  runner:
+    default_command: npx playwright test
+    headed: false
+    retries: 0
+    timeout_ms: 30000
+    trace: retain-on-failure
+    video: retain-on-failure
+    screenshot: only-on-failure
+    require_base_url_for_browser_flow: true
+  decision_gate_required_for:
+  - external_service
+  - browser_cloud
+  - real_account_or_secret
+  - destructive_data_cleanup
+  - non_whitelisted_tool
+  - major_framework_migration
+  - external_visual_regression_saas
+  - user_forbids_new_dependency
+visual_interaction:
+  enabled: true
+  generator_policy: expert_maintained_html
+  variant_count_default: 3
+  source_dirs:
+    stage_variants: harness-runtime/harness/artifacts/{mission_id}/interaction/visual-interaction/variants
+  stage_artifact_dir_template: harness-runtime/harness/artifacts/{mission_id}/interaction/visual-interaction
+  manifest_name: visual-interaction-manifest.json
+  required_artifact_types:
+  - html
+  - svg
+  review_required: true
+  evidence_required:
+  - visual_manifest
+  - html_or_svg_variant
+  - flow_state_traceability
+  metadata:
+    comment_prefix: 'harness:'
+    sidecar_suffixes:
+    - .harness.json
+    - .harness.yaml
+    - .harness.yml
+test_toolchain:
+  enabled: true
+  install_policy: auto_for_required_whitelist
+  evidence_dir: harness-runtime/harness/traces
+  approved_tools:
+    python:
+    - pytest
+    - pytest-cov
+    - coverage
+    - diff-cover
+    - pytest-json-report
+    - mutmut
+    typescript:
+    - vitest
+    - '@vitest/coverage-v8'
+    - '@testing-library/react'
+    - '@testing-library/jest-dom'
+    - jsdom
+    - '@playwright/test'
+    - '@stryker-mutator/core'
+    accessibility:
+    - axe-core
+    - '@axe-core/playwright'
+    - jest-axe
+    api_contract:
+    - schemathesis
+  capability_defaults:
+    low:
+    - test_result
+    - regression_report
+    medium:
+    - test_result
+    - coverage
+    - diff_coverage
+    high:
+    - test_result
+    - coverage
+    - diff_coverage
+    - mutation_or_fault_injection
+  surface_defaults:
+    backend_api:
+    - test_result
+    - coverage
+    - diff_coverage
+    backend_logic:
+    - test_result
+    - coverage
+    - diff_coverage
+    state_machine:
+    - mutation_or_fault_injection
+    concurrency:
+    - mutation_or_fault_injection
+    auth:
+    - mutation_or_fault_injection
+    permission:
+    - mutation_or_fault_injection
+    data_model:
+    - mutation_or_fault_injection
+    migration:
+    - mutation_or_fault_injection
+    frontend_ui:
+    - ui_component_or_e2e
+    frontend_component:
+    - ui_component_or_e2e
+    frontend_visual:
+    - ui_component_or_e2e
+    client_ui:
+    - test_result
+    - coverage
+    client_logic:
+    - test_result
+    - coverage
+    mobile:
+    - test_result
+    desktop:
+    - test_result
+    user_journey:
+    - e2e_ui
+    realtime:
+    - e2e_ui
+    accessibility:
+    - a11y
+    public_api:
+    - api_contract
+  decision_gate_required_for:
+  - external_service
+  - global_install
+  - secret_or_token
+  - non_whitelisted_tool
+  - destructive_operation
+  - major_framework_migration
+  - user_forbids_new_dependency
+agent_engineering:
+  enabled: true
+  require_capability_spec: true
+  require_agent_eval: true
+spec:
+  enabled: true
+  auto_archive: true
+  require_spec_review: true

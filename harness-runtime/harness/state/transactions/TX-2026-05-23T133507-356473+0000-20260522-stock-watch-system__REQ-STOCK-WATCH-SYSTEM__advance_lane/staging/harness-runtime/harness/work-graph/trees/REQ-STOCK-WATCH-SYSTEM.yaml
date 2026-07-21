@@ -1,0 +1,10 @@
+schema_version: 1
+generated: true
+root: REQ-STOCK-WATCH-SYSTEM
+tree:
+- id: REQ-STOCK-WATCH-SYSTEM
+  kind: requirement
+  title: 多市场股票看盘系统
+  lane: development-lane
+  status: ready
+  children: []

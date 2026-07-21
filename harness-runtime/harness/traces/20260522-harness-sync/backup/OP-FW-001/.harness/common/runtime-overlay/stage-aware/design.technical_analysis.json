@@ -1,0 +1,25 @@
+{
+  "_comment": "Stage-4 M1.3: design+technical_analysis stage overlay. When stage='technical_analysis', merges into settings.json. Stage 单一性 deny: writes to solution.md / interaction.md / interaction-spec/** / visual-interaction/** physically blocked. capability-designer协同写 solution.md `## Agent 架构` 是例外 — overlay 一刀切 deny，hook 层 (M3.1) section anchor 检查后做精细放行。",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/tech-design.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/tech-design.contract.yaml)",
+      "Write(harness-runtime/harness/stages/*/solution.md)",
+      "Edit(harness-runtime/harness/stages/*/solution.md)",
+      "Write(harness-runtime/harness/stages/*/interaction.md)",
+      "Edit(harness-runtime/harness/stages/*/interaction.md)",
+      "Write(harness-runtime/harness/stages/*/interaction-spec/**)",
+      "Edit(harness-runtime/harness/stages/*/interaction-spec/**)",
+      "Write(harness-runtime/harness/stages/*/visual-interaction/**)",
+      "Edit(harness-runtime/harness/stages/*/visual-interaction/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/solution.contract.yaml)",
+      "Write(harness-runtime/harness/stages/*/contracts/interaction.contract.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/stages/*/tech-design.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

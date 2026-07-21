@@ -1,0 +1,75 @@
+patches:
+  - target: control_contract.success_definition.deliverables
+    op: set
+    value:
+      - id: DEL-01
+        name: 本地网页看盘界面
+        format: 浏览器入口的本地网页应用
+        acceptance_link:
+          ac: [AC-01, AC-02, AC-05]
+      - id: DEL-02
+        name: 多市场自选管理与代码归一
+        format: 前端交互 + 本地持久化 + 市场分组
+        acceptance_link:
+          ac: [AC-01, AC-05]
+      - id: DEL-03
+        name: 技术指标、MTS 信号与提醒层
+        format: 用户可见的图表信号、提醒等级与触发理由
+        acceptance_link:
+          ac: [AC-02, AC-03, AC-04]
+  - target: control_contract.success_definition.validation_evidence
+    op: set
+    value:
+      - id: EVD-01
+        type: test
+        method: 运行单元与集成测试，覆盖股票代码归一、市场分组、MTS 评分带与提醒规则，确认 exit code 0。
+        proves:
+          ac: [AC-01, AC-03, AC-04, AC-05]
+      - id: EVD-02
+        type: screenshot
+        method: 打开本地网页，对四个市场的代表性标的截图，确认图表、主/副图指标和信号标签均可见。
+        proves:
+          ac: [AC-02, AC-03]
+      - id: EVD-03
+        type: fixture_replay
+        method: 使用冻结行情 fixture 或可回放样本片段分别覆盖趋势回调、收敛突破、趋势破坏和风控止损场景，确认 MTS 信号类型、提醒等级和触发理由稳定一致。
+        proves:
+          ac: [AC-03, AC-04]
+      - id: EVD-04
+        type: manual_acceptance
+        method: 关闭浏览器并重新打开同一浏览器配置，确认自选和提醒设置从本地持久化恢复。
+        proves:
+          ac: [AC-05]
+      - id: EVD-05
+        type: manual_acceptance
+        method: 在页面中加载同一批冻结样本对应的代表性标的，截图确认图表、信号标签和提醒理由与 fixture 预期一致。
+        proves:
+          ac: [AC-03, AC-04]
+  - target: control_contract.autonomy.skippable_stages
+    op: set
+    value: []
+  - target: control_contract.autonomy.reviewer_pass_sufficient
+    op: set
+    value:
+      - code-review
+      - verify
+  - target: control_contract.autonomy.human_checkpoints
+    op: set
+    value:
+      - prd
+      - solution
+      - tech-design
+      - execution-brief
+      - verification-report
+      - acceptance-result
+      - delivery-package
+  - target: control_contract.autonomy.governance_assessment.required_checkpoints
+    op: set
+    value:
+      - prd
+      - solution
+      - tech-design
+      - execution-brief
+      - verification-report
+      - acceptance-result
+      - delivery-package

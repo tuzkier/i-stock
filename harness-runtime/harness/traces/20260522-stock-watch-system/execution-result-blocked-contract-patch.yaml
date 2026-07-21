@@ -1,0 +1,217 @@
+patches:
+  - target: control_contract.status
+    op: set
+    value: blocked
+  - target: control_contract.work_graph_artifact
+    op: set
+    value:
+      node_id: TASK-STOCK-WATCH-T001
+      artifact_version: v1
+      promoted_by_mission: 20260522-stock-watch-system
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md
+  - target: control_contract.execute_session
+    op: set
+    value:
+      id: EXE-SESSION-T001-BLOCKED
+      skill: execute
+      carrier: execute
+      execute_mode: sdd
+      dispatch_plans:
+        - id: DISPATCH-T001-A1
+          task_id: TASK-STOCK-WATCH-T001
+          execution_unit_id: T001-A1
+          surfaces:
+            - SURF-WATCHLIST
+          primary_executors:
+            - execute-control-plane-executor
+          supporting_executors: []
+          reviewers:
+            - spec-reviewer
+          required_evidence:
+            - red_report
+            - green_report
+            - regression_report
+            - screenshot_or_locator_evidence
+            - mutation_or_fault_injection_report
+          execution_context:
+            skill: execute
+            role_package_refs:
+              spec-reviewer: .harness/common/agents/spec-reviewer.md
+          material_package_contract:
+            must_include_execution_context: true
+            must_include_role_package_ref: true
+            must_include_atomic_task_text: true
+            must_include_parent_task_boundary: true
+            must_include_write_scope: true
+          write_scope:
+            - src/domain/market-normalization.ts
+            - src/data/markets.ts
+            - src/features/watchlist/NormalizationPreview.tsx
+            - src/types.ts
+            - tests/unit/watchlist/normalization.spec.ts
+          read_scope:
+            - src/data/markets.ts
+            - src/App.tsx
+            - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+          depends_on: []
+          parallel_group: serial
+          conflict_risk: high
+          missing_surfaces:
+            - src/App.tsx
+          blocked: true
+          blockers:
+            - src/App.tsx is required to wire normalization preview into the existing watchlist form but is outside the atomic write scope.
+        - id: DISPATCH-T001-A2
+          task_id: TASK-STOCK-WATCH-T001
+          execution_unit_id: T001-A2
+          surfaces:
+            - SURF-WATCHLIST
+            - SURF-RESTORE
+            - SURF-ALERTS
+          primary_executors:
+            - execute-control-plane-executor
+          supporting_executors: []
+          reviewers:
+            - spec-reviewer
+          required_evidence:
+            - red_report
+            - green_report
+            - regression_report
+            - screenshot_or_locator_evidence
+            - mutation_or_fault_injection_report
+          execution_context:
+            skill: execute
+            role_package_refs:
+              spec-reviewer: .harness/common/agents/spec-reviewer.md
+          material_package_contract:
+            must_include_execution_context: true
+            must_include_role_package_ref: true
+            must_include_atomic_task_text: true
+            must_include_parent_task_boundary: true
+            must_include_write_scope: true
+          write_scope:
+            - src/features/watchlist/WatchlistPanel.tsx
+            - src/features/watchlist/WatchlistRow.tsx
+            - src/lib/storage.ts
+            - src/types.ts
+            - tests/unit/watchlist/archive.spec.ts
+          read_scope:
+            - src/App.tsx
+          depends_on:
+            - T001-A1
+          parallel_group: serial
+          conflict_risk: high
+          missing_surfaces:
+            - src/App.tsx
+          blocked: true
+          blockers:
+            - src/App.tsx is required to replace physical delete with archive/restore and surface row summaries but is outside the atomic write scope.
+      stop_events:
+        - kind: changes_outside_authorized_paths
+          task_id: T001-A1
+          affected_paths:
+            - src/App.tsx
+          hook_source: manual
+  - target: control_contract.baseline_evidence
+    op: set
+    value:
+      - id: EV-BASELINE-001
+        type: baseline_report
+        decision: focused_baseline_run
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: npm run build
+        result: PASS
+        reason: Existing React/Vite app builds before T001 execution.
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-CONTROL-001
+        role: execute-control-plane-executor
+        status: BLOCKED
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-result.contract.yaml
+        fulfilled_obligations: []
+        evidence_refs:
+          - EV-BASELINE-001
+          - EV-REGRESSION-001
+          - STOP-T001-A1-001
+        open_questions:
+          - 是否允许把 src/App.tsx 加入 T001-A1/T001-A2 写入范围，以完成用户可见接线。
+        concerns:
+          - 不修改 src/App.tsx 时，只能新增未接线组件，无法满足差量规格的用户可见场景。
+  - target: control_contract.role_verdicts
+    op: set
+    value:
+      - id: RV-SPEC-T001-BLOCKED
+        role: spec-reviewer
+        reviewed_unit: TASK-STOCK-WATCH-T001
+        verdict: BLOCKED
+        blocking_gaps:
+          - T001 requires user-visible changes in the current App.tsx watchlist form and list, but App.tsx is outside the declared atomic write scope.
+        evidence_refs:
+          - STOP-T001-A1-001
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 0
+      pending_reviewer_recheck: true
+      last_gate_run_status: BLOCKED
+  - target: control_contract.tdd_evidence
+    op: set
+    value:
+      - id: EV-RED-001
+        type: red_report
+        phase: red
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: not run
+        exit_code: BLOCKED
+        failure_signal: Scope boundary blocked before writing failing test.
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-GREEN-001
+        type: green_report
+        phase: green
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: not run
+        exit_code: BLOCKED
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-REGRESSION-001
+        type: regression_report
+        phase: regression
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: npm run build
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-TOOLCHAIN-001
+        type: toolchain_status
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: harness-runtime/bin/harness control frame --mission 20260522-stock-watch-system --json
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001

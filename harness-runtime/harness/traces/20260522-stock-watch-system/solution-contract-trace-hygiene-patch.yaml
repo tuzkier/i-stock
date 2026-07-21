@@ -1,0 +1,52 @@
+patches:
+  - target: control_contract.execution_result.traceability_matrix
+    op: set
+    value:
+      - decision: D-01
+        traces_to: [AC-02, AC-03, AC-05, FR-02, FR-03, FR-05]
+        extended_refs: [BUC-02, BUC-03, BUC-04, BUC-06, SURF-DETAIL]
+      - decision: D-02
+        traces_to: [AC-01, AC-05, FR-01]
+        extended_refs: [BUC-01, BO-001, BO-002, SURF-WATCHLIST]
+      - decision: D-03
+        traces_to: [AC-02, AC-03, AC-04, FR-06]
+        extended_refs: [BUC-07, BO-007, SURF-SOURCE, FLOW-SOURCE-DEGRADED]
+      - decision: D-04
+        traces_to: [FR-02, FR-03, FR-04, NFR-06]
+        extended_refs: [BUC-02, BUC-04, BUC-05, BO-004, BO-005]
+      - decision: D-05
+        traces_to: [AC-03, AC-04, FR-03, FR-04]
+        extended_refs: [BUC-04, BUC-05, SURF-ALERTS]
+      - decision: D-06
+        traces_to: [AC-05, FR-05]
+        extended_refs: [BUC-06, BO-008, FLOW-RESTORE-WORKSPACE]
+      - decision: D-07
+        traces_to: [AC-01, AC-02, AC-03, AC-04, AC-05]
+        extended_refs: [BUC-01, BUC-02, BUC-03, BUC-04, BUC-05, BUC-06, BUC-07, VIZ-001]
+      - decision: D-08
+        traces_to: [NFR-06, FR-03, FR-04]
+        extended_refs: [mission-agent-engineering-none, audit-boundary]
+  - target: control_contract.decisions.0.traces_to
+    op: set
+    value: [AC-02, AC-03, AC-05, FR-02, FR-03, FR-05]
+  - target: control_contract.decisions.1.traces_to
+    op: set
+    value: [AC-01, AC-05, FR-01]
+  - target: control_contract.decisions.2.traces_to
+    op: set
+    value: [FR-06, AC-02, AC-03, AC-04]
+  - target: control_contract.decisions.3.traces_to
+    op: set
+    value: [FR-02, FR-03, FR-04, NFR-06]
+  - target: control_contract.decisions.4.traces_to
+    op: set
+    value: [AC-03, AC-04, FR-03, FR-04]
+  - target: control_contract.decisions.5.traces_to
+    op: set
+    value: [AC-05, FR-05]
+  - target: control_contract.decisions.6.traces_to
+    op: set
+    value: [AC-01, AC-02, AC-03, AC-04, AC-05]
+  - target: control_contract.decisions.7.traces_to
+    op: set
+    value: [NFR-06, FR-03, FR-04]

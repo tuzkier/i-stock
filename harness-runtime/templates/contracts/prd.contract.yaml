@@ -1,0 +1,157 @@
+control_contract:
+  type: behaviour_contract
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: prd
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - User Stories
+        - Acceptance Scenarios
+        - Scope In
+        - Scope Out
+  consumers:
+    - design
+    - breakdown
+    - execute
+    - code-review
+    - verify
+    - stage-gate
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_set_id: "AS-{{work_graph_node_id}}-prd-{{artifact_version}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    artifact_refs:
+      - artifact_id: "{{mission_id}}:product-definition"
+        role: product-definition
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      - artifact_id: "{{mission_id}}:product-evidence"
+        role: product-evidence
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-evidence.md"
+      - artifact_id: "{{mission_id}}:product-domain-model"
+        role: product-domain-model
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-domain-model.md"
+      - artifact_id: "{{mission_id}}:business-object-analysis"
+        role: business-object-analysis
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/business-object-analysis.md"
+      - artifact_id: "{{mission_id}}:use-case-model"
+        role: use-case-model
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/use-case-model.md"
+      - artifact_id: "{{mission_id}}:acceptance-scenarios"
+        role: acceptance-scenarios
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/acceptance-scenarios.md"
+      - artifact_id: "{{mission_id}}:scope-strategy"
+        role: scope-strategy
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/scope-strategy.md"
+      - artifact_id: "{{mission_id}}:delta-specs"
+        role: delta-spec
+        required: "{{delta_specs_required}}"
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/specs"
+        path_glob: "harness-runtime/harness/artifacts/{{mission_id}}/product/specs/*/spec.md"
+  execution_result:
+  execution_results: []
+  product_definition_package:
+    main:
+      path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      role: senior-product-expert
+    artifacts:
+      - id: product-definition
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+        role: senior-product-expert
+        required: true
+      - id: product-evidence
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-evidence.md"
+        role: senior-product-expert
+        required: true
+      - id: product-domain-model
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-domain-model.md"
+        role: senior-product-expert
+        required: true
+      - id: business-object-analysis
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/business-object-analysis.md"
+        role: business-domain-modeler
+        required: true
+      - id: use-case-model
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/use-case-model.md"
+        role: use-case-modeler
+        required: true
+      - id: acceptance-scenarios
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/acceptance-scenarios.md"
+        role: acceptance-scenario-designer
+        required: true
+      - id: scope-strategy
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/product/scope-strategy.md"
+        role: product-scope-strategist
+        required: true
+  domain_model:
+    bounded_contexts: []
+    aggregates: []
+    commands: []
+    events: []
+    invariants: []
+    state_machines: []
+    permission_rules: []
+    modeling_risks: []
+  obligations:
+    - id: OBL-PRD-001
+      mission_id: "{{mission_id}}"
+      type: correctness
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+          - SCN-02
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - product-definition-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  covers_intent:
+    user_stories:
+      - US-01
+      - US-02
+    acceptance_scenarios:
+      - SCN-01
+      - SCN-02
+  user_story_mapping:
+    - story_id: US-01
+      journeys:
+        - Journey-01
+      behavior_specs:
+        - CAP-01
+      acceptance_scenarios:
+        - SCN-01
+    - story_id: US-02
+      journeys:
+        - Journey-02
+      behavior_specs:
+        - CAP-02
+      acceptance_scenarios:
+        - SCN-02
+  requirement_trace: []
+  acceptance_trace: []
+  behavior_specs: []
+  quality_runtime_constraints: []
+  business_rules: []
+  product_metrics: []
+  dependencies: []
+  risks: []
+  capabilities: []
+  agent_capability_requirements: []
+  effectiveness_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

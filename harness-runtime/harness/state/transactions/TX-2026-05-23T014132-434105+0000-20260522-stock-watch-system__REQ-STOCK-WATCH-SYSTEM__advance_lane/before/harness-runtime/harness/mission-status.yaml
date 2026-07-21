@@ -1,0 +1,44 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: product-definition-lane
+  current_stage: interaction
+  stages:
+    intake: done
+    discovery: done
+    prd: done
+    interaction: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    related_nodes: []
+    operation: advance_lane
+    lane: product-definition-lane
+    stage: interaction
+    lane_action:
+      lane: product-definition-lane
+      stage: interaction
+      graph_operation: advance_lane
+      operation_profiles:
+        advance_lane:
+          to_lane: solution-lane
+          to_stage: solution
+      allowed_graph_operations:
+      - advance_lane
+      output_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      required_execution_roles:
+      - interaction-designer
+      required_review_roles:
+      - interaction-reviewer
+      to_lane: solution-lane
+      to_stage: solution
+      skill: interaction
+    last_gate_report: harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/prd__advance_stage.json
+    last_operation_manifest: harness-runtime/harness/work-graph/operations/20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage.yaml
+    last_operation_status: PASS
+    last_transaction_id: TX-2026-05-23T011012-085961+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-05-23T011012-085961+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage.json
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation

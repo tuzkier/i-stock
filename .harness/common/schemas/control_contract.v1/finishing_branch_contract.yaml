@@ -1,0 +1,154 @@
+# finishing-branch-improvement-plan M4.2: finishing_branch_contract schema.
+# Defines the typed shape expected for finishing-branch.contract.yaml.
+# Used by `harness contract check --artifact finishing-branch.contract.yaml`.
+
+schema_name: finishing_branch_contract
+schema_version: 1
+description: >
+  Typed contract for the finishing-branch stage lifecycle.
+  Consumed by gate run, hook suite, and mission close write-back.
+
+required_fields:
+  - stage
+  - mission_id
+  - branch_status
+  - release_readiness
+  - close_choice
+  - mission_close
+
+field_definitions:
+  stage:
+    type: string
+    enum: [finishing-branch]
+  mission_id:
+    type: string
+  branch_status:
+    type: object
+    required:
+      - mission_branch
+      - base_branch
+      - dirty
+      - active_stage_worktrees
+      - blocked_stage_worktrees
+    properties:
+      mission_branch:
+        type: string
+      base_branch:
+        type: string
+      dirty:
+        type: boolean
+      active_stage_worktrees:
+        type: array
+        items:
+          type: string
+      blocked_stage_worktrees:
+        type: array
+        items:
+          type: string
+  release_readiness:
+    type: object
+    required:
+      - delivery_package
+      - acceptance_result
+      - verification_report_contract
+      - command_evidence_ids
+    properties:
+      delivery_package:
+        type: string
+      acceptance_result:
+        type: string
+      verification_report_contract:
+        type: string
+      command_evidence_ids:
+        type: array
+        items:
+          type: string
+  test_evidence:
+    type: object
+    properties:
+      mode:
+        type: string
+        enum: [rerun, reused_verification_evidence]
+      command:
+        type: string
+      exit_code:
+        type: integer
+      evidence_id:
+        type: string
+  close_choice:
+    type: object
+    required:
+      - strategy
+      - selected_by
+    properties:
+      strategy:
+        type: string
+        enum: [merge_to_base, push_pr, keep, discard]
+      selected_by:
+        type: string
+        enum: [user]
+      approval_id:
+        type: string
+  git_ops:
+    type: array
+    items:
+      type: object
+      properties:
+        op:
+          type: string
+          enum: [checkout, pull, merge, push, pr_create, branch_delete, worktree_remove, worktree_prune]
+        command_evidence_id:
+          type: string
+        status:
+          type: string
+          enum: [PASS, FAIL, BLOCKED, DRY_RUN]
+  pr_body:
+    type: object
+    properties:
+      required:
+        type: boolean
+      source_artifacts:
+        type: array
+        items:
+          type: string
+      pr_url:
+        type: string
+  mission_close:
+    type: object
+    required:
+      - branch_closed
+      - close_strategy
+    properties:
+      branch_closed:
+        type: boolean
+      close_strategy:
+        type: string
+        enum: [merged, pr, kept, discarded]
+      close_evidence_id:
+        type: string
+
+# Validation rules consumed by `harness contract check`:
+validation_rules:
+  - id: VR-FB-001
+    description: >
+      branch_status must be present; active_stage_worktrees must be empty
+      before merge_to_base or push_pr strategy is allowed.
+    applies_to: [merge_to_base, push_pr]
+  - id: VR-FB-002
+    description: >
+      release_readiness.command_evidence_ids must be non-empty for
+      merge_to_base and push_pr strategies.
+    applies_to: [merge_to_base, push_pr]
+  - id: VR-FB-003
+    description: >
+      close_choice.strategy=discard requires an approval_id.
+    applies_to: [discard]
+  - id: VR-FB-004
+    description: >
+      pr_body.source_artifacts must be non-empty when strategy=push_pr.
+    applies_to: [push_pr]
+  - id: VR-FB-005
+    description: >
+      mission_close.close_strategy must match close_choice.strategy
+      (modulo merge_to_base -> merged alias).
+    applies_to: [all]

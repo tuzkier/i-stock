@@ -1,0 +1,57 @@
+id: EXE-SOLUTION-002
+role: solution-architect
+status: DONE
+produced_artifacts:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+    work_graph_node: REQ-STOCK-WATCH-SYSTEM
+fulfilled_obligations:
+  - OBL-SOLUTION-001
+decision_log:
+  - D-01
+  - D-02
+  - D-03
+  - D-04
+  - D-05
+  - D-06
+  - D-07
+  - D-08
+traceability_matrix:
+  - decision: D-01
+    traces_to: [AC-02, AC-03, AC-05, FR-02, FR-03, FR-05]
+    extended_refs: [BUC-02, BUC-03, BUC-04, BUC-08, SURF-WORKBENCH, SURF-LAYOUT]
+  - decision: D-02
+    traces_to: [AC-01, AC-05, FR-01]
+    extended_refs: [BUC-01, BO-001, BO-002, SURF-WATCHLIST]
+  - decision: D-03
+    traces_to: [FR-06, AC-02, AC-03, AC-04]
+    extended_refs: [BUC-06, BO-007, SURF-SOURCE, SURF-WORKBENCH, SURF-MTS, SURF-ALERTS, FLOW-SOURCE-DEGRADED]
+  - decision: D-04
+    traces_to: [FR-02, FR-03, FR-04, NFR-06]
+    extended_refs: [BUC-02, BUC-03, BUC-04, BUC-08, BO-004, BO-005, SURF-WORKBENCH, SURF-MTS]
+  - decision: D-05
+    traces_to: [AC-03, AC-04, FR-03, FR-04]
+    extended_refs: [BUC-04, BUC-05, BUC-06, SURF-MTS, SURF-ALERTS, SURF-WORKBENCH]
+  - decision: D-06
+    traces_to: [AC-05, FR-05, FR-07, FR-08]
+    extended_refs: [BUC-01, BUC-02, BUC-05, BUC-07, BUC-08, SURF-WATCHLIST, SURF-WORKBENCH, SURF-ALERTS, SURF-RESTORE, SURF-LAYOUT]
+  - decision: D-07
+    traces_to: [AC-01, AC-02, AC-03, AC-04, AC-05, FR-09, NFR-05]
+    extended_refs: [BUC-01, BUC-02, BUC-03, BUC-04, BUC-05, BUC-06, BUC-07, BUC-08, BUC-09, SURF-WATCHLIST, SURF-WORKBENCH, SURF-MTS, SURF-ALERTS, SURF-SOURCE, SURF-LAYOUT, SURF-RESTORE]
+  - decision: D-08
+    traces_to: [NFR-06, FR-03, FR-04]
+    extended_refs: [mission-agent-engineering-none, audit-boundary]
+evidence_refs:
+  - harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+open_questions:
+  - MTS reason code / invalidator 的完整枚举留给 technical_analysis 细化。
+  - formal provider 的最终品牌和授权留给后续供应商决策。
+  - localStorage 容量与迁移细节留给 technical_analysis 定义迁移器和回退策略。
+concerns:
+  - Yahoo Finance 非授权和限流风险必须由 MarketDataSource 边界、可见降级和 fixture-first 验证管理。
+  - 当前项目尚无 e2e 基础设施，后续必须建立 Playwright fixture-first 门禁。
+summary: solution.md 已按 interaction 密度反馈后的新版合同重新对齐，更新为七个共享 surface、BUC-01 到 BUC-09、默认 focus / dense 诊断验收展开策略，并确认该调整只改变信息架构与布局策略，不改变 PRD 语义。

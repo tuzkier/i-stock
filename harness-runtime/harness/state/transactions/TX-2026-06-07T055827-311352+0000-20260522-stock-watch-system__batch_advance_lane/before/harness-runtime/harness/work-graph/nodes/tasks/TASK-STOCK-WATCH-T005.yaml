@@ -1,0 +1,41 @@
+id: TASK-STOCK-WATCH-T005
+kind: task
+title: WorkspaceSnapshotV2、per-symbol layout 与浏览器重开恢复
+lane: verification-lane
+stage: verify
+status: ready
+parent_task_id: T005
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T005-A1
+- T005-A2
+dependencies:
+- TASK-STOCK-WATCH-T001
+- TASK-STOCK-WATCH-T002
+- TASK-STOCK-WATCH-T003
+- TASK-STOCK-WATCH-T004
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 本地工作台恢复 / 工作台布局模式
+    scenario: 浏览器重开恢复工作台 / 布局恢复失败回退默认 / 桌面 dense 与 focus 切换 / 移动端 tab 工作台
+    evidence:
+      implementation_refs:
+      - src/domain/workspace.ts
+      - src/features/layout/LayoutController.tsx
+      - src/features/restore/RestoreStatus.tsx
+      - src/App.tsx
+      test_refs:
+      - tests/unit/workspace/snapshot-migration.spec.ts
+      - tests/e2e/restore-layout/resume.spec.ts
+      - fixtures/workspace/t005-restore-trace.json
+updated_at: '2026-06-07T05:44:35.278167+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__batch_advance_lane__4

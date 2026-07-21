@@ -1,0 +1,54 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: product-definition-lane
+  current_stage: prd
+  stages:
+    prd: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    related_nodes: []
+    operation: advance_stage
+    lane: product-definition-lane
+    stage: prd
+    lane_action:
+      lane: product-definition-lane
+      stage: prd
+      graph_operation: advance_stage
+      operation_profiles:
+        advance_stage:
+          to_stage: interaction
+        advance_lane:
+          to_lane: solution-lane
+          to_stage: solution
+      allowed_graph_operations:
+      - advance_stage
+      - advance_lane
+      output_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+      required_execution_roles:
+      - business-domain-modeler
+      - acceptance-scenario-designer
+      - product-scope-strategist
+      - senior-product-expert
+      required_review_roles:
+      - product-definition-reviewer
+      to_stage: interaction
+    last_gate_report: ''
+    last_operation_manifest: ''
+    last_operation_status: ''
+    last_transaction_id: ''
+    last_transaction_journal: ''
+    input_nodes: []
+    output_nodes: []
+    reset_stage: prd
+    reset_reason: 用户要求在 PRD 重写后将控制面回退到 PRD 完成边界，废弃当前 solution 阶段状态，后续需从新版 PRD 重新推进。
+    reset_at: '2026-05-23T18:11:30.388324+08:00'
+    reset_output_node_policy: keep
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation
+  - prd
+  started_at: '2026-05-23'
+  completed_at: ''

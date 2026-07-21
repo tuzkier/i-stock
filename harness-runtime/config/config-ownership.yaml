@@ -1,0 +1,61 @@
+# harness.yaml 归属清单（config-ownership）
+#
+# 用途：已安装项目升级到新版本模板时，`harness config diff/migrate` 用本清单做
+# 三方迁移（旧模板基线 vs 新模板 vs 当前已装）。它回答一个问题——升级时每个键
+# 该「保留项目现值」还是「采用新模板值」。
+#
+# 归属语义：
+#   - auto_managed   ：元数据，由 install/upgrade 自动写戳，迁移时采用上游。
+#   - project_owned  ：项目自己的设置，迁移时**保留当前已装的值**；若新模板默认值
+#                      也变了，会被标成 keep_customized（requires_decision），让用户
+#                      显式确认是保留还是改用新默认。
+#   - 其余（未列入两者的所有键）：framework_owned，迁移时**采用新模板值**。框架结构
+#                      演进（新增 stage/role、改 lane、调 toolchain 白名单等）由此生效。
+#
+# 匹配规则：dot-path 前缀匹配。例如 `prototype` 命中 `prototype.*` 全部子键；
+# 列表（如 work_graph.lanes.*.stages）整体作为一个叶子值比较 / 替换，不逐元素 diff。
+#
+# 安全网：即便某个本该项目自有的键漏列，迁移也不会静默丢值——它会以 adopt_framework
+# （旧值→新值）出现在 diff todolist 里被用户看到。本清单只决定「默认保留 vs 默认采用」。
+
+schema_version: 1
+
+# 由 install/upgrade 自动管理，迁移采用上游（随后由 upgrade 写戳版本/commit）。
+auto_managed:
+  - harness_template
+
+# 项目自有设置：迁移保留当前值。
+project_owned:
+  - project_name
+  - language
+  - default_mode
+  - brownfield
+  - pre_checkpoint_doc_review
+  - execute_mode
+  # 自治级别是项目选择（具体级别定义 execution_governance.levels/* 仍属框架）。
+  - execution_governance.default_level
+  # 原型交付路线与项目自有目录。
+  - prototype.delivery_mode
+  - prototype.interactive_prototype.prototype_project_root
+  - prototype.frontend_engineering.frontend_project_root
+  # 各能力层的项目级开关 / 模式（结构与白名单仍属框架）。
+  - spec.enabled
+  - agent_engineering.enabled
+  - project_lint.enabled
+  - project_lint.mode
+  - visual_interaction.enabled
+  - test_toolchain.enabled
+  - e2e.enabled
+  - e2e.base_url
+  - e2e.framework
+  - e2e.test_dir
+  - interaction.reachability_gate_level
+  - interaction.composition_gate_level
+  - dependency_impact.require_on_brownfield
+  - dependency_impact.require_on_external_dependency
+  - dependency_impact.require_on_data_model_change
+  - dependency_impact.require_on_shared_interface
+
+# 旧→新键改名 / 搬家映射：迁移时把当前已装的旧键值迁到新键路径。
+# 每条 {from: <旧 dot-path>, to: <新 dot-path>}；新版本若有键重命名在此登记。
+renames: []

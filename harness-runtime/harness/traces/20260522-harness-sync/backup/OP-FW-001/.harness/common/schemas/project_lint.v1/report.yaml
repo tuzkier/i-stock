@@ -1,0 +1,50 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required: [schema_version, control, status, mode, gate_effect, generated_at, findings]
+properties:
+  schema_version:
+    const: 1
+  control:
+    const: project_lint
+  status:
+    enum: [PASS, WARN, FAIL]
+  mode:
+    enum: [blocking, advisory]
+  gate_effect:
+    enum: [allow, warn, block]
+  generated_at:
+    type: string
+  mission_id:
+    type: [string, "null"]
+  config:
+    type: string
+  changed_files:
+    type: array
+    items:
+      type: string
+  command_evidence_refs:
+    type: array
+    items:
+      type: string
+  findings:
+    type: array
+    items:
+      type: object
+      required: [level, rule_id, category, message, remediation, paths]
+      properties:
+        level:
+          enum: [PASS, WARN, FAIL]
+        rule_id:
+          type: string
+        category:
+          type: string
+        message:
+          type: string
+        remediation:
+          type: string
+        paths:
+          type: array
+          items:
+            type: string
+      additionalProperties: true
+additionalProperties: true

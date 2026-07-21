@@ -1,0 +1,146 @@
+control_contract:
+  type: guide_contract
+  subtype: solution_guide
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: solution
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Acceptance Scenarios
+        - Constraints
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      sections:
+        - System Responsibilities
+        - Observable Behaviors
+        - Quality Runtime Constraints
+    # 如 interaction 阶段已完成（该 mission 有原型产物）：原型契约进入 upstream，
+    # 使 behavior-graph.yaml 的 SURF-/PS- ref 进入本契约 upstream_ids 许可集，
+    # 让 decisions[].traces_to 可合法承载原型界面边界。非 UI / 未跑 interaction 的
+    # mission 无此产物，本项省略即可。
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/contracts/interaction.contract.yaml"
+      optional: true   # 未跑 interaction 的 mission 此文件不存在，gate 跳过 missing_upstream；存在则 SURF-/PS- 进许可集
+      sections:
+        - Surface Model
+        - Behavior Graph
+  consumers:
+    - tech-design
+    - breakdown
+    - code-review
+    - stage-gate
+  role_policy:
+    stage: solution
+    work_graph_lane: solution-lane
+    required_execution_roles:
+      - solution-architect
+    required_review_roles:
+      - solution-effectiveness-reviewer
+    conditional_roles:
+      - role: agent-capability-designer
+        kind: execution
+        when:
+          - agent_engineering
+          - agent_capability
+      - role: agent-capability-reviewer
+        kind: review
+        when:
+          - agent_engineering
+          - agent_capability
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_set_id: "AS-{{work_graph_node_id}}-solution-{{artifact_version}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    artifact_refs:
+      - artifact_id: "{{mission_id}}:solution"
+        role: solution
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/solution/solution.md"
+  execution_result:
+    id: EXE-SOLUTION-001
+    role: solution-architect
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/solution/solution.md"
+    fulfilled_obligations: []
+    decision_log:
+      - DEC-01
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-DESIGN-001
+      mission_id: "{{mission_id}}"
+      type: architecture
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - solution-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  decisions:
+    - id: DEC-01
+      title: "{{decision_1_title}}"
+      chosen: "{{chosen_path}}"
+      rejected:
+        - "{{rejected_path}}"
+      rationale: "{{rationale}}"
+      traces_to:
+        - SCN-01
+        - CAP-01
+        # 如该 mission 有原型产物：可指向 SURF-/PS- ref（如 SURF-xxx、PS-<surf>-<state>）
+        # 以承载 interaction 阶段的原型界面边界；solution gate 对每个 mission SURF 要求
+        # 被某决策 traces_to 承载，否则报 SURFACE_NOT_CARRIED。不承载需在
+        # prototype_coverage_exemptions 显式登记并经决策门。
+      # Stage-4 M1.4: typed reversibility / confidence enums (low | medium | high).
+      # Omitted from template defaults (placeholders would FAIL enum check);
+      # solution-architect must add them per decision. M2/M3 strict mode FAILs
+      # gate when fields missing; M1.4 schema only declares enum shape.
+      # reversibility: medium
+      # confidence: medium
+      appetite: "{{shape_up_appetite}}"
+      bet_boundary: "{{shape_up_bet_boundary}}"
+      circuit_breaker: "{{shape_up_circuit_breaker}}"
+      driver: "{{daci_driver}}"
+      approver: "{{daci_approver}}"
+      contributors:
+        - "{{daci_contributor}}"
+      informed:
+        - "{{daci_informed}}"
+  forbidden_paths:
+    - id: FB-01
+      statement: "{{forbidden_action}}"
+      reason: "{{reason}}"
+  risks:
+    - id: RISK-01
+      statement: "{{risk}}"
+      mitigation: "{{mitigation}}"
+  # 原型覆盖豁免：如该 mission 有原型产物（interaction 已完成）时使用。
+  # solution gate 默认要求每个 mission SURF 被某决策 traces_to 承载，否则报
+  # SURFACE_NOT_CARRIED。本方案显式改写或不承载某界面边界时，必须在此登记
+  # 合法出口，否则视为静默漂移 / 自由重设计界面。无产物时本字段省略，gate 跳过。
+  # 每项缺 reason 报 PROTOTYPE_EXEMPTION_NO_REASON。
+  prototype_coverage_exemptions: []
+  #   - id: SURF-xxx                # 被豁免的 SURF-/PS- ref
+  #     reason: "为何本方案不承载该界面边界、是否经决策门（引用 DEC-xx）"
+  # Stage-4 M1.4: agent_architecture[] (Step 4 Agent capability output).
+  # Empty by default; populated when mission-contract.agent_engineering.enabled=true.
+  # Each entry must trace to prd.contract.yaml.agent_capability_requirements[]
+  # (R-AGENT-* IDs) — strict cross-contract check lands in M4.3.
+  agent_architecture: []
+  # Stage-4 M1.4: parallel to prd / discovery effectiveness_review block.
+  # rounds_used incremented by `harness contract patch --add-round` per reviewer
+  # cycle; M3.1 hook blocks `harness gate advance` when pending_reviewer_recheck
+  # is true.
+  effectiveness_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

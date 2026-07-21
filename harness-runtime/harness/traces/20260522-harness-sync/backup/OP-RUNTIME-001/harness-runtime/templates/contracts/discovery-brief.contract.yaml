@@ -1,0 +1,65 @@
+control_contract:
+  type: behaviour_contract
+  subtype: discovery_brief
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: discovery
+  status: ready
+  produced_at: "{{produced_at}}"
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Objective
+        - User Stories
+        - Scope
+  consumers:
+    - prd
+    - design
+    - breakdown
+    - verify
+    - stage-gate
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    source_stage_artifact: "harness-runtime/harness/stages/{{mission_id}}/discovery-brief.md"
+    canonical_artifact: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/discovery-brief.md"
+  obligations: []
+  role_verdicts: []
+  # ---- discovery-brief 差量字段（schema: discovery_brief_contract.yaml）----
+  # 每个数组在初始模板里为空，由 discovery-analyst 在 Step 2-7 写入；
+  # 关键字段缺失或 confidence 越枚举时 discovery-effectiveness-reviewer / harness-lint
+  # (M4.2 W-* 规则) 会触发 HOLD / FAIL。
+  affected_capabilities: []
+    # - capability: "<id>"
+    #   requirement_id: "<id>"
+    #   confidence: CONFIRMED | UNCERTAIN | ASSUMED
+    #   evidence_or_inference: "<string>"
+  roles: []
+    # - role: "<name>"
+    #   core_need: "<string>"
+    #   frequency: high | medium | low
+    #   tech_level: "<string>"
+  scenarios: []
+    # - kind: happy_path | exception | edge_case
+    #   description: "<string>"
+    #   related_roles:
+    #     - "<role>"
+  existing_solutions: []
+    # - description: "<string>"
+    #   source: gitnexus_symbol | gitnexus_query | grep | manual_read | web_url
+    #   reference: "<gitnexus path / URL / file path>"
+  design_assumptions: []
+    # - assumption: "<string>"
+    #   impact_on: prd | solution | technical_analysis | verify
+  agent_engineering_candidates: []
+    # - component: "<string>"
+    #   autonomy: true | false
+    #   runtime_context: true | false
+    #   multi_step_reasoning: true | false
+    #   uncertainty: true | false
+    #   recommended: agentize | deterministic | undecided
+  degradations: []
+    # - kind: gitnexus_unavailable | gitnexus_stale | web_failed
+    #   reason: "<string>"
+    #   compensating_action: "<string>"

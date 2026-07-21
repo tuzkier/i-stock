@@ -1,0 +1,22 @@
+patches:
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 3
+      max_rounds: 3
+      last_verdict: PASS
+      pending_reviewer_recheck: false
+  - target: control_contract.agent_capability_review
+    op: set
+    value:
+      rounds_used: 2
+      max_rounds: 3
+      last_verdict: PASS
+      pending_reviewer_recheck: false
+  - target: control_contract.dependency_validity_review
+    op: set
+    value:
+      rounds_used: 2
+      max_rounds: 3
+      last_verdict: PASS
+      pending_reviewer_recheck: false

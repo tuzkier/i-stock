@@ -1,0 +1,1042 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260522-stock-watch-system",
+  "status": "PASS",
+  "install_policy": "auto_for_required_whitelist",
+  "probe_status": "WARN",
+  "toolchain": [
+    {
+      "tool": "pytest",
+      "category": "test_result",
+      "configured": false,
+      "available": false,
+      "commands": [
+        "python3 -m pytest --junitxml=harness-runtime/harness/traces/<mission-id>/tools/pytest-junit.xml",
+        "python3 -m pytest --json-report --json-report-file=harness-runtime/harness/traces/<mission-id>/tools/pytest-report.json"
+      ],
+      "report_paths": [
+        "playwright-report/index.html"
+      ],
+      "purpose": "Collect Python unit/integration pass/fail and test identity evidence.",
+      "notes": [
+        "No pytest config/tests detected by Harness probe."
+      ]
+    },
+    {
+      "tool": "coverage.py/pytest-cov",
+      "category": "coverage",
+      "configured": false,
+      "available": false,
+      "commands": [
+        "python3 -m pytest --cov --cov-report=xml:harness-runtime/harness/traces/<mission-id>/tools/coverage.xml --cov-report=json:harness-runtime/harness/traces/<mission-id>/tools/coverage.json"
+      ],
+      "report_paths": [],
+      "purpose": "Measure executed Python lines/branches; feed diff-cover and reviewer adequacy checks.",
+      "notes": [
+        "Coverage tool/config not detected."
+      ]
+    },
+    {
+      "tool": "diff-cover",
+      "category": "diff_coverage",
+      "configured": true,
+      "available": false,
+      "commands": [
+        "diff-cover harness-runtime/harness/traces/<mission-id>/tools/coverage.xml --compare-branch=<baseline>"
+      ],
+      "report_paths": [],
+      "purpose": "Map coverage to changed lines so reviewer can focus on mission diff risk.",
+      "notes": [
+        "Requires coverage.xml from coverage.py/pytest-cov."
+      ]
+    },
+    {
+      "tool": "mutmut",
+      "category": "mutation",
+      "configured": false,
+      "available": false,
+      "commands": [
+        "mutmut run --paths-to-mutate <changed-python-source>",
+        "mutmut results"
+      ],
+      "report_paths": [],
+      "purpose": "Prove critical Python tests fail when source behavior is mutated.",
+      "notes": [
+        "Mutation testing not configured for Python."
+      ]
+    },
+    {
+      "tool": "vitest/jest",
+      "category": "frontend_unit_component",
+      "configured": true,
+      "available": true,
+      "commands": [
+        "pnpm --filter @theforce/frontend test -- --reporter=json --coverage",
+        "npm test -- --json --coverage"
+      ],
+      "report_paths": [],
+      "purpose": "Validate frontend units/components/API clients with structured results and coverage.",
+      "notes": []
+    },
+    {
+      "tool": "playwright",
+      "category": "e2e_ui",
+      "configured": true,
+      "available": true,
+      "commands": [
+        "pnpm exec playwright test --reporter=json --reporter=junit"
+      ],
+      "report_paths": [
+        "playwright-report/index.html"
+      ],
+      "purpose": "Validate user-visible UI workflows, browser behavior, traces, and E2E acceptance paths.",
+      "notes": []
+    },
+    {
+      "tool": "StrykerJS",
+      "category": "mutation",
+      "configured": true,
+      "available": true,
+      "commands": [
+        "pnpm exec stryker run --incremental"
+      ],
+      "report_paths": [],
+      "purpose": "Prove critical JS/TS tests fail when frontend/source behavior is mutated.",
+      "notes": []
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "T001",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "missing_obligation": false,
+      "risk_level": "high",
+      "surfaces": [
+        "SURF-WATCHLIST",
+        "SURF-RESTORE",
+        "SURF-ALERTS"
+      ],
+      "required_capabilities": [
+        "unit",
+        "browser_flow",
+        "storage_assertion",
+        "mutation_or_fault_injection"
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "screenshot_or_locator_evidence"
+      ],
+      "accepted_alternatives": {
+        "mutation_or_fault_injection": [
+          "mutation_report",
+          "targeted_fault_injection_report",
+          "equivalent_proof"
+        ],
+        "ui_component_or_e2e": [
+          "component_test_report",
+          "e2e_report"
+        ]
+      },
+      "capabilities": {
+        "unit": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "browser_flow": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "storage_assertion": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "mutation_or_fault_injection": {
+          "candidate_tools": [
+            "mutmut",
+            "StrykerJS"
+          ],
+          "selected_tool": "StrykerJS",
+          "configured": true,
+          "available": true,
+          "missing": false
+        }
+      }
+    },
+    {
+      "task_id": "T002",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "missing_obligation": false,
+      "risk_level": "high",
+      "surfaces": [
+        "SURF-WORKBENCH",
+        "SURF-SOURCE",
+        "SURF-LAYOUT"
+      ],
+      "required_capabilities": [
+        "unit",
+        "replay",
+        "browser_flow",
+        "cache_semantics",
+        "user_visible_assertion"
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "cache_trace"
+      ],
+      "accepted_alternatives": {
+        "mutation_or_fault_injection": [
+          "mutation_report",
+          "targeted_fault_injection_report",
+          "equivalent_proof"
+        ],
+        "ui_component_or_e2e": [
+          "component_test_report",
+          "e2e_report"
+        ]
+      },
+      "capabilities": {
+        "unit": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "replay": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "browser_flow": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "cache_semantics": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "user_visible_assertion": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        }
+      }
+    },
+    {
+      "task_id": "T003",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "missing_obligation": false,
+      "risk_level": "high",
+      "surfaces": [
+        "SURF-MTS",
+        "SURF-WORKBENCH"
+      ],
+      "required_capabilities": [
+        "unit",
+        "replay",
+        "mutation_or_registry_validation",
+        "screenshot_or_copy_review"
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "registry_report"
+      ],
+      "accepted_alternatives": {
+        "mutation_or_fault_injection": [
+          "mutation_report",
+          "targeted_fault_injection_report",
+          "equivalent_proof"
+        ],
+        "ui_component_or_e2e": [
+          "component_test_report",
+          "e2e_report"
+        ]
+      },
+      "capabilities": {
+        "unit": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "replay": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "mutation_or_registry_validation": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "screenshot_or_copy_review": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        }
+      }
+    },
+    {
+      "task_id": "T004",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "missing_obligation": false,
+      "risk_level": "high",
+      "surfaces": [
+        "SURF-ALERTS",
+        "SURF-MTS"
+      ],
+      "required_capabilities": [
+        "unit",
+        "replay",
+        "browser_flow",
+        "clock_control",
+        "mutation_or_fault_injection"
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "replay_log"
+      ],
+      "accepted_alternatives": {
+        "mutation_or_fault_injection": [
+          "mutation_report",
+          "targeted_fault_injection_report",
+          "equivalent_proof"
+        ],
+        "ui_component_or_e2e": [
+          "component_test_report",
+          "e2e_report"
+        ]
+      },
+      "capabilities": {
+        "unit": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "replay": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "browser_flow": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "clock_control": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "mutation_or_fault_injection": {
+          "candidate_tools": [
+            "mutmut",
+            "StrykerJS"
+          ],
+          "selected_tool": "StrykerJS",
+          "configured": true,
+          "available": true,
+          "missing": false
+        }
+      }
+    },
+    {
+      "task_id": "T005",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "missing_obligation": false,
+      "risk_level": "high",
+      "surfaces": [
+        "SURF-RESTORE",
+        "SURF-LAYOUT",
+        "SURF-WATCHLIST"
+      ],
+      "required_capabilities": [
+        "unit",
+        "replay",
+        "browser_flow",
+        "storage_migration_assertion",
+        "screenshot_or_restore_trace"
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "migration_report"
+      ],
+      "accepted_alternatives": {
+        "mutation_or_fault_injection": [
+          "mutation_report",
+          "targeted_fault_injection_report",
+          "equivalent_proof"
+        ],
+        "ui_component_or_e2e": [
+          "component_test_report",
+          "e2e_report"
+        ]
+      },
+      "capabilities": {
+        "unit": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "replay": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "browser_flow": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "storage_migration_assertion": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "screenshot_or_restore_trace": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        }
+      }
+    },
+    {
+      "task_id": "T006",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "missing_obligation": false,
+      "risk_level": "high",
+      "surfaces": [
+        "SURF-WATCHLIST",
+        "SURF-WORKBENCH",
+        "SURF-MTS",
+        "SURF-ALERTS",
+        "SURF-SOURCE",
+        "SURF-LAYOUT",
+        "SURF-RESTORE"
+      ],
+      "required_capabilities": [
+        "unit",
+        "replay",
+        "browser_flow",
+        "user_visible_assertion",
+        "accessibility_smoke",
+        "fixture_first",
+        "mutation_or_fault_injection"
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "e2e_run_report",
+        "trace_or_video"
+      ],
+      "accepted_alternatives": {
+        "mutation_or_fault_injection": [
+          "mutation_report",
+          "targeted_fault_injection_report",
+          "equivalent_proof"
+        ],
+        "ui_component_or_e2e": [
+          "component_test_report",
+          "e2e_report"
+        ]
+      },
+      "capabilities": {
+        "unit": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "replay": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "browser_flow": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "user_visible_assertion": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "accessibility_smoke": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "fixture_first": {
+          "candidate_tools": [],
+          "selected_tool": null,
+          "configured": false,
+          "available": false,
+          "missing": false
+        },
+        "mutation_or_fault_injection": {
+          "candidate_tools": [
+            "mutmut",
+            "StrykerJS"
+          ],
+          "selected_tool": "StrykerJS",
+          "configured": true,
+          "available": true,
+          "missing": false
+        }
+      }
+    }
+  ],
+  "install_actions": [],
+  "decision_gate_reasons": [],
+  "probe": {
+    "schema_version": 1,
+    "status": "WARN",
+    "mission_id": "20260522-stock-watch-system",
+    "baseline_commit": null,
+    "changed_files": {
+      "total": 0,
+      "scoped_total": 0,
+      "authorized_path_patterns": [
+        "fixtures/**",
+        "fixtures/alerts/**",
+        "fixtures/mts/**",
+        "fixtures/source/**",
+        "fixtures/watchlist/**",
+        "fixtures/workspace/**",
+        "package-lock.json",
+        "package.json",
+        "server/index.js",
+        "src/App.tsx",
+        "src/data/markets.ts",
+        "src/domain/alert.ts",
+        "src/domain/market-data-source.ts",
+        "src/domain/market-normalization.ts",
+        "src/domain/mts-registry.ts",
+        "src/domain/mts.ts",
+        "src/domain/observation.ts",
+        "src/domain/workspace.ts",
+        "src/features/alerts/**",
+        "src/features/chart/**",
+        "src/features/layout/**",
+        "src/features/mts/**",
+        "src/features/restore/**",
+        "src/features/source/**",
+        "src/features/watchlist/**",
+        "src/features/workbench/**",
+        "src/lib/alerts.ts",
+        "src/lib/indicators.ts",
+        "src/lib/signals.ts",
+        "src/lib/storage.ts",
+        "src/types.ts",
+        "tests/e2e/**",
+        "tests/e2e/restore-layout/**",
+        "tests/e2e/watchlist/**",
+        "tests/e2e/workbench/**",
+        "tests/replay/**",
+        "tests/replay/alerts/**",
+        "tests/replay/mts/**",
+        "tests/replay/workspace/**",
+        "tests/unit/**",
+        "tests/unit/alerts/**",
+        "tests/unit/mts/**",
+        "tests/unit/source/**",
+        "tests/unit/watchlist/**",
+        "tests/unit/workspace/**"
+      ],
+      "sources": [],
+      "tests": [],
+      "frontend": []
+    },
+    "test_inventory": {
+      "total": 0,
+      "frontend_test_files": [],
+      "backend_test_files": [],
+      "frontend_has_test_script": false,
+      "frontend_scripts": {},
+      "root_has_test_script": false,
+      "root_scripts": {
+        "dev": "node server/index.js",
+        "build": "tsc --noEmit && vite build",
+        "test:e2e": "NO_PROXY=127.0.0.1,localhost playwright test",
+        "preview": "NODE_ENV=production node server/index.js"
+      }
+    },
+    "toolchain": [
+      {
+        "tool": "pytest",
+        "category": "test_result",
+        "configured": false,
+        "available": false,
+        "commands": [
+          "python3 -m pytest --junitxml=harness-runtime/harness/traces/<mission-id>/tools/pytest-junit.xml",
+          "python3 -m pytest --json-report --json-report-file=harness-runtime/harness/traces/<mission-id>/tools/pytest-report.json"
+        ],
+        "report_paths": [
+          "playwright-report/index.html"
+        ],
+        "purpose": "Collect Python unit/integration pass/fail and test identity evidence.",
+        "notes": [
+          "No pytest config/tests detected by Harness probe."
+        ]
+      },
+      {
+        "tool": "coverage.py/pytest-cov",
+        "category": "coverage",
+        "configured": false,
+        "available": false,
+        "commands": [
+          "python3 -m pytest --cov --cov-report=xml:harness-runtime/harness/traces/<mission-id>/tools/coverage.xml --cov-report=json:harness-runtime/harness/traces/<mission-id>/tools/coverage.json"
+        ],
+        "report_paths": [],
+        "purpose": "Measure executed Python lines/branches; feed diff-cover and reviewer adequacy checks.",
+        "notes": [
+          "Coverage tool/config not detected."
+        ]
+      },
+      {
+        "tool": "diff-cover",
+        "category": "diff_coverage",
+        "configured": true,
+        "available": false,
+        "commands": [
+          "diff-cover harness-runtime/harness/traces/<mission-id>/tools/coverage.xml --compare-branch=<baseline>"
+        ],
+        "report_paths": [],
+        "purpose": "Map coverage to changed lines so reviewer can focus on mission diff risk.",
+        "notes": [
+          "Requires coverage.xml from coverage.py/pytest-cov."
+        ]
+      },
+      {
+        "tool": "mutmut",
+        "category": "mutation",
+        "configured": false,
+        "available": false,
+        "commands": [
+          "mutmut run --paths-to-mutate <changed-python-source>",
+          "mutmut results"
+        ],
+        "report_paths": [],
+        "purpose": "Prove critical Python tests fail when source behavior is mutated.",
+        "notes": [
+          "Mutation testing not configured for Python."
+        ]
+      },
+      {
+        "tool": "vitest/jest",
+        "category": "frontend_unit_component",
+        "configured": true,
+        "available": true,
+        "commands": [
+          "pnpm --filter @theforce/frontend test -- --reporter=json --coverage",
+          "npm test -- --json --coverage"
+        ],
+        "report_paths": [],
+        "purpose": "Validate frontend units/components/API clients with structured results and coverage.",
+        "notes": []
+      },
+      {
+        "tool": "playwright",
+        "category": "e2e_ui",
+        "configured": true,
+        "available": true,
+        "commands": [
+          "pnpm exec playwright test --reporter=json --reporter=junit"
+        ],
+        "report_paths": [
+          "playwright-report/index.html"
+        ],
+        "purpose": "Validate user-visible UI workflows, browser behavior, traces, and E2E acceptance paths.",
+        "notes": []
+      },
+      {
+        "tool": "StrykerJS",
+        "category": "mutation",
+        "configured": true,
+        "available": true,
+        "commands": [
+          "pnpm exec stryker run --incremental"
+        ],
+        "report_paths": [],
+        "purpose": "Prove critical JS/TS tests fail when frontend/source behavior is mutated.",
+        "notes": []
+      }
+    ],
+    "normalized_reports": {
+      "test_result": [
+        {
+          "tool": "pytest",
+          "category": "test_result",
+          "configured": false,
+          "available": false,
+          "commands": [
+            "python3 -m pytest --junitxml=harness-runtime/harness/traces/<mission-id>/tools/pytest-junit.xml",
+            "python3 -m pytest --json-report --json-report-file=harness-runtime/harness/traces/<mission-id>/tools/pytest-report.json"
+          ],
+          "report_paths": [
+            "playwright-report/index.html"
+          ],
+          "purpose": "Collect Python unit/integration pass/fail and test identity evidence.",
+          "notes": [
+            "No pytest config/tests detected by Harness probe."
+          ]
+        }
+      ],
+      "coverage": [
+        {
+          "tool": "coverage.py/pytest-cov",
+          "category": "coverage",
+          "configured": false,
+          "available": false,
+          "commands": [
+            "python3 -m pytest --cov --cov-report=xml:harness-runtime/harness/traces/<mission-id>/tools/coverage.xml --cov-report=json:harness-runtime/harness/traces/<mission-id>/tools/coverage.json"
+          ],
+          "report_paths": [],
+          "purpose": "Measure executed Python lines/branches; feed diff-cover and reviewer adequacy checks.",
+          "notes": [
+            "Coverage tool/config not detected."
+          ]
+        },
+        {
+          "tool": "diff-cover",
+          "category": "diff_coverage",
+          "configured": true,
+          "available": false,
+          "commands": [
+            "diff-cover harness-runtime/harness/traces/<mission-id>/tools/coverage.xml --compare-branch=<baseline>"
+          ],
+          "report_paths": [],
+          "purpose": "Map coverage to changed lines so reviewer can focus on mission diff risk.",
+          "notes": [
+            "Requires coverage.xml from coverage.py/pytest-cov."
+          ]
+        }
+      ],
+      "mutation": [
+        {
+          "tool": "mutmut",
+          "category": "mutation",
+          "configured": false,
+          "available": false,
+          "commands": [
+            "mutmut run --paths-to-mutate <changed-python-source>",
+            "mutmut results"
+          ],
+          "report_paths": [],
+          "purpose": "Prove critical Python tests fail when source behavior is mutated.",
+          "notes": [
+            "Mutation testing not configured for Python."
+          ]
+        },
+        {
+          "tool": "StrykerJS",
+          "category": "mutation",
+          "configured": true,
+          "available": true,
+          "commands": [
+            "pnpm exec stryker run --incremental"
+          ],
+          "report_paths": [],
+          "purpose": "Prove critical JS/TS tests fail when frontend/source behavior is mutated.",
+          "notes": []
+        }
+      ],
+      "ui_e2e": [
+        {
+          "tool": "vitest/jest",
+          "category": "frontend_unit_component",
+          "configured": true,
+          "available": true,
+          "commands": [
+            "pnpm --filter @theforce/frontend test -- --reporter=json --coverage",
+            "npm test -- --json --coverage"
+          ],
+          "report_paths": [],
+          "purpose": "Validate frontend units/components/API clients with structured results and coverage.",
+          "notes": []
+        },
+        {
+          "tool": "playwright",
+          "category": "e2e_ui",
+          "configured": true,
+          "available": true,
+          "commands": [
+            "pnpm exec playwright test --reporter=json --reporter=junit"
+          ],
+          "report_paths": [
+            "playwright-report/index.html"
+          ],
+          "purpose": "Validate user-visible UI workflows, browser behavior, traces, and E2E acceptance paths.",
+          "notes": []
+        }
+      ]
+    },
+    "required_evidence": {},
+    "trace_artifacts": [
+      "harness-runtime/harness/traces/20260522-stock-watch-system/agent-capability-reviewer-pass-verdict-tech-design.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/archived-gate-reports/solution__advance_lane__stale-after-prd-reset.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/archived-gate-reports/solution__advance_lane__stale-after-prd-reset.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-contract-check-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-contract-schema-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/src/data/markets.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/src/domain/market-normalization.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/src/domain/watchlist-state.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/src/lib/storage.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/src/types.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/tests/unit/watchlist/archive.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/tests/unit/watchlist/normalization.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-build/tests/unit/watchlist/storage-replay.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/src/data/markets.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/src/domain/market-normalization.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/src/domain/watchlist-state.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/src/lib/storage.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/src/types.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/tests/unit/watchlist/archive.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/tests/unit/watchlist/normalization.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/code-review-unit-esm/tests/unit/watchlist/storage-replay.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/contract-placeholder-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/contract-review-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/contract-version-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/dependency-validity-reviewer-pass-verdict-tech-design.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/diff-snapshot.patch",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/discovery-contract-fields-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/discovery-contract-hygiene-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/discovery-effectiveness-review-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/discovery-execution-result.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/discovery-obligation-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-plan.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-run.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/e2e/playwright-output.txt",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-brief-contract-check-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-brief-contract-coverage-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-brief-contract-e2e-evidence-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-brief-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-brief-review-status-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-plan-effectiveness-reviewer-pass-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-batch-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-blocked-contract-final-hygiene-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-blocked-contract-hygiene-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-blocked-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-blocked-execution-role-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-complete-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-contract-cleanup-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-contract-reviewer-pass-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-contract-reviewer-started-at-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-contract-t003-red-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-contract-tasks-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-contract-upstream-obligations-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-schema-hygiene-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/execution-result-task-metadata-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/final-gate/execute-contract-check.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/graph-create-requirement.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-buc06-07-realign-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-refresh-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-remove-buc09-scenario-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-review-hold-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-role-verdict-schema-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-surface-flow-realign-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-density-feedback-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-density-prd-sync-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-density-reviewer-pass-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/interaction-reviewer-pass-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mission-contract-reviewer-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/package.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/src/data/markets.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/src/domain/market-normalization.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/src/domain/watchlist-state.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/src/lib/storage.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/src/types.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/tests/unit/watchlist/archive.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/tests/unit/watchlist/normalization.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-ambiguous/tests/unit/watchlist/storage-replay.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/package.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/src/data/markets.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/src/domain/market-normalization.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/src/domain/watchlist-state.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/src/lib/storage.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/src/types.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/tests/unit/watchlist/archive.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/tests/unit/watchlist/normalization.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/mutation-suspend/tests/unit/watchlist/storage-replay.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/open-source-library-preference-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/open-source-library-preference-review-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/open-source-library-review-metadata-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/playwright-no-webserver.config.ts",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-contract-schema-fix-patch-v2.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-contract-schema-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-review-hold-fix-patch-v2.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-review-hold-fix-patch-v3.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-review-hold-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-reviewer-pass-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/prd-role-verdict-schema-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/project-lint/project-lint-report.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/project-lint/project-lint-report.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-contract-fields-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-contract-trace-hygiene-patch-v2.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-contract-trace-hygiene-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-density-alignment-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-density-alignment-execution-result.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-effectiveness-reviewer-pass-verdict-v2.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/solution-effectiveness-reviewer-pass-with-risk-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/spec-reviewer-pass-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/steps.jsonl",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t002-browser-walkthrough.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t002-fault-injection-report.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t002-red-report.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t002-workbench-unavailable.png",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-copy-review.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-red-report.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-red/registry-red.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-red/registry-red.spec.ts",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-replay/replay.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-unit/mts.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t003-unit/registry.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t004-unit/rule-model.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t004-unit/trigger-flow.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t005-migration-report.md",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t005-replay/migration-replay.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t005-unit/snapshot-migration.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_replay_alerts_trigger-flow_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_replay_gate_fixture-corpus_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_replay_mts_replay_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_replay_workspace_migration-replay_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_alerts_rule-model_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_mts_registry_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_signals_mts_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_source_market-data-source_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_watchlist_archive_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_watchlist_normalization_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_watchlist_storage-replay_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/tests_unit_workspace_snapshot-migration_spec_ts.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/t006-replay/fixture-corpus.spec.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-plan.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-run.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-alert-flow-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-contract-finalize-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-contract-sanitize-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-execution-result.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-review-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tech-design-review-status-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/technical-design-effectiveness-reviewer-pass-verdict.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/tools/pytest-junit.xml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/package.json",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/src/data/markets.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/src/domain/market-normalization.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/src/domain/watchlist-state.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/src/lib/storage.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/src/types.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/archive.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/normalization.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/storage-replay.spec.js",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verification-contract-check-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verification-effectiveness-verdict-pass.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verification-evidence-graph-fix-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verification-fresh-evidence-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verification-report-contract-patch.yaml",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verify-t001-ui-evidence.mjs",
+      "harness-runtime/harness/traces/20260522-stock-watch-system/verify-t001-ui-evidence.spec.ts"
+    ],
+    "risk_keyword_test_hits": {
+      "unbound": [],
+      "revoked": [],
+      "mismatch": [],
+      "stale": [],
+      "idempot": [],
+      "concurrent": [],
+      "target exists": [],
+      "a11y|accessib|keyboard": [],
+      "websocket|realtime|invalidation": []
+    },
+    "signals": [
+      {
+        "level": "WARN",
+        "code": "risk_keyword_without_matching_test_text",
+        "message": "Some risk keywords appear in design/brief but not in detected tests.",
+        "evidence": [
+          "stale",
+          "a11y|accessib|keyboard",
+          "websocket|realtime|invalidation"
+        ],
+        "reviewer_guidance": "Heuristic only. Inspect whether equivalent tests exist under different wording before raising a TDD adequacy finding."
+      }
+    ]
+  }
+}

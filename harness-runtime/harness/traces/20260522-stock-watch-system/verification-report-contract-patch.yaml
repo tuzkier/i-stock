@@ -1,0 +1,297 @@
+patches:
+  - target: control_contract.status
+    op: set
+    value: ready
+  - target: control_contract.execution_result
+    op: set
+    value:
+      id: EXE-VERIFY-001
+      role: verification-engineer
+      status: DONE
+      produced_artifacts:
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+      fulfilled_obligations:
+        - OBL-VERIFY-T001
+      decision_log:
+        - id: VERIFY-SCOPE-001
+          decision: scope_current_primary_node_only
+          rationale: Current Mission Slice primary node is TASK-STOCK-WATCH-T001; global AC items for T002-T006 are explicitly out of scope.
+      traceability_matrix:
+        - target: 添加前预览归一结果
+          command_evidence:
+            - CMD-UNIT-001
+            - CMD-E2E-001
+          result_evidence:
+            - RESULT-NORMALIZE-001
+        - target: 歧义输入不得静默写入
+          command_evidence:
+            - CMD-UNIT-001
+            - CMD-E2E-001
+          result_evidence:
+            - RESULT-AMBIGUITY-001
+        - target: 列表显示行情摘要
+          command_evidence:
+            - CMD-E2E-001
+          result_evidence:
+            - RESULT-SUMMARY-001
+        - target: 归档暂停提醒
+          command_evidence:
+            - CMD-UNIT-001
+            - CMD-E2E-001
+          result_evidence:
+            - RESULT-ARCHIVE-001
+        - target: 恢复已归档标的与提醒意图
+          command_evidence:
+            - CMD-UNIT-001
+            - CMD-E2E-001
+          result_evidence:
+            - RESULT-RESTORE-001
+      evidence_refs:
+        - CMD-UNIT-001
+        - CMD-BUILD-001
+        - CMD-E2E-001
+        - RESULT-NORMALIZE-001
+        - RESULT-AMBIGUITY-001
+        - RESULT-SUMMARY-001
+        - RESULT-ARCHIVE-001
+        - RESULT-RESTORE-001
+      open_questions: []
+      concerns:
+        - Project lint WARN P003: AGENTS.md lacks project guidance keywords for test and delivery.
+  - target: control_contract.obligations
+    op: set
+    value:
+      - id: OBL-VERIFY-T001
+        mission_id: 20260522-stock-watch-system
+        type: verification
+        risk: medium
+        traces_to:
+          ac:
+            - AC-01
+            - AC-05
+          task:
+            - TASK-STOCK-WATCH-T001
+        required_evidence:
+          - command_result
+          - result_evidence
+          - e2e_result
+        required_roles:
+          - verification-effectiveness-reviewer
+        blocking: true
+        source: mission_slice
+  - target: control_contract.command_evidence
+    op: set
+    value:
+      - id: CMD-UNIT-001
+        required_evidence_id: re-T001-1
+        command: node --test harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/*.spec.js
+        cwd: /Users/hanbin/Workspace/AI/MyInvestment
+        exit_code: 0
+        started_at: "2026-05-24T01:33:03.424124+00:00"
+        ended_at: "2026-05-24T01:33:03.560974+00:00"
+        result: pass
+        summary: 14 tests / 3 suites / 0 failures for watchlist normalization, archive state, and storage replay.
+        artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-unit-2026-05-24-01-33-03.json
+      - id: CMD-BUILD-001
+        required_evidence_id: re-T001-2
+        command: npm run build
+        cwd: /Users/hanbin/Workspace/AI/MyInvestment
+        exit_code: 0
+        started_at: "2026-05-24T01:33:03.429444+00:00"
+        ended_at: "2026-05-24T01:33:06.293723+00:00"
+        result: pass
+        summary: TypeScript noEmit and Vite production build passed.
+        artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-integration-2026-05-24-01-33-03.json
+      - id: CMD-E2E-001
+        required_evidence_id: re-T001-3
+        command: npm run test:e2e
+        cwd: /Users/hanbin/Workspace/AI/MyInvestment
+        exit_code: 0
+        started_at: "2026-05-24T01:33:03.424001+00:00"
+        ended_at: "2026-05-24T01:33:07.922684+00:00"
+        result: pass
+        summary: 3 Playwright tests passed, including archive/restore, ambiguity blocking, and accessibility smoke.
+        artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-33-03.json
+      - id: CMD-LINT-001
+        required_evidence_id: re-T001-4
+        command: harness lint project --mission 20260522-stock-watch-system --command-evidence harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-33-03.json
+        cwd: /Users/hanbin/Workspace/AI/MyInvestment
+        exit_code: 0
+        result: warn
+        summary: Project lint WARN P003 about AGENTS.md guidance keywords; gate_effect warn.
+        artifact: harness-runtime/harness/traces/20260522-stock-watch-system/project-lint/latest.json
+  - target: control_contract.result_evidence
+    op: set
+    value:
+      - id: RESULT-NORMALIZE-001
+        required_evidence_id: re-T001-1
+        ac: AC-01
+        kind: dom
+        evidence_role: primary
+        expected: 支持市场代码添加前显示市场、原始代码和归一代码，确认后进入 active 自选。
+        actual: E2E 港股输入 9988 显示“港股 · 9988 → 9988.HK”，确认后 9988.HK 回到 active；unit 覆盖 HK/CN/KR 归一。
+        reproduce: Run npm run test:e2e and inspect tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts archive/restore flow.
+        artifact: tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+        result: pass
+      - id: RESULT-AMBIGUITY-001
+        required_evidence_id: re-T001-1
+        ac: AC-01
+        kind: dom
+        evidence_role: primary
+        expected: 美股 tab 输入纯数字 0700 时不写入 active，并显示需要确认市场的状态。
+        actual: E2E 断言歧义文案可见、确认按钮 disabled，localStorage 不包含 0700.HK。
+        reproduce: Run npm run test:e2e and inspect test “歧义数字输入不会写入 active 自选”.
+        artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-33-03.json
+        result: pass
+      - id: RESULT-SUMMARY-001
+        required_evidence_id: re-T001-3
+        ac: AC-01
+        kind: dom
+        evidence_role: primary
+        expected: 自选列表展示市场、归一代码、来源状态、最近价和涨跌摘要。
+        actual: E2E 断言 9988.HK 行展示“正式 · 190.00 · 5.56%”；browser walkthrough 记录 demo fallback 下多行摘要。
+        reproduce: Run npm run test:e2e; optional manual evidence in browser-walkthrough.md.
+        artifact: harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+        result: pass
+      - id: RESULT-ARCHIVE-001
+        required_evidence_id: re-T001-2
+        ac: AC-05
+        kind: dom
+        evidence_role: primary
+        expected: 归档 active 标的时标的变为 archived，绑定 enabled 提醒进入 suspended_by_archive 且不触发。
+        actual: E2E localStorage assertion equals archived/suspended_by_archive/enabled=false; unit archive tests pass.
+        reproduce: Run npm run test:e2e and node --test unit-build watchlist specs.
+        artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-33-03.json
+        result: pass
+      - id: RESULT-RESTORE-001
+        required_evidence_id: re-T001-2
+        ac: AC-05
+        kind: dom
+        evidence_role: primary
+        expected: 重新加入已归档同 identity 标的时恢复 active，并恢复提醒启停意图；reload 后仍保留。
+        actual: E2E 断言 archived 行消失、9988.HK 回到 active、strong-sell checkbox checked；reload 后仍 checked。
+        reproduce: Run npm run test:e2e and inspect archive/restore flow.
+        artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-33-03.json
+        result: pass
+      - id: RESULT-MUTATION-001
+        required_evidence_id: re-T001-4
+        ac: AC-01
+        kind: file
+        evidence_role: cross_check
+        expected: 删除歧义门禁或把 suspended_by_archive 退化为 disabled 时测试失败。
+        actual: mutation-report.md 记录两类 targeted mutation 均失败。
+        reproduce: Read mutation-report.md.
+        artifact: harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+        result: pass
+      - id: RESULT-A11Y-001
+        required_evidence_id: re-T001-3
+        ac: AC-01
+        kind: accessibility_snapshot
+        evidence_role: auxiliary
+        expected: T001 看盘主流程无自动化可访问性严重违规。
+        actual: Playwright axe smoke test passed.
+        reproduce: Run npm run test:e2e.
+        artifact: tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+        result: pass
+  - target: control_contract.e2e_status
+    op: set
+    value:
+      status_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+      status: PASS
+      html_report: playwright-report/index.html
+      traces: []
+      videos: []
+      screenshots: []
+      decision_gate_reasons: []
+  - target: control_contract.ac_trace
+    op: set
+    value:
+      - id: AC-T001-01
+        ac_id: AC-01
+        ac: 添加前预览归一结果
+        surface_type: ui
+        ui_surface: true
+        conclusion: pass
+        command_evidence_ids:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+        result_evidence_ids:
+          - RESULT-NORMALIZE-001
+        evidence:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+          - RESULT-NORMALIZE-001
+        gaps: []
+      - id: AC-T001-02
+        ac_id: AC-01
+        ac: 歧义输入不得静默写入
+        surface_type: ui
+        ui_surface: true
+        conclusion: pass
+        command_evidence_ids:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+        result_evidence_ids:
+          - RESULT-AMBIGUITY-001
+          - RESULT-MUTATION-001
+        evidence:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+          - RESULT-AMBIGUITY-001
+          - RESULT-MUTATION-001
+        gaps: []
+      - id: AC-T001-03
+        ac_id: AC-01
+        ac: 列表显示行情摘要
+        surface_type: ui
+        ui_surface: true
+        conclusion: pass
+        command_evidence_ids:
+          - CMD-E2E-001
+        result_evidence_ids:
+          - RESULT-SUMMARY-001
+        evidence:
+          - CMD-E2E-001
+          - RESULT-SUMMARY-001
+        gaps: []
+      - id: AC-T001-04
+        ac_id: AC-05
+        ac: 归档暂停提醒
+        surface_type: ui
+        ui_surface: true
+        conclusion: pass
+        command_evidence_ids:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+        result_evidence_ids:
+          - RESULT-ARCHIVE-001
+        evidence:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+          - RESULT-ARCHIVE-001
+        gaps: []
+      - id: AC-T001-05
+        ac_id: AC-05
+        ac: 恢复已归档标的与提醒意图
+        surface_type: ui
+        ui_surface: true
+        conclusion: pass
+        command_evidence_ids:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+        result_evidence_ids:
+          - RESULT-RESTORE-001
+        evidence:
+          - CMD-UNIT-001
+          - CMD-E2E-001
+          - RESULT-RESTORE-001
+        gaps: []
+  - target: control_contract.nfr_trace
+    op: set
+    value:
+      - nfr: project_lint
+        conclusion: warn
+        evidence:
+          - CMD-LINT-001
+        rationale: Project lint P003 warns about AGENTS.md guidance keywords; this does not contradict T001 user-observable verification.

@@ -1,0 +1,51 @@
+id: TASK-STOCK-WATCH-T001
+kind: task
+title: 多市场自选归一、列表摘要与归档暂停
+lane: development-lane
+stage: execute
+status: ready
+parent_task_id: T001
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T001-A1
+- T001-A2
+dependencies: []
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+updated_at: '2026-05-23T14:37:02.559411+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__TASK-STOCK-WATCH-T001__update_node_metadata
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    capability: local-stock-watch-workbench
+    requirements:
+    - 多市场自选与归一预览
+    - 自选列表状态摘要
+    scenarios:
+    - 添加前预览归一结果
+    - 歧义输入不得静默写入
+    - 列表显示行情摘要
+    - 归档暂停提醒
+e2e_obligation:
+  risk_level: medium
+  surfaces:
+  - web_ui
+  - realtime
+  required_capabilities:
+  - browser_flow
+  - user_visible_assertion
+  - e2e_run_report
+  accepted_evidence:
+  - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+  - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+stop_if:
+- changes_outside_authorized_paths
+- design_constraint_conflict
+- new_external_dependency
+- new_public_behavior_without_delta_spec

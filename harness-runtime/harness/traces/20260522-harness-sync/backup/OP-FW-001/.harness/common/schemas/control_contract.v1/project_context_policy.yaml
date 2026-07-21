@@ -1,0 +1,40 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+# retrospective-improvement-plan M4.2: policy schema for project-context.md.
+# Consumed by harness project-context lint and harness-gap drift-scan.
+title: project_context_policy
+description: >
+  Validation policy for project-context.md lesson entries. Enforces date
+  format, ordering preference, deduplication, and source-mission traceability.
+type: object
+properties:
+  lesson_date_format:
+    type: string
+    default: "YYYY-MM-DD"
+    description: "Required date format prefix for each lesson line"
+  prefer_ascending_date_order:
+    type: boolean
+    default: true
+    description: "Lessons should appear oldest-first for readability"
+  dedupe_key:
+    type: string
+    enum:
+      - content
+      - content_normalized
+    default: content
+    description: "Field used to identify duplicate lessons"
+  require_source_mission:
+    type: boolean
+    default: false
+    description: >
+      When true, every lesson must include a (source: <mission-id>) annotation.
+      Set to true in environments where audit trail is required.
+  stale_threshold_days:
+    type: integer
+    minimum: 1
+    default: 365
+    description: "Lessons older than this many days are flagged as potentially stale by drift-scan"
+  max_lessons_without_review:
+    type: integer
+    minimum: 10
+    default: 50
+    description: "Emit WARN if project-context.md has more than this many lessons without a drift-scan"

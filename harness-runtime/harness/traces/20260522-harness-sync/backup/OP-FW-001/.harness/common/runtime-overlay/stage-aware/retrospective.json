@@ -1,0 +1,19 @@
+{
+  "_comment": "retrospective-improvement-plan M1.x stage-aware overlay. Retrospective is a consumer of mission-wide data: forbids all writes to source mission artifacts and runtime state; allows retrospective.md write + project-context.md edit (where lessons are persisted) + harness CLI.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Write(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/retrospective.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/retrospective.contract.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/stages/*/retrospective.md)",
+      "Edit(harness-runtime/harness/stages/*/retrospective.md)",
+      "Edit(harness-runtime/project-context.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

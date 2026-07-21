@@ -1,0 +1,36 @@
+{
+  "_comment": "Stage-4 M1.3 + 偏离修正1 (2026-05-15) + behavior-graph 重设计 (2026-05-29): design+interaction stage overlay (H4 naming). When stage='interaction', merges into settings.json. Visual-interaction-manifest direct write is denied — manifest must come from `harness evidence visual manifest` CLI. interaction-spec/behavior-graph.yaml + surface-model.md 是手写真相源（允许 Write via interaction-spec/**）；interaction-spec/views/** 是 `harness interaction project` 的生成产物，禁止手写（deny）。 WebFetch/WebSearch are routed through ask channel since visual evidence collection requires user authorization. Cross-lane deny added (偏离修正1) to mirror solution / technical_analysis overlays — when in interaction lane, writes to solution.md / tech-design.md / *.contract.yaml of other lanes are physically blocked. The operable prototype lives in the project-owned prototype project dir (prototype.interactive_prototype.prototype_project_root, recommended default prototype/), not under project-knowledge/ and not under the mission artifact; provenance comes from that dir's git history, not a knowledge-side registry. A non-default prototype_project_root is not pre-allowed and will prompt, same as the frontend_engineering route's project root.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(**/visual-interaction-manifest.json)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/interaction-spec/views/**)",
+      "Edit(harness-runtime/harness/artifacts/*/interaction/interaction-spec/views/**)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Write(harness-runtime/harness/stages/*/contracts/interaction.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/interaction.contract.yaml)",
+      "Write(harness-runtime/harness/artifacts/*/solution/solution.md)",
+      "Edit(harness-runtime/harness/artifacts/*/solution/solution.md)",
+      "Write(harness-runtime/harness/artifacts/*/technical-analysis/tech-design.md)",
+      "Edit(harness-runtime/harness/artifacts/*/technical-analysis/tech-design.md)",
+      "Write(harness-runtime/harness/stages/*/contracts/solution.contract.yaml)",
+      "Write(harness-runtime/harness/stages/*/contracts/tech-design.contract.yaml)"
+    ],
+    "ask": [
+      "WebFetch(*)",
+      "WebSearch(*)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/artifacts/*/interaction/interaction.md)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/interaction-spec/**)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/visual-interaction/variants/**)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/visual-interaction/evidence/**)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/visual-interaction/design-brief.md)",
+      "Write(prototype/**)",
+      "Edit(prototype/**)",
+      "Bash(harness *)"
+    ]
+  }
+}

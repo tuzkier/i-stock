@@ -1,0 +1,23 @@
+{
+  "_comment": "code-review-improvement-plan M1.2 stage-aware overlay. Pure-review stage: denies direct writes to code-review.contract.yaml and runtime state; allows code-review.md write + harness CLI. Reviewer roles already carry readonly via M1.1 (intake reuse). Git dangerous ops are denied at baseline (intake _baseline.json).",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Write(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/code-review.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/code-review.contract.yaml)",
+      "Edit(harness-runtime/config/harness.yaml)",
+      "Edit(harness-runtime/config/model-routing.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/artifacts/*/code-review/code-review.md)",
+      "Edit(harness-runtime/harness/artifacts/*/code-review/code-review.md)",
+      "Bash(harness *)",
+      "Bash(git diff *)",
+      "Bash(git status *)",
+      "Bash(git log *)"
+    ]
+  }
+}

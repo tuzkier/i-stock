@@ -1,0 +1,151 @@
+patches:
+  - target: control_contract.execution_result.traceability_matrix
+    op: set
+    value:
+      - decision: D-01
+        traces_to: [AC-02, AC-03, AC-05, FR-02, FR-03, FR-05]
+        extended_refs: [BUC-02, BUC-03, BUC-04, BUC-06, SURF-DETAIL]
+      - decision: D-02
+        traces_to: [AC-01, AC-05, FR-01]
+        extended_refs: [BUC-01, BO-001, BO-002, SURF-WATCHLIST]
+      - decision: D-03
+        traces_to: [AC-02, AC-03, AC-04, FR-06]
+        extended_refs: [BUC-07, BO-007, SURF-SOURCE, FLOW-SOURCE-DEGRADED]
+      - decision: D-04
+        traces_to: [FR-02, FR-03, FR-04, NFR-06]
+        extended_refs: [BUC-02, BUC-04, BUC-05, BO-004, BO-005]
+      - decision: D-05
+        traces_to: [AC-03, AC-04, FR-03, FR-04]
+        extended_refs: [BUC-04, BUC-05, SURF-ALERTS]
+      - decision: D-06
+        traces_to: [AC-05, FR-05]
+        extended_refs: [BUC-06, BO-008, FLOW-RESTORE-WORKSPACE]
+      - decision: D-07
+        traces_to: [AC-01, AC-02, AC-03, AC-04, AC-05]
+        extended_refs: [BUC-01, BUC-02, BUC-03, BUC-04, BUC-05, BUC-06, BUC-07, VIZ-001]
+      - decision: D-08
+        traces_to: [NFR-06, FR-03, FR-04]
+        extended_refs: [mission-agent-engineering-none, audit-boundary]
+  - target: control_contract.decisions
+    op: set
+    value:
+      - id: D-01
+        title: 前端架构边界与图表库路线
+        chosen: 本地单体 React SPA + Express 本地代理 + lightweight-charts 延续
+        rejected: [迁移到 KLineChart 或更重图表栈作为本阶段主路线]
+        rationale: 保持现有本地栈和成熟图表库，覆盖主图/成交量/副图交互，同时避免图表引擎迁移分散 MTS、提醒和恢复闭环。
+        traces_to: [AC-02, AC-03, AC-05, FR-02, FR-03, FR-05]
+        reversibility: medium
+        confidence: high
+        appetite: 当前阶段保持本地工作台主路由，图表替换仅作为后续单独决策。
+        bet_boundary: 不重写图表核心引擎，不改变本地网页边界。
+        circuit_breaker: 若 lightweight-charts 无法满足主图/成交量/副图或关键交互，再发起图表库替换 Decision Gate。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, frontend-engineer]
+        informed: [stage-gate, verify]
+      - id: D-02
+        title: 多市场代码识别与自选准入
+        chosen: 显式市场提示 + 归一结果预览 + 歧义门禁
+        rejected: [静默自动猜测市场并直接入库]
+        rationale: 自选标的是领域身份主键，数字代码歧义必须在加入前可见和可确认，避免错误 identity 污染提醒与恢复。
+        traces_to: [AC-01, AC-05, FR-01]
+        reversibility: medium
+        confidence: high
+        appetite: 在加入自选前解决市场歧义。
+        bet_boundary: 不引入账号或云端代码解析服务。
+        circuit_breaker: 若市场规则不能确定候选归一代码，必须阻断 active 化并展示错误态。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, interaction-spec]
+        informed: [verify]
+      - id: D-03
+        title: 行情源、缓存与降级边界
+        chosen: MarketDataSource 显式边界 + 短 TTL cache + formal/demo_fallback/unavailable 可见降级
+        rejected: [静默 fallback 保证页面可运行]
+        rationale: 供应商未授权和限流风险必须通过来源边界隔离，并穿透到 SURF-SOURCE 与局部不可解释状态，不能伪装真实行情。
+        traces_to: [FR-06, AC-02, AC-03, AC-04]
+        reversibility: high
+        confidence: high
+        appetite: 保持供应商可替换和降级可审计。
+        bet_boundary: cache 只做短期可用性，不承担行情持久化。
+        circuit_breaker: 若无法显示来源模式和降级原因，不允许把数据用于 MTS 或提醒解释。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, backend-engineer]
+        informed: [code-review, verify]
+      - id: D-04
+        title: 图表指标与 MTS 计算位置
+        chosen: 共享纯 TypeScript 领域层 + 浏览器端确定性计算，必要时再迁移 worker
+        rejected: [Express 后端预计算指标和信号]
+        rationale: 指标、MTS 和提醒需要同输入同输出的可回放语义；后端保持来源适配职责，避免业务策略和 UI 状态分裂。
+        traces_to: [FR-02, FR-03, FR-04, NFR-06]
+        reversibility: medium
+        confidence: high
+        appetite: 先建立纯函数领域流水线，再视性能决定 worker。
+        bet_boundary: 不把策略计算塞入 UI 组件或 Express 代理。
+        circuit_breaker: 若浏览器端计算性能无法满足目标样本量，technical_analysis 必须提出 worker 分流方案。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, frontend-engineer]
+        informed: [tdd-reviewer, verify]
+      - id: D-05
+        title: MTS 信号与提醒规则编排
+        chosen: 聚合 + Policy + Domain Event 流水线
+        rejected: [UI 组件内直接判断信号与提醒状态]
+        rationale: MtsSignal 与 AlertRule 必须可解释、可回放、可审计；风控优先级和归档暂停应由领域策略保证。
+        traces_to: [AC-03, AC-04, FR-03, FR-04]
+        reversibility: medium
+        confidence: high
+        appetite: 在 solution 阶段固定编排方向，枚举细节交给 technical_analysis。
+        bet_boundary: 不冻结全部 reason code / invalidator 枚举，但禁止自由文本进入主逻辑。
+        circuit_breaker: 若 MTS taxonomy 无法形成稳定语义类别，必须回到方案层重新决策信号边界。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, test-planning-expert]
+        informed: [verify]
+      - id: D-06
+        title: 本地持久化与恢复粒度
+        chosen: 版本化 localStorage snapshot + 标的级布局恢复 + 默认布局回退
+        rejected: [非版本化整体应用状态序列化]
+        rationale: 本地连续使用需要 schema 可演进和恢复可回退；布局以标的级为主，失败时回到默认看盘布局。
+        traces_to: [AC-05, FR-05]
+        reversibility: medium
+        confidence: medium
+        appetite: 先用 localStorage 版本化快照承载本地恢复。
+        bet_boundary: 不引入账号、云同步或 IndexedDB，除非后续容量证据触发新决策。
+        circuit_breaker: 若 snapshot 迁移失败影响首屏看盘，必须降级到默认布局并保留自选/提醒可恢复证据。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, frontend-engineer]
+        informed: [verify]
+      - id: D-07
+        title: 可验证性与 E2E 方案
+        chosen: fixture-first E2E + live source 非门禁 smoke
+        rejected: [live Yahoo Finance 作为 E2E 门禁]
+        rationale: 外部行情不稳定，门禁必须建立在可回放 fixture、mock source、localStorage 恢复和 interaction-spec locator 上。
+        traces_to: [AC-01, AC-02, AC-03, AC-04, AC-05]
+        reversibility: high
+        confidence: high
+        appetite: 以稳定用户路径证明 AC，不把供应商可用性当产品门禁。
+        bet_boundary: live smoke 只能提供补充信号，不能替代 fixture-first 回归。
+        circuit_breaker: 若缺少稳定 locator 或 fixture，verify 不得宣称 AC 完成。
+        driver: solution-architect
+        approver: user
+        contributors: [technical_analysis, test-planning-expert]
+        informed: [code-review, verify]
+      - id: D-08
+        title: Agent 运行时边界
+        chosen: 产品运行时不引入 Agent，仅保留阶段治理 Agent
+        rejected: [用运行时 Agent 自动解释行情、生成提醒或辅助交易判断]
+        rationale: 上游明确无 Agent 组件，MTS 和提醒链路必须 deterministic；Agent 不得替代信号生成、提醒触发或任何交易动作。
+        traces_to: [NFR-06, FR-03, FR-04]
+        reversibility: high
+        confidence: high
+        appetite: 明确拒绝运行时 Agent，保持产品行为确定性。
+        bet_boundary: 后续若引入 Agent，只能作为非默认、只读、可关闭辅助层，并重新发起 Decision Gate。
+        circuit_breaker: 任何进入 MTS、AlertRule 或交易路径的 Agent 设计都必须阻断。
+        driver: solution-architect
+        approver: user
+        contributors: [agent-capability-reviewer, technical_analysis]
+        informed: [stage-gate, verify]

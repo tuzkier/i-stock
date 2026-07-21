@@ -1,0 +1,80 @@
+patches:
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-CONTROL-001
+        role: execute-control-plane-executor
+        status: BLOCKED
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-result.contract.yaml
+        fulfilled_obligations: []
+        evidence_refs:
+          - EV-BASELINE-001
+          - EV-REGRESSION-001
+          - STOP-T001-A1-001
+        open_questions:
+          - 是否允许把 src/App.tsx 加入 T001-A1/T001-A2 写入范围，以完成用户可见接线。
+        concerns:
+          - 不修改 src/App.tsx 时，只能新增未接线组件，无法满足差量规格的用户可见场景。
+      - id: EXE-REVIEW-001
+        role: spec-reviewer
+        status: BLOCKED
+        produced_artifacts: []
+        fulfilled_obligations: []
+        evidence_refs:
+          - RV-SPEC-T001-BLOCKED
+        open_questions: []
+        concerns:
+          - Scope blocker prevents readonly spec review from certifying completion.
+  - target: control_contract.tdd_evidence
+    op: set
+    value:
+      - id: EV-RED-001
+        type: red_report
+        phase: red
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: blocked-before-red-test
+        exit_code: BLOCKED
+        failure_signal: Scope boundary blocked before writing failing test.
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-GREEN-001
+        type: green_report
+        phase: green
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: npm run build
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-REGRESSION-001
+        type: regression_report
+        phase: regression
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: npm run build
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-TOOLCHAIN-001
+        type: toolchain_status
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: harness-runtime/bin/harness control frame --mission 20260522-stock-watch-system --json
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001

@@ -1,0 +1,19 @@
+schema_version: 1
+generated: true
+generated_at: '2026-05-23T14:38:08.295045+00:00'
+lanes:
+  requirement-lane: []
+  product-definition-lane: []
+  solution-lane: []
+  technical-analysis-lane: []
+  breakdown-lane:
+  - REQ-STOCK-WATCH-SYSTEM
+  development-lane:
+  - TASK-STOCK-WATCH-T001
+  - TASK-STOCK-WATCH-T002
+  - TASK-STOCK-WATCH-T003
+  - TASK-STOCK-WATCH-T004
+  - TASK-STOCK-WATCH-T005
+  - TASK-STOCK-WATCH-T006
+  verification-lane: []
+  delivery-lane: []

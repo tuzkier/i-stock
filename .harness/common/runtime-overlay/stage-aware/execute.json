@@ -1,0 +1,24 @@
+{
+  "_comment": "execute-improvement-plan M1.1 stage-aware overlay (static base). Denies direct writes of upstream stage artifacts (execution-brief.md and contract.yaml) and mission-status / work-graph runtime state. Allows execution-result.md writes plus the harness CLI bash surface. Dynamic per-task authorized_paths / prohibited_paths translation is M5 anchor (CROSS-STAGE-OVERLAY-PROTOCOL) and is applied incrementally on top of this overlay via `harness execute apply-overlay --mission <id> [--task <atomic-id>]`. Upstream design lane artifact protection (solution.md / tech-design.md / interaction.md) is intentionally left to the lane-action overlays so this overlay does not collide with the design lane switch contract (same trade-off as breakdown.json).",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Write(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/artifacts/*/breakdown/execution-brief.md)",
+      "Edit(harness-runtime/harness/artifacts/*/breakdown/execution-brief.md)",
+      "Write(harness-runtime/harness/stages/*/contracts/execution-brief.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/execution-brief.contract.yaml)",
+      "Write(harness-runtime/harness/stages/*/contracts/execution-result.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/execution-result.contract.yaml)",
+      "Edit(harness-runtime/config/harness.yaml)",
+      "Edit(harness-runtime/config/model-routing.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/artifacts/*/execute/execution-result.md)",
+      "Edit(harness-runtime/harness/artifacts/*/execute/execution-result.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

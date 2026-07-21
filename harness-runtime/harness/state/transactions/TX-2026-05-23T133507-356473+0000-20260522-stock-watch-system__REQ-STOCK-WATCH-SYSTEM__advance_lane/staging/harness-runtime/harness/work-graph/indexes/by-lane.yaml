@@ -1,0 +1,12 @@
+schema_version: 1
+generated: true
+lanes:
+  requirement-lane: []
+  product-definition-lane: []
+  solution-lane: []
+  technical-analysis-lane: []
+  breakdown-lane: []
+  development-lane:
+  - REQ-STOCK-WATCH-SYSTEM
+  verification-lane: []
+  delivery-lane: []

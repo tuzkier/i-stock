@@ -1,0 +1,50 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required: [role_policy]
+properties:
+  role_policy:
+    type: object
+    required: [stage, required_execution_roles, required_review_roles]
+    properties:
+      stage:
+        type: string
+        minLength: 1
+      work_graph_lane:
+        type: string
+        minLength: 1
+      required_execution_roles:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      required_review_roles:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      conditional_roles:
+        type: array
+        items:
+          type: object
+          required: [role, when]
+          properties:
+            role:
+              type: string
+              minLength: 1
+            when:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                minLength: 1
+            kind:
+              enum: [execution, review]
+            carrier:
+              enum: [agent, skill]
+            skip_reason:
+              type: string
+      skip_reason:
+        type: string
+additionalProperties: false

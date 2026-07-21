@@ -1,0 +1,99 @@
+{
+  "_comment": "Stage-4 design+technical_analysis hook manifest. Contract target is tech-design.contract.yaml; stage=technical_analysis in gate completion check.",
+  "stage": "design.technical_analysis",
+  "hooks": [
+    {
+      "id": "design-tech-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set tech-design.contract.yaml pending_reviewer_recheck=true after tech-design.md edit."
+    },
+    {
+      "id": "design-tech-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when tech-design.contract.yaml pending_reviewer_recheck=true."
+    },
+    {
+      "id": "design-tech-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block harness mission stage complete technical_analysis when gate has not passed."
+    }
+  ]
+}
+#!/usr/bin/env python3
+"""Stage-4 design+technical_analysis PreToolUse hook: block harness gate/contract
+advance when tech-design.contract.yaml pending_reviewer_recheck=true.
+Exit conventions: 0 = allow; 2 = block.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+try:
+    import yaml
+except ImportError:  # pragma: no cover
+    yaml = None
+
+_ADVANCE_CMD_RE = re.compile(r"\bharness\s+(?:gate|contract)\s+advance\b")
+_MISSION_FLAG_RE = re.compile(r"--mission\s+([^\s'\"]+)")
+
+
+def _contract_path(cwd: str, mission_id: str) -> Path:
+    return (
+        Path(cwd) / "harness-runtime" / "harness" / "stages"
+        / mission_id / "contracts" / "tech-design.contract.yaml"
+    )
+
+
+def _pending(contract_path: Path) -> bool:
+    if not contract_path.exists() or yaml is None:
+        return False
+    try:
+        data = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, OSError):
+        return False
+    if not isinstance(data, dict):
+        return False
+    contract = data.get("control_contract") if isinstance(data.get("control_contract"), dict) else data
+    if not isinstance(contract, dict):
+        return False
+    eff = contract.get("effectiveness_review")
+    return bool(isinstance(eff, dict) and eff.get("pending_reviewer_recheck"))
+
+
+def main() -> int:
+    try:
+        payload = json.load(sys.stdin)
+    except (json.JSONDecodeError, ValueError):
+        return 0
+    if payload.get("tool_name") != "Bash":
+        return 0
+    command = (payload.get("tool_input") or {}).get("command")
+    if not isinstance(command, str) or not _ADVANCE_CMD_RE.search(command):
+        return 0
+    m = _MISSION_FLAG_RE.search(command)
+    if not m:
+        return 0
+    cwd = payload.get("cwd") or str(Path.cwd())
+    if _pending(_contract_path(cwd, m.group(1))):
+        print(
+            "HarnessV2 design+technical_analysis hook BLOCKED: "
+            "tech-design.contract.yaml has pending_reviewer_recheck=true. "
+            "Re-run technical-design-effectiveness-reviewer before advancing.",
+            file=sys.stderr,
+        )
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

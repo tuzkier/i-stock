@@ -1,0 +1,83 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+# retrospective-improvement-plan M4.2: policy schema for retrospective artifacts.
+# Consumed by harness contract check and gate run --stage retrospective.
+title: retrospective_policy
+description: >
+  Validation policy for the retrospective stage. Enforces: required sections
+  in retrospective.md, no embedded control YAML, valid decision shapes,
+  change_type=applied only for project-context targets.
+type: object
+properties:
+  required_sections:
+    type: array
+    description: "Sections that retrospective.md must contain"
+    default:
+      - "执行摘要"
+      - "发现的问题"
+      - "根因分析"
+      - "改进行动"
+      - "Contract: contracts/retrospective.contract.yaml"
+  forbidden_inline_yaml_sections:
+    type: array
+    description: "Section headings that must not appear in retrospective.md"
+    default:
+      - "## memory_update_contract"
+      - "## execution_result"
+      - "## role_verdicts"
+  decision_source_enum:
+    type: array
+    description: "Allowed sources for memory update decisions"
+    default:
+      - quality-control
+      - bug-fix
+      - retrospective
+      - agent-eval
+      - human-approval
+  applied_change_constraint:
+    type: object
+    description: >
+      When change_type=applied, target must be project-context and
+      target_ref must point to the lesson section.
+    properties:
+      allowed_targets:
+        type: array
+        default:
+          - project-context
+      target_ref_pattern:
+        type: string
+        default: "project-context.md#历史教训"
+  proposed_change_constraint:
+    type: object
+    description: >
+      When change_type=proposed or status=proposed, template-source targets
+      must have requires_human_approval=true and must not have changed any
+      file in package/common.
+    properties:
+      template_source_targets:
+        type: array
+        default:
+          - rule
+          - skill
+          - agent
+          - schema
+          - contract_template
+          - cli
+          - methodology
+  dora_signals:
+    type: object
+    description: "Lightweight mission-local DORA-style signals captured for trend analysis."
+    properties:
+      lead_time:
+        type: string
+      rework_count:
+        type: integer
+        minimum: 0
+      review_hold_count:
+        type: integer
+        minimum: 0
+      verification_failure_count:
+        type: integer
+        minimum: 0
+      rollback_followup_count:
+        type: integer
+        minimum: 0

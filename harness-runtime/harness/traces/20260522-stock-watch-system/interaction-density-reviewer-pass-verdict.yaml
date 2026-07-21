@@ -1,0 +1,37 @@
+id: RVW-INTERACTION-REVIEWER-20260523-001
+role: interaction-reviewer
+verdict: PASS
+summary: 默认 focus / dense 语义、中文文案、BUC-05 到 BUC-08 可达路径、spec / prototype / contract / PRD 一致性已收敛，本轮 interaction 产物可作为下游 AI handoff 合同。
+dispatch:
+  subagent_id: 019e5497-0a77-7df0-a663-353e20002184
+  model: gpt-5.4
+  execution_mode: spawn_agent
+  started_at: "2026-05-23T11:27:00Z"
+  completed_at: "2026-05-23T11:38:37Z"
+reviewed_obligations:
+  - OBL-INTERACTION-001
+review_basis:
+  work_graph_artifact:
+    node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+  artifacts:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+evidence:
+  - ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-08.md#interaction-rules
+    supports: 布局恢复失败统一回到默认日常看盘 focus。
+  - ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+    supports: spec_vs_prd_drift none、prototype_vs_spec_drift none、feedback_not_synced none、copy_language pass。
+  - ref: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+    supports: density_feedback_synced pass、unresolved_blockers 0、interaction contract ready for reviewer verdict。
+  - ref: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+    supports: 默认 focus、人类可操作原型、daily-dock / top-controls / mobile_tab / restore-banner 提供 BUC-05 到 BUC-08 可达路径。
+  - ref: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/evidence/seed-state.md
+    supports: desktop focus 默认、desktop dense 诊断 / 验收、mobile_tab 视口覆盖。
+  - ref: harness-runtime/harness/traces/20260522-stock-watch-system
+    supports: spec-check、ux-quality-check、visual-coverage-check、feedback-sync-check、locator-check、alignment check 全部 PASS。
+blocking_gaps: []

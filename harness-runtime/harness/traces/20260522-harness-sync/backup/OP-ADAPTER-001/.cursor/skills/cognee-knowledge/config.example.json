@@ -1,0 +1,7 @@
+{
+  "_comment": "仅用于 cognee-search.sh 直连 REST；与 Cursor 里 Cognee 官方 MCP 无关。api_url 为后端 API，不是前端页面。未知键可被忽略。",
+  "api_url": "http://localhost:18777",
+  "api_token": "粘贴 Bearer JWT（登录接口返回的 access_token）",
+  "default_dataset": "跨境",
+  "default_top_k": 10
+}

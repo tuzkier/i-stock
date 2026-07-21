@@ -1,0 +1,23 @@
+patches:
+- target: control_contract.acceptance_result.user_checkpoint
+  op: set
+  value:
+    status: approved
+    approval_id: APR-20260607-005
+    original_user_text_ref: 用户确认接受交付
+    risk_summary: null
+- target: control_contract.delivery_package.acceptance_state_ref
+  op: set
+  value:
+    path: harness-runtime/harness/stages/20260522-stock-watch-system/acceptance-result.md
+    status: accepted
+    user_checkpoint_status: approved
+    approval_id: APR-20260607-005
+- target: control_contract.delivery_package.handoff_evidence
+  op: set
+  value:
+    pause_required: true
+    delivery_gate_report_path: null
+    approval_id: APR-20260607-005
+    next_stage_candidate: finishing-branch
+    requires_user_resume: true

@@ -1,0 +1,177 @@
+patches:
+- target: control_contract.artifact
+  op: set
+  value: delivery
+- target: control_contract.acceptance_result
+  op: set
+  value:
+    mission_id: 20260522-stock-watch-system
+    stage: delivery
+    artifact: acceptance-result
+    delivery_entry:
+    - type: url
+      url_or_command: http://localhost:5174
+      credential_or_fixture_ref: local fixtures and browser localStorage
+      commit_or_branch: null
+    - type: cli
+      url_or_command: PORT=5174 npm run dev
+      credential_or_fixture_ref: null
+      commit_or_branch: null
+    - type: cli
+      url_or_command: npm run build
+      credential_or_fixture_ref: null
+      commit_or_branch: null
+    - type: cli
+      url_or_command: node --test harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/*.mjs
+      credential_or_fixture_ref: local replay fixtures
+      commit_or_branch: null
+    - type: cli
+      url_or_command: ./node_modules/.bin/playwright test --config harness-runtime/harness/traces/20260522-stock-watch-system/playwright-no-webserver.config.ts --reporter=list --trace=on
+      credential_or_fixture_ref: local browser/dev server
+      commit_or_branch: null
+    acceptance_trace:
+    - acceptance_id: T002
+      expected: 默认工作台展示主图、成交量、副图、OHLC、来源健康与指标切换；demo/stale/unavailable 降级语义可见且不伪装实时成功。
+      actual: E2E 结果显示 workbench 默认、指标切换、数据不足、demo fallback、stale、unavailable 全部通过。
+      reproduce_steps:
+      - PORT=5174 npm run dev
+      - 浏览器打开 http://localhost:5174
+      - 观察默认工作台、来源健康和指标切换
+      - 复核 CMD-VERIFY-E2E-RERUN
+      verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+      acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+      result_evidence_id: EV-RESULT-T002-WORKBENCH
+      result_status: pass
+    - acceptance_id: T003
+      expected: MTS 卡展示结构化字段、ReasonRegistry 与技术提醒口径，不出现收益承诺、胜率或确定性买卖建议。
+      actual: E2E 与 unit/replay 均通过；MTS 卡、非建议文案和 unavailable 降级已验证。
+      reproduce_steps:
+      - PORT=5174 npm run dev
+      - 浏览器打开 http://localhost:5174
+      - 查看 MTS 面板
+      - 复核 CMD-VERIFY-UNIT-REPLAY 与 CMD-VERIFY-E2E-RERUN
+      verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+      acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+      result_evidence_id: EV-RESULT-T003-MTS
+      result_status: pass
+    - acceptance_id: T004
+      expected: 可创建分类提醒；触发后可确认；归档后绑定提醒暂停；scheduled missed 只记录历史，不补发触发。
+      actual: alerts panel 的创建、确认、归档暂停路径通过；unit/replay 也通过。
+      reproduce_steps:
+      - PORT=5174 npm run dev
+      - 打开提醒面板
+      - 创建、触发、确认、归档提醒
+      - 复核 CMD-VERIFY-UNIT-REPLAY 与 CMD-VERIFY-E2E-RERUN
+      verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+      acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+      result_evidence_id: EV-RESULT-T004-ALERTS
+      result_status: pass
+    - acceptance_id: T005
+      expected: 关闭并重开浏览器后恢复 selectedSymbol、alerts、per-symbol dense layout、mobile tab；坏布局可回退且页面仍可用。
+      actual: restore-layout 的 E2E 路径通过；unit/replay 也通过。
+      reproduce_steps:
+      - PORT=5174 npm run dev
+      - 进行一次本地状态写入
+      - 重开浏览器或刷新页面
+      - 检查恢复结果并复核 CMD-VERIFY-E2E-RERUN
+      verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+      acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+      result_evidence_id: EV-RESULT-T005-RESTORE
+      result_status: pass
+    - acceptance_id: T006
+      expected: 冻结样本、回放与浏览器门禁覆盖 AC-01 到 AC-05 核心验收场景。
+      actual: gate acceptance matrix 与 unit/replay matrix 均通过；全量 E2E 24 条通过。
+      reproduce_steps:
+      - PORT=5174 npm run dev
+      - 运行 unit/replay matrix
+      - 运行 Playwright E2E rerun
+      - 复核 gate matrix
+      verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+      acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+      result_evidence_id: EV-RESULT-T006-GATE
+      result_status: pass
+    risk_acceptance: []
+    user_checkpoint:
+      status: pending_user_acceptance
+      approval_id: null
+      original_user_text_ref: null
+      risk_summary: null
+- target: control_contract.delivery_package
+  op: set
+  value:
+    acceptance_state_ref:
+      path: harness-runtime/harness/stages/20260522-stock-watch-system/acceptance-result.md
+      status: ready-for-acceptance
+      user_checkpoint_status: pending_user_acceptance
+    scope_summary: T002 到 T006 已完成验证并进入交付：默认工作台、MTS、提醒、恢复和冻结样本验收矩阵均可本地验收。
+    evidence_links:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/acceptance-result.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/acceptance-result.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/verify__advance_lane.json
+    known_gaps:
+    - id: KG-RED-TRACE-GRANULARITY
+      description: final-round red artifact 粒度可继续增强。
+      severity: advisory
+      user_impact: 不影响当前验收，但后续审计证据可更细。
+      source: code-review.md
+    - id: KG-MTS-INPUT-SINGLE-SOURCE
+      description: MTS 内部指标输入可进一步单源化。
+      severity: advisory
+      user_impact: 当前用户可见结果已通过，但内部实现存在未来漂移风险。
+      source: code-review.md
+    - id: KG-SCN-CLOSURE-WARN
+      description: 全 mission 闭包检查提示 SCN-01 到 SCN-05 悬空引用。
+      severity: advisory
+      user_impact: 不影响当前用户验收，但影响文档集闭包洁净度。
+      source: stage_gate.check_closure
+    - id: KG-PROVIDER-SLA
+      description: 真实外部行情供应商 SLA / auth / quota 未纳入本次范围。
+      severity: advisory
+      user_impact: 生产化接入仍需单独验证；当前本地验收不受影响。
+      source: mission-contract.md
+    follow_ups:
+    - id: FU-RED-TRACE-GRANULARITY
+      description: 补更细的 final-round red / regression trace。
+      severity: advisory
+      graph_op: none
+      none_reason: 不阻断当前本地验收。
+    - id: FU-MTS-INPUT-SINGLE-SOURCE
+      description: 将 MTS 输入进一步收敛到 MarketObservation.indicators。
+      severity: advisory
+      graph_op: none
+      none_reason: 当前用户可见结果已通过。
+    - id: FU-SCN-CLOSURE-WARN
+      description: 清理旧 contract 中 SCN-01 到 SCN-05 的定义或引用。
+      severity: advisory
+      graph_op: none
+      none_reason: check_closure 当前为灰度 WARN。
+    handoff_evidence:
+      pause_required: true
+      delivery_gate_report_path: null
+      approval_id: null
+      next_stage_candidate: finishing-branch
+      requires_user_resume: true
+    dora_signals:
+      lead_time: 2026-05-22 到 2026-06-07
+      rework_count: 1
+      review_hold_count: 0
+      verification_failure_count: 1
+      rollback_followup_count: 0
+- target: control_contract.dispatches
+  op: set
+  value:
+  - role: release-readiness-expert
+    execution_mode: subagent
+    model: gpt-5.4-mini
+    started_at: '2026-06-07T06:05:00Z'
+    completed_at: '2026-06-07T06:05:00Z'
+    verdict: DRAFT_PRODUCED
+    artifact_inputs:
+    - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml

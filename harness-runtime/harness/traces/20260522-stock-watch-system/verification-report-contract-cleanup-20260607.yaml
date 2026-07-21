@@ -1,0 +1,200 @@
+patches:
+- target: control_contract.execution_result
+  op: set
+  value:
+    id: exe-verify-t002-t006
+    role: verification-engineer
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+    fulfilled_obligations: []
+    decision_log:
+    - id: verify-scope-current-batch
+      decision: verify_current_batch_slice
+      rationale: Current verification evidence covers the active batch slice after code-review gate advance.
+    - id: verify-e2e-rerun-with-server
+      decision: rerun_e2e_after_starting_dev_server
+      rationale: First no-webserver E2E attempt failed with ERR_CONNECTION_REFUSED because port 5174 was not listening; the same command passed after starting the dev server.
+    traceability_matrix:
+    - source: AC-02
+      target:
+      - result-t002-workbench
+      - cmd-e2e-2026-06-07-05-47-19
+    - source: AC-03
+      target:
+      - result-t003-mts
+      - cmd-unit-2026-06-07-05-46-38
+      - cmd-e2e-2026-06-07-05-47-19
+    - source: AC-04
+      target:
+      - result-t004-alerts
+      - cmd-unit-2026-06-07-05-46-38
+      - cmd-e2e-2026-06-07-05-47-19
+    - source: AC-05
+      target:
+      - result-t005-restore
+      - result-t006-gate
+      - cmd-unit-2026-06-07-05-46-38
+      - cmd-e2e-2026-06-07-05-47-19
+    evidence_refs:
+    - cmd-unit-2026-06-07-05-46-31
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    - result-t002-workbench
+    - result-t003-mts
+    - result-t004-alerts
+    - result-t005-restore
+    - result-t006-gate
+    open_questions: []
+    concerns:
+    - Final-round red artifact granularity can be improved later; current regression evidence is passing and no High blocker remains.
+- target: control_contract.obligations
+  op: set
+  value:
+  - id: OBL-VERIFY-T002-T006
+    mission_id: 20260522-stock-watch-system
+    type: verification
+    risk: medium
+    traces_to:
+      ac:
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+    required_evidence:
+    - command_result
+    - result_evidence
+    - e2e_result
+    required_roles:
+    - verification-effectiveness-reviewer
+    blocking: true
+    source: mission_slice
+- target: control_contract.result_evidence
+  op: set
+  value:
+  - id: result-t002-workbench
+    acceptance_id: AC-02
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: Workbench shows chart, volume, secondary pane, OHLC, source health, indicator switching, and visible degraded source states.
+    actual: Playwright output passed workbench default, indicator switch, insufficient data, demo fallback, stale, and unavailable cases.
+    reproduce: Start PORT=5174 npm run dev, then run the no-webserver Playwright config.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: result-t003-mts
+    acceptance_id: AC-03
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: MTS card exposes structured fields and non-advice copy; unavailable source degrades MTS.
+    actual: Playwright MTS card tests passed; unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: result-t004-alerts
+    acceptance_id: AC-04
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: Alert rules can be created, triggered, acknowledged, suspended by archive, and scheduled missed is recorded without backfilling trigger.
+    actual: Alerts panel E2E paths passed; unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: result-t005-restore
+    acceptance_id: AC-05
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: Browser reload restores selectedSymbol, alerts, per-symbol dense layout, mobile tab, and corrupt layout fallback remains usable.
+    actual: Restore-layout E2E paths passed; unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: result-t006-gate
+    acceptance_id: AC-05
+    kind: trace
+    evidence_role: primary
+    expected: Fixture-first AC matrix and replay corpus cover AC-01 through AC-05.
+    actual: Gate acceptance matrix E2E passed and unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+- target: control_contract.acceptance_trace
+  op: set
+  value:
+  - id: trace-ac-02-workbench
+    acceptance_id: AC-02
+    surface_type: ui
+    conclusion: pass
+    command_evidence_ids:
+    - cmd-e2e-2026-06-07-05-47-19
+    result_evidence_ids:
+    - result-t002-workbench
+    evidence:
+    - cmd-e2e-2026-06-07-05-47-19
+    - result-t002-workbench
+    gaps: []
+  - id: trace-ac-03-mts
+    acceptance_id: AC-03
+    surface_type: ui
+    conclusion: pass
+    command_evidence_ids:
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    result_evidence_ids:
+    - result-t003-mts
+    evidence:
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    - result-t003-mts
+    gaps: []
+  - id: trace-ac-04-alerts
+    acceptance_id: AC-04
+    surface_type: ui
+    conclusion: pass
+    command_evidence_ids:
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    result_evidence_ids:
+    - result-t004-alerts
+    evidence:
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    - result-t004-alerts
+    gaps: []
+  - id: trace-ac-05-restore
+    acceptance_id: AC-05
+    surface_type: ui
+    conclusion: pass
+    command_evidence_ids:
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    result_evidence_ids:
+    - result-t005-restore
+    evidence:
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    - result-t005-restore
+    gaps: []
+  - id: trace-ac-05-gate
+    acceptance_id: AC-05
+    surface_type: trace
+    conclusion: pass
+    command_evidence_ids:
+    - cmd-unit-2026-06-07-05-46-31
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    result_evidence_ids:
+    - result-t006-gate
+    evidence:
+    - cmd-unit-2026-06-07-05-46-31
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    - result-t006-gate
+    gaps: []
+- target: control_contract.ac_trace
+  op: set
+  value: []
+- target: control_contract.nfr_trace
+  op: set
+  value: []

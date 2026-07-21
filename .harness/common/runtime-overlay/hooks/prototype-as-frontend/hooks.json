@@ -1,0 +1,21 @@
+{
+  "_comment": "interaction 阶段 frontend_engineering（prototype.delivery_mode=frontend_engineering）路线 hook 镜像。活跃实现是单一 dispatcher 模型：.harness/common/hooks/checks/prototype_as_frontend.py，经 registry[\"interaction\"] = design.ENTRIES + prototype_as_frontend.ENTRIES 路由。本目录为旧 per-stage 源镜像，与 dispatcher 行为对齐：改前端代码（frontend-changeset.md）→ 置脏 prototype-as-frontend.contract.yaml；PASS 必须在 pending=false 时由 record-review 产生。两条 hook 只在路径/命令指向 prototype-as-frontend 产物时触发，对 interactive_prototype 路线无副作用。",
+  "stage": "prototype-as-frontend",
+  "route": "interaction/frontend_engineering",
+  "hooks": [
+    {
+      "id": "prototype-as-frontend-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set prototype-as-frontend.contract.yaml effectiveness_review.pending_reviewer_recheck=true after frontend-changeset.md edit so the reviewer PASS gate fires (改代码→旧 PASS 失效)."
+    },
+    {
+      "id": "prototype-as-frontend-reject-pass-without-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "reject_pass_without_recheck.py",
+      "purpose": "Block `harness contract record-review --verdict PASS` against prototype-as-frontend.contract.yaml when pending_reviewer_recheck=true (re-run frontend-reviewer first)."
+    }
+  ]
+}

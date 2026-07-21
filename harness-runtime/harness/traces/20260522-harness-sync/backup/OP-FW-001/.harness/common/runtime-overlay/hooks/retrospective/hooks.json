@@ -1,0 +1,55 @@
+{
+  "_comment": "retrospective-improvement-plan M3.1 hook manifest. planning-analyst is data-producer-class (zero-write); workflow only writes retrospective.md + project-context.md.",
+  "stage": "retrospective",
+  "hooks": [
+    {
+      "id": "retrospective-check-data-producer-zero-write",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_data_producer_zero_write.py",
+      "purpose": "Enforce retrospective-stage zero-write semantics: only retrospective.md + project-context.md are writable."
+    },
+    {
+      "id": "retrospective-check-markdown-structure",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_retrospective_markdown.py",
+      "purpose": "Deny fenced YAML contract blocks and forbidden section headings (memory_update_contract, execution_result, role_verdicts) in retrospective.md."
+    },
+    {
+      "id": "retrospective-deny-direct-contract-edit",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "deny_direct_contract_edit.py",
+      "purpose": "Block direct Write/Edit of retrospective.contract.yaml; all contract writes must go through harness-cli."
+    },
+    {
+      "id": "retrospective-deny-direct-project-context-edit",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "deny_direct_project_context_edit.py",
+      "purpose": "Block direct Write/Edit of project-context.md; all lesson writes must go through harness project-context add-lesson."
+    },
+    {
+      "id": "retrospective-deny-direct-template-mutation",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "deny_direct_template_mutation.py",
+      "purpose": "Block direct mutation of template source paths (.harness/common/rules, skills, agents, schemas)."
+    },
+    {
+      "id": "retrospective-require-gate-evidence",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "require_retrospective_gate_evidence.py",
+      "purpose": "Advisory: check trace log for Step 5 gate evidence before retrospective stage complete."
+    },
+    {
+      "id": "retrospective-record-planning-analyst-dispatch",
+      "event": "PostToolUse",
+      "matcher": "Task",
+      "script": "record_planning_analyst_dispatch.py",
+      "purpose": "Record planning-analyst dispatch in trace JSONL; exit 2 if planning-analyst dispatch is BLOCKED (no main-agent substitution)."
+    }
+  ]
+}

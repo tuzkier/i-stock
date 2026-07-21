@@ -1,0 +1,236 @@
+control_contract:
+  type: intent_contract
+  version: 2
+  mission_id: "{{mission_id}}"
+  stage: intake
+  status: ready
+  upstream: []
+  consumers:
+    - prd
+    - design
+    - breakdown
+    - verify
+    - stage-gate
+  objective:
+    id: OBJ-001
+    statement: "{{objective_short_statement}}"
+  intake_decision:
+    confirmed: true
+    confirmation_source: "{{intake_confirmation_source}}"
+    confirmed_at_or_turn: "{{intake_confirmed_at_or_turn}}"
+  intent_role_analysis:
+    actual_task_goal: "{{actual_task_goal}}"
+    source_materials:
+      - "{{source_material_1}}"
+    agent_instructions:
+      - "{{agent_instruction_1}}"
+    process_constraints:
+      - "{{process_constraint_1}}"
+    discussion_outputs:
+      - "{{discussion_output_1}}"
+    corrections:
+      - "{{correction_1}}"
+    execution_confirmation: "{{intake_confirmation_source}}"
+    excluded_from_objective:
+      - source: "{{excluded_source_1}}"
+        reason: "{{excluded_reason_1}}"
+  task_goal_fidelity:
+    objective_source: actual_task_goal
+    deliverables_source: actual_task_goal
+    acceptance_criteria_source: actual_task_goal
+    work_graph_title_source: actual_task_goal
+    reviewer_notes: ""
+  success_definition:
+    desired_effect: "{{desired_effect}}"
+    deliverables:
+      - id: DEL-01
+        name: "{{primary_deliverable}}"
+        format: "{{delivery_format}}"
+        acceptance_link:
+          ac:
+            - AC-01
+    validation_evidence:
+      - id: EVD-01
+        type: "{{evidence_type}}" # test | command | screenshot | demo | review | manual_acceptance | document
+        method: "{{validation_method}}"
+        proves:
+          ac:
+            - AC-01
+    non_goals:
+      - "{{non_goal_1}}"
+  user_stories:
+    - id: US-01
+      role: "{{user_role_1}}"
+      goal: "{{user_goal_1}}"
+      value: "{{user_value_1}}"
+      story_context:
+        user: "{{story_user_1}}"
+        problem: "{{story_problem_1}}"
+        scenario: "{{story_scenario_1}}"
+        value: "{{story_value_1}}"
+        success_metrics:
+          - id: SM-01
+            signal: "{{story_success_signal_1}}"
+            target: "{{story_success_target_1}}"
+      traces_to:
+        ac:
+          - AC-01
+    - id: US-02
+      role: "{{user_role_2}}"
+      goal: "{{user_goal_2}}"
+      value: "{{user_value_2}}"
+      story_context:
+        user: "{{story_user_2}}"
+        problem: "{{story_problem_2}}"
+        scenario: "{{story_scenario_2}}"
+        value: "{{story_value_2}}"
+        success_metrics:
+          - id: SM-02
+            signal: "{{story_success_signal_2}}"
+            target: "{{story_success_target_2}}"
+      traces_to:
+        ac:
+          - AC-02
+  scope:
+    in:
+      - id: SCOPE-IN-001
+        statement: "{{scope_in_item_1}}"
+    out:
+      - id: SCOPE-OUT-001
+        statement: "{{scope_out_1}}"
+        reason: "{{reason_1}}"
+  acceptance_criteria:
+    # AC 必须有 id + statement，再加下面之一：
+    #   (a) given / when / then（GWT 风格），三者都要顶层字段，**不要写成 gwt: {...}**
+    #   (b) verification_method（无法用 GWT 描述时的兜底，写一句可执行的验证方法）
+    - id: AC-01
+      statement: "Behaviour the system must support after this mission ships"
+      given: "the precondition observable before the action"
+      when: "the user-visible action or trigger"
+      then: "the observable outcome that proves the behaviour"
+      verification_required: true
+    - id: AC-02
+      statement: "Non-GWT criterion that needs an explicit verification method"
+      verification_method: "Run scripts/verify-foo.sh and confirm exit code 0 with expected output line 'OK'"
+      verification_required: true
+  autonomy:
+    level: "{{autonomy_level}}"
+    governance_risk: "{{governance_risk}}" # low | medium | high
+    governance_assessment:
+      hard_triggers:
+        # Any non-empty hard trigger makes governance_risk=high / autonomy.level=受控推进 unless user records risk acceptance.
+        - id: "{{hard_trigger_id}}"
+          category: "{{hard_trigger_category}}" # security | data | external_dependency | product_decision | agent_authority | verification_gap
+          rationale: "{{hard_trigger_rationale}}"
+      dimensions:
+        decision_authority:
+          level: "{{decision_authority_risk}}" # low | medium | high
+          rationale: "{{decision_authority_rationale}}"
+        reversibility:
+          level: "{{reversibility_risk}}"
+          rationale: "{{reversibility_rationale}}"
+        blast_radius:
+          level: "{{blast_radius_risk}}"
+          rationale: "{{blast_radius_rationale}}"
+        verification_reliability:
+          level: "{{verification_reliability_risk}}"
+          rationale: "{{verification_reliability_rationale}}"
+        data_permission:
+          level: "{{data_permission_risk}}"
+          rationale: "{{data_permission_rationale}}"
+        external_dependency:
+          level: "{{external_dependency_risk}}"
+          rationale: "{{external_dependency_rationale}}"
+        agent_authority:
+          level: "{{agent_authority_risk}}"
+          rationale: "{{agent_authority_rationale}}"
+        uncertainty:
+          level: "{{uncertainty_risk}}"
+          rationale: "{{uncertainty_rationale}}"
+      scale_signals:
+        change_surface:
+          level: "{{change_surface_signal}}"
+          rationale: "{{change_surface_rationale}}"
+        user_roles:
+          level: "{{user_roles_signal}}"
+          rationale: "{{user_roles_rationale}}"
+        module_span:
+          level: "{{module_span_signal}}"
+          rationale: "{{module_span_rationale}}"
+      decision_rule: "{{governance_decision_rule}}"
+      user_confirmation_required: true
+      downgrade_or_checkpoint_removal_requires_approval: true
+    skippable_stages:
+      - discovery
+      - interaction
+    reviewer_pass_sufficient:
+      - prd
+      - design
+      - verify
+    human_checkpoints:
+      - solution
+      - tech-design
+      - execution-brief
+    escalation_triggers:
+      - scope_change
+      - new_external_dependency
+      - high_risk_change
+  work_graph:
+    primary_nodes:
+      - "{{primary_work_graph_node}}"
+    related_nodes: []
+    operation: "{{work_graph_operation}}"
+    from_lane: "{{work_graph_from_lane}}"
+    to_lane: "{{work_graph_to_lane}}"
+    board: "harness-runtime/harness/work-graph/boards/main.yaml"
+  role_policy:
+    stage: intake
+    required_execution_roles:
+      - mission-framing-expert
+    required_review_roles:
+      - mission-contract-effectiveness-reviewer
+    conditional_roles: []
+  execution_result:
+    id: EXE-INTAKE-001
+    role: mission-framing-expert
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+        work_graph_node: "{{primary_work_graph_node}}"
+    fulfilled_obligations:
+      - OBL-INTAKE-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-INTAKE-001
+      mission_id: "{{mission_id}}"
+      type: correctness
+      risk: medium
+      traces_to:
+        ac:
+          - AC-01
+          - AC-02
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - mission-contract-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  effectiveness_review:
+    # M4.3: typed counter for reviewer-loop rounds; the contract YAML is the
+    # source of truth (trace JSONL records rounds as bypass sensor evidence
+    # and must not disagree). Bump via `harness contract patch --add-round`.
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: ""
+  role_policy_overrides:
+    # 可选：按阶段覆盖 professional_roles.stage_policies；未填写时使用 harness.yaml 默认策略。
+    prd:
+      required_execution_roles: []
+      required_review_roles: []
+      conditional_roles: []

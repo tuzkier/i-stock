@@ -1,0 +1,341 @@
+patches:
+  - target: control_contract.stage
+    op: set
+    value: technical_analysis
+  - target: control_contract.work_graph_artifact.node_id
+    op: set
+    value: REQ-STOCK-WATCH-SYSTEM
+  - target: control_contract.work_graph_artifact.canonical_artifact
+    op: set
+    value: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/tech-design.md
+  - target: control_contract.execution_result
+    op: set
+    value:
+      id: EXE-TECH-001
+      role: tech-designer
+      status: DONE
+      produced_artifacts:
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+      fulfilled_obligations:
+        - OBL-TECH-001
+      decision_log:
+        - id: TD-DESIGN-BOUNDARY
+          summary: "保持本地 React/Vite/Express 边界；不引入账号、云同步、自动交易、数据库、外部推送或运行时 Agent。"
+        - id: TD-GATES
+          summary: "Provider / Cache / Storage / Chart 相关不确定项按门禁前提处理，不作为已确认事实。"
+      traceability_matrix:
+        - source: solution D-01
+          target: [MOD-07, VS-06]
+        - source: solution D-02
+          target: [MOD-01, INT-08, DATA-05]
+        - source: solution D-03
+          target: [MOD-02, INT-01, INT-02, INT-03, DATA-01, VS-01, VS-02, VS-08]
+        - source: solution D-04
+          target: [MOD-03, MOD-04, INT-04, INT-05, DATA-02, DATA-03, VS-03]
+        - source: solution D-05
+          target: [MOD-05, INT-06, DATA-06, VS-04]
+        - source: solution D-06
+          target: [MOD-06, INT-07, INT-08, DATA-04, DATA-05, DATA-06, VS-05]
+        - source: solution D-07
+          target: [MOD-08, VS-01, VS-02, VS-03, VS-04, VS-05, VS-06, VS-07]
+      evidence_refs:
+        - harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+        - harness-runtime/harness/stages/20260522-stock-watch-system/dependency-impact.md
+      open_questions: []
+      concerns:
+        - "正式行情供应商未锁定；必须保持 MarketDataSource provider-agnostic，并用 Provider Gate 处理 auth/quota/schema 渗透。"
+        - "localStorage 是否足以承载版本化 snapshot 仍需 execute/verify 用旧版本、损坏、大体量 fixture 证明。"
+  - target: control_contract.obligations
+    op: set
+    value:
+      - id: OBL-TECH-001
+        mission_id: 20260522-stock-watch-system
+        type: architecture
+        risk: high
+        traces_to:
+          ac: [AC-01, AC-02, AC-03, AC-04, AC-05]
+          fr: [FR-01, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08, FR-09]
+          decisions: [D-01, D-02, D-03, D-04, D-05, D-06, D-07]
+          task: []
+        required_evidence:
+          - reviewer_verdict
+          - contract_check
+          - alignment_check
+        required_roles:
+          - technical-design-effectiveness-reviewer
+        blocking: true
+        source: solution_and_prd
+  - target: control_contract.modules
+    op: set
+    value:
+      - id: MOD-01
+        name: market-normalization
+        responsibility: "统一处理 raw symbol / market 候选、归一预览、歧义阻断、重复添加幂等；输出可确认的 symbol identity。"
+        paths:
+          - src/data/markets.ts
+          - src/domain/market-normalization.ts
+          - src/features/watchlist/NormalizationPreview.tsx
+        traces_to: [D-02, FR-01, FR-02, AC-01, BUC-01, BO-001, BO-002, RULE-01, RULE-02]
+      - id: MOD-02
+        name: market-data-source
+        responsibility: "封装 Yahoo proxy / fallback / source health；产出 SourceHealth 与价格系列载荷；管理短 TTL cache 显式边界。"
+        paths:
+          - server/index.js
+          - src/domain/market-data-source.ts
+          - src/features/source
+        traces_to: [D-03, FR-06, AC-02, AC-03, AC-04, BUC-06, BO-007, RULE-10]
+      - id: MOD-03
+        name: observation-engine
+        responsibility: "将价格条、指标可用性与来源健康组合成 PriceSeries / IndicatorState，并计算图表读数准备态。"
+        paths:
+          - src/lib/indicators.ts
+          - src/domain/observation.ts
+          - src/features/chart
+        traces_to: [D-04, FR-03, FR-06, AC-02, BUC-02, BUC-03, BUC-06, BO-003, BO-004]
+      - id: MOD-04
+        name: mts-interpreter
+        responsibility: "用纯函数把 PriceSeries、IndicatorSet 与 SourceHealth 解释成 MtsExplanation。"
+        paths:
+          - src/lib/signals.ts
+          - src/domain/mts.ts
+          - src/features/mts
+        traces_to: [D-04, D-05, FR-04, AC-03, AC-04, BUC-04, BUC-06, BO-005, RULE-05, RULE-06]
+      - id: MOD-05
+        name: alert-resolution
+        responsibility: "管理提醒 taxonomy、启停、触发、确认、归档暂停、历史记录与风控优先级。"
+        paths:
+          - src/features/alerts
+          - src/lib/alerts.ts
+          - src/types.ts
+        traces_to: [D-05, FR-05, AC-04, BUC-05, BUC-06, BUC-07, BO-006, RULE-07, RULE-08, RULE-09]
+      - id: MOD-06
+        name: workspace-recovery
+        responsibility: "以版本化 snapshot 管理 watchlist、alerts、selected symbol、layout、restore status；负责迁移、回退与默认布局补救。"
+        paths:
+          - src/lib/storage.ts
+          - src/domain/workspace.ts
+        traces_to: [D-06, FR-07, FR-08, AC-05, BUC-07, BUC-08, BO-008, RULE-12]
+      - id: MOD-07
+        name: surface-composition
+        responsibility: "将 App.tsx 拆分为 Watchlist / Workbench / MTS / Alerts / Source / Layout / Restore surface，并保留稳定 locator 与可访问名称。"
+        paths:
+          - src/App.tsx
+          - src/features/surfaces
+          - src/styles.css
+        traces_to: [D-01, D-07, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08, AC-01, AC-02, AC-03, AC-04, AC-05]
+      - id: MOD-08
+        name: verification-harness
+        responsibility: "提供 frozen fixture、replay、E2E 断言和 build/test 门禁。"
+        paths:
+          - tests/unit
+          - tests/replay
+          - tests/e2e
+          - fixtures
+        traces_to: [D-07, FR-09, NFR-05, AC-01, AC-02, AC-03, AC-04, AC-05, VIZ-001]
+  - target: control_contract.interface_changes
+    op: set
+    value:
+      - id: INT-01
+        kind: ADDED
+        module: MOD-02
+        name: MarketDataSource.fetchSeries
+        before: "server/index.js 直接拼接 Yahoo fetch + fallback，没有显式边界。"
+        after: "返回 MarketDataEnvelope，包含 priceSeries、sourceHealth、meta、servedAt、cacheState。"
+        caller_impact: "Workbench、MTS、Alerts 只消费标准化结果。"
+        error_semantics: "上游失败返回 unavailable / stale / demo_fallback，不把未包装异常抛给 UI。"
+        compatibility: "保留 /api/chart/:symbol；迁移期保留 bars。"
+        traces_to: [D-03, FR-06, AC-02]
+      - id: INT-02
+        kind: MODIFIED
+        module: MOD-02
+        name: ChartPayload_to_MarketDataEnvelope
+        before: "ChartPayload 仅含 symbol/range/interval/meta/bars/dataSource/notice。"
+        after: "新增 sourceHealth、priceSeries、degradationReason、sourceName、lastRefreshedAt、retryState，保留 bars。"
+        caller_impact: "图表和 source banner 不再猜测 fallback 语义。"
+        error_semantics: "新字段缺失时降级为 unavailable 并显示恢复提示。"
+        compatibility: "双读：先读新字段，读不到再读旧 bars。"
+        traces_to: [D-03, FR-06, AC-02, AC-03, AC-04]
+      - id: INT-03
+        kind: ADDED
+        module: MOD-02
+        name: SourceHealth
+        after: "formal / demo_fallback / stale / unavailable，附 lastRefreshedAt、degradationReason、retryState、affectedObjects。"
+        caller_impact: "SourceHealthPanel、Workbench、MTS、Alerts 一致展示降级。"
+        error_semantics: "未知状态折叠为 unavailable，禁止映射成 formal。"
+        compatibility: "从 dataSource + notice 迁移。"
+        traces_to: [D-03, FR-06, RULE-10]
+      - id: INT-04
+        kind: REPLACED
+        module: MOD-03
+        name: PriceBar_to_PriceSeries
+        before: "domain 与 UI 直接使用裸 PriceBar[]。"
+        after: "PriceSeries 成为 canonical domain object，包含 bars、timeframe、latestOhlc、latestPrice、changeSummary、sourceHealth。"
+        caller_impact: "指标、MTS、提醒、读数和回放统一消费 PriceSeries。"
+        error_semantics: "bars 不足返回 partial / unavailable。"
+        compatibility: "wire 层可继续传 bars，domain 层不直接依赖 PriceBar[]。"
+        traces_to: [D-04, FR-03, FR-06, AC-02]
+      - id: INT-05
+        kind: REPLACED
+        module: MOD-04
+        name: CompositeSignal_to_MtsExplanation
+        before: "buildSignal 输出旧四因子 CompositeSignal。"
+        after: "MtsExplanation 包含 trendState、scoreBand、signalType、alertLevel、reasonCodes、invalidators、interpretability、sourceHealth。"
+        caller_impact: "MtsSignalCard 只绑定解释对象，旧信号名称不得进入用户可见 surface。"
+        error_semantics: "数据不足返回 data_insufficient；sourceHealth 非 formal 时暴露降级。"
+        compatibility: "内部可复用旧四因子评分作为子分项。"
+        traces_to: [D-04, D-05, FR-04, AC-03, AC-04]
+      - id: INT-06
+        kind: MODIFIED
+        module: MOD-05
+        name: AlertRule
+        before: "仅 above/below 价格提醒或 signal 提醒，只有 enabled / lastTriggeredAt。"
+        after: "增加 taxonomy、activationState、triggerState、history、acknowledgedAt、suspendedReason、restoreIntent。"
+        caller_impact: "AlertsPanel、RestoreStatus、Workbench 渲染启停、触发、确认、归档恢复。"
+        error_semantics: "无效条件阻断写入；归档状态不得触发；风控优先。"
+        compatibility: "旧规则双读，读取后补默认 taxonomy。"
+        traces_to: [D-05, FR-05, AC-04]
+      - id: INT-07
+        kind: ADDED
+        module: MOD-06
+        name: WorkspaceSnapshotV2
+        after: "版本化快照包含 watchlist、alerts、selectedSymbol、layoutMode、selectedMobileTab、restoreMetadata。"
+        caller_impact: "RestoreStatus、WatchlistPanel、LayoutController 共享恢复结果。"
+        error_semantics: "快照损坏时回退默认 focus 布局并记录失败。"
+        compatibility: "读取旧 key，写入 V2，保留迁移回退。"
+        traces_to: [D-06, FR-07, FR-08, AC-05]
+      - id: INT-08
+        kind: MODIFIED
+        module: MOD-06
+        name: storage_api_to_workspace_api
+        before: "readWatchlist/readAlerts/writeWatchlist/writeAlerts 简单 JSON 读写。"
+        after: "readWorkspace/writeWorkspace/migrateWorkspace 负责双读旧 key、生成 V2、校验 schema、写入回退信息。"
+        caller_impact: "本地恢复调用方只对 snapshot API 编程。"
+        error_semantics: "解析失败返回 recoverable=false 的结果，不抛阻断异常。"
+        compatibility: "至少一个发布周期内保留旧 key 读取逻辑。"
+        traces_to: [D-02, D-06, FR-01, FR-07, FR-08, AC-01, AC-05]
+  - target: control_contract.data_changes
+    op: set
+    value:
+      - id: DATA-01
+        kind: MODIFIED
+        entity: SourceHealth
+        migration: "从 dataSource + notice 迁移到 formal / demo_fallback / stale / unavailable；fallback 结果携带显式状态。"
+        rollback: "未知状态回退为 unavailable；刷新失败保留上次可解释状态并给 retry 提示。"
+        invariants:
+          - "不得把 demo 当 formal。"
+          - "stale 必须保留上次刷新时间。"
+          - "affectedObjects 必须同步到图表/MTS/提醒。"
+        traces_to: [FR-06, RULE-10, AC-02, AC-03, AC-04]
+      - id: DATA-02
+        kind: REPLACED
+        entity: PriceSeries
+        migration: "从 wire bars 生成 PriceSeries；保留原始 bars 仅用于适配层与回放。"
+        rollback: "bars 不足、字段缺失或时间序列不连续时降级为 partial/unavailable。"
+        invariants:
+          - "同一 symbol/range/source 下可复算。"
+          - "latestOhlc 与 changeSummary 必须可由 bars 推导。"
+          - "provider 字段不得进入 domain。"
+        traces_to: [FR-03, FR-06, BUC-02, BUC-03, BO-003, BO-004]
+      - id: DATA-03
+        kind: REPLACED
+        entity: MtsExplanation
+        migration: "旧四因子评分可作为内部子分项；UI、fixture 与 snapshot 只认 MtsExplanation。"
+        rollback: "评分不足或来源降级时输出 data_insufficient。"
+        invariants:
+          - "reasonCodes 与 invalidators 不能同时为空。"
+          - "alertLevel 只能落在观察/确认/强信号/风控。"
+          - "禁止收益承诺措辞。"
+        traces_to: [FR-04, RULE-05, RULE-06, AC-03, AC-04]
+      - id: DATA-04
+        kind: ADDED
+        entity: WorkspaceSnapshotV2
+        migration: "从 myinvestment.watchlist / myinvestment.alerts 双 key 迁移到版本化 snapshot。"
+        rollback: "读取失败时回退默认 focus 布局并重建可用工作台。"
+        invariants:
+          - "版本号必填。"
+          - "archived 标的必须可恢复。"
+          - "snapshot 不能隐式丢失触发历史。"
+        traces_to: [FR-07, FR-08, AC-05, RULE-12]
+      - id: DATA-05
+        kind: MODIFIED
+        entity: WatchSymbolArchiveState
+        migration: "从删除即消失迁移到 active/archived；归档暂停绑定提醒。"
+        rollback: "回退时保留 archived 条目，至少恢复为只读状态。"
+        invariants:
+          - "同 identity 的 active 不能重复。"
+          - "archived 标的可恢复。"
+          - "归档期间绑定提醒状态为 suspended_by_archive。"
+        traces_to: [FR-01, FR-02, FR-07, BUC-01, BUC-07, RULE-09]
+      - id: DATA-06
+        kind: MODIFIED
+        entity: AlertTaxonomyHistoryTriggerState
+        migration: "从 above/below + signal + enabled/lastTriggeredAt 迁移到 taxonomy、activationState、triggerState、history、acknowledged、suspended_by_archive。"
+        rollback: "旧提醒按默认 taxonomy 和状态补全；历史缺失时以无历史但可继续使用回退。"
+        invariants:
+          - "风控优先于观察。"
+          - "suspended_by_archive 不得触发。"
+          - "触发历史必须可追踪，确认与触发分离。"
+        traces_to: [FR-05, AC-04, BUC-05, BUC-06, BUC-07]
+  - target: control_contract.verification_strategy
+    op: set
+    value:
+      - id: VS-01
+        layer: integration
+        target_ids: [MOD-02, INT-01, INT-02, DATA-01, FR-06, AC-02]
+        evidence_required: [live_smoke_result, mock_failure_result, fallback_fixture_result]
+      - id: VS-02
+        layer: replay
+        target_ids: [MOD-02, MOD-03, MOD-04, MOD-05, DATA-01, DATA-03, FR-06, AC-03, AC-04]
+        evidence_required: [source_health_fixture_replay]
+      - id: VS-03
+        layer: unit
+        target_ids: [MOD-04, INT-05, DATA-03, FR-04, AC-03]
+        evidence_required: [mts_replay_determinism_result]
+      - id: VS-04
+        layer: integration
+        target_ids: [MOD-05, INT-06, DATA-05, DATA-06, FR-05, FR-07, AC-04, AC-05]
+        evidence_required: [alert_archive_restore_result]
+      - id: VS-05
+        layer: integration
+        target_ids: [MOD-06, INT-07, INT-08, DATA-04, DATA-05, DATA-06, FR-07, FR-08, AC-05]
+        evidence_required: [localstorage_migration_result, corrupted_snapshot_result]
+      - id: VS-06
+        layer: e2e
+        target_ids: [MOD-07, INT-02, INT-07, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08]
+        evidence_required: [playwright_user_journey_result, locator_contract_result]
+      - id: VS-07
+        layer: gate
+        target_ids: [MOD-08, FR-09, NFR-05]
+        evidence_required: [unit_result, replay_result, e2e_result, build_result]
+      - id: VS-08
+        layer: fitness
+        target_ids: [MOD-02, MOD-03, D-03, D-01]
+        evidence_required: [cache_boundary_check, chart_render_check]
+  - target: control_contract.architectural_fitness_functions
+    op: set
+    value:
+      - id: AFF-01
+        protected_quality: provider_agnostic_domain
+        measurement: "domain objects 与 WorkspaceSnapshot 不含 provider-specific auth/quota/response schema 字段。"
+        threshold: "0 provider-specific 字段进入 WatchSymbol / PriceSeries / AlertRule / WorkspaceSnapshot。"
+        verification_evidence: [VS-01, VS-02]
+      - id: AFF-02
+        protected_quality: local_recovery_integrity
+        measurement: "legacy key、V2 snapshot、损坏 snapshot、大体量 fixture 均可给出明确恢复结果。"
+        threshold: "无静默数据丢失；失败时 UI 显示恢复状态。"
+        verification_evidence: [VS-05]
+      - id: AFF-03
+        protected_quality: deterministic_signal_explanation
+        measurement: "同一 fixture 回放得到同一 MtsExplanation，且 reasonCodes/invalidators 可解释。"
+        threshold: "replay 结果稳定；数据不足显式为 data_insufficient。"
+        verification_evidence: [VS-03]
+  - target: control_contract.production_readiness
+    op: set
+    value:
+      error_handling: "行情失败以 SourceHealth 和降级文案呈现；MTS 数据不足输出 data_insufficient；本地恢复失败回退默认 focus 布局；提醒校验失败阻断写入并显示原因。"
+      compatibility: "ChartPayload 过渡期保留 bars；legacy watchlist/alerts key 可读；旧四因子评分仅可内部复用，不能作为用户可见正式 MTS 名称。"
+      observability: "后端记录 upstream 成功/失败、fallback 原因与 cache 状态；前端展示 SourceHealth、恢复结果、提醒触发理由和降级状态；fixture 名称可定位 AC/FR。"
+      rollback: "snapshot 迁移失败不清空旧 key；provider 失败切到显式 demo_fallback；图表库不满足合同则降级到读数摘要并走 Chart Gate；cache 影响恢复或 stale 语义时停用并重审。"
+  - target: control_contract.agent_implementation
+    op: set
+    value: []

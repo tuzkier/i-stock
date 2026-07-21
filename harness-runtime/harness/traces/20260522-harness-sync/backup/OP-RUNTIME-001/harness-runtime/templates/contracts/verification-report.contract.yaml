@@ -1,0 +1,116 @@
+control_contract:
+  type: evidence_contract
+  subtype: verification_evidence
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: verify
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Acceptance Criteria
+    - path: "harness-runtime/harness/stages/{{mission_id}}/execution-brief.md"
+      sections:
+        - Control Contract
+        - Tasks
+  consumers:
+    - delivery
+    - retrospective
+    - stage-gate
+  execution_result:
+    id: EXE-VERIFY-001
+    role: verification-engineer
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/stages/{{mission_id}}/verification-report.md"
+    fulfilled_obligations:
+      - OBL-VERIFY-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs:
+      - CMD-001
+      - EV-RESULT-001
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-VERIFY-001
+      mission_id: "{{mission_id}}"
+      type: verification
+      risk: medium
+      traces_to:
+        ac:
+          - AC-01
+          - AC-02
+        task: []
+      required_evidence:
+        - command_result
+        - result_evidence
+      required_roles:
+        - verification-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  command_evidence:
+    - id: CMD-001
+      command: "{{verification_command}}"
+      cwd: "{{command_cwd}}"
+      exit_code: 0
+      started_at: "{{started_at}}"
+      ended_at: "{{ended_at}}"
+      result: pass
+      summary: "{{command_summary}}"
+      artifact: "{{optional_log_path}}"
+  result_evidence:
+    - id: EV-RESULT-001
+      ac: AC-01
+      kind: screenshot
+      evidence_role: primary
+      expected: "{{expected_user_visible_result}}"
+      actual: "{{actual_observed_result}}"
+      reproduce: "{{human_reproduction_steps}}"
+      artifact: "{{screenshot_video_response_or_output_path}}"
+      result: pass
+    - id: EV-RESULT-API-001
+      ac: AC-01
+      kind: api
+      evidence_role: cross_check
+      expected: "{{expected_api_backed_state}}"
+      actual: "{{actual_api_backed_state}}"
+      artifact: "{{api_response_or_log_path}}"
+      result: pass
+  e2e_status:
+    status_artifact: "harness-runtime/harness/traces/{{mission_id}}/e2e/e2e-status.json"
+    status: PASS | WARN | FAIL | BLOCKED | N/A
+    html_report: "{{optional_html_report_path}}"
+    traces: []
+    videos: []
+    screenshots: []
+    decision_gate_reasons: []
+  role_verdicts: []
+  ac_trace:
+    - id: AC-01
+      ac: AC-01
+      surface_type: ui
+      conclusion: pass
+      command_evidence_ids:
+        - CMD-001
+      result_evidence_ids:
+        - EV-RESULT-001
+        - EV-RESULT-API-001
+      evidence:
+        - CMD-001
+        - EV-RESULT-001
+      gaps: []
+    - id: AC-02
+      ac: AC-02
+      conclusion: blocked
+      command_evidence_ids: []
+      result_evidence_ids: []
+      evidence: []
+      blocked_reason: "{{blocked_reason}}"
+      impact: "{{blocked_impact}}"
+      next_step: "{{blocked_next_step}}"
+  nfr_trace:
+    - nfr: NFR-01
+      conclusion: not_applicable
+      evidence: []
+      rationale: "{{nfr_rationale}}"

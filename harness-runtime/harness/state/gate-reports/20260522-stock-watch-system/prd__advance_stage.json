@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260522-stock-watch-system",
+  "stage": "prd",
+  "operation": "advance_stage",
+  "from_stage": "prd",
+  "to_stage": "interaction",
+  "decision": "continue",
+  "gate_effect": "allow",
+  "contract_check": {
+    "status": "PASS",
+    "artifact": "harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md",
+    "contract_type": "behaviour_contract",
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "contract_valid",
+        "message": "Control Contract integrity checks passed"
+      }
+    ]
+  },
+  "control_reports": {
+    "status": "PASS",
+    "controls": [],
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "control_reports_valid",
+        "message": "Control-plane reports allow Stage Gate to continue",
+        "path": ""
+      }
+    ]
+  },
+  "required_checkpoints": [
+    "prd"
+  ],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [
+      "prd"
+    ],
+    "approved_checkpoints": [
+      "discovery",
+      "prd"
+    ],
+    "missing_checkpoints": [],
+    "approval_ids": {
+      "discovery": "APR-20260522-002",
+      "prd": "APR-20260523-003"
+    },
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml",
+    "primary_nodes": [
+      "REQ-STOCK-WATCH-SYSTEM"
+    ],
+    "related_nodes": [],
+    "lane": "product-definition-lane",
+    "stage": "prd",
+    "operation": "advance_stage"
+  },
+  "ai_interpretation": "PRD 产品定义包、差量规格与控制契约已通过程序化 contract check；product-definition-reviewer 第 2 轮 PASS 已写入 prd.contract.yaml；用户已在 PRD checkpoint 回复“好 继续”批准推进。残余风险均作为后续 interaction / solution 决策项保留，不阻断从 PRD advance_stage 到 interaction。"
+}

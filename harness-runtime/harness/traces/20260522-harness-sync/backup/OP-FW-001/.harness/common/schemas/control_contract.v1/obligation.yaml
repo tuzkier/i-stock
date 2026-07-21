@@ -1,0 +1,53 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required: [obligation]
+properties:
+  obligation:
+    type: object
+    required: [id, mission_id, type, risk, traces_to, required_evidence, required_roles, blocking, source]
+    properties:
+      id:
+        type: string
+        pattern: "^OBL-[A-Za-z0-9][A-Za-z0-9-]*$"
+      mission_id:
+        type: string
+        minLength: 1
+      type:
+        enum: [tdd, e2e, security, correctness, architecture, verification, acceptance, integration, rollback, agent_behavior]
+      risk:
+        enum: [low, medium, high]
+      surfaces:
+        type: array
+        items:
+          type: string
+      traces_to:
+        type: object
+        required: [ac]
+        properties:
+          ac:
+            type: array
+            items:
+              type: string
+          task:
+            type: array
+            items:
+              type: string
+          files:
+            type: array
+            items:
+              type: string
+      required_evidence:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      required_roles:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      blocking:
+        type: boolean
+      source:
+        enum: [explicit, inferred, explicit_plus_inferred]
+additionalProperties: false

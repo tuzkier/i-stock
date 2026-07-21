@@ -1,0 +1,34 @@
+id: EXE-TECH-001
+role: tech-designer
+status: DONE
+produced_artifacts:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+fulfilled_obligations:
+  - OBL-TECH-001
+decision_log:
+  - id: TD-DESIGN-BOUNDARY
+    summary: "保持本地 React/Vite/Express 边界；不引入账号、云同步、自动交易、数据库、外部推送或运行时 Agent。"
+  - id: TD-GATES
+    summary: "Provider / Cache / Storage / Chart 相关不确定项按门禁前提处理，不作为已确认事实。"
+traceability_matrix:
+  - source: solution D-01
+    target: [MOD-07, VS-06]
+  - source: solution D-02
+    target: [MOD-01, INT-08, DATA-05]
+  - source: solution D-03
+    target: [MOD-02, INT-01, INT-02, INT-03, DATA-01, VS-01, VS-02, VS-08]
+  - source: solution D-04
+    target: [MOD-03, MOD-04, INT-04, INT-05, DATA-02, DATA-03, VS-03]
+  - source: solution D-05
+    target: [MOD-05, INT-06, DATA-06, VS-04]
+  - source: solution D-06
+    target: [MOD-06, INT-07, INT-08, DATA-04, DATA-05, DATA-06, VS-05]
+  - source: solution D-07
+    target: [MOD-08, VS-01, VS-02, VS-03, VS-04, VS-05, VS-06, VS-07]
+evidence_refs:
+  - harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/dependency-impact.md
+open_questions: []
+concerns:
+  - "正式行情供应商未锁定；必须保持 MarketDataSource provider-agnostic，并用 Provider Gate 处理 auth/quota/schema 渗透。"
+  - "localStorage 是否足以承载版本化 snapshot 仍需 execute/verify 用旧版本、损坏、大体量 fixture 证明。"

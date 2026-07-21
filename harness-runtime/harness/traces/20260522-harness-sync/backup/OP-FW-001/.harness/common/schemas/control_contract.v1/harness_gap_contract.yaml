@@ -1,0 +1,61 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+# retrospective-improvement-plan M4.2: typed schema for harness-gap records.
+# Aggregates cross-mission failure patterns for harness evolution tracking.
+title: harness_gap_contract
+description: >
+  Typed record for a Harness framework gap identified across one or more missions.
+  Consumed by harness harness-gap pattern-scan and harness lint project.
+type: object
+required:
+  - gap_id
+  - pattern_key
+  - first_seen
+  - repeat_count
+  - target_kind
+  - status
+properties:
+  gap_id:
+    type: string
+    pattern: "^GAP-"
+    description: "Unique identifier, e.g. GAP-rule-001"
+  pattern_key:
+    type: string
+    minLength: 1
+    description: "Normalized short description used for deduplication across missions"
+  first_seen:
+    type: string
+    description: "Mission id where this pattern first appeared"
+  repeat_count:
+    type: integer
+    minimum: 1
+    description: "Number of missions where this pattern has been observed"
+  target_kind:
+    type: string
+    enum:
+      - rule
+      - skill
+      - agent
+      - schema
+      - contract_template
+      - cli
+      - project_knowledge
+      - methodology
+  target_ref:
+    type: string
+    description: "Path or identifier of the affected Harness artifact"
+  status:
+    type: string
+    enum:
+      - open
+      - in_progress
+      - resolved
+      - wont_fix
+    default: open
+  verification_ref:
+    type: string
+    description: "Evidence path confirming resolution (required when status=resolved)"
+  proposals:
+    type: array
+    description: "List of learning_proposal_contract ids that address this gap"
+    items:
+      type: string

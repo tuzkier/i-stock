@@ -1,0 +1,26 @@
+patches:
+  - target: control_contract.role_verdicts
+    op: set
+    value: []
+  - target: control_contract.consistency_report
+    op: merge
+    value:
+      path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+      spec_vs_prd_drift: none
+      prototype_vs_spec_drift: none
+      feedback_not_synced: none
+      shared_surface_consistency: pass
+      e2e_seed_readiness: pass
+      copy_language: pass
+      density_feedback_synced: pass
+      density_feedback_note: 用户反馈“页面上东西好多”已同步为日常看盘 focus 默认模式与诊断 / 验收 dense 展开模式。
+  - target: control_contract.prototype_interfaces
+    op: set
+    value:
+      - id: SCREEN-WORKBENCH
+        title: 多市场看盘工作台
+        buc_refs: [BUC-01, BUC-02, BUC-03, BUC-04, BUC-05, BUC-06, BUC-07, BUC-08]
+        surface_id: SURF-WORKBENCH
+        domain_refs: [WatchSymbol, IndicatorSet, MtsSignal, AlertRule, MarketDataSource]
+        default_mode: 日常看盘（focus）
+        diagnostic_mode: 诊断 / 验收（dense）

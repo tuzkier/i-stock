@@ -1,0 +1,172 @@
+# intent-framing manifest 示例
+#
+# 这份文件描述 `harness contract fill` 接受的输入格式。
+# 它是 mission-framing-expert 子 Agent 的输出形态：贴近人写的样子，
+# CLI 内部会自动归一化 id、补齐 schema、写入 control_contract.* 字段。
+#
+# 用法：
+#   harness contract fill \
+#     --mission 20260511-export-session-log \
+#     --stage intake \
+#     --artifact harness-runtime/harness/missions/<mission-id>/contracts/mission-contract.contract.yaml \
+#     --intent-framing harness-runtime/harness/missions/<mission-id>/intent-framing.yaml \
+#     [--template mission-contract]   # 仅当 contract 还未 init 时需要
+#
+# 字段未列时使用 contract 模板默认值；id 留空时会自动按前缀编号。
+
+intent_role_analysis:
+  actual_task_goal: "让调度员能从当前 Agent 会话页导出结构化 JSON 会话日志"
+  source_materials:
+    - "用户提供的当前会话导出诉求"
+  agent_instructions:
+    - "按 Harness 流程推进"
+  process_constraints:
+    - "不做历史会话批量导出"
+  discussion_outputs: []
+  corrections: []
+  execution_confirmation: "用户说：开始吧，按这个做。"
+  excluded_from_objective:
+    - source: "按 Harness 流程推进"
+      reason: "这是流程约束，不是用户要交付的外部结果"
+
+objective:
+  statement: "调度员能将当前 Agent 会话以 JSON 形式一键导出"
+
+intake_decision:
+  confirmed: true
+  confirmation_source: "用户说：开始吧，按这个做。"
+  confirmed_at_or_turn: "turn-12"
+
+success_definition:
+  desired_effect: "调度员能从当前会话页导出结构稳定、可被运维脚本解析的 JSON 会话日志"
+  deliverables:
+    - id: DEL-01
+      name: "当前会话 JSON 导出能力"
+      format: "UI 入口 + API + JSON 文件"
+      acceptance_link:
+        acceptance: [SCN-01, SCN-02, SCN-03]
+  validation_evidence:
+    - id: EVD-01
+      type: "test"
+      method: "运行相关前后端测试，确认 exit code 0"
+      proves:
+        acceptance: [SCN-01, SCN-03]
+    - id: EVD-02
+      type: "command"
+      method: "运行 scripts/inspect-session-log.py <file>，确认 exit code 0"
+      proves:
+        acceptance: [SCN-02]
+  non_goals:
+    - "历史会话批量导出"
+    - "CSV / Excel 导出"
+
+user_stories:
+  - role: "分拨调度员"
+    goal: "在 Agent 对话页一键导出会话 JSON"
+    value: "事后复盘排障并把对话作为证据留档"
+    story_context:
+      user: "需要把当前 Agent 会话留档的分拨调度员"
+      problem: "复盘和排障时缺少结构化会话证据，只能手工复制对话"
+      scenario: "处理完一次异常调度后，调度员在当前 Agent 会话页导出本次对话"
+      value: "减少手工整理成本，并让复盘材料可追溯"
+      success_metrics:
+        - id: SM-01
+          signal: "调度员能在当前会话页完成导出并获得 JSON 文件"
+          target: "5 秒内开始下载，文件能被打开解析"
+    acceptance_refs: [SCN-01, SCN-02]
+  - role: "运维"
+    goal: "JSON 包含 message id / role / 时间戳 / tool 调用"
+    value: "接入既有日志解析脚本"
+    story_context:
+      user: "负责排障工具链的运维人员"
+      problem: "现有脚本无法消费自由文本对话记录"
+      scenario: "运维拿到调度员导出的 JSON 后，用既有脚本提取消息和工具调用"
+      value: "不用重写分析脚本即可纳入现有排障链路"
+      success_metrics:
+        - id: SM-02
+          signal: "现有日志脚本能读取导出 JSON 并输出消息条数"
+          target: "脚本 exit code 0，且关键字段完整"
+    acceptance_refs: [SCN-03]
+
+scope:
+  in:
+    - "Agent 对话页新增导出按钮"
+    - "后端新增 GET /api/agent/sessions/{id}/export 接口"
+    - statement: "JSON 含 session_id / hub_code / created_at / messages[]"
+  out:
+    - statement: "历史会话批量导出"
+      reason: "当前 mission 只覆盖当前会话；批量另开 mission"
+    - statement: "CSV / Excel 导出"
+      reason: "用户当前只要 JSON"
+
+acceptance_scenarios:
+  # GWT 风格 —— given/when/then 是平铺字段（**不要写成 gwt: {...}**）
+  - id: SCN-01
+    statement: "调度员能在对话页一键导出当前会话 JSON"
+    given: "当前会话至少包含一条 user message"
+    when: "调度员点击「导出会话日志」按钮"
+    then: "浏览器在 5 秒内开始下载文件，文件名匹配 agent-session-*.json"
+  # verification_method 风格 —— 无法用 GWT 自然描述时使用
+  - id: SCN-02
+    statement: "导出文件能被现有日志脚本解析"
+    verification_method: "运行 scripts/inspect-session-log.py <file>，确认 exit code 0 且打印消息条数"
+  - id: SCN-03
+    statement: "JSON 含运维要求的所有字段"
+    given: "已下载导出文件"
+    when: "校验顶层字段"
+    then: "同时存在 session_id / hub_code / created_at / messages[]"
+
+work_graph:
+  primary_nodes: [REQ-001]
+  related_nodes: []
+  operation: advance_lane
+  from_lane: requirement-lane
+  to_lane: product-definition-lane
+
+autonomy_level: "专家确认"           # governance_risk low→快速执行 / medium→专家确认 / high→受控推进
+governance_risk: "medium"
+governance_assessment:
+  hard_triggers: []                 # 命中任一项通常要求受控推进；降级必须有人确认
+  dimensions:
+    decision_authority:
+      level: "low"
+      rationale: "实现路径明确，无业务取舍。"
+    reversibility:
+      level: "low"
+      rationale: "可通过回滚代码撤销。"
+    blast_radius:
+      level: "medium"
+      rationale: "用户可见导出入口，但不影响核心写链路。"
+    verification_reliability:
+      level: "medium"
+      rationale: "需要浏览器下载验证和脚本解析证据。"
+    data_permission:
+      level: "low"
+      rationale: "只导出当前会话，无新增权限。"
+    external_dependency:
+      level: "low"
+      rationale: "无新增外部服务。"
+    agent_authority:
+      level: "low"
+      rationale: "无 Agent 行动权变化。"
+    uncertainty:
+      level: "low"
+      rationale: "验收条件可直接验证。"
+  scale_signals:
+    change_surface:
+      level: "medium"
+      rationale: "预计涉及前端入口、导出工具和测试。"
+    user_roles:
+      level: "low"
+      rationale: "单一调度员角色。"
+    module_span:
+      level: "medium"
+      rationale: "UI 与日志解析脚本有交互。"
+  decision_rule: "无 hard trigger；存在 medium 核心风险，因此建议专家确认。"
+  user_confirmation_required: true
+  downgrade_or_checkpoint_removal_requires_approval: true
+required_checkpoints:                # 即 control_contract.autonomy.human_checkpoints
+  - acceptance_result
+escalation_triggers:
+  - scope_change
+  - external_dependency

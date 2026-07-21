@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "stop": [
+      {
+        "command": "echo 'HarnessV2 stop hook placeholder - implement autonomy continuation logic here'",
+        "timeout": 10000,
+        "loop_limit": null
+      }
+    ]
+  }
+}

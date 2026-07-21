@@ -1,0 +1,53 @@
+patches:
+- target: control_contract.decisions
+  op: set
+  value:
+  - id: MEM-01
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/specs/local-stock-watch-workbench/spec.md
+    change_type: applied
+    reason: 已接受差量规格应成为后续本地看盘工作台行为契约边界。
+    blocking: false
+  - id: MEM-02
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/operations/verification/README.md
+    change_type: applied
+    reason: no-webserver Playwright 验证必须先确认本地 dev server 前提，且 fixture-first 验收命令是可复用运行手册。
+    blocking: false
+  - id: MEM-03
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/lessons/quality/README.md
+    change_type: applied
+    reason: delivery contract/checker 漂移、review 摩擦压平和晚轮证据粒度不足会影响后续交付治理。
+    blocking: false
+  - id: MEM-04
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/engineering/testing/README.md
+    change_type: applied
+    reason: fixture-first、真实 reload 和投资文案负向断言是本项目可复用测试模式。
+    blocking: false
+  - id: MEM-05
+    source: retrospective
+    target: project-context
+    target_ref: project-context.md#历史教训
+    change_type: applied
+    reason: 三条复盘教训已通过 harness project-context add-lesson 写入，未来任务必须继承。
+    blocking: false
+  - id: MEM-06
+    source: retrospective
+    target: runtime-asset
+    target_ref: .harness/common/skills/stage-gate/scripts/check_contracts.py
+    change_type: applied
+    reason: delivery_contract schema 存在但 checker 未注册，已在本地 runtime 修正并需要作为框架缺口留痕。
+    blocking: false
+  - id: MEM-07
+    source: retrospective
+    target: runtime-asset
+    target_ref: .harness/common/skills/verify/workflow.md
+    change_type: proposed
+    reason: no-webserver Playwright 需要 verify preflight，避免服务未启动导致假性验证失败。
+    blocking: false

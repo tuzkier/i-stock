@@ -1,0 +1,39 @@
+id: TASK-STOCK-WATCH-T004
+kind: task
+title: 分类提醒、触发确认、scheduled 与归档暂停
+lane: delivery-lane
+stage: retrospective
+status: ready
+parent_task_id: T004
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T004-A1
+- T004-A2
+dependencies:
+- TASK-STOCK-WATCH-T001
+- TASK-STOCK-WATCH-T002
+- TASK-STOCK-WATCH-T003
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 本地提醒 taxonomy 与触发历史
+    scenario: 创建分类提醒 / 提醒触发后可确认 / 归档暂停提醒
+    evidence:
+      implementation_refs:
+      - src/domain/alert.ts
+      - src/features/alerts/AlertRulePanel.tsx
+      - src/App.tsx
+      test_refs:
+      - tests/unit/alerts/rule-model.spec.ts
+      - tests/replay/alerts/trigger-flow.spec.ts
+      - tests/e2e/alerts/panel.spec.ts
+updated_at: '2026-06-07T06:42:52.659756+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__batch_advance_stage__3

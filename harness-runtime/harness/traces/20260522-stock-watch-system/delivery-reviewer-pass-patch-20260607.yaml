@@ -1,0 +1,30 @@
+patches:
+- target: control_contract.dispatches
+  op: set
+  value:
+  - role: release-readiness-expert
+    execution_mode: subagent
+    model: gpt-5.4-mini
+    started_at: '2026-06-07T06:05:00Z'
+    completed_at: '2026-06-07T06:05:00Z'
+    verdict: DRAFT_PRODUCED
+    artifact_inputs:
+    - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+  - role: acceptance-package-reviewer
+    execution_mode: subagent_readonly
+    model: gpt-5.4
+    started_at: '2026-06-07T06:20:00Z'
+    completed_at: '2026-06-07T06:20:00Z'
+    verdict: PASS
+    reviewed_artifacts:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/acceptance-result.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/delivery-package.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/delivery.contract.yaml
+    - harness-runtime/harness/traces/20260522-stock-watch-system/delivery-closure-check-20260607.json
+    reviewed_hold_fixes:
+    - BG-01 not_reproducible fixed for T003/T004/T005
+    - BG-02 closure evidence path fixed

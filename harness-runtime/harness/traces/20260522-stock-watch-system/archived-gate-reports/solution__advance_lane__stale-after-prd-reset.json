@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260522-stock-watch-system",
+  "stage": "solution",
+  "operation": "advance_lane",
+  "from_stage": "prd",
+  "to_stage": "prd",
+  "decision": "cannot_continue",
+  "gate_effect": "block",
+  "contract_check": {
+    "status": "FAIL",
+    "artifact": "harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md",
+    "contract_type": "behaviour_contract",
+    "findings": [
+      {
+        "level": "FAIL",
+        "code": "mission_slice_stage_mismatch",
+        "message": "contract.stage prd does not match Mission Slice stage solution"
+      },
+      {
+        "level": "FAIL",
+        "code": "mission_slice_output_artifact_missing",
+        "message": "execution_result(s).produced_artifacts must include lane_action.output_artifact harness-runtime/harness/stages/20260522-stock-watch-system/solution.md"
+      }
+    ]
+  },
+  "control_reports": {
+    "status": "PASS",
+    "controls": [],
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "control_reports_valid",
+        "message": "Control-plane reports allow Stage Gate to continue",
+        "path": ""
+      }
+    ]
+  },
+  "required_checkpoints": [],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [],
+    "approved_checkpoints": [
+      "discovery"
+    ],
+    "missing_checkpoints": [],
+    "approval_ids": {
+      "discovery": "APR-20260522-002"
+    },
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml",
+    "primary_nodes": [
+      "REQ-STOCK-WATCH-SYSTEM"
+    ],
+    "related_nodes": [],
+    "lane": "solution-lane",
+    "stage": "solution",
+    "operation": "advance_lane"
+  },
+  "ai_interpretation": "[omitted] PRD upstream rewrite requested while active mission slice is in solution stage; run only for control-plane status evidence."
+}

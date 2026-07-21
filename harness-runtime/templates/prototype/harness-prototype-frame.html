@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!-- harness: role=prototype_demo_player
+     用途：Harness 原型引导式演示播放器（dev-only，非 operable 产品入口）。
+     数据源 walkthrough.js（window.__HARNESS_WALKTHROUGH__，由 `harness interaction project`
+     从 behavior-graph.yaml 生成）。左栏列 SUC → flow（演示场景）；选一条 flow 即开始导览。
+     播放器逐拍【自动驱动】右侧原型（导航到 page_entry + 用 location.hash=#<page_state> 激活该态），
+     并在底部旁白讲解当前这一步发生了什么（触发、看到的态、验收点）。用户只需点「下一步 / 自动播放」
+     观看，不需要自己操作——这是演示/引导，不是走查任务。
+     原型契约：page-state 须可由 location.hash='#'+pageStateId 激活（hashchange 钩子，见 prototype-standard R5）。
+     可达性 / 覆盖的【验证】由 `harness interaction prototype-check` 静态保证，不靠人肉走查。
+     需通过本地静态服务器打开（与主原型、walkthrough.js 同目录）。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Harness 原型演示导览</title>
+<style>
+  :root {
+    --bg:#f4f5f8; --side:#fbfcfe; --card:#fff; --line:#e7e9ef; --ink:#1f2430; --ink-2:#4a5160;
+    --muted:#8a92a3; --faint:#aab0be; --accent:#5b6cff; --accent-soft:#eef0ff;
+    --ok:#0ea579; --ok-soft:#e6f7f1; --chip:#f1f3f7;
+    --shadow:0 1px 2px rgba(20,24,40,.04), 0 3px 12px rgba(20,24,40,.05);
+  }
+  * { box-sizing:border-box; }
+  html,body { height:100%; margin:0; }
+  /* grid 行高锁定到视口，左栏再高也只在自身滚动，不撑开整页 */
+  body { display:grid; grid-template-columns:300px 1fr; grid-template-rows:100vh; height:100vh; overflow:hidden;
+    font:14px/1.55 -apple-system,"PingFang SC","Microsoft YaHei",ui-sans-serif,sans-serif;
+    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; }
+  .nav { background:var(--side); border-right:1px solid var(--line); overflow-y:auto; min-height:0; }
+  .nav-head { padding:16px 16px 12px; position:sticky; top:0; background:var(--side);
+    border-bottom:1px solid var(--line); z-index:3; }
+  .brand { display:flex; align-items:center; gap:8px; }
+  .brand .dot { width:9px; height:9px; border-radius:3px; background:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  .brand h1 { margin:0; font-size:14.5px; font-weight:650; }
+  .brand .sub { font-size:11.5px; color:var(--muted); margin-top:3px; }
+  .mission { font:11px/1.5 ui-monospace,monospace; color:var(--accent); margin-top:8px; word-break:break-all; }
+  .group-head { padding:14px 16px 4px; font-size:11px; font-weight:700; letter-spacing:.6px;
+    text-transform:uppercase; color:var(--faint); display:flex; align-items:center; gap:7px; }
+  .group-head .gn { font:600 10px/1 ui-monospace,monospace; color:var(--muted); background:var(--chip); padding:2px 6px; border-radius:20px; }
+  .suc { margin:2px 8px 0; }
+  .suc-title { display:flex; align-items:center; gap:6px; font:600 11px/1 ui-monospace,monospace;
+    color:var(--accent); padding:7px 8px; letter-spacing:.3px; cursor:pointer; border-radius:8px; }
+  .suc-title:hover { background:var(--accent-soft); }
+  .suc-title.on { background:var(--accent-soft); }
+  .suc-title .chev { width:12px; color:var(--muted); font-size:9px; }
+  .suc-title .sid { flex:0 0 auto; }
+  .suc-title .stitle { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font:400 11px/1.3 -apple-system,"PingFang SC",sans-serif; color:var(--ink-2); }
+  .suc-title .suc-cnt { flex:0 0 auto; font:600 10px/1 ui-monospace,monospace; color:var(--muted); background:var(--chip); padding:2px 6px; border-radius:20px; }
+  .flow { display:flex; align-items:center; gap:7px; padding:5px 8px 5px 22px; margin:0; border-radius:7px;
+    cursor:pointer; transition:background .1s; }
+  .flow:hover { background:var(--card); }
+  .flow.active { background:var(--accent-soft); }
+  .flow.done .name { color:var(--muted); }
+  .flow .play { width:16px; height:16px; flex:0 0 auto; border-radius:50%; background:var(--chip);
+    color:var(--muted); display:flex; align-items:center; justify-content:center; font-size:8px; }
+  .flow.active .play { background:var(--accent); color:#fff; }
+  .flow.done .play { background:var(--ok-soft); color:var(--ok); }
+  .flow .meta { flex:1; min-width:0; }
+  .flow .name { font-size:12.5px; font-weight:500; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block; }
+  .flow.active .name { font-weight:600; color:var(--accent); }
+  .flow .fcnt { font:600 10px/1 ui-monospace,monospace; color:var(--faint); }
+  /* flow 下的拍（子节点）列表 —— 仅当前演示 flow 展开 */
+  .steps2 { margin:1px 0 6px 34px; border-left:2px solid var(--accent-soft); padding-left:8px; }
+  .stepitem { display:flex; gap:7px; align-items:center; padding:5px 8px; margin:1px 0; border-radius:7px;
+    cursor:pointer; font-size:12px; color:var(--ink-2); }
+  .stepitem:hover { background:var(--card); }
+  .stepitem.cur { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+  .stepitem .mk { width:15px; height:15px; border-radius:50%; border:1.5px solid var(--faint); flex:0 0 auto;
+    font:600 9px/1 ui-monospace,monospace; display:flex; align-items:center; justify-content:center; color:var(--muted); }
+  .stepitem.cur .mk { border-color:var(--accent); color:var(--accent); }
+  .stepitem.past .mk { background:var(--ok); border-color:var(--ok); color:#fff; }
+  .stepitem .sid2 { font:600 10px/1.3 ui-monospace,monospace; color:var(--accent); }
+  .stepitem .lbl { color:var(--ink-2); }
+  .empty { margin:18px; padding:16px; border:1px dashed var(--line); border-radius:11px; color:var(--ink-2); font-size:12.5px; background:var(--card); }
+  .empty code { background:var(--chip); padding:1px 6px; border-radius:5px; }
+  .stage { display:flex; flex-direction:column; min-width:0; min-height:0; overflow:hidden; background:var(--bg); }
+  .topbar { display:flex; align-items:center; gap:10px; padding:9px 16px; background:var(--side);
+    border-bottom:1px solid var(--line); font-size:12.5px; color:var(--muted); }
+  .topbar .cur { color:var(--ink); }
+  .topbar a { color:var(--accent); text-decoration:none; margin-left:auto; font-weight:600; white-space:nowrap; }
+  .frame-wrap { flex:1; padding:12px 12px 0; min-height:0; }
+  iframe { width:100%; height:100%; border:1px solid var(--line); border-radius:12px; background:#fff; box-shadow:var(--shadow); }
+  /* 演示控制条 + 旁白 */
+  .player { background:var(--side); border-top:1px solid var(--line); padding:12px 16px 14px; }
+  .player.hidden { display:none; }
+  .suc-desc { font-size:13px; color:var(--ink-2); margin-bottom:10px; padding-bottom:9px; border-bottom:1px solid var(--line); }
+  .suc-desc .sid { font:600 11px/1 ui-monospace,monospace; color:var(--accent); background:var(--accent-soft); padding:2px 7px; border-radius:6px; margin-right:8px; }
+  .suc-desc .title { font-weight:650; color:var(--ink); }
+  .suc-desc .flow { color:var(--muted); margin-left:8px; }
+  .narr { display:flex; align-items:flex-start; gap:12px; }
+  .narr .stepno { flex:0 0 auto; font:700 12px/1 ui-monospace,monospace; color:#fff; background:var(--accent);
+    border-radius:8px; padding:8px 10px; min-width:54px; text-align:center; }
+  .narr .stepno small { display:block; font-weight:500; font-size:9.5px; opacity:.85; margin-top:2px; }
+  .narr .body { min-width:0; flex:1; }
+  .narr .trig { font-size:14px; font-weight:650; color:var(--ink); }
+  .narr .desc { font-size:12.5px; color:var(--ink-2); margin-top:3px; }
+  .narr .refs { font:11px/1.5 ui-monospace,monospace; color:var(--muted); margin-top:4px; }
+  .narr .refs b { color:var(--accent); }
+  .ctrls { display:flex; align-items:center; gap:10px; margin-top:12px; }
+  .ctrls button { font:600 13px/1 ui-sans-serif; padding:9px 16px; border:1px solid var(--line);
+    border-radius:9px; background:var(--card); color:var(--ink-2); cursor:pointer; }
+  .ctrls button:hover { border-color:var(--accent); color:var(--accent); }
+  .ctrls button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .ctrls button:disabled { opacity:.4; cursor:default; }
+  .ctrls .prog { margin-left:auto; font-size:12px; color:var(--muted); }
+  .ctrls .dots { display:flex; gap:5px; }
+  .ctrls .dot2 { width:8px; height:8px; border-radius:50%; background:var(--line); }
+  .ctrls .dot2.on { background:var(--accent); }
+  .ctrls .dot2.past { background:var(--ok); }
+</style>
+</head>
+<body>
+  <aside class="nav">
+    <div class="nav-head">
+      <div class="brand"><span class="dot"></span><h1>原型演示导览</h1></div>
+      <div class="sub">选一条流程 → 点「下一步」看它演给你</div>
+      <div class="mission" id="mission-id"></div>
+    </div>
+    <div id="directory"></div>
+  </aside>
+  <main class="stage">
+    <div class="topbar">
+      <span class="cur" id="cur">未选择流程 · 左侧点一条开始演示</span>
+      <a href="index.html" target="_blank" rel="noopener">新标签打开主原型 ↗</a>
+    </div>
+    <div class="frame-wrap"><iframe id="proto" src="index.html" title="可操作主原型"></iframe></div>
+    <div class="player hidden" id="player">
+      <div class="suc-desc" id="suc-desc"></div>
+      <div class="narr">
+        <div class="stepno" id="stepno">—<small>步</small></div>
+        <div class="body">
+          <div class="trig" id="narr-trig"></div>
+          <div class="desc" id="narr-desc"></div>
+          <div class="refs" id="narr-refs"></div>
+        </div>
+      </div>
+      <div class="ctrls">
+        <button id="btn-prev">◀ 上一步</button>
+        <button id="btn-next" class="primary">下一步 ▶</button>
+        <button id="btn-auto">▶ 自动播放</button>
+        <button id="btn-restart">↻ 重播</button>
+        <span class="dots" id="dots"></span>
+        <span class="prog" id="prog"></span>
+      </div>
+    </div>
+  </main>
+<script>
+(function () {
+  "use strict";
+  var iframe = document.getElementById("proto");
+  var dir = document.getElementById("directory");
+  var PROTO_DEFAULT = "index.html";
+  var tour = null;        // {suc, flow, nodes:[...]}
+  var ptr = -1;           // 当前步索引
+  var autoTimer = null;
+  var loadedFile = "index.html";
+  var collapsedSucs = null;   // {sucId:true} 折叠状态；null=未初始化（首渲按 focus 设默认）
+
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c];});}
+  function fileOf(s){return String(s||"").split("#")[0].split("/").pop();}
+  var HTML_ENTRY=/^[\w./-]+\.html(?:#.*)?$/i;
+
+  // 驱动原型到某一拍：导航到 page_entry 文件 + 用 hash 激活该 page-state（演示，逐步驱动）
+  function driveTo(node, cb){
+    var pe=String(node.page_entry||"").trim();
+    var file = HTML_ENTRY.test(pe)? fileOf(pe) : PROTO_DEFAULT;
+    var psHash = node.page_state ? ("#"+node.page_state) : "";
+    function applyHashAndHighlight(){
+      try{
+        if(psHash) iframe.contentWindow.location.hash = psHash;
+        if(node.anchor_root){
+          var el=iframe.contentDocument.querySelector(node.anchor_root);
+          if(el){ el.scrollIntoView({block:"center"}); var p=el.style.outline;
+            el.style.outline="3px solid #5b6cff"; el.style.outlineOffset="2px";
+            setTimeout(function(){el.style.outline=p;},1400); }
+        }
+      }catch(e){}
+      if(cb) cb();
+    }
+    if(file===loadedFile){ applyHashAndHighlight(); }
+    else { loadedFile=file; iframe.onload=function(){ iframe.onload=null; applyHashAndHighlight(); }; iframe.src=file+psHash; }
+  }
+
+  function renderNarration(){
+    var n=tour.nodes[ptr]; var t=n.trigger||{};
+    var trig = t.desc || t.kind || "进入";
+    // 底部 SUC 描述：当前演示的 SUC id + 名称 + 当前 flow（直观说明"在演什么"）
+    document.getElementById("suc-desc").innerHTML='<span class="sid">'+esc(tour.suc)+'</span>'
+      +'<span class="title">'+esc(tour.sucTitle||"（未命名系统用例）")+'</span>'
+      +'<span class="flow">· '+esc(tour.flow)+(tour.rationale?('：'+esc(tour.rationale)):'')+'</span>';
+    document.getElementById("stepno").innerHTML=(ptr+1)+'<small>/ '+tour.nodes.length+' 步</small>';
+    document.getElementById("narr-trig").textContent = trig;
+    var stateLabel = n.state?("当前态："+n.state):"";
+    var via = (t.kind==="system_event"&&t.via)?("  ·  触发方式：产品输入 "+t.via):"";
+    document.getElementById("narr-desc").textContent = stateLabel + via;
+    var refs = (n.acceptance_refs||[]);
+    document.getElementById("narr-refs").innerHTML = refs.length? ("验收点："+refs.map(function(r){return "<b>"+esc(r)+"</b>";}).join("、")) : "";
+    // dots
+    var dots=document.getElementById("dots"); dots.innerHTML="";
+    tour.nodes.forEach(function(_,i){ var d=document.createElement("span");
+      d.className="dot2"+(i<ptr?" past":(i===ptr?" on":"")); dots.appendChild(d); });
+    document.getElementById("prog").textContent = tour.flow+" · "+(ptr+1)+"/"+tour.nodes.length;
+    document.getElementById("btn-prev").disabled = ptr<=0;
+    document.getElementById("btn-next").disabled = ptr>=tour.nodes.length-1;
+    document.getElementById("cur").innerHTML = "正在演示：<b style='color:#1f2430'>"+esc(tour.suc)+" · "+esc(tour.flow)+"</b>";
+  }
+
+  function goTo(i){
+    if(!tour) return;
+    ptr=Math.max(0,Math.min(i,tour.nodes.length-1));
+    driveTo(tour.nodes[ptr]);
+    renderNarration();
+    renderDir();  // 刷新左栏子节点高亮（当前拍 / 已演拍）
+    if(ptr>=tour.nodes.length-1){ markDone(tour); stopAuto(); }
+  }
+  function next(){ if(tour && ptr<tour.nodes.length-1) goTo(ptr+1); }
+  function prev(){ if(tour && ptr>0) goTo(ptr-1); }
+
+  function stopAuto(){ if(autoTimer){ clearInterval(autoTimer); autoTimer=null; document.getElementById("btn-auto").textContent="▶ 自动播放"; } }
+  function toggleAuto(){
+    if(autoTimer){ stopAuto(); return; }
+    document.getElementById("btn-auto").textContent="⏸ 暂停";
+    autoTimer=setInterval(function(){ if(!tour||ptr>=tour.nodes.length-1){ stopAuto(); return; } next(); }, 2600);
+  }
+
+  var doneFlows=Object.create(null);
+  function markDone(t){ doneFlows[t.suc+"|"+t.flow]=true; renderDir(); }
+
+  function startTour(suc, flow){
+    stopAuto();
+    tour={suc:suc.suc, sucTitle:suc.title||"", flow:flow.flow, rationale:flow.rationale||"", nodes:flow.nodes||[]};
+    ptr=-1;
+    if(collapsedSucs) collapsedSucs[suc.suc]=false;  // 演示中的 SUC 自动展开
+    document.getElementById("player").classList.remove("hidden");
+    renderDir();
+    if(tour.nodes.length) goTo(0);
+  }
+
+  function renderDir(){
+    var data=window.__HARNESS_WALKTHROUGH__;
+    document.getElementById("mission-id").textContent = data&&data.mission_id?("mission: "+data.mission_id):"";
+    var bySuc = data && Array.isArray(data.by_suc)?data.by_suc:[];
+    dir.innerHTML="";
+    if(!bySuc.length){
+      dir.innerHTML='<div class="empty">未找到 walkthrough 数据。<br><br>先运行：<br>'
+        +'<code>harness interaction project --mission &lt;id&gt; --prototype-root &lt;dir&gt;</code><br><br>'
+        +'它会从 behavior-graph.yaml 生成 <code>walkthrough.js</code>。</div>';
+      return;
+    }
+    // 分两组：本任务（focus=true）/ 项目已有（focus=false）。focus 缺省视为本任务。
+    var focusList=bySuc.filter(function(sb){return sb.focus!==false;});
+    var projList=bySuc.filter(function(sb){return sb.focus===false;});
+    // 首渲初始化折叠态：本任务默认展开、项目已有默认折叠（密度优先，按需展开）。
+    if(collapsedSucs===null){
+      collapsedSucs={};
+      bySuc.forEach(function(sb){ if(sb.focus===false) collapsedSucs[sb.suc]=true; });
+    }
+    function groupHeader(text,count){
+      var h=document.createElement("div"); h.className="group-head";
+      h.innerHTML=esc(text)+'<span class="gn">'+count+'</span>'; dir.appendChild(h);
+    }
+    function renderSuc(sb){
+      var box=document.createElement("div"); box.className="suc";
+      var collapsed=!!collapsedSucs[sb.suc];
+      var flows=sb.flows||[];
+      var doneN=flows.filter(function(fl){return doneFlows[sb.suc+"|"+fl.flow];}).length;
+      var hasActive=tour&&tour.suc===sb.suc;
+      var t=document.createElement("div");
+      t.className="suc-title"+(collapsed?" collapsed":"")+(hasActive?" on":"");
+      t.innerHTML='<span class="chev">'+(collapsed?"▸":"▾")+'</span>'
+        +'<span class="sid">'+esc(sb.suc)+'</span>'
+        +(sb.title?'<span class="stitle">'+esc(sb.title)+'</span>':'')
+        +'<span class="suc-cnt">'+(doneN?doneN+"/":"")+flows.length+'</span>';
+      t.addEventListener("click",function(){ collapsedSucs[sb.suc]=!collapsed; renderDir(); });
+      box.appendChild(t);
+      if(!collapsed){
+        flows.forEach(function(fl){
+          var key=sb.suc+"|"+fl.flow;
+          var isActive=tour&&tour.suc===sb.suc&&tour.flow===fl.flow;
+          var el=document.createElement("div");
+          el.className="flow"+(isActive?" active":"")+(doneFlows[key]?" done":"");
+          el.innerHTML='<span class="play">'+(doneFlows[key]?"✓":"▶")+'</span>'
+            +'<span class="meta"><span class="name">'+esc(fl.flow)+'</span></span>'
+            +'<span class="fcnt">'+(fl.nodes?fl.nodes.length:0)+'</span>';
+          el.addEventListener("click",function(){ startTour(sb,fl); });
+          box.appendChild(el);
+          // 拍序列只在【当前正在演示的 flow】下展开，避免一屏全是步骤、密度过低。
+          if(isActive){
+            var sList=document.createElement("div"); sList.className="steps2";
+            (fl.nodes||[]).forEach(function(node, si){
+              var isCur=ptr===si, isPast=si<ptr;
+              var it=document.createElement("div");
+              it.className="stepitem"+(isCur?" cur":"")+(isPast?" past":"");
+              var tt=node.trigger||{}; var lbl=tt.desc||tt.kind||"进入";
+              it.innerHTML='<span class="mk">'+(isPast?"✓":(si+1))+'</span>'
+                +'<span><span class="sid2">'+esc(node.state||node.step)+'</span> <span class="lbl">· '+esc(lbl)+'</span></span>';
+              it.addEventListener("click",function(e){ e.stopPropagation(); stopAuto(); goTo(si); });
+              sList.appendChild(it);
+            });
+            box.appendChild(sList);
+          }
+        });
+      }
+      dir.appendChild(box);
+    }
+    if(focusList.length){ groupHeader("本任务 · 系统用例", focusList.length); focusList.forEach(renderSuc); }
+    if(projList.length){ groupHeader("项目已有 · 系统用例", projList.length); projList.forEach(renderSuc); }
+  }
+
+  document.getElementById("btn-next").addEventListener("click",function(){ stopAuto(); next(); });
+  document.getElementById("btn-prev").addEventListener("click",function(){ stopAuto(); prev(); });
+  document.getElementById("btn-auto").addEventListener("click",toggleAuto);
+  document.getElementById("btn-restart").addEventListener("click",function(){ stopAuto(); goTo(0); });
+
+  var sc=document.createElement("script");
+  sc.src="walkthrough.js?v="+(window.performance?Math.floor(performance.now()):"x");
+  sc.onload=function(){ renderDir(); };
+  sc.onerror=function(){ renderDir(); };
+  document.head.appendChild(sc);
+})();
+</script>
+</body>
+</html>

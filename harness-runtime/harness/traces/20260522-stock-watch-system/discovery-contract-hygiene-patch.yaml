@@ -1,0 +1,21 @@
+patches:
+  - target: control_contract.produced_at
+    op: set
+    value: "2026-05-22T23:18:00+08:00"
+  - target: control_contract.work_graph_artifact.node_id
+    op: set
+    value: "REQ-STOCK-WATCH-SYSTEM"
+  - target: control_contract.work_graph_artifact.canonical_artifact
+    op: set
+    value: "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/discovery-brief.md"
+  - target: control_contract.degradations
+    op: set
+    value:
+      - kind: gitnexus_unavailable
+        reason: "GitNexus available=false indexed=false fresh=false，当前没有 .gitnexus/；project-context.md 也缺失，无法形成自动索引 + 项目上下文组合证据。"
+        compensating_action: "后续运行 npx gitnexus analyze 并补 project-context.md；本次 discovery 使用 project-knowledge/context/*、任务契约、代码直读和外部官方资料作为临时证据。"
+  - target: control_contract.design_assumptions
+    op: append
+    value:
+      assumption: "project-context.md 缺失时，下游 PRD 暂以 project-knowledge/context/* 和 discovery 证据作为上下文输入，但应在后续补齐项目上下文。"
+      impact_on: prd

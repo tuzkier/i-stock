@@ -1,0 +1,58 @@
+id: RV-CODE-REVIEW-T002-T006-CORRECTNESS-PASS
+role: correctness-reviewer
+verdict: PASS
+reviewed_unit: TASK-STOCK-WATCH-T002..TASK-STOCK-WATCH-T006
+reviewed_obligations:
+- T002 SourceHealth / workbench user-observable behavior
+- T003 MTS explanation and non-advice boundary
+- T004 alert taxonomy, trigger, acknowledgement, scheduled missed, archive suspension
+- T005 WorkspaceSnapshotV2 restore and per-symbol layout behavior
+- T006 fixture-first acceptance matrix
+review_basis:
+- harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+- harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+- harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+- harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+- src/App.tsx
+- src/domain/alert.ts
+- src/domain/market-data-source.ts
+- src/domain/workspace.ts
+- src/lib/signals.ts
+role_boundary:
+  in_scope:
+  - user-observable correctness
+  - acceptance scenario behavior
+  - unauthorized behavior drift
+  out_of_scope:
+  - test effectiveness
+  - architecture boundary ownership
+  - Harness gate mechanics
+behavior_matrix:
+- target: T004 scheduled missed keeps enabled / idle and does not backfill trigger
+  conclusion: pass
+  evidence:
+  - tests/replay/alerts/trigger-flow.spec.ts
+  - tests/e2e/alerts/panel.spec.ts
+- target: T005 selectedSymbol and per-symbol layout/tab persist after reload
+  conclusion: pass
+  evidence:
+  - tests/e2e/restore-layout/resume.spec.ts
+- target: T002 SourceHealth is the user-visible status authority
+  conclusion: pass
+  evidence:
+  - src/App.tsx
+  - tests/e2e/workbench/default.spec.ts
+- target: T003 MTS card keeps technical reminder and non-advice copy boundary
+  conclusion: pass
+  evidence:
+  - tests/e2e/mts/card.spec.ts
+  - harness-runtime/harness/traces/20260522-stock-watch-system/t003-copy-review.md
+blocking_gaps: []
+findings: []
+non_blocking_risks: []
+dispatch:
+  subagent_id: code-review-artifact-correctness-reviewer-20260606
+  model: gpt-5.4
+  execution_mode: spawn_agent
+  started_at: '2026-06-06T00:00:00Z'
+  completed_at: '2026-06-06T00:00:00Z'

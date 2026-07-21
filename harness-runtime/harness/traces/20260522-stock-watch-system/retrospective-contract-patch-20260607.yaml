@@ -1,0 +1,112 @@
+patches:
+- target: control_contract.upstream
+  op: set
+  value:
+  - path: harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+  - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+  - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+  - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+  - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/acceptance-result.md
+  - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/delivery-package.md
+  - path: harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/delivery__advance_stage.json
+- target: control_contract.decisions
+  op: set
+  value:
+  - id: MEM-01
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/specs/local-stock-watch-workbench/spec.md
+    change_type: applied
+    reason: 已接受差量规格应成为后续本地看盘工作台行为契约边界。
+    blocking: false
+  - id: MEM-02
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/operations/verification/README.md
+    change_type: applied
+    reason: no-webserver Playwright 验证必须先确认本地 dev server 前提，且 fixture-first 验收命令是可复用运行手册。
+    blocking: false
+  - id: MEM-03
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/lessons/quality/README.md
+    change_type: applied
+    reason: delivery contract/checker 漂移、review 摩擦压平和晚轮证据粒度不足会影响后续交付治理。
+    blocking: false
+  - id: MEM-04
+    source: retrospective
+    target: project-knowledge
+    target_ref: project-knowledge/engineering/testing/README.md
+    change_type: applied
+    reason: fixture-first、真实 reload 和投资文案负向断言是本项目可复用测试模式。
+    blocking: false
+  - id: MEM-05
+    source: retrospective
+    target: project-context
+    target_ref: project-context.md#历史教训
+    change_type: applied
+    reason: 三条复盘教训已通过 harness project-context add-lesson 写入，未来任务必须继承。
+    blocking: false
+  - id: MEM-06
+    source: retrospective
+    target: harness-gap
+    target_ref: .harness/common/skills/stage-gate/scripts/check_contracts.py
+    change_type: applied
+    reason: delivery_contract schema 存在但 checker 未注册，已在本地 runtime 修正并需要作为框架缺口留痕。
+    blocking: false
+  - id: MEM-07
+    source: retrospective
+    target: harness-gap
+    target_ref: .harness/common/skills/verify/workflow.md
+    change_type: proposed
+    reason: no-webserver Playwright 需要 verify preflight，避免服务未启动导致假性验证失败。
+    blocking: false
+- target: control_contract.planning_analysis
+  op: set
+  value:
+    planning_delta:
+    - id: PD-01
+      summary: no-webserver E2E 前置条件未在验证前显式化，首次失败后才启动 5174 dev server。
+      evidence:
+      - harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+    - id: PD-02
+      summary: 设计合同到实现合同的替代确认推迟到 code-review 初审。
+      evidence:
+      - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - id: PD-03
+      summary: late-stage corrective fix 缺更细 red/regression 证据，最终为 PASS_WITH_RISK。
+      evidence:
+      - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - id: PD-04
+      summary: delivery gate 因 contract/checker 漂移先阻断，修复后转为 continue_with_warnings。
+      evidence:
+      - harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/delivery__advance_stage.json
+    failure_patterns:
+    - id: FP-S1
+      repeatability: systemic
+      summary: contract/checker 漂移会把已验收交付转成治理层阻断。
+    - id: FP-R1
+      repeatability: repeated
+      summary: 控制面派生状态刷新滞后，需要额外解释当前权威证据。
+    - id: FP-R2
+      repeatability: repeated
+      summary: 证据粒度前强后弱，晚轮修复审计细度不足。
+- target: control_contract.evidence_refs
+  op: set
+  value:
+  - harness-runtime/harness/artifacts/20260522-stock-watch-system/retrospective/retrospective.md
+  - harness-runtime/harness/artifacts/20260522-stock-watch-system/retrospective/knowledge-promotion-plan.md
+  - project-knowledge/operations/knowledge-promotions/20260522-stock-watch-system.md
+  - project-knowledge/specs/local-stock-watch-workbench/spec.md
+  - project-knowledge/operations/verification/README.md
+  - project-knowledge/lessons/quality/README.md
+  - project-knowledge/engineering/testing/README.md
+  - project-context.md
+- target: control_contract.dora_signals
+  op: set
+  value:
+    lead_time: 2026-05-22 到 2026-06-07
+    rework_count: 1
+    review_hold_count: artifact-observed=1; delivery_contract=0
+    verification_failure_count: 1
+    rollback_followup_count: 0 rollback; 3 advisory follow-ups

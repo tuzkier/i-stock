@@ -1,0 +1,14 @@
+operation_id: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane
+type: advance_lane
+node_id: REQ-STOCK-WATCH-SYSTEM
+mission_id: 20260522-stock-watch-system
+from_lane: breakdown-lane
+to_lane: development-lane
+to_stage: execute
+status: ready
+work_graph_artifact:
+  node_id: REQ-STOCK-WATCH-SYSTEM
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/execution-brief.md

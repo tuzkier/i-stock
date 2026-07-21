@@ -1,0 +1,85 @@
+{
+  "type": "visual_interaction_manifest",
+  "version": 1,
+  "mission_id": "20260522-stock-watch-system",
+  "generated_at": "2026-05-23T01:33:44.730907+00:00",
+  "stage_dir": "harness-runtime/harness/stages/20260522-stock-watch-system",
+  "artifact_count": 1,
+  "artifacts": [
+    {
+      "id": "VIZ-001",
+      "path": "visual-interaction/prototype/index.html",
+      "absolute_path": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html",
+      "type": "html",
+      "size_bytes": 13904,
+      "sha256": "62a41049bdeb07057d5b699d66cea8f61db29b25243c007940ca221437a96bc0",
+      "modified_at": "2026-05-23T01:31:46.347333+00:00",
+      "source": "harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction",
+      "covers": {
+        "bucs": [
+          "BUC-01",
+          "BUC-02",
+          "BUC-03",
+          "BUC-04",
+          "BUC-05",
+          "BUC-06",
+          "BUC-07"
+        ],
+        "flows": [
+          "FLOW-WATCHLIST-MANAGE",
+          "FLOW-OPEN-DETAIL",
+          "FLOW-SWITCH-INDICATOR",
+          "FLOW-READ-MTS",
+          "FLOW-MANAGE-ALERT",
+          "FLOW-RESTORE-WORKSPACE",
+          "FLOW-SOURCE-DEGRADED"
+        ],
+        "states": [
+          "STATE-LOADING",
+          "STATE-EMPTY",
+          "STATE-SUCCESS",
+          "STATE-ERROR",
+          "STATE-PERMISSION",
+          "STATE-DISABLED",
+          "STATE-WATCH-ACTIVE",
+          "STATE-WATCH-ARCHIVED",
+          "STATE-MTS-STRONG",
+          "STATE-MTS-DATA-INSUFFICIENT",
+          "STATE-SOURCE-DEMO",
+          "STATE-ALERT-TRIGGERED"
+        ],
+        "viewports": [
+          "desktop",
+          "tablet",
+          "mobile"
+        ],
+        "ac": [
+          "AC-01",
+          "AC-02",
+          "AC-03",
+          "AC-04",
+          "AC-05"
+        ],
+        "scenarios": [
+          "BUC-01",
+          "BUC-02",
+          "BUC-03",
+          "BUC-04",
+          "BUC-05",
+          "BUC-06",
+          "BUC-07"
+        ]
+      },
+      "artifact_role": "primary_prototype",
+      "screen": "多市场看盘工作台",
+      "component": "watchlist-detail-alerts",
+      "style_source": "inline-css",
+      "notes": "主可操作原型，覆盖 BUC-01 到 BUC-07、六类通用状态和桌面/移动视口。",
+      "review_status": "pending"
+    }
+  ],
+  "review_inputs": {
+    "interaction_doc": "harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md",
+    "manifest": "visual-interaction-manifest.json"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "_comment": "execute-improvement-plan M3.1 + M5 anchor hook manifest. Includes static base hooks (contract-via-cli / upstream-readonly / gate-pass) and the 4 dynamic stop_if hooks (changes_outside_authorized / new_external_dependency / design_constraint_conflict / new_public_behavior_without_delta_spec). The dynamic hooks read effective-overlay.json produced by `harness execute apply-overlay`.",
+  "stage": "execute",
+  "hooks": [
+    {
+      "id": "execute-check-contract-via-cli",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_contract_via_cli.py",
+      "purpose": "Block direct Write/Edit of execution-result.contract.yaml."
+    },
+    {
+      "id": "execute-check-upstream-artifact-readonly",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_upstream_artifact_readonly.py",
+      "purpose": "Block mutation of upstream execution-brief.md / execution-brief.contract.yaml."
+    },
+    {
+      "id": "execute-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block `harness mission stage complete execute` until last_gate_run_status=PASS."
+    },
+    {
+      "id": "execute-check-stop-changes-outside-authorized",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_changes_outside_authorized.py",
+      "purpose": "Deny Edit/Write whose file_path is outside the current Atomic Task's authorized_paths."
+    },
+    {
+      "id": "execute-check-stop-new-external-dependency",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_new_external_dependency.py",
+      "purpose": "Deny Edit/Write to project dependency files (per dependency-files.yaml) when stop_if active."
+    },
+    {
+      "id": "execute-check-stop-design-constraint-conflict",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_design_constraint_conflict.py",
+      "purpose": "Deny Edit/Write hitting prohibited_paths from upstream design constraints."
+    },
+    {
+      "id": "execute-check-stop-new-public-behavior",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_new_public_behavior.py",
+      "purpose": "Advisory or strict block when new public behavior lacks delta spec coverage."
+    }
+  ]
+}

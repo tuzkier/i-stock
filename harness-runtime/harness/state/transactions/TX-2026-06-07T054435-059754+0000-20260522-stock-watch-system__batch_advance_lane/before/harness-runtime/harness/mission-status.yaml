@@ -1,0 +1,61 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: development-lane
+  current_stage: code-review
+  stages:
+    execute: done
+    code-review: pending
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - TASK-STOCK-WATCH-T002
+    - TASK-STOCK-WATCH-T003
+    - TASK-STOCK-WATCH-T004
+    - TASK-STOCK-WATCH-T005
+    - TASK-STOCK-WATCH-T006
+    related_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    operation: advance_lane
+    lane: development-lane
+    stage: code-review
+    lane_action:
+      lane: development-lane
+      stage: code-review
+      graph_operation: advance_lane
+      operation_profiles:
+        advance_lane:
+          to_lane: verification-lane
+          to_stage: verify
+      allowed_graph_operations:
+      - advance_lane
+      output_artifact: harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+      required_execution_roles:
+      - review-control-plane-executor
+      required_review_roles:
+      - correctness-reviewer
+      - tdd-reviewer
+      to_lane: verification-lane
+      to_stage: verify
+      carrier: code-review
+      skill: code-review
+      role_carriers:
+        review-control-plane-executor: skill
+    last_gate_report: harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/execute__advance_stage.json
+    last_operation_manifest: harness-runtime/harness/work-graph/operations/20260522-stock-watch-system__batch_advance_stage.yaml
+    last_operation_status: PASS
+    last_transaction_id: TX-2026-06-06T094657-962046+0000-20260522-stock-watch-system__batch_advance_stage
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-06-06T094657-962046+0000-20260522-stock-watch-system__batch_advance_stage.json
+    input_nodes: []
+    output_nodes: []
+    reset_stage: execute
+    reset_reason: 用户确认其他任务仍在执行；T001 仅完成节点级验证，不进入整套任务最终交付，切回 development-lane/execute
+      继续 T002。
+    reset_at: '2026-05-24T10:24:37.844002+08:00'
+    reset_output_node_policy: keep
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation
+  - prd
+  started_at: '2026-05-23'
+  completed_at: ''

@@ -1,0 +1,52 @@
+patches:
+  - target: control_contract.role_verdicts
+    op: append
+    value:
+      id: RV-SPEC-T003-T006-RECHECK-PASS
+      role: spec-reviewer
+      reviewed_unit: TASK-STOCK-WATCH-T003..TASK-STOCK-WATCH-T006
+      verdict: PASS
+      review_basis:
+        - execution-brief.md T003-T006
+        - local-stock-watch-workbench spec
+        - EV-T003-RED-001
+        - EV-T003-REGISTRY-001
+        - EV-T003-REPLAY-001
+        - EV-T003-MTS-E2E-001
+        - EV-T003-COPY-001
+        - EV-T005-REPLAY-001
+        - EV-T006-UNIT-REPLAY-MATRIX-001
+        - EV-T006-E2E-REGRESSION-001
+      dispatch:
+        mode: readonly
+        role_package_ref: .harness/common/agents/spec-reviewer.md
+        subagent_id: 019e9c37-e022-7042-8f3e-38460abf26e1
+        model: gpt-5.4
+        execution_mode: readonly
+        completed_at: '2026-06-06T00:00:00Z'
+      reviewed_obligations:
+        - T003-A1
+        - T003-A2
+        - T004-A1
+        - T004-A2
+        - T005-A1
+        - T005-A2
+        - T006-A1
+        - T006-A2
+      blocking_gaps: []
+      evidence_refs:
+        - EV-T003-RED-001
+        - EV-T003-REGISTRY-001
+        - EV-T003-REPLAY-001
+        - EV-T003-MTS-E2E-001
+        - EV-T003-COPY-001
+        - EV-T005-REPLAY-001
+        - EV-T006-UNIT-REPLAY-MATRIX-001
+        - EV-T006-E2E-REGRESSION-001
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 5
+      pending_reviewer_recheck: false
+      last_gate_run_status: PASS
+      last_verdict: PASS

@@ -1,0 +1,16 @@
+patches:
+  - target: control_contract.tdd_evidence
+    op: append
+    value:
+      id: EV-T003-RED-001
+      type: red_report
+      phase: red
+      path: harness-runtime/harness/traces/20260522-stock-watch-system/t003-red-report.md
+      command: esbuild bundle harness-runtime/harness/traces/20260522-stock-watch-system/t003-red/registry-red.spec.ts then node --test
+      exit_code: 1
+      failure_signal: UNKNOWN_CODE did not pass through as REMOVED_REASON_ENTRY, proving the registry fallback contract rejects free-text MTS reason drift.
+      covers:
+        atomic_tasks:
+          - T003-A1
+        tasks:
+          - TASK-STOCK-WATCH-T003

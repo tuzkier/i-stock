@@ -1,0 +1,20 @@
+patches:
+  - target: control_contract.scenarios
+    op: set
+    value:
+      - id: BUC-01-S01
+        title: 新增多市场标的并打开默认看盘
+        traces_to: [AC-01, AC-02]
+        source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-01.md
+      - id: BUC-06-S01
+        title: 来源降级时 MTS 与提醒不可解释
+        traces_to: [AC-02, AC-03, AC-04]
+        source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-06.md
+      - id: BUC-07-S01
+        title: 重开浏览器恢复本地工作台
+        traces_to: [AC-05]
+        source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-07.md
+      - id: BUC-08-S01
+        title: 桌面 dense 与 focus 切换并保持入口可达
+        traces_to: [AC-02, AC-05]
+        source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-08.md

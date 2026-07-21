@@ -1,0 +1,4 @@
+patches:
+  - target: control_contract.version
+    op: set
+    value: 1

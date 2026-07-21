@@ -1,0 +1,126 @@
+patches:
+  - target: control_contract.domain_model
+    op: set
+    value:
+      source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+      bounded_contexts:
+        - BC-01 Watchlist Context
+        - BC-02 Chart Observation Context
+        - BC-03 Signal & Alert Context
+        - BC-04 Source Transparency Context
+        - BC-05 Local Continuity Context
+      context_map:
+        - upstream: BC-01 Watchlist Context
+          relationship: customer_supplier
+          downstream: BC-02 Chart Observation Context
+          contract: Only active WatchSymbol with supported Market can enter observation flow.
+        - upstream: BC-02 Chart Observation Context
+          relationship: customer_supplier
+          downstream: BC-03 Signal & Alert Context
+          contract: MtsSignal consumes interpretable PriceBar and IndicatorSet for the same WatchSymbol context.
+        - upstream: BC-04 Source Transparency Context
+          relationship: upstream_guardrail
+          downstream: BC-02 Chart Observation Context
+          contract: SourceStatus translates to sufficient / insufficient / demo_fallback / unavailable product semantics.
+        - upstream: BC-04 Source Transparency Context
+          relationship: upstream_guardrail
+          downstream: BC-03 Signal & Alert Context
+          contract: Demo or degraded source changes MTS and alert interpretability, not just visual decoration.
+        - upstream: BC-05 Local Continuity Context
+          relationship: supporting
+          downstream: BC-01 / BC-02 / BC-03
+          contract: Restore only product-authorized local semantics, not cloud sync or background behavior.
+      aggregates:
+        - AGG-01 Watchlist Aggregate / WatchSymbol
+        - AGG-02 Observation Aggregate / ObservationSession
+        - AGG-03 Signal & Alert Aggregate / AlertRuleSet
+      commands:
+        - CMD-01 AddWatchSymbol
+        - CMD-02 ArchiveWatchSymbol
+        - CMD-03 RestoreWatchSymbol
+        - CMD-04 SelectWatchSymbol
+        - CMD-05 SwitchSecondaryIndicator
+        - CMD-06 RefreshObservationContext
+        - CMD-07 EvaluateMtsSignal
+        - CMD-08 CreateAlertRule
+        - CMD-09 UpdateAlertRuleState
+        - CMD-10 ResolveAlertOutcome
+        - CMD-11 RestoreLocalWorkspace
+      events:
+        - EVT-01 WatchSymbolAdded
+        - EVT-02 WatchSymbolArchived
+        - EVT-03 WatchSymbolRestored
+        - EVT-04 ObservationContextRefreshed
+        - EVT-05 SourceDegraded
+        - EVT-06 MtsSignalEvaluated
+        - EVT-07 AlertRuleTriggered
+        - EVT-08 LocalWorkspaceRestored
+      invariants:
+        - INV-01 supported market and normalized symbol required
+        - INV-02 duplicate normalized symbol maps to same observation object
+        - INV-03 archived symbols remain recoverable
+        - INV-04 observation session requires active WatchSymbol
+        - INV-05 insufficient or degraded source prevents fake ready state
+        - INV-06 default chart layout remains recoverable
+        - INV-07 MTS must expose trend state score band signal type and alert level
+        - INV-08 MTS score is not win rate or return probability
+        - INV-09 risk alert precedence
+        - INV-10 AlertRule bound to archived WatchSymbol is suspended and recoverable
+      state_machines:
+        - STM-01 WatchSymbol draft_added -> active
+        - STM-02 WatchSymbol active -> archived
+        - STM-03 WatchSymbol archived -> active
+        - STM-04 MarketDataSource available -> degraded / unavailable
+        - STM-05 IndicatorSet ready -> partial / unavailable
+        - STM-06 MtsSignal data_insufficient -> interpretable / watch / confirmed / strong / risk
+        - STM-07 AlertRule enabled:idle -> enabled:triggered
+        - STM-08 AlertRule enabled:triggered -> enabled:acknowledged
+        - STM-09 ChartLayout default -> customized
+        - STM-10 AlertRule enabled -> suspended_by_archive
+        - STM-11 AlertRule suspended_by_archive -> enabled / disabled
+      permission_rules:
+        - User may add, archive, restore WatchSymbol.
+        - User may create, update, enable, disable, or acknowledge AlertRule.
+        - System may suspend AlertRule for archived WatchSymbol and restore it according to prior user intent.
+        - System may refresh observation context, evaluate MTS, resolve alerts, and restore local workspace.
+        - Trading execution actions are denied because they are outside mission scope.
+      modeling_risks:
+        - ChartLayout restore granularity remains for interaction / solution decision.
+        - MarketDataSource visible information density remains for interaction / solution decision.
+        - MTS reason code and invalidator taxonomy remains for solution / technical design decision.
+  - target: control_contract.business_objects.objects.5
+    op: merge
+    value:
+      states: [enabled, disabled, suspended_by_archive, idle, triggered, acknowledged]
+      rules: [RULE-02, RULE-09]
+      downstream_hints: [BUC-01, BUC-05, BUC-06]
+  - target: control_contract.business_use_cases.cases.0.exceptions_boundaries
+    op: set
+    value:
+      - 市场不可识别时不得进入 active。
+      - 重复标的保持同一观察对象语义。
+      - 标的归档后绑定提醒进入 suspended_by_archive，恢复标的后按用户原启停意图恢复。
+  - target: control_contract.business_use_cases.cases.4.exceptions_boundaries
+    op: set
+    value:
+      - 风控提醒优先。
+      - disabled 规则不得触发。
+      - suspended_by_archive 规则不得触发。
+  - target: control_contract.business_use_cases.cases.5.exceptions_boundaries
+    op: set
+    value:
+      - ChartLayout 恢复粒度待 interaction / solution 定稿。
+      - archived WatchSymbol 恢复为 active 后，相关 AlertRule 按用户原启停意图恢复。
+  - target: control_contract.business_rules
+    op: set
+    value:
+      - {id: RULE-01, source: BR-001, summary: 自选标的必须归属于已支持市场并保留原始代码与归一代码}
+      - {id: RULE-02, source: BR-002, summary: 自选与提醒本地恢复不依赖账号；归档标的提醒暂停且恢复后按原启停意图恢复}
+      - {id: RULE-03, source: BR-004, summary: 历史数据不足时可以展示价格，但不得产出伪造指标或 MTS 结论}
+      - {id: RULE-04, source: BR-005, summary: 来源降级必须显式显示正式 / 演示 / 降级语义}
+      - {id: RULE-05, source: BR-006, summary: 默认布局必须包含主图、成交量和一个可切换副图}
+      - {id: RULE-06, source: BR-007, summary: 指标与 MTS 只能服务解释与提醒，不得被包装成收益承诺}
+      - {id: RULE-07, source: BR-008, summary: MTS 必须同时表达趋势状态、分数带、信号类型和提醒等级}
+      - {id: RULE-08, source: BR-010/BR-011, summary: 买点必须区分趋势回调和收敛突破；风险必须区分趋势破坏、动量衰竭和风控止损}
+      - {id: RULE-09, source: BR-012/BR-013, summary: 提醒必须保持四级语义且风控优先级最高}
+      - {id: RULE-10, source: BR-014, summary: Legacy composite signal 不得冒充正式 MTS}

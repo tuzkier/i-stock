@@ -1,0 +1,4 @@
+patches:
+  - target: control_contract.role_verdicts.1.dispatch.model
+    op: set
+    value: "gpt-5.4"

@@ -1,0 +1,39 @@
+{
+  "transaction_id": "TX-2026-05-23T143653-269403+0000-20260522-stock-watch-system__TASK-STOCK-WATCH-T001__update_node_metadata",
+  "status": "staged",
+  "started_at": "2026-05-23T14:36:53.269869+00:00",
+  "ended_at": "2026-05-23T14:36:53.864238+00:00",
+  "mission_id": "20260522-stock-watch-system",
+  "operation_id": "20260522-stock-watch-system__TASK-STOCK-WATCH-T001__update_node_metadata",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T143653-269403+0000-20260522-stock-watch-system__TASK-STOCK-WATCH-T001__update_node_metadata/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/work-graph/operations/20260522-stock-watch-system__TASK-STOCK-WATCH-T001__update_node_metadata.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-STOCK-WATCH-T001.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "cleanup_staging",
+      "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T143653-269403+0000-20260522-stock-watch-system__TASK-STOCK-WATCH-T001__update_node_metadata/staging",
+      "status": "removed"
+    }
+  ],
+  "rollback": {
+    "snapshots": []
+  }
+}

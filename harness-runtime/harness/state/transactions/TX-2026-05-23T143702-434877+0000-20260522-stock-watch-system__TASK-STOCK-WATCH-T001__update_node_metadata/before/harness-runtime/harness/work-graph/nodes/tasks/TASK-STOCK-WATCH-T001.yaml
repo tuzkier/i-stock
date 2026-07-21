@@ -1,0 +1,22 @@
+id: TASK-STOCK-WATCH-T001
+kind: task
+title: 多市场自选归一、列表摘要与归档暂停
+lane: development-lane
+stage: execute
+status: ready
+parent_task_id: T001
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T001-A1
+- T001-A2
+dependencies: []
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+updated_at: '2026-05-23T13:37:21.678496+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__split_breakdown_tasks

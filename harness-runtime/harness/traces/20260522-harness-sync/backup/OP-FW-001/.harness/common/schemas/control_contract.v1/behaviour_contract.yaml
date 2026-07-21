@@ -1,0 +1,142 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    properties:
+      type:
+        const: behaviour_contract
+      functional_requirements:
+        type: array
+      covers_intent:
+        oneOf:
+          - type: object
+            properties:
+              user_stories:
+                type: array
+              acceptance_criteria:
+                type: array
+          - type: array
+      user_story_mapping:
+        type: array
+      capabilities:
+        type: array
+        items:
+          type: object
+          properties:
+            capability:
+              type: string
+            requirement_ids:
+              type: array
+              items:
+                type: string
+            scenario_ids:
+              type: array
+              items:
+                type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+            delta_spec:
+              type: string
+            confidence_from_discovery:
+              type: string
+              enum:
+                - CONFIRMED
+                - UNCERTAIN
+                - ASSUMED
+                - UPSTREAM_SKIPPED
+      agent_capability_requirements:
+        type: array
+        items:
+          type: object
+          properties:
+            component:
+              type: string
+            work_rights:
+              type: array
+              items:
+                type: string
+                enum:
+                  - read_context
+                  - decide_action
+                  - write_artifact
+                  - dispatch_subagent
+                  - request_human_input
+                  - halt_for_review
+            behaviour_requirements:
+              type: array
+              items:
+                type: string
+            eval_criteria:
+              type: array
+              items:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    enum:
+                      - skill_eval
+                      - scenario_eval
+                      - regression_eval
+                      - adversarial_eval
+                  threshold:
+                    type: number
+                required:
+                  - kind
+                  - threshold
+            priority:
+              type: string
+              enum:
+                - P0
+                - P1
+                - P2
+            related_sc:
+              type: array
+              items:
+                type: string
+      domain_model:
+        type: object
+        properties:
+          bounded_contexts:
+            type: array
+          aggregates:
+            type: array
+          commands:
+            type: array
+          events:
+            type: array
+          invariants:
+            type: array
+          state_machines:
+            type: array
+          permission_rules:
+            type: array
+          modeling_risks:
+            type: array
+      effectiveness_review:
+        type: object
+        properties:
+          rounds_used:
+            type: integer
+          max_rounds:
+            type: integer
+          last_verdict:
+            # Null until the first effectiveness-reviewer round runs; once set,
+            # it must match one of the four canonical verdict tokens. Without
+            # the null branch, freshly materialized templates that carry
+            # `last_verdict: null` placeholders would FAIL schema validation
+            # before the reviewer has had a chance to act.
+            oneOf:
+              - type: "null"
+              - type: string
+                enum:
+                  - PASS
+                  - HOLD
+                  - PASS_WITH_RISK
+                  - BLOCKED
+          pending_reviewer_recheck:
+            type: boolean
+    anyOf:
+      - required: [functional_requirements]
+      - required: [capabilities]

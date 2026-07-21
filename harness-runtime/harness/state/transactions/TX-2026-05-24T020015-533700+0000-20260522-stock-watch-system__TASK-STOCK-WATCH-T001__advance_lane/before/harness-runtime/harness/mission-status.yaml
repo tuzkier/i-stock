@@ -1,0 +1,57 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: verification-lane
+  current_stage: verify
+  stages:
+    interaction: done
+    solution: done
+    technical_analysis: done
+    breakdown: done
+    execute: done
+    code-review: done
+    verify: pending
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - TASK-STOCK-WATCH-T001
+    related_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    operation: advance_lane
+    lane: verification-lane
+    stage: verify
+    lane_action:
+      lane: verification-lane
+      stage: verify
+      graph_operation: advance_lane
+      operation_profiles:
+        advance_lane:
+          to_lane: delivery-lane
+          to_stage: delivery
+      allowed_graph_operations:
+      - advance_lane
+      output_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+      required_execution_roles:
+      - verification-engineer
+      required_review_roles:
+      - verification-effectiveness-reviewer
+      to_lane: delivery-lane
+      to_stage: delivery
+    last_gate_report: harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/code-review__advance_lane.json
+    last_operation_manifest: harness-runtime/harness/work-graph/operations/20260522-stock-watch-system__TASK-STOCK-WATCH-T001__advance_lane.yaml
+    last_operation_status: PASS
+    last_transaction_id: TX-2026-05-24T013157-173611+0000-20260522-stock-watch-system__TASK-STOCK-WATCH-T001__advance_lane
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-05-24T013157-173611+0000-20260522-stock-watch-system__TASK-STOCK-WATCH-T001__advance_lane.json
+    input_nodes: []
+    output_nodes: []
+    reset_stage: interaction
+    reset_reason: 用户走查原型后反馈页面信息密度过高；需回到 interaction 调整为日常看盘优先、诊断/验收信息可展开，再重新过 interaction
+      gate。
+    reset_at: '2026-05-23T19:19:28.421191+08:00'
+    reset_output_node_policy: keep
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation
+  - prd
+  started_at: '2026-05-23'
+  completed_at: ''

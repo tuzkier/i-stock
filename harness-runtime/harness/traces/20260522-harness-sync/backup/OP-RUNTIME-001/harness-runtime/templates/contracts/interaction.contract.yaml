@@ -1,0 +1,213 @@
+control_contract:
+  type: guide_contract
+  subtype: interaction_guide
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: interaction
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/stages/{{mission_id}}/product/product-definition.md"
+      sections:
+        - User Journeys
+        - Functional Requirements
+    - path: "harness-runtime/harness/stages/{{mission_id}}/product/product-domain-model.md"
+      sections:
+        - Entities
+        - States
+        - Actions
+    - path: "harness-runtime/harness/stages/{{mission_id}}/tech-design.md"
+      sections:
+        - 模块划分
+        - 验证策略
+  consumers:
+    - breakdown
+    - execute
+    - code-review
+    - verify
+    - stage-gate
+  role_policy:
+    stage: interaction
+    work_graph_lane: product-definition-lane
+    required_execution_roles:
+      - interaction-designer
+    required_review_roles:
+      - interaction-reviewer
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    source_stage_artifact: "harness-runtime/harness/stages/{{mission_id}}/interaction.md"
+    canonical_artifact: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/interaction.md"
+    supplementary_artifacts:
+      - id: visual_interaction_artifacts
+        required: true
+        source_stage_artifact_glob: "harness-runtime/harness/stages/{{mission_id}}/visual-interaction/**/*"
+        strip_source_prefix: "harness-runtime/harness/stages/{{mission_id}}/visual-interaction"
+        canonical_artifact_dir: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/visual-interaction"
+      - id: interaction_spec
+        required: true
+        source_stage_artifact_glob: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/**/*"
+        strip_source_prefix: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec"
+        canonical_artifact_dir: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/interaction-spec"
+  execution_result:
+    id: EXE-INTERACTION-001
+    role: interaction-designer
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/stages/{{mission_id}}/interaction.md"
+      - path: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/README.md"
+      - path: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/consistency-report.md"
+      - path: "harness-runtime/harness/stages/{{mission_id}}/visual-interaction/visual-interaction-manifest.json"
+    fulfilled_obligations:
+      - OBL-INTERACTION-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs:
+      - VIZ-001
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-INTERACTION-001
+      mission_id: "{{mission_id}}"
+      type: interaction
+      risk: medium
+      traces_to:
+        ac:
+          - AC-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+        - interaction_spec
+        - visual_artifact
+      required_roles:
+        - interaction-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  interaction_spec:
+    canonical_dir: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec"
+    ai_handoff: true
+    prototype_is_human_entry_only: true
+    structure_axis: system_surface
+    read_order:
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/contracts/interaction.contract.yaml"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/README.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/source-trace.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/surface-index.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/surface-baseline.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/surface-changeset.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/information-architecture.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/domain-ui-mapping.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/surfaces/"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/flows.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/states.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/interactions.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/scenarios.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/validation-rules.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/view-models.ts"
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/consistency-report.md"
+    do_not_use_as_ai_contract:
+      - "harness-runtime/harness/stages/{{mission_id}}/visual-interaction/prototype"
+  surface_baseline:
+    source_ref: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/surface-baseline.md"
+    surfaces:
+      - id: SURF-001
+        existing: "{{yes_no}}"
+        baseline_ref: "{{baseline_ref_or_none}}"
+        decision: create_surface
+  surface_changeset:
+    source_ref: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/surface-changeset.md"
+    changes:
+      - id: CHG-SURF-001
+        surface_id: SURF-001
+        operation: create_surface
+        traces_to:
+          - AC-01
+  prototype_interfaces:
+    - id: SCREEN-001
+      title: "{{screen_title}}"
+      surface_id: SURF-001
+      domain_refs:
+        - "{{domain_entity_or_action}}"
+      flows:
+        - FLOW-001
+      states:
+        - STATE-EMPTY
+  domain_model_coverage:
+    - ref: "{{domain_entity_or_action_or_state}}"
+      kind: entity
+      prototype_refs:
+        - SCREEN-001
+      flow_refs:
+        - FLOW-001
+      state_refs:
+        - STATE-EMPTY
+  information_architecture:
+    entry_points:
+      - "{{entry_point}}"
+    navigation_nodes:
+      - id: NAV-001
+        title: "{{navigation_node}}"
+        screens:
+          - SCREEN-001
+    source_ref: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/information-architecture.md"
+  prd_feedback:
+    status: no_change
+    findings: []
+    required_action: none
+  knowledge_promotion_candidates:
+    - id: KPC-INTERACTION-001
+      kind: prototype_pattern
+      source_ref: "harness-runtime/harness/stages/{{mission_id}}/interaction.md#沉淀候选"
+      suggested_target: project-knowledge
+      reason: "{{promotion_reason}}"
+  flows:
+    - id: FLOW-001
+      title: "{{flow_title}}"
+      traces_to:
+        - AC-01
+      visual_refs:
+        - VIZ-001
+  states:
+    - id: STATE-EMPTY
+      title: empty
+      visual_refs:
+        - VIZ-001
+  scenarios:
+    - id: SCN-INTERACTION-001
+      title: "{{scenario_title}}"
+      traces_to:
+        - AC-01
+      source_ref: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/scenarios.md"
+  validation_rules:
+    - id: VAL-001
+      title: "{{validation_rule}}"
+      traces_to:
+        - AC-01
+      source_ref: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/validation-rules.md"
+  consistency_report:
+    path: "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/consistency-report.md"
+    unresolved_blockers: 0
+    unresolved_decisions: "{{unresolved_decisions_count}}"
+  copy_language:
+    default: zh-CN
+    visible_copy_must_be_chinese: true
+    applies_to:
+      - interaction_spec
+      - html_svg_variants
+      - preview
+      - empty_error_permission_confirmation_feedback
+    allowed_exceptions:
+      - brand_name
+      - product_name
+      - code_identifier
+      - common_industry_acronym
+      - upstream_specified_copy
+    exception_refs:
+      - "harness-runtime/harness/stages/{{mission_id}}/interaction-spec/consistency-report.md"
+  visual_artifacts:
+    manifest: "harness-runtime/harness/stages/{{mission_id}}/visual-interaction/visual-interaction-manifest.json"
+    prototype_entry: "harness-runtime/harness/stages/{{mission_id}}/visual-interaction/prototype/index.html"
+    prototype_is_human_entry: true
+    required: true

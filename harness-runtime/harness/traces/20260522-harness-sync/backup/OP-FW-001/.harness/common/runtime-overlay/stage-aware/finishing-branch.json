@@ -1,0 +1,24 @@
+{
+  "_comment": "finishing-branch-improvement-plan M1.x stage-aware overlay. Pure-delivery stage with git ops; the dangerous-git deny (push --force / reset --hard) already lives in _baseline.json. This overlay denies direct contract writes and runtime state; allows finishing-branch.md, harness CLI, and standard non-destructive git commands.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Write(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/finishing-branch.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/finishing-branch.contract.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/stages/*/finishing-branch.md)",
+      "Edit(harness-runtime/harness/stages/*/finishing-branch.md)",
+      "Bash(harness *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(git merge --no-ff *)"
+    ]
+  }
+}

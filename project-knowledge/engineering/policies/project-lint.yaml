@@ -1,0 +1,78 @@
+# Project Lint Profile
+# 安装到目标项目后由 generate-context / 人工维护补齐。
+
+schema_version: 1
+enabled: true
+mode: blocking # blocking | advisory
+
+reports:
+  output_dir_template: "harness-runtime/harness/traces/{mission_id}/project-lint"
+
+changed_files:
+  # 这些是 Harness 框架资产。目标项目任务默认不得修改；需要升级 Harness 时应走安装/升级流程。
+  protected_paths:
+    - ".harness/common/**"
+    - ".harness/docs/**"
+    - ".harness/workflow-map.html"
+
+commands:
+  # code_change_requires_command_evidence 会检查这些 kind 是否有 PASS 证据。
+  required_for_code_change:
+    - test
+  accepted_results:
+    - pass
+
+code_change:
+  patterns:
+    - "src/**"
+    - "app/**"
+    - "lib/**"
+    - "packages/**/src/**"
+    - "backend/**"
+    - "frontend/**"
+    - "**/*.py"
+    - "**/*.ts"
+    - "**/*.tsx"
+    - "**/*.js"
+    - "**/*.jsx"
+    - "**/*.go"
+    - "**/*.rs"
+  ignore_patterns:
+    - "docs/**"
+    - "harness-runtime/**"
+    - ".harness/**"
+    - "tests/**"
+    - "**/*.md"
+
+agent_instructions:
+  enabled: true
+  path: "AGENTS.md"
+  required_keywords:
+    setup:
+      - "install"
+      - "setup"
+      - "安装"
+    test:
+      - "test"
+      - "pytest"
+      - "npm test"
+      - "测试"
+    style:
+      - "style"
+      - "lint"
+      - "代码规范"
+    delivery:
+      - "verify"
+      - "delivery"
+      - "验收"
+      - "交付"
+
+trace:
+  enabled: true
+  same_tool_max_repeats: 3
+
+external_commands:
+  # 预留给目标项目接入 dependency-cruiser / semgrep / import-linter / eslint custom rules。
+  # 每个命令必须是本地、可重复、无破坏性的检查命令。
+  items: []
+

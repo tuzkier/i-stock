@@ -1,0 +1,254 @@
+patches:
+  - target: control_contract.execution_result
+    op: set
+    value:
+      id: EXE-PRD-001
+      role: senior-product-expert
+      status: DONE
+      produced_artifacts:
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-evidence.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/scope-strategy.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+      fulfilled_obligations: [OBL-PRD-001]
+      evidence_refs: [mission-contract, discovery-brief, business-objects, business-use-cases, scope-strategy, technical-signal-research-design]
+      open_questions:
+        - ChartLayout 恢复粒度需在 interaction / solution 阶段定稿。
+        - MarketDataSource 用户可见信息密度需在 interaction / solution 阶段定稿。
+        - MTS reason code / invalidator taxonomy 需在 solution / technical design 阶段定稿。
+      concerns:
+        - project-context.md 缺失，当前用 project-knowledge/context/* 和任务契约补偿。
+        - GitNexus 未索引，当前代码现状证据来自手动代码读取和 discovery 记录。
+        - project-knowledge 多为 init/draft，不能当作强约束来源。
+      summary: Product definition package completed and programmatic PRD self-checks pass.
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-PRD-BO-001
+        role: business-domain-modeler
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - project-context.md 缺失，BO Registry 以 mission / discovery / research 为主证据。
+        summary: BO Registry completed with 8 objects and 16 business rules.
+      - id: EXE-PRD-BUC-001
+        role: acceptance-scenario-designer
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - ChartLayout、MarketDataSource 和 MTS taxonomy 的细节需下游阶段定稿。
+        summary: BUC package completed with 7 business use cases and 6 detailed paths.
+      - id: EXE-PRD-SCOPE-001
+        role: product-scope-strategist
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/scope-strategy.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - 3 个范围项进入 Decision Needed，并已绑定后续阶段。
+        summary: Scope strategy completed with 10 in-scope items, 9 out-of-scope items, and 3 decision-needed items.
+      - id: EXE-PRD-SYN-001
+        role: senior-product-expert
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-evidence.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - Evidence degradations are recorded in product-evidence and risks.
+        summary: Main product definition, evidence, and domain model completed.
+  - target: control_contract.business_use_cases
+    op: set
+    value:
+      source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+      cases:
+        - buc_id: BUC-01
+          name: 管理多市场自选标的
+          actor: 个人投资者
+          trigger: 用户新增、归档或恢复标的
+          goal: 把四市场标的纳入同一本地观察清单并保持可识别。
+          related_bo: [BO-001, BO-002, BO-006]
+          priority: P0
+          detail_level: detail_required
+          prototype_required: true
+          main_path_summary: 识别市场、保存原始代码与归一代码、维持市场分组、允许归档后恢复。
+          exceptions_boundaries: [市场不可识别时不得进入 active, 重复标的保持同一观察对象语义]
+          state_changes:
+            - {bo_id: BO-001, from: draft_added, to: active}
+            - {bo_id: BO-001, from: active, to: archived}
+          validation_signals: [UI 状态, 持久化状态, BO 状态]
+          traces_to: {user_stories: [US-01, US-04], scenarios: [SCN-01], rules: [RULE-01, RULE-02], functional_requirements: [FR-01], acceptance_criteria: [AC-01, AC-05]}
+        - buc_id: BUC-02
+          name: 打开标的进入默认看盘布局
+          actor: 个人投资者 / 技术分析用户
+          trigger: 用户选中 active 标的
+          goal: 同时看到主图、成交量和副图指标上下文。
+          related_bo: [BO-001, BO-003, BO-004, BO-008]
+          priority: P0
+          detail_level: detail_required
+          prototype_required: true
+          main_path_summary: 选中标的后展示默认主图、成交量常驻和一个副图。
+          exceptions_boundaries: [数据不足时局部降级, 默认布局不得要求用户先配置]
+          state_changes:
+            - {bo_id: BO-001, from: unselected, to: selected}
+            - {bo_id: BO-004, from: partial, to: ready}
+          validation_signals: [UI 状态, 页面截图, BO 状态]
+          traces_to: {user_stories: [US-02], scenarios: [SCN-02], rules: [RULE-04, RULE-06], functional_requirements: [FR-02], acceptance_criteria: [AC-02]}
+        - buc_id: BUC-03
+          name: 切换副图指标观察不同分析维度
+          actor: 技术分析用户
+          trigger: 用户切换副图选择
+          goal: 不离开当前标的即可切换 MACD / RSI / KDJ / ATR。
+          related_bo: [BO-004, BO-008]
+          priority: P1
+          detail_level: map_only
+          prototype_required: true
+          main_path_summary: 保持主图和成交量上下文不变，仅切换副图解释视角。
+          exceptions_boundaries: [切换副图不得导致主图上下文丢失]
+          state_changes:
+            - {bo_id: BO-008, from: default, to: customized}
+          validation_signals: [UI 状态]
+          traces_to: {user_stories: [US-02], scenarios: [SCN-02], rules: [RULE-06], functional_requirements: [FR-02], acceptance_criteria: [AC-02]}
+        - buc_id: BUC-04
+          name: 解读 MTS 多周期趋势信号
+          actor: 研究驱动用户
+          trigger: 数据刷新完成或用户进入标的页面
+          goal: 理解趋势状态、买卖类型和风险等级。
+          related_bo: [BO-003, BO-004, BO-005]
+          priority: P0
+          detail_level: detail_required
+          prototype_required: true
+          main_path_summary: 输出趋势状态、分数带、信号类型、提醒等级、触发理由和失效条件。
+          exceptions_boundaries: [数据不足不得输出伪信号, 分数带不得表达胜率]
+          state_changes:
+            - {bo_id: BO-005, from: data_insufficient, to: interpretable}
+            - {bo_id: BO-005, from: watch, to: confirmed}
+          validation_signals: [UI 状态, fixture 回放, BO 状态]
+          traces_to: {user_stories: [US-03], scenarios: [SCN-03], rules: [RULE-04, RULE-07, RULE-08, RULE-10], functional_requirements: [FR-03], acceptance_criteria: [AC-03, AC-04]}
+        - buc_id: BUC-05
+          name: 配置并接收四级提醒
+          actor: 研究驱动用户 / 本地使用者
+          trigger: 用户创建或启停提醒，系统刷新后命中条件
+          goal: 让价格或 MTS 条件按观察、确认、强信号、风控四级语义提示。
+          related_bo: [BO-001, BO-005, BO-006]
+          priority: P0
+          detail_level: detail_required
+          prototype_required: true
+          main_path_summary: 绑定标的与条件，按优先级触发，并保留最近触发原因。
+          exceptions_boundaries: [风控提醒优先, disabled 规则不得触发]
+          state_changes:
+            - {bo_id: BO-006, from: idle, to: triggered}
+            - {bo_id: BO-006, from: triggered, to: acknowledged}
+          validation_signals: [UI 状态, BO 状态, 本地恢复状态]
+          traces_to: {user_stories: [US-03, US-04], scenarios: [SCN-04], rules: [RULE-09], functional_requirements: [FR-04], acceptance_criteria: [AC-04, AC-05]}
+        - buc_id: BUC-06
+          name: 重开浏览器恢复本地看盘现场
+          actor: 本地使用者
+          trigger: 用户在同一浏览器配置中重新打开应用
+          goal: 无需登录即可恢复自选、提醒和基础看盘上下文。
+          related_bo: [BO-001, BO-006, BO-008]
+          priority: P0
+          detail_level: detail_required
+          prototype_required: true
+          main_path_summary: 恢复本地配置并让用户继续观察。
+          exceptions_boundaries: [恢复粒度待 interaction / solution 定稿]
+          state_changes:
+            - {bo_id: BO-001, from: saved, to: active}
+            - {bo_id: BO-006, from: saved, to: enabled}
+          validation_signals: [持久化状态, 浏览器重开验证]
+          traces_to: {user_stories: [US-01, US-04], scenarios: [SCN-01, SCN-04], rules: [RULE-02], functional_requirements: [FR-05], acceptance_criteria: [AC-05]}
+        - buc_id: BUC-07
+          name: 行情来源降级下继续看盘
+          actor: 个人投资者 / 技术分析用户
+          trigger: 上游来源不可用、覆盖不足或刷新失败
+          goal: 继续观察可用内容，并明确知道当前处于演示或降级状态。
+          related_bo: [BO-007, BO-003, BO-004, BO-005, BO-006]
+          priority: P0
+          detail_level: detail_required
+          prototype_required: true
+          main_path_summary: 显示来源状态并阻止伪指标或伪信号。
+          exceptions_boundaries: [来源降级提示不可隐藏, 数据不足传播到下游解释对象]
+          state_changes:
+            - {bo_id: BO-007, from: available, to: degraded}
+            - {bo_id: BO-003, from: live_or_formal, to: demo_fallback}
+          validation_signals: [降级状态, UI 截图, BO 状态]
+          traces_to: {user_stories: [US-02, US-03], scenarios: [SCN-05], rules: [RULE-03, RULE-04, RULE-05], functional_requirements: [FR-06], acceptance_criteria: [AC-02, AC-03, AC-04]}
+  - target: control_contract.non_functional_requirements
+    op: set
+    value:
+      - id: NFR-01
+        category: 可解释性
+        requirement: MTS 与提醒必须带结构化语义，不能退化成单一颜色或买卖词。
+        metric: 页面可观察到趋势状态、分数带、信号类型、提醒等级、理由和失效条件。
+        verification_method: BUC-04 / BUC-05 UI 检查与 fixture 回放。
+      - id: NFR-02
+        category: 连续性
+        requirement: 同一浏览器配置内用户关闭后重开仍能继续使用核心配置。
+        metric: 自选、提醒和基础看盘上下文可恢复。
+        verification_method: 浏览器重开恢复验证。
+      - id: NFR-03
+        category: 降级透明性
+        requirement: 来源降级或数据不足时必须显式提示。
+        metric: 用户能区分正式、演示、降级和数据不足状态。
+        verification_method: 降级场景截图和状态断言。
+      - id: NFR-04
+        category: 范围合规
+        requirement: 产品不得输出收益承诺、自动交易动作或确定性投资建议。
+        metric: 无下单、保证收益、胜率承诺等越界语义。
+        verification_method: 内容审查与验收清单。
+      - id: NFR-05
+        category: 可替换性约束
+        requirement: 下游方案必须优先评估成熟、维护活跃、许可合适的现成开源库。
+        metric: 选型文档覆盖图表、指标、通知、数据接入候选比较。
+        verification_method: solution / technical design 评审。
+      - id: NFR-06
+        category: 确定性
+        requirement: 第一阶段 MTS 与提醒计算链路必须保持 deterministic。
+        metric: 相同 fixture 输入产生相同 MTS 和提醒结果。
+        verification_method: fixture / 回放样本验证。
+  - target: control_contract.capabilities
+    op: set
+    value:
+      - id: CAP-01
+        name: 多市场自选管理
+        confidence_from_discovery: CONFIRMED
+        traces_to: [FR-01, BUC-01]
+      - id: CAP-02
+        name: 看盘布局与技术指标
+        confidence_from_discovery: CONFIRMED
+        traces_to: [FR-02, BUC-02, BUC-03]
+      - id: CAP-03
+        name: MTS 多周期趋势信号
+        confidence_from_discovery: UNCERTAIN
+        traces_to: [FR-03, BUC-04]
+      - id: CAP-04
+        name: 买卖和风控提醒
+        confidence_from_discovery: UNCERTAIN
+        traces_to: [FR-04, BUC-05]
+      - id: CAP-05
+        name: 本地恢复
+        confidence_from_discovery: CONFIRMED
+        traces_to: [FR-05, BUC-06]
+      - id: CAP-06
+        name: 来源降级透明化
+        confidence_from_discovery: ASSUMED
+        traces_to: [FR-06, BUC-07]

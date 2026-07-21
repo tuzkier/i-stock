@@ -1,0 +1,265 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [subtype, modules, verification_strategy]
+    properties:
+      type:
+        const: guide_contract
+      subtype:
+        const: technical_guide
+      modules:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            responsibility:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+      verification_strategy:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            layer:
+              type: string
+            target_ids:
+              type: array
+              items:
+                type: string
+            evidence_required:
+              type: array
+              items:
+                type: string
+      architectural_fitness_functions:
+        type: array
+        items:
+          type: object
+          required:
+            - id
+            - protected_quality
+            - measurement
+            - threshold
+            - verification_evidence
+          properties:
+            id:
+              type: string
+            protected_quality:
+              type: string
+            measurement:
+              type: string
+            threshold:
+              type: string
+            verification_evidence:
+              type: array
+              items:
+                type: string
+      # Stage-4 M1.4: typed interface_changes. `kind` enum forces ADDED /
+      # MODIFIED / REPLACED / REMOVED so the change category is machine-checkable.
+      # before/after blocks let downstream verify reviewer compare contract surface.
+      interface_changes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            kind:
+              type: string
+              enum:
+                - ADDED
+                - MODIFIED
+                - REPLACED
+                - REMOVED
+            module:
+              type: string
+            before:
+              # YAML block; loose typing because surface shape varies.
+              {}
+            after:
+              {}
+            traces_to:
+              type: array
+              items:
+                type: string
+            # Legacy field shape (existing template uses change_type + surface +
+            # contract_summary). Preserved so historical contracts still parse.
+            change_type:
+              type: string
+            surface:
+              type: string
+            contract_summary:
+              type: string
+      # Stage-4 M1.4: typed data_changes. Migration / rollback required for
+      # MODIFIED / REMOVED so downstream cannot ship without reversibility.
+      data_changes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            kind:
+              type: string
+              enum:
+                - ADDED
+                - MODIFIED
+                - REMOVED
+            entity:
+              type: string
+            default:
+              {}
+            nullable:
+              type: boolean
+            migration:
+              type: string
+            rollback:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+            # Legacy field shape preserved for historical contracts.
+            change_type:
+              type: string
+            target:
+              type: string
+      # Stage-4 M1.4: production_readiness 四要素. Each may be a real value
+      # OR an explicit "N/A: <reason>" string — empty / missing FAIL in M2/M3
+      # gates. Schema only declares property shape; required-ness lives in
+      # check_contracts.py technical_guide handler (M4 strict mode).
+      production_readiness:
+        type: object
+        properties:
+          error_handling:
+            type: string
+          compatibility:
+            type: string
+          observability:
+            type: string
+          rollback:
+            type: string
+      # Stage-4 M1.4: agent_implementation — typed mirror of solution.contract.yaml
+      # agent_architecture, scoped to tech-design implementation loci. eval_scenarios
+      # must contain all four kinds (normal / boundary / adversarial / ambiguous)
+      # when agent_engineering.scope=core (M4 strict).
+      agent_implementation:
+        type: array
+        items:
+          type: object
+          properties:
+            component:
+              type: string
+            traces_to_solution_arch:
+              type: array
+              items:
+                type: string
+            traces_to_prd_capability:
+              type: array
+              items:
+                type: string
+            implementation_loci:
+              type: array
+              items:
+                type: object
+                properties:
+                  layer:
+                    type: string
+                    enum:
+                      - rule
+                      - skill
+                      - agent
+                      - cli
+                      - hook
+                  path:
+                    type: string
+                required:
+                  - layer
+                  - path
+            eval_scenarios:
+              type: array
+              items:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    enum:
+                      - normal
+                      - boundary
+                      - adversarial
+                      - ambiguous
+                  scenario_id:
+                    type: string
+                  threshold:
+                    type: number
+                required:
+                  - kind
+                  - scenario_id
+      # Stage-4 M1.4: 3 reviewer rounds. effectiveness_review always present;
+      # agent_capability_review present when agent_engineering.enabled=true;
+      # dependency_validity_review present when dependency-impact triggered.
+      effectiveness_review:
+        type: object
+        properties:
+          rounds_used:
+            type: integer
+          max_rounds:
+            type: integer
+          last_verdict:
+            oneOf:
+              - type: "null"
+              - type: string
+                enum:
+                  - PASS
+                  - FAIL
+                  - NEEDS_CLARIFICATION
+                  - BLOCKED
+          pending_reviewer_recheck:
+            type: boolean
+      agent_capability_review:
+        type: object
+        properties:
+          rounds_used:
+            type: integer
+          max_rounds:
+            type: integer
+          last_verdict:
+            oneOf:
+              - type: "null"
+              - type: string
+                enum:
+                  - PASS
+                  - FAIL
+                  - NEEDS_CLARIFICATION
+                  - BLOCKED
+          pending_reviewer_recheck:
+            type: boolean
+      dependency_validity_review:
+        type: object
+        properties:
+          rounds_used:
+            type: integer
+          max_rounds:
+            type: integer
+          last_verdict:
+            oneOf:
+              - type: "null"
+              - type: string
+                enum:
+                  - PASS
+                  - FAIL
+                  - NEEDS_CLARIFICATION
+                  - BLOCKED
+          pending_reviewer_recheck:
+            type: boolean

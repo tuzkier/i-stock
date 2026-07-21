@@ -1,0 +1,413 @@
+control_contract:
+  type: evidence_contract
+  subtype: review_evidence
+  version: 1
+  mission_id: 20260522-stock-watch-system
+  stage: code-review
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    sections:
+    - Acceptance Criteria
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+    sections:
+    - Control Contract
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    sections:
+    - Control Contract
+  consumers:
+  - receiving-review
+  - verify
+  - delivery
+  - retrospective
+  - stage-gate
+  obligations:
+  - id: OBL-REVIEW-001
+    mission_id: 20260522-stock-watch-system
+    type: correctness
+    risk: medium
+    traces_to:
+      ac:
+      - AC-01
+      - AC-05
+      task:
+      - TASK-STOCK-WATCH-T001
+    required_evidence:
+    - reviewer_verdict
+    - behavior_matrix
+    required_roles:
+    - correctness-reviewer
+    blocking: true
+    source: lane_action
+  - id: OBL-REVIEW-002
+    mission_id: 20260522-stock-watch-system
+    type: tdd
+    risk: medium
+    traces_to:
+      ac:
+      - AC-01
+      - AC-05
+      task:
+      - TASK-STOCK-WATCH-T001
+    required_evidence:
+    - reviewer_verdict
+    - test_adequacy_matrix
+    required_roles:
+    - tdd-reviewer
+    blocking: true
+    source: lane_action
+  toolchain_probe:
+    artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+    status: PASS
+    signals:
+    - toolchain_status_pass
+    - node_test_pass
+    - playwright_pass
+  toolchain_status:
+    plan_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-plan.json
+    run_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-run.json
+    status_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+    status: PASS
+    missing_capabilities: []
+    decision_gate_reasons: []
+  e2e_status:
+    plan_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-plan.json
+    run_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-run.json
+    status_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+    status: PASS
+    missing_capabilities: []
+    decision_gate_reasons: []
+    artifacts:
+      html_report: playwright-report/index.html
+      trace: []
+      video: []
+      screenshots: []
+      ui_diff: []
+    flaky_signals: []
+    skipped_tests: []
+  effectiveness_review:
+    pending_reviewer_recheck: false
+    rounds_used: 2
+    last_verdict: PASS_WITH_RISK
+    rounds:
+    - round: 1
+      verdict: PASS
+      reviewers:
+      - correctness-reviewer
+      - tdd-reviewer
+      high_findings: 0
+      blocking_gaps: 0
+  reviewers:
+  - id: REV-CTRL-001
+    role: correctness
+    verdict: PASS
+    role_boundary:
+      in_scope:
+      - T001 user-observable correctness
+      out_of_scope:
+      - test effectiveness
+      - security
+      - Harness gate mechanics
+    review_basis:
+    - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    - src/App.tsx
+    - src/domain/market-normalization.ts
+    - src/domain/watchlist-state.ts
+  - id: REV-CTRL-002
+    role: tdd
+    verdict: PASS
+    role_boundary:
+      in_scope:
+      - test effectiveness
+      - assertion strength
+      - adequacy
+      - fault detection
+      out_of_scope:
+      - business correctness verdict
+      - Work Graph metadata
+    review_basis:
+    - harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+    - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+    - tests/unit/watchlist/normalization.spec.ts
+    - tests/unit/watchlist/archive.spec.ts
+    - tests/unit/watchlist/storage-replay.spec.ts
+    - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+  - id: REV-CTRL-003
+    role: e2e
+    verdict: PASS
+    role_boundary:
+      in_scope:
+      - user journey coverage
+      - user-visible assertions
+      - E2E reliability
+      out_of_scope:
+      - Playwright installation
+      - TDD adequacy
+      - verification-report structure
+    review_basis:
+    - harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+    - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+  role_verdicts:
+  - id: REV-001
+    role: correctness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-REVIEW-001
+    review_basis:
+      artifacts:
+      - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+      - harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md
+      implementation:
+      - src/App.tsx
+      - src/domain/market-normalization.ts
+      - src/domain/watchlist-state.ts
+      - src/lib/storage.ts
+      evidence:
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+    matrix:
+    - target: 添加前预览归一结果
+      conclusion: pass
+    - target: 歧义输入不得静默写入
+      conclusion: pass
+    - target: 列表显示行情摘要
+      conclusion: pass
+    - target: 归档暂停提醒
+      conclusion: pass
+    - target: 恢复已归档标的与提醒意图
+      conclusion: pass
+    findings: []
+    blocking_gaps: []
+    non_blocking_risks: []
+    dispatch:
+      subagent_id: 019e5792-1d84-7a02-a095-47670f4f2087
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-24T09:19:00+08:00'
+      completed_at: '2026-05-24T09:25:00+08:00'
+  - id: REV-002
+    role: tdd-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-REVIEW-002
+    review_basis:
+      artifacts:
+      - harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+      - harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+      - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+      tests:
+      - tests/unit/watchlist/normalization.spec.ts
+      - tests/unit/watchlist/archive.spec.ts
+      - tests/unit/watchlist/storage-replay.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+    matrix:
+    - target: unit normalization and archive state
+      conclusion: adequate
+      fault_detection: proven
+    - target: storage replay
+      conclusion: adequate
+      fault_detection: proven
+    - target: browser flow
+      conclusion: adequate
+      fault_detection: partial
+    - target: fault injection
+      conclusion: adequate
+      fault_detection: proven
+    findings: []
+    blocking_gaps: []
+    non_blocking_risks: []
+    dispatch:
+      subagent_id: 019e5792-590d-7cf3-8a16-db07017fce27
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-24T09:19:00+08:00'
+      completed_at: '2026-05-24T09:26:00+08:00'
+  tdd_review:
+    verdict: PASS
+    probe_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+    toolchain_status_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+    role_boundary:
+      in_scope:
+      - test effectiveness
+      - assertion strength
+      - adequacy
+      - fault detection
+      - TDD integrity
+      out_of_scope:
+      - business correctness verdict
+      - verification-report structure
+      - E2E report completeness
+      - tool installation policy
+    toolchain_signal_handling:
+      accepted:
+      - node:test PASS
+      - Playwright PASS
+      - manual fault injection PASS
+      rejected: []
+    adequacy_matrix:
+    - target: 添加前预览归一结果
+      test_refs:
+      - tests/unit/watchlist/normalization.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      red_validity: partial_auditable
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: 歧义输入不得静默写入
+      test_refs:
+      - tests/unit/watchlist/normalization.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+      red_validity: valid_via_fault_injection
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: 列表显示行情摘要
+      test_refs:
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+      red_validity: missing_historical_red
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: partial
+      conclusion: pass
+    - target: 归档暂停提醒
+      test_refs:
+      - tests/unit/watchlist/archive.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+      red_validity: valid_via_fault_injection
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: 恢复已归档标的与提醒意图
+      test_refs:
+      - tests/unit/watchlist/archive.spec.ts
+      - tests/unit/watchlist/storage-replay.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      red_validity: partial_auditable
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: TDD-FND-M01
+      severity: medium
+      traces_to:
+      - TASK-STOCK-WATCH-T001
+      risk: T001 red evidence has summary only and lacks reproducible failing command/output
+        artifact.
+      recommendation: Preserve a concrete red artifact with failing command, test
+        name, and output excerpt.
+    - id: TDD-FND-L01
+      severity: low
+      traces_to:
+      - TASK-STOCK-WATCH-T001
+      risk: Unit rerun path depends on precompiled unit-build and local CommonJS package
+        metadata.
+      recommendation: Add a stable root unit test script or align TS/ESM test execution.
+  e2e_review:
+    verdict: PASS
+    e2e_status_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+    methodology_ref: .harness/docs/e2e-effectiveness-reviewer-methodology.md
+    role_boundary:
+      in_scope:
+      - user journey coverage
+      - user-visible assertions
+      - data reality
+      - negative path
+      - realtime behavior
+      - E2E reliability
+      - diagnostics usefulness
+      out_of_scope:
+      - Playwright installation
+      - TDD adequacy
+      - verification-report structure
+    artifact_handling:
+      accepted:
+      - harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/e2e/playwright-output.txt
+      rejected: []
+    coverage_matrix:
+    - target: 归档后暂停提醒，重新加入已归档港股时恢复提醒
+      obligation_refs:
+      - T001.e2e_obligation
+      e2e_test_refs:
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      user_result_assertion: strong
+      data_reality: seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: reload_covered
+      reliability: stable
+      diagnostics: playwright_output_available
+      conclusion: pass
+    - target: 歧义数字输入不会写入 active 自选
+      obligation_refs:
+      - T001.e2e_obligation
+      e2e_test_refs:
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      user_result_assertion: strong
+      data_reality: seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: playwright_output_available
+      conclusion: pass
+    - target: 看盘主流程没有自动化可访问性严重违规
+      obligation_refs:
+      - T001.e2e_obligation
+      e2e_test_refs:
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      user_result_assertion: smoke
+      data_reality: seeded_fixture
+      negative_path: not_applicable
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: playwright_output_available
+      conclusion: pass
+    blocking_gaps: []
+    non_blocking_risks: []
+  findings:
+  - id: FND-CR-001
+    severity: medium
+    category: correctness
+    summary: Archived row always says reminders are suspended, even for symbols without
+      a suspended alert.
+    evidence:
+    - file: src/App.tsx
+      line: 497
+    traces_to: []
+    status: superseded
+    resolution_ref: harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+  - id: FND-CR-002
+    severity: medium
+    category: tdd
+    summary: EV-RED-001 is summary-only and lacks reproducible failing command/output.
+    evidence:
+    - file: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md
+      line: 34
+    - file: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+      line: 0
+    traces_to: []
+    status: superseded
+    resolution_ref: harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+  - id: FND-CR-003
+    severity: low
+    category: tdd
+    summary: Unit rerun path is fragile because ad hoc TS compile output collides
+      with root ESM package mode.
+    evidence:
+    - file: package.json
+      line: 5
+    - file: harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/package.json
+      line: 1
+    traces_to: []
+    status: superseded
+    resolution_ref: harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md

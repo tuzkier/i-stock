@@ -1,0 +1,51 @@
+mission_id: 20260522-stock-watch-system
+objective: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+control_plane:
+  lane: breakdown-lane
+  stage: breakdown
+lane_action:
+  lane: breakdown-lane
+  stage: breakdown
+  graph_operation: advance_lane
+  operation_profiles:
+    advance_lane:
+      to_lane: development-lane
+      to_stage: execute
+    split_node:
+      default_child_lane: development-lane
+      default_child_stage: execute
+      allowed_child_kinds:
+      - task
+      - bug
+    batch:
+      allowed_operations:
+      - advance_lane
+      - split_node
+  allowed_graph_operations:
+  - advance_lane
+  - split_node
+  - batch
+  output_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+  required_execution_roles:
+  - delivery-slicer
+  - test-planning-expert
+  required_review_roles:
+  - execution-plan-effectiveness-reviewer
+  to_lane: development-lane
+  to_stage: execute
+work_graph:
+  primary_nodes:
+  - REQ-STOCK-WATCH-SYSTEM
+  related_nodes: []
+  selection:
+    relevance_score: 1000
+    reasons:
+    - primary_node
+related_candidates:
+  deferred: []
+  blocked: []
+operation: advance_lane
+acceptance_criteria:
+- REQ-STOCK-WATCH-SYSTEM advanced from breakdown-lane/breakdown
+- graph operation applied by work-graph script
+- board/index/tree regenerated from nodes

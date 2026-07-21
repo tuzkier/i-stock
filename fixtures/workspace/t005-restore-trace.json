@@ -1,0 +1,82 @@
+{
+  "mission_id": "20260522-stock-watch-system",
+  "task": "T005",
+  "generated_at": "2026-06-06T07:46:44Z",
+  "workspace_key": "myinvestment.workspace.v2",
+  "cases": [
+    {
+      "name": "browser_reopen_restore_selected_symbol_alerts_dense_layout",
+      "seed": {
+        "selectedSymbol": "0700.HK",
+        "layoutBySymbol": {
+          "AAPL": {
+            "mode": "focus",
+            "selectedMobileTab": "chart"
+          },
+          "0700.HK": {
+            "mode": "dense",
+            "selectedMobileTab": "source"
+          }
+        },
+        "alerts": [
+          {
+            "id": "0700-risk",
+            "symbol": "0700.HK",
+            "triggerState": "acknowledged",
+            "history": [
+              "acknowledged"
+            ]
+          }
+        ]
+      },
+      "assertions": [
+        "restore-status contains 已恢复",
+        "workbench-selection-summary contains 0700.HK",
+        "layout-mode-dense is active",
+        "alert-rule-row-risk contains acknowledged"
+      ]
+    },
+    {
+      "name": "corrupt_layout_fallback_focus",
+      "seed": {
+        "selectedSymbol": "AAPL",
+        "layoutBySymbol": {
+          "AAPL": {
+            "mode": "broken",
+            "selectedMobileTab": "missing"
+          }
+        },
+        "globalLayoutFallback": {
+          "mode": "broken",
+          "selectedMobileTab": "chart"
+        }
+      },
+      "assertions": [
+        "restore-status contains 已回退默认布局",
+        "layout-mode-focus is active",
+        "chart-main-panel contains AAPL"
+      ]
+    },
+    {
+      "name": "mobile_tab_source_restore",
+      "viewport": {
+        "width": 390,
+        "height": 820
+      },
+      "seed": {
+        "selectedSymbol": "AAPL",
+        "layoutBySymbol": {
+          "AAPL": {
+            "mode": "mobile_tab",
+            "selectedMobileTab": "source"
+          }
+        }
+      },
+      "assertions": [
+        "layout-mode-mobile-tab is active",
+        "mobile-tab-source is active",
+        "source-health-panel is visible"
+      ]
+    }
+  ]
+}

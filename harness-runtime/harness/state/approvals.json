@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "approvals": [
+    {
+      "approval_id": "APR-20260522-001",
+      "mission_id": "20260522-stock-watch-system",
+      "type": "tradeoff",
+      "stage": "intake",
+      "checkpoint": "intake",
+      "status": "approved",
+      "decided_at": "2026-05-22T22:27:02.516667+08:00",
+      "comment": "Git 不可用：git rev-parse --git-dir 返回 not a git repository；按 git-workflow 降级规则，本 mission 使用 downgraded 策略。用户已授权正式 intake。"
+    },
+    {
+      "approval_id": "APR-20260522-002",
+      "mission_id": "20260522-stock-watch-system",
+      "type": "checkpoint",
+      "stage": "discovery",
+      "checkpoint": "discovery_confirmation",
+      "status": "approved",
+      "decided_at": "2026-05-22T23:22:35.773615+08:00",
+      "comment": "approved: 用户回复‘好 继续吧’，确认 discovery 关键发现，允许进入 discovery stage exit gate。"
+    },
+    {
+      "approval_id": "APR-20260523-003",
+      "mission_id": "20260522-stock-watch-system",
+      "type": "checkpoint",
+      "stage": "prd",
+      "checkpoint": "prd",
+      "status": "approved",
+      "decided_at": "2026-05-23T18:24:53.333284+08:00",
+      "comment": "用户在 2026-05-23 明确回复“好 继续”，批准从新版 PRD 边界继续推进到 interaction。"
+    },
+    {
+      "approval_id": "APR-20260523-004",
+      "mission_id": "20260522-stock-watch-system",
+      "type": "boundary",
+      "stage": "execute",
+      "checkpoint": "T001-src-scope",
+      "status": "approved",
+      "decided_at": "2026-05-23T21:51:15.283786+08:00",
+      "comment": "User approved adding src/App.tsx and treating the whole src/ directory as in scope for TASK-STOCK-WATCH-T001 implementation."
+    },
+    {
+      "approval_id": "APR-20260607-005",
+      "mission_id": "20260522-stock-watch-system",
+      "type": "checkpoint",
+      "stage": "acceptance-result",
+      "checkpoint": "acceptance-result",
+      "status": "approved",
+      "decided_at": "2026-06-07T14:30:15.578831+08:00",
+      "comment": "用户确认接受交付"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+---
+description: HarnessV2 adapter entrypoint. Points Cursor at the shared Harness brain.
+globs:
+alwaysApply: true
+---
+
+# HarnessV2 Cursor Adapter
+
+This project uses HarnessV2. This Cursor rule is only an entrypoint.
+
+Use root `AGENTS.md` as the startup capsule. Do not preload `.harness/common/`, `.harness/docs/`, `.harness/common/agents/`, or all skill bodies at session start.
+
+For routing, read `.harness/common/skills/skill-router/SKILL.md` and `workflow.md`; then read only the skill, rule, agent, script, or template files required by that workflow.
+
+Harness role definitions are installed as native Cursor subagents in `.harness/common/agents/<name>.md`. Load stage document rules, runtime config, and other Harness files only when the selected workflow, Gate, or user request requires them.
+
+## Sub-agent dispatch on Cursor
+
+Cursor discovers project subagents from `.harness/common/agents/`. The HarnessV2 installer materializes every role from `.harness/common/agents/` into that directory so workflows can dispatch by role name instead of falling back to the default worker agent.
+
+When a workflow calls `<role>`, use the matching `.harness/common/agents/<role>.md` subagent. Append only the Task Envelope with paths, scopes, completion criteria, and stop conditions. If the file is missing or Cursor refuses to dispatch that named subagent, return BLOCKED to the workflow; do not run the role inline as the main Agent. Reviewer-class roles never accept `main_agent` fallback.
+
+Cursor agent frontmatter `model` is generated at install time from `harness-runtime/config/model-routing.yaml`. Do not change workflow text to hard-code model names, and do not replace a configured subagent with the main Agent just because the main Agent already runs on a capable model.
+
+## Skill workflow 副本路径（Cursor-specific）
+
+部分 skill workflow 的 subagent dispatch 已被 install pipeline 改写为 Cursor native delegation（`@<role>`）的写法。读 skill workflow 时优先尝试 `.harness/common/skills/<skill>/workflow.md`（Cursor-flavored）；该路径不存在时再 fall back 到 `.harness/common/skills/<skill>/workflow.md`（含 `<dispatch role="..." />` 占位符，需要按 Cursor delegation 自行翻译）。

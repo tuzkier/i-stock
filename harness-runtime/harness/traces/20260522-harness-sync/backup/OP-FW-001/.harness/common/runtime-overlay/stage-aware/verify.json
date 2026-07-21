@@ -1,0 +1,20 @@
+{
+  "_comment": "verify-improvement-plan M1.x stage-aware overlay. Standard worker + reviewer stage. Denies direct writes to verification-report.contract.yaml + runtime state; allows verification-report.md write + harness CLI bash + read-only verification command surface.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Write(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/verification-report.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/verification-report.contract.yaml)",
+      "Edit(harness-runtime/config/harness.yaml)",
+      "Edit(harness-runtime/config/model-routing.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/stages/*/verification-report.md)",
+      "Edit(harness-runtime/harness/stages/*/verification-report.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

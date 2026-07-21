@@ -1,0 +1,164 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [subtype, decisions]
+    properties:
+      type:
+        const: guide_contract
+      subtype:
+        const: solution_guide
+      decisions:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            chosen:
+              type: string
+            rationale:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+            risks:
+              type: array
+              items:
+                type: string
+            # Stage-4 M1.4: typed reversibility + confidence so the AI cannot
+            # punt with vague "needs review" — every decision must declare how
+            # hard it is to walk back and how confident the chooser is.
+            reversibility:
+              type: string
+              enum:
+                - low
+                - medium
+                - high
+            confidence:
+              type: string
+              enum:
+                - low
+                - medium
+                - high
+            rejected:
+              # Existing template uses `rejected: [...]`; preserved here so
+              # historical contracts still parse. Plan-spec name `options`
+              # may also surface as decisions evolve.
+              type: array
+              items:
+                type: string
+            options:
+              type: array
+              items:
+                type: string
+            # Methodology hardening: Shape Up appetite / bet boundary and
+            # DACI ownership are first-class decision fields.
+            appetite:
+              type: string
+            bet_boundary:
+              type: string
+            circuit_breaker:
+              type: string
+            driver:
+              type: string
+            approver:
+              type: string
+            contributors:
+              type: array
+              items:
+                type: string
+            informed:
+              type: array
+              items:
+                type: string
+      forbidden_paths:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            statement:
+              type: string
+            reason:
+              type: string
+      risks:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            statement:
+              type: string
+            mitigation:
+              type: string
+      # Stage-4 M1.4: Step 4 Agent capability output. agent_engineering.enabled=true
+      # gates strict enforcement in M4; here the schema only describes shape so
+      # contracts that opt into agent design have a typed scaffold.
+      agent_architecture:
+        type: array
+        items:
+          type: object
+          properties:
+            component:
+              type: string
+            work_rights_realization:
+              type: array
+              items:
+                type: string
+                enum:
+                  - read_context
+                  - decide_action
+                  - write_artifact
+                  - dispatch_subagent
+                  - request_human_input
+                  - halt_for_review
+            implementation_loci:
+              type: array
+              items:
+                type: object
+                properties:
+                  layer:
+                    type: string
+                    enum:
+                      - rule
+                      - skill
+                      - agent
+                      - cli
+                      - hook
+                  path:
+                    type: string
+                required:
+                  - layer
+                  - path
+            routing_strategy:
+              type: string
+            traces_to_prd:
+              type: array
+              items:
+                type: string
+      # Stage-4 M1.4: parallel to prd / discovery effectiveness_review structure.
+      effectiveness_review:
+        type: object
+        properties:
+          rounds_used:
+            type: integer
+          max_rounds:
+            type: integer
+          last_verdict:
+            oneOf:
+              - type: "null"
+              - type: string
+                enum:
+                  - PASS
+                  - FAIL
+                  - NEEDS_CLARIFICATION
+                  - BLOCKED
+          pending_reviewer_recheck:
+            type: boolean

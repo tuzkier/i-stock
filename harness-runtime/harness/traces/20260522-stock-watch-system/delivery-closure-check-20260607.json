@@ -1,0 +1,38 @@
+{
+  "status": "WARN",
+  "control": "stage_gate.check_closure",
+  "mission_id": "20260522-stock-watch-system",
+  "contracts_scanned": 12,
+  "findings": [
+    {
+      "level": "WARN",
+      "code": "dangling_traces_to",
+      "id": "SCN-01",
+      "message": "traces_to 引用了 SCN-01，但它在本 mission 全部阶段 contract 中均无定义（悬空引用 = 推理链断在文档集外）"
+    },
+    {
+      "level": "WARN",
+      "code": "dangling_traces_to",
+      "id": "SCN-02",
+      "message": "traces_to 引用了 SCN-02，但它在本 mission 全部阶段 contract 中均无定义（悬空引用 = 推理链断在文档集外）"
+    },
+    {
+      "level": "WARN",
+      "code": "dangling_traces_to",
+      "id": "SCN-03",
+      "message": "traces_to 引用了 SCN-03，但它在本 mission 全部阶段 contract 中均无定义（悬空引用 = 推理链断在文档集外）"
+    },
+    {
+      "level": "WARN",
+      "code": "dangling_traces_to",
+      "id": "SCN-04",
+      "message": "traces_to 引用了 SCN-04，但它在本 mission 全部阶段 contract 中均无定义（悬空引用 = 推理链断在文档集外）"
+    },
+    {
+      "level": "WARN",
+      "code": "dangling_traces_to",
+      "id": "SCN-05",
+      "message": "traces_to 引用了 SCN-05，但它在本 mission 全部阶段 contract 中均无定义（悬空引用 = 推理链断在文档集外）"
+    }
+  ]
+}

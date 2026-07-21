@@ -1,0 +1,97 @@
+{
+  "_comment": "delivery-improvement-plan M3.1 hook manifest. 13 hooks: PreToolUse deny/require guards + PostToolUse record sensors. Materialized into .claude/hooks/delivery/ by install.py.",
+  "stage": "delivery",
+  "hooks": [
+    {
+      "id": "delivery-check-contract-via-cli",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_contract_via_cli.py",
+      "purpose": "Block direct Write/Edit of delivery-package.contract.yaml / acceptance-result.contract.yaml."
+    },
+    {
+      "id": "delivery-check-acceptance-write",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_acceptance_write.py",
+      "purpose": "Block acceptance-result.md write when verify gate not PASS / contract not init."
+    },
+    {
+      "id": "delivery-check-delivery-package-write",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_delivery_package_write.py",
+      "purpose": "Block delivery-package.md write lacking acceptance_state_ref."
+    },
+    {
+      "id": "delivery-deny-direct-approval-edit",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "deny_direct_approval_edit.py",
+      "purpose": "Block direct Write/Edit of approvals.json; must use harness approval append."
+    },
+    {
+      "id": "delivery-deny-direct-mission-status-edit",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "deny_direct_mission_status_edit.py",
+      "purpose": "Block direct Write/Edit of mission-status.yaml."
+    },
+    {
+      "id": "delivery-deny-direct-workgraph-edit",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "deny_direct_workgraph_edit.py",
+      "purpose": "Block direct Write/Edit of work-graph/**; follow-ups must use graph CLI."
+    },
+    {
+      "id": "delivery-deny-git-danger",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "deny_git_danger.py",
+      "purpose": "Block git push --force / reset --hard / branch -D during delivery."
+    },
+    {
+      "id": "delivery-require-handoff-pause",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "require_handoff_pause.py",
+      "purpose": "Block harness gate advance unless delivery handoff pause_required=true."
+    },
+    {
+      "id": "delivery-mark-acceptance-written",
+      "event": "PostToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "mark_acceptance_written.py",
+      "purpose": "Record acceptance-result.md artifact path + checksum after write."
+    },
+    {
+      "id": "delivery-mark-delivery-package-written",
+      "event": "PostToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "mark_delivery_package_written.py",
+      "purpose": "Record delivery-package.md artifact path + acceptance ref after write."
+    },
+    {
+      "id": "delivery-record-followup-graph-op",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "script": "record_followup_graph_op.py",
+      "purpose": "Record split/defer/block/advance graph op events for follow-ups."
+    },
+    {
+      "id": "delivery-record-acceptance-checkpoint",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "script": "record_acceptance_checkpoint.py",
+      "purpose": "Record acceptance checkpoint approval id / status after harness approval append."
+    },
+    {
+      "id": "delivery-record-delivery-gate",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "script": "record_delivery_gate.py",
+      "purpose": "Record delivery gate PASS/BLOCKED evidence after harness gate run --stage delivery."
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+control_contract:
+  type: guide_contract
+  subtype: solution_guide
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: solution
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Acceptance Criteria
+        - Constraints
+    - path: "harness-runtime/harness/stages/{{mission_id}}/product/product-definition.md"
+      sections:
+        - Functional Requirements
+        - Non-Functional Requirements
+  consumers:
+    - tech-design
+    - breakdown
+    - code-review
+    - stage-gate
+  role_policy:
+    stage: solution
+    work_graph_lane: solution-lane
+    required_execution_roles:
+      - solution-architect
+    required_review_roles:
+      - solution-effectiveness-reviewer
+    conditional_roles:
+      - role: agent-capability-designer
+        kind: execution
+        when:
+          - agent_engineering
+          - agent_capability
+      - role: agent-capability-reviewer
+        kind: review
+        when:
+          - agent_engineering
+          - agent_capability
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    source_stage_artifact: "harness-runtime/harness/stages/{{mission_id}}/solution.md"
+    canonical_artifact: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/solution.md"
+  execution_result:
+    id: EXE-SOLUTION-001
+    role: solution-architect
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/stages/{{mission_id}}/solution.md"
+    fulfilled_obligations:
+      - OBL-DESIGN-001
+    decision_log:
+      - DEC-01
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-DESIGN-001
+      mission_id: "{{mission_id}}"
+      type: architecture
+      risk: medium
+      traces_to:
+        ac:
+          - AC-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - solution-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  decisions:
+    - id: DEC-01
+      title: "{{decision_1_title}}"
+      chosen: "{{chosen_path}}"
+      rejected:
+        - "{{rejected_path}}"
+      rationale: "{{rationale}}"
+      traces_to:
+        - AC-01
+        - FR-01
+      # Stage-4 M1.4: typed reversibility / confidence enums (low | medium | high).
+      # Omitted from template defaults (placeholders would FAIL enum check);
+      # solution-architect must add them per decision. M2/M3 strict mode FAILs
+      # gate when fields missing; M1.4 schema only declares enum shape.
+      # reversibility: medium
+      # confidence: medium
+      appetite: "{{shape_up_appetite}}"
+      bet_boundary: "{{shape_up_bet_boundary}}"
+      circuit_breaker: "{{shape_up_circuit_breaker}}"
+      driver: "{{daci_driver}}"
+      approver: "{{daci_approver}}"
+      contributors:
+        - "{{daci_contributor}}"
+      informed:
+        - "{{daci_informed}}"
+  forbidden_paths:
+    - id: FB-01
+      statement: "{{forbidden_action}}"
+      reason: "{{reason}}"
+  risks:
+    - id: RISK-01
+      statement: "{{risk}}"
+      mitigation: "{{mitigation}}"
+  # Stage-4 M1.4: agent_architecture[] (Step 4 Agent capability output).
+  # Empty by default; populated when mission-contract.agent_engineering.enabled=true.
+  # Each entry must trace to prd.contract.yaml.agent_capability_requirements[]
+  # (R-AGENT-* IDs) — strict cross-contract check lands in M4.3.
+  agent_architecture: []
+  # Stage-4 M1.4: parallel to prd / discovery effectiveness_review block.
+  # rounds_used incremented by `harness contract patch --add-round` per reviewer
+  # cycle; M3.1 hook blocks `harness gate advance` when pending_reviewer_recheck
+  # is true.
+  effectiveness_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

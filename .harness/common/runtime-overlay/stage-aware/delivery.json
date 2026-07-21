@@ -1,0 +1,24 @@
+{
+  "_comment": "delivery-improvement-plan M1.x stage-aware overlay. Pure-delivery stage: forbids direct writes to delivery-package.contract.yaml + acceptance-result.contract.yaml + runtime state; allows the two deliverable markdown files plus the harness CLI.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Write(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/delivery-package.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/delivery-package.contract.yaml)",
+      "Write(harness-runtime/harness/stages/*/contracts/acceptance-result.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/acceptance-result.contract.yaml)",
+      "Edit(harness-runtime/config/harness.yaml)",
+      "Edit(harness-runtime/config/model-routing.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/artifacts/*/delivery/delivery-package.md)",
+      "Edit(harness-runtime/harness/artifacts/*/delivery/delivery-package.md)",
+      "Write(harness-runtime/harness/artifacts/*/delivery/acceptance-result.md)",
+      "Edit(harness-runtime/harness/artifacts/*/delivery/acceptance-result.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

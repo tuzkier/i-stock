@@ -1,0 +1,51 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: product-definition-lane
+  current_stage: interaction
+  stages:
+    interaction: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    related_nodes: []
+    operation: advance_lane
+    lane: product-definition-lane
+    stage: interaction
+    lane_action:
+      lane: product-definition-lane
+      stage: interaction
+      graph_operation: advance_lane
+      operation_profiles:
+        advance_lane:
+          to_lane: solution-lane
+          to_stage: solution
+      allowed_graph_operations:
+      - advance_lane
+      output_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      required_execution_roles:
+      - interaction-designer
+      required_review_roles:
+      - interaction-reviewer
+      to_lane: solution-lane
+      to_stage: solution
+      skill: interaction
+    last_gate_report: ''
+    last_operation_manifest: ''
+    last_operation_status: ''
+    last_transaction_id: ''
+    last_transaction_journal: ''
+    input_nodes: []
+    output_nodes: []
+    reset_stage: interaction
+    reset_reason: 用户走查原型后反馈页面信息密度过高；需回到 interaction 调整为日常看盘优先、诊断/验收信息可展开，再重新过 interaction
+      gate。
+    reset_at: '2026-05-23T19:19:28.421191+08:00'
+    reset_output_node_policy: keep
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation
+  - prd
+  started_at: '2026-05-23'
+  completed_at: ''

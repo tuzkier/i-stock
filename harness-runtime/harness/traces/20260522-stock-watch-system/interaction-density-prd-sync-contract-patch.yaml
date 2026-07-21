@@ -1,0 +1,16 @@
+patches:
+  - target: control_contract.prd_feedback
+    op: set
+    value:
+      status: synced_user_feedback
+      findings:
+        - id: density-default-layout-sync
+          summary: 用户走查反馈页面信息密度过高；已将产品 BUC、interaction spec、design brief、prototype 和 contract 同步为默认日常看盘 focus、诊断 / 验收 dense。
+          source_ref: user_feedback:页面上东西好多
+      required_action: none
+  - target: control_contract.interaction_spec.drift_checks
+    op: merge
+    value:
+      spec_vs_prd_drift: none
+      prototype_vs_spec_drift: none
+      feedback_not_synced: none

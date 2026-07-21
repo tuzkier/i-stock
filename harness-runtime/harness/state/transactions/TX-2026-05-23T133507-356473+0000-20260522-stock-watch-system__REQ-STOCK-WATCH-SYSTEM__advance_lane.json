@@ -1,0 +1,46 @@
+{
+  "transaction_id": "TX-2026-05-23T133507-356473+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane",
+  "status": "failed",
+  "started_at": "2026-05-23T13:35:07.356701+00:00",
+  "ended_at": "2026-05-23T13:35:07.584615+00:00",
+  "mission_id": "20260522-stock-watch-system",
+  "operation_id": "20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T133507-356473+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmpbvg34v0m.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/execution-brief.md",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane.yaml",
+        "harness-runtime/harness/work-graph/trees/REQ-STOCK-WATCH-SYSTEM.yaml"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "FAIL",
+      "findings": [
+        {
+          "level": "FAIL",
+          "code": "lane_kind_not_accepted",
+          "message": "REQ-STOCK-WATCH-SYSTEM kind requirement is in lane development-lane, but lane accepts only: task, bug"
+        }
+      ]
+    }
+  ],
+  "rollback": {
+    "snapshots": []
+  }
+}

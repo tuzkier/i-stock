@@ -1,0 +1,93 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required: [type, version, mission_id, stage, status, upstream, consumers]
+properties:
+  type:
+    type: string
+  subtype:
+    type: string
+  version:
+    enum: [1, 2]
+  mission_id:
+    type: string
+    minLength: 1
+  stage:
+    type: string
+    minLength: 1
+  status:
+    enum: [draft, ready, blocked]
+  upstream:
+    type: array
+  consumers:
+    type: array
+  artifact_refs:
+    type: array
+    items:
+      type: object
+      required:
+        - artifact_id
+        - path
+      properties:
+        artifact_id:
+          type: string
+          minLength: 1
+        role:
+          type: string
+        path:
+          type: string
+          minLength: 1
+        kind:
+          type: string
+        required:
+          type:
+            - boolean
+            - string
+      additionalProperties: true
+  work_graph_artifact:
+    type: object
+    required:
+      - node_id
+      - artifact_version
+      - promoted_by_mission
+    properties:
+      node_id:
+        type: string
+        minLength: 1
+      artifact_version:
+        type: string
+        minLength: 1
+      promoted_by_mission:
+        type: string
+        minLength: 1
+      artifact_set_id:
+        type: string
+      artifact_refs:
+        type: array
+        items:
+          type: object
+          required:
+            - artifact_id
+            - path
+          properties:
+            artifact_id:
+              type: string
+              minLength: 1
+            role:
+              type: string
+            path:
+              type: string
+              minLength: 1
+            path_glob:
+              type: string
+            kind:
+              type: string
+            required:
+              type:
+                - boolean
+                - string
+          additionalProperties: true
+      source_stage_artifact:
+        type: string
+      canonical_artifact:
+        type: string
+additionalProperties: true

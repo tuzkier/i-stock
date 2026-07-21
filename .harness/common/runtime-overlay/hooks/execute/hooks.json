@@ -1,0 +1,137 @@
+{
+  "_comment": "execute-improvement-plan M3.1 + M5 anchor hook manifest. Includes static base hooks (contract-via-cli / upstream-readonly / gate-pass) and the 4 dynamic stop_if hooks (changes_outside_authorized / new_external_dependency / design_constraint_conflict / new_public_behavior_without_delta_spec). The dynamic hooks read effective-overlay.json produced by `harness execute apply-overlay`.",
+  "stage": "execute",
+  "hooks": [
+    {
+      "id": "execute-check-contract-via-cli",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_contract_via_cli.py",
+      "purpose": "Block direct Write/Edit of execution-result.contract.yaml."
+    },
+    {
+      "id": "execute-check-upstream-artifact-readonly",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_upstream_artifact_readonly.py",
+      "purpose": "Block mutation of upstream execution-brief.md / execution-brief.contract.yaml."
+    },
+    {
+      "id": "execute-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block `harness mission stage complete execute` until last_gate_run_status=PASS."
+    },
+    {
+      "id": "execute-check-stop-changes-outside-authorized",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_changes_outside_authorized.py",
+      "purpose": "Deny Edit/Write whose file_path is outside the current Atomic Task's authorized_paths."
+    },
+    {
+      "id": "execute-check-stop-new-external-dependency",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_new_external_dependency.py",
+      "purpose": "Deny Edit/Write to project dependency files (per dependency-files.yaml) when stop_if active."
+    },
+    {
+      "id": "execute-check-stop-design-constraint-conflict",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_design_constraint_conflict.py",
+      "purpose": "Deny Edit/Write hitting prohibited_paths from upstream design constraints."
+    },
+    {
+      "id": "execute-check-stop-new-public-behavior",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stop_new_public_behavior.py",
+      "purpose": "Advisory or strict block when new public behavior lacks delta spec coverage."
+    }
+  ]
+}
+#!/usr/bin/env python3
+"""execute M5 / protocol stop_if hook: `new_external_dependency`.
+
+Triggered when an Edit/Write touches a file declared in
+`harness-runtime/config/dependency-files.yaml`. Such mutations imply a
+project-level dependency change that must go through Decision Gate, never
+silent slipped in by execute.
+
+Exit convention: 0 = allow; 2 = block.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+try:
+    import yaml
+except ImportError:  # pragma: no cover
+    yaml = None
+
+_DEP_CONFIG = "harness-runtime/config/dependency-files.yaml"
+_OVERLAY_GLOB = "harness-runtime/harness/stages/*/runtime/effective-overlay.json"
+
+
+def _load_dep_patterns(cwd: Path) -> list[str]:
+    path = cwd / _DEP_CONFIG
+    if not path.exists() or yaml is None:
+        return []
+    try:
+        doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, OSError):
+        return []
+    patterns: list[str] = []
+    for entry in (doc or {}).get("dependency_files", []):
+        if isinstance(entry, dict) and isinstance(entry.get("pattern"), str):
+            patterns.append(entry["pattern"])
+    return patterns
+
+
+def _stop_if_active(cwd: Path) -> bool:
+    for path in sorted(cwd.glob(_OVERLAY_GLOB), reverse=True):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        if "new_external_dependency" in (data.get("stop_if") or []):
+            return True
+    return False
+
+
+def main() -> int:
+    try:
+        payload = json.load(sys.stdin)
+    except (json.JSONDecodeError, ValueError):
+        return 0
+    if payload.get("tool_name") not in {"Edit", "Write", "MultiEdit"}:
+        return 0
+    tool_input = payload.get("tool_input") or {}
+    file_path = tool_input.get("file_path") or ""
+    if not file_path:
+        return 0
+    cwd = Path(payload.get("cwd") or ".")
+    if not _stop_if_active(cwd):
+        return 0
+    patterns = _load_dep_patterns(cwd)
+    basename = Path(file_path).name
+    if not any(basename == pat or file_path.endswith("/" + pat) for pat in patterns):
+        return 0
+    print(
+        "HarnessV2 execute stop_if BLOCKED (new_external_dependency): "
+        f"{file_path!r} matches a project dependency file "
+        f"({patterns!r}). Mutations require Decision Gate via "
+        "`harness execute stop-event record --kind new_external_dependency`.",
+        file=sys.stderr,
+    )
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

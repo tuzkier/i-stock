@@ -1,0 +1,16 @@
+patches:
+- target: control_contract.delivery_package.follow_ups
+  op: set
+  value:
+  - id: FU-RED-TRACE-GRANULARITY
+    description: 补更细的 final-round red / regression trace。
+    severity: advisory
+    graph_op: defer_node
+  - id: FU-MTS-INPUT-SINGLE-SOURCE
+    description: 将 MTS 输入进一步收敛到 MarketObservation.indicators。
+    severity: advisory
+    graph_op: defer_node
+  - id: FU-SCN-CLOSURE-WARN
+    description: 清理旧 contract 中 SCN-01 到 SCN-05 的定义或引用。
+    severity: advisory
+    graph_op: defer_node

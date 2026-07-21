@@ -1,0 +1,39 @@
+id: TASK-STOCK-WATCH-T006
+kind: task
+title: 冻结样本、回放、unit/e2e 门禁与 AC 验收矩阵
+lane: verification-lane
+stage: verify
+status: ready
+parent_task_id: T006
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T006-A1
+- T006-A2
+dependencies:
+- TASK-STOCK-WATCH-T001
+- TASK-STOCK-WATCH-T002
+- TASK-STOCK-WATCH-T003
+- TASK-STOCK-WATCH-T004
+- TASK-STOCK-WATCH-T005
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: Fixture-first 验收输入
+    scenario: 使用冻结样本验收核心路径
+    evidence:
+      implementation_refs:
+      - fixtures/gate/stock-watch-core.json
+      - tests/replay/gate/fixture-loader.ts
+      test_refs:
+      - tests/replay/gate/fixture-corpus.spec.ts
+      - tests/e2e/gate/acceptance-matrix.spec.ts
+updated_at: '2026-06-07T05:44:35.312272+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__batch_advance_lane__5

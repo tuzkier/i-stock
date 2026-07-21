@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "artifact": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md",
+  "contract_type": "action_contract",
+  "findings": [
+    {
+      "level": "PASS",
+      "code": "contract_valid",
+      "message": "Control Contract integrity checks passed"
+    }
+  ]
+}

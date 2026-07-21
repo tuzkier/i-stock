@@ -1,0 +1,171 @@
+control_contract:
+  type: action_contract
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: execute
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/stages/{{mission_id}}/execution-brief.md"
+      sections:
+        - Parent Task Index
+        - Execution Units
+        - Definition of Done
+  consumers:
+    - code-review
+    - verify
+    - stage-gate
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    source_stage_artifact: "harness-runtime/harness/stages/{{mission_id}}/execution-result.md"
+    canonical_artifact: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/execution-result.md"
+  role_policy:
+    stage: execute
+    work_graph_lane: development-lane
+    required_execution_roles:
+      - execute-control-plane-executor
+    required_review_roles:
+      - spec-reviewer
+    role_carriers:
+      execute-control-plane-executor: skill
+  execute_session:
+    id: EXE-SESSION-001
+    skill: execute
+    carrier: execute
+    execute_mode: sdd
+    dispatch_plans:
+      - id: DISPATCH-001
+        task_id: T001
+        # Exactly one Atomic Task id from the selected TASK node's
+        # parent_local_atomic_task_queue. Ranges such as AT-001..AT-003 are
+        # invalid because execute must progress under per-Atomic-Task control.
+        execution_unit_id: AT-001
+        surfaces:
+          - backend_logic
+        primary_executors:
+          - backend-engineer
+        supporting_executors:
+          - test-engineer
+        reviewers:
+          - spec-reviewer
+        required_evidence:
+          - test_result
+          - coverage
+        execution_context:
+          skill: execute
+          role_package_refs:
+            backend-engineer: .harness/common/agents/backend-engineer.md
+            test-engineer: .harness/common/agents/test-engineer.md
+            spec-reviewer: .harness/common/agents/spec-reviewer.md
+        material_package_contract:
+          must_include_execution_context: true
+          must_include_role_package_ref: true
+          must_include_atomic_task_text: true
+          must_include_parent_task_boundary: true
+          must_include_write_scope: true
+        write_scope:
+          - "{{write_scope}}"
+        read_scope: []
+        depends_on: []
+        parallel_group: "{{parallel_group}}"
+        conflict_risk: low
+        missing_surfaces: []
+        blocked: false
+        blockers: []
+  baseline_evidence:
+    - id: EV-BASELINE-001
+      type: baseline_report
+      decision: "{{baseline_decision}}" # reuse_existing_evidence | focused_baseline_run | blocked_existing_failure | toolchain_blocked | expected_missing_behavior
+      path: "{{baseline_report_path}}"
+      command: "{{baseline_command_or_reused_evidence_ref}}"
+      result: "{{baseline_result}}"
+      reason: "{{baseline_reason}}"
+      covers:
+        atomic_tasks:
+          - AT-001
+        tasks:
+          - T001
+  execution_results:
+    - id: EXE-CONTROL-001
+      role: execute-control-plane-executor
+      status: DONE
+      produced_artifacts:
+        - path: "harness-runtime/harness/stages/{{mission_id}}/execution-result.md"
+      fulfilled_obligations: []
+      evidence_refs:
+        - EV-RED-001
+        - EV-GREEN-001
+        - EV-REGRESSION-001
+        - EV-TOOLCHAIN-001
+      open_questions: []
+      concerns: []
+    - id: EXE-PRIMARY-001
+      role: backend-engineer
+      status: DONE
+      produced_artifacts: []
+      fulfilled_obligations: []
+      evidence_refs:
+        - EV-RED-001
+        - EV-GREEN-001
+      open_questions: []
+      concerns: []
+  role_verdicts: []
+  # execute-improvement-plan M1.3: typed fields the breakdown/execute hooks
+  # and reviewer rounds rely on. effectiveness_review.rounds_used mirrors
+  # the breakdown contract; bug_fix_session.fix_attempt_count caps
+  # bug-fix retry attempts before AskUserQuestion / Decision Gate; the
+  # `last_gate_run_status` slot is written by `harness execute gate run`
+  # (M2.1 backlog) so the corresponding PreToolUse hook (parallel to
+  # breakdown's check_gate_pass) can enforce gate PASS before stage
+  # complete.
+  effectiveness_review:
+    rounds_used: 0
+    pending_reviewer_recheck: false
+    last_gate_run_status: PASS
+  bug_fix_session:
+    fix_attempt_count: 0
+  dangerous_command_decisions: []
+  tdd_evidence:
+    - id: EV-RED-001
+      type: red_report
+      phase: red
+      path: "{{red_report_path}}"
+      command: "{{red_command}}"
+      exit_code: "{{red_exit_code}}"
+      failure_signal: "{{red_expected_failure_signal}}"
+      covers:
+        atomic_tasks:
+          - AT-001
+        tasks:
+          - T001
+    - id: EV-GREEN-001
+      type: green_report
+      phase: green
+      path: "{{green_report_path}}"
+      command: "{{green_command}}"
+      exit_code: 0
+      covers:
+        atomic_tasks:
+          - AT-001
+        tasks:
+          - T001
+    - id: EV-REGRESSION-001
+      type: regression_report
+      phase: regression
+      path: "{{regression_report_path}}"
+      command: "{{regression_command}}"
+      exit_code: 0
+      covers:
+        atomic_tasks:
+          - AT-001
+        tasks:
+          - T001
+    - id: EV-TOOLCHAIN-001
+      type: toolchain_status
+      path: "harness-runtime/harness/traces/{{mission_id}}/tdd/toolchain-status.json"
+      covers:
+        atomic_tasks:
+          - AT-001
+        tasks:
+          - T001

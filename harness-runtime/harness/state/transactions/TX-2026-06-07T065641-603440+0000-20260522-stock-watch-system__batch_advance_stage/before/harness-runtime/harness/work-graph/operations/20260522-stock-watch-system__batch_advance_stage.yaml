@@ -1,0 +1,29 @@
+operation_id: 20260522-stock-watch-system__batch_advance_stage
+type: batch
+mission_id: 20260522-stock-watch-system
+operations:
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T002
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T003
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T004
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T005
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T006
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective

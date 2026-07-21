@@ -1,0 +1,57 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: delivery-lane
+  current_stage: delivery
+  stages:
+    execute: done
+    code-review: done
+    verify: done
+    delivery: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - TASK-STOCK-WATCH-T002
+    - TASK-STOCK-WATCH-T003
+    - TASK-STOCK-WATCH-T004
+    - TASK-STOCK-WATCH-T005
+    - TASK-STOCK-WATCH-T006
+    related_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    operation: advance_stage
+    lane: delivery-lane
+    stage: delivery
+    lane_action:
+      lane: delivery-lane
+      stage: delivery
+      graph_operation: advance_stage
+      operation_profiles:
+        advance_stage:
+          to_stage: retrospective
+      allowed_graph_operations:
+      - advance_stage
+      output_artifact: harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/delivery-package.md
+      required_execution_roles:
+      - release-readiness-expert
+      required_review_roles:
+      - acceptance-package-reviewer
+      to_stage: retrospective
+    last_gate_report: ''
+    last_operation_manifest: ''
+    last_operation_status: ''
+    last_transaction_id: TX-2026-06-07T055827-311352+0000-20260522-stock-watch-system__batch_advance_lane
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-06-07T055827-311352+0000-20260522-stock-watch-system__batch_advance_lane.json
+    input_nodes: []
+    output_nodes: []
+    reset_stage: execute
+    reset_reason: 用户确认其他任务仍在执行；T001 仅完成节点级验证，不进入整套任务最终交付，切回 development-lane/execute
+      继续 T002。
+    reset_at: '2026-05-24T10:24:37.844002+08:00'
+    reset_output_node_policy: keep
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation
+  - prd
+  - acceptance-result
+  started_at: '2026-05-23'
+  completed_at: ''

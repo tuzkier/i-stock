@@ -1,0 +1,11 @@
+schema_version: 1
+generated: true
+inputs:
+  REQ-STOCK-WATCH-SYSTEM: []
+outputs:
+  REQ-STOCK-WATCH-SYSTEM: []
+relations:
+  depends_on: {}
+  conflicts_with: {}
+  duplicates: {}
+  supersedes: {}

@@ -1,0 +1,79 @@
+schema_version: 1
+generated: true
+generated_at: '2026-05-24T02:24:37.844961+00:00'
+nodes:
+  REQ-STOCK-WATCH-SYSTEM:
+    kind: requirement
+    title: 多市场股票看盘系统
+    lane: breakdown-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-23T13:37:21.678792+00:00'
+    inputs: []
+    outputs:
+    - TASK-STOCK-WATCH-T001
+    - TASK-STOCK-WATCH-T002
+    - TASK-STOCK-WATCH-T003
+    - TASK-STOCK-WATCH-T004
+    - TASK-STOCK-WATCH-T005
+    - TASK-STOCK-WATCH-T006
+  TASK-STOCK-WATCH-T001:
+    kind: task
+    title: 多市场自选归一、列表摘要与归档暂停
+    lane: delivery-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-24T02:00:15.595904+00:00'
+    inputs:
+    - REQ-STOCK-WATCH-SYSTEM
+    outputs: []
+  TASK-STOCK-WATCH-T002:
+    kind: task
+    title: 默认工作台、来源健康、指标切换与可见降级
+    lane: development-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-24T10:24:37.844002+08:00'
+    inputs:
+    - REQ-STOCK-WATCH-SYSTEM
+    outputs: []
+  TASK-STOCK-WATCH-T003:
+    kind: task
+    title: MTS 解释卡、ReasonRegistry 与非投资建议边界
+    lane: development-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-23T13:37:21.678778+00:00'
+    inputs:
+    - REQ-STOCK-WATCH-SYSTEM
+    outputs: []
+  TASK-STOCK-WATCH-T004:
+    kind: task
+    title: 分类提醒、触发确认、scheduled 与归档暂停
+    lane: development-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-23T13:37:21.678782+00:00'
+    inputs:
+    - REQ-STOCK-WATCH-SYSTEM
+    outputs: []
+  TASK-STOCK-WATCH-T005:
+    kind: task
+    title: WorkspaceSnapshotV2、per-symbol layout 与浏览器重开恢复
+    lane: development-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-23T13:37:21.678785+00:00'
+    inputs:
+    - REQ-STOCK-WATCH-SYSTEM
+    outputs: []
+  TASK-STOCK-WATCH-T006:
+    kind: task
+    title: 冻结样本、回放、unit/e2e 门禁与 AC 验收矩阵
+    lane: development-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-23T13:37:21.678788+00:00'
+    inputs:
+    - REQ-STOCK-WATCH-SYSTEM
+    outputs: []

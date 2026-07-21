@@ -1,0 +1,163 @@
+patches:
+  - target: control_contract.execution_result
+    op: set
+    value:
+      id: EXE-PRD-001
+      role: senior-product-expert
+      status: DONE
+      produced_artifacts:
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-evidence.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/scope-strategy.md
+          work_graph_node: REQ-STOCK-WATCH-SYSTEM
+      fulfilled_obligations:
+        - OBL-PRD-001
+      evidence_refs:
+        - mission-contract
+        - discovery-brief
+        - business-objects
+        - business-use-cases
+        - scope-strategy
+        - technical-signal-research-design
+      open_questions:
+        - ChartLayout 恢复粒度需在 interaction / solution 阶段定稿。
+        - MarketDataSource 用户可见信息密度需在 interaction / solution 阶段定稿。
+        - MTS reason code / invalidator taxonomy 需在 solution / technical design 阶段定稿。
+      concerns:
+        - project-context.md 缺失，当前用 project-knowledge/context/* 和任务契约补偿。
+        - GitNexus 未索引，当前代码现状证据来自手动代码读取和 discovery 记录。
+        - project-knowledge 多为 init/draft，不能当作强约束来源。
+      summary: Product definition package completed and programmatic PRD self-checks pass.
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-PRD-BO-001
+        role: business-domain-modeler
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - project-context.md 缺失，BO Registry 以 mission / discovery / research 为主证据。
+        summary: BO Registry completed with 8 objects and 16 business rules.
+      - id: EXE-PRD-BUC-001
+        role: acceptance-scenario-designer
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - ChartLayout、MarketDataSource 和 MTS taxonomy 的细节需下游阶段定稿。
+        summary: BUC package completed with 7 business use cases and 6 detailed paths.
+      - id: EXE-PRD-SCOPE-001
+        role: product-scope-strategist
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/scope-strategy.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - 3 个范围项进入 Decision Needed，并已绑定后续阶段。
+        summary: Scope strategy completed with 10 in-scope items, 9 out-of-scope items, and 3 decision-needed items.
+      - id: EXE-PRD-SYN-001
+        role: senior-product-expert
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-evidence.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+            work_graph_node: REQ-STOCK-WATCH-SYSTEM
+        fulfilled_obligations: [OBL-PRD-001]
+        concerns:
+          - Evidence degradations are recorded in product-evidence and risks.
+        summary: Main product definition, evidence, and domain model completed.
+  - target: control_contract.business_use_cases.cases.0.detail_level
+    op: set
+    value: detail_required
+  - target: control_contract.business_use_cases.cases.1.detail_level
+    op: set
+    value: detail_required
+  - target: control_contract.business_use_cases.cases.3.detail_level
+    op: set
+    value: detail_required
+  - target: control_contract.business_use_cases.cases.4.detail_level
+    op: set
+    value: detail_required
+  - target: control_contract.business_use_cases.cases.5.detail_level
+    op: set
+    value: detail_required
+  - target: control_contract.business_use_cases.cases.6.detail_level
+    op: set
+    value: detail_required
+  - target: control_contract.non_functional_requirements
+    op: set
+    value:
+      - id: NFR-01
+        category: 可解释性
+        requirement: MTS 与提醒必须带结构化语义，不能退化成单一颜色或买卖词。
+        metric: 页面可观察到趋势状态、分数带、信号类型、提醒等级、理由和失效条件。
+        verification_method: BUC-04 / BUC-05 UI 检查与 fixture 回放。
+      - id: NFR-02
+        category: 连续性
+        requirement: 同一浏览器配置内用户关闭后重开仍能继续使用核心配置。
+        metric: 自选、提醒和基础看盘上下文可恢复。
+        verification_method: 浏览器重开恢复验证。
+      - id: NFR-03
+        category: 降级透明性
+        requirement: 来源降级或数据不足时必须显式提示。
+        metric: 用户能区分正式、演示、降级和数据不足状态。
+        verification_method: 降级场景截图和状态断言。
+      - id: NFR-04
+        category: 范围合规
+        requirement: 产品不得输出收益承诺、自动交易动作或确定性投资建议。
+        metric: 无下单、保证收益、胜率承诺等越界语义。
+        verification_method: 内容审查与验收清单。
+      - id: NFR-05
+        category: 可替换性约束
+        requirement: 下游方案必须优先评估成熟、维护活跃、许可合适的现成开源库。
+        metric: 选型文档覆盖图表、指标、通知、数据接入候选比较。
+        verification_method: solution / technical design 评审。
+      - id: NFR-06
+        category: 确定性
+        requirement: 第一阶段 MTS 与提醒计算链路必须保持 deterministic。
+        metric: 相同 fixture 输入产生相同 MTS 和提醒结果。
+        verification_method: fixture / 回放样本验证。
+  - target: control_contract.capabilities
+    op: set
+    value:
+      - id: CAP-01
+        name: 多市场自选管理
+        confidence_from_discovery: CONFIRMED
+        traces_to: [FR-01, BUC-01]
+      - id: CAP-02
+        name: 看盘布局与技术指标
+        confidence_from_discovery: CONFIRMED
+        traces_to: [FR-02, BUC-02, BUC-03]
+      - id: CAP-03
+        name: MTS 多周期趋势信号
+        confidence_from_discovery: UNCERTAIN
+        traces_to: [FR-03, BUC-04]
+      - id: CAP-04
+        name: 买卖和风控提醒
+        confidence_from_discovery: UNCERTAIN
+        traces_to: [FR-04, BUC-05]
+      - id: CAP-05
+        name: 本地恢复
+        confidence_from_discovery: CONFIRMED
+        traces_to: [FR-05, BUC-06]
+      - id: CAP-06
+        name: 来源降级透明化
+        confidence_from_discovery: ASSUMED
+        traces_to: [FR-06, BUC-07]

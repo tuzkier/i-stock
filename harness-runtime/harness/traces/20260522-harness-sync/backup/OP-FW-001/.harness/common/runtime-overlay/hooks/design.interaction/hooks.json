@@ -1,0 +1,27 @@
+{
+  "_comment": "Stage-4 design+interaction hook manifest. Mirrors design.solution structure with interaction.contract.yaml as the contract target and stage=interaction in the gate completion check.",
+  "stage": "design.interaction",
+  "hooks": [
+    {
+      "id": "design-interaction-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set interaction.contract.yaml pending_reviewer_recheck=true after interaction.md or interaction-spec edit."
+    },
+    {
+      "id": "design-interaction-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when interaction.contract.yaml pending_reviewer_recheck=true."
+    },
+    {
+      "id": "design-interaction-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block harness mission stage complete interaction when gate has not passed."
+    }
+  ]
+}

@@ -1,0 +1,394 @@
+{
+  "version": 1,
+  "generatedAt": "2026-06-06T07:52:00Z",
+  "description": "Fixture-first gate corpus for AC-01 through AC-05. Live market data is not required for these gate paths.",
+  "watchlist": [
+    {
+      "id": "AAPL",
+      "symbol": "AAPL",
+      "name": "Apple",
+      "market": "US",
+      "status": "active"
+    },
+    {
+      "id": "0700.HK",
+      "symbol": "0700.HK",
+      "name": "腾讯控股",
+      "market": "HK",
+      "status": "active"
+    },
+    {
+      "id": "600519.SS",
+      "symbol": "600519.SS",
+      "name": "贵州茅台",
+      "market": "CN",
+      "status": "active"
+    },
+    {
+      "id": "005930.KS",
+      "symbol": "005930.KS",
+      "name": "Samsung Electronics",
+      "market": "KR",
+      "status": "active"
+    }
+  ],
+  "ambiguousInputs": [
+    {
+      "rawInput": "0700",
+      "selectedMarket": "US",
+      "expectedStatus": "ambiguous",
+      "expectedMessage": "纯数字代码可能属于多个市场"
+    },
+    {
+      "rawInput": "005930",
+      "selectedMarket": "US",
+      "expectedStatus": "ambiguous",
+      "expectedMessage": "纯数字代码可能属于多个市场"
+    }
+  ],
+  "source": [
+    {
+      "id": "source-formal-aapl",
+      "symbol": "AAPL",
+      "range": "6mo",
+      "status": "formal",
+      "count": 90,
+      "startClose": 160,
+      "step": 0.45
+    },
+    {
+      "id": "source-demo-hk",
+      "symbol": "0700.HK",
+      "range": "6mo",
+      "status": "demo_fallback",
+      "count": 80,
+      "startClose": 300,
+      "step": 0.2,
+      "reason": "fixture demo fallback"
+    },
+    {
+      "id": "source-unavailable-cn",
+      "symbol": "600519.SS",
+      "range": "6mo",
+      "status": "unavailable",
+      "count": 80,
+      "startClose": 1450,
+      "step": -0.35,
+      "reason": "fixture unavailable source"
+    },
+    {
+      "id": "source-stale-kr",
+      "symbol": "005930.KS",
+      "range": "6mo",
+      "status": "stale",
+      "count": 80,
+      "startClose": 72000,
+      "step": 25,
+      "reason": "fixture stale cache"
+    },
+    {
+      "id": "source-insufficient",
+      "symbol": "AAPL",
+      "range": "6mo",
+      "status": "formal",
+      "count": 5,
+      "startClose": 180,
+      "step": 0.1
+    }
+  ],
+  "mts": [
+    {
+      "id": "mts-strong-positive",
+      "sourceFixtureId": "source-formal-aapl",
+      "expectedFields": [
+        "trend_state",
+        "mts_score",
+        "score_band",
+        "signal_type",
+        "alert_level"
+      ],
+      "nonAdviceForbiddenTerms": [
+        "强买点",
+        "强卖点",
+        "胜率"
+      ]
+    },
+    {
+      "id": "mts-source-degraded",
+      "sourceFixtureId": "source-unavailable-cn",
+      "expectedTrendState": "source_degraded",
+      "expectedAlertLevel": "none"
+    },
+    {
+      "id": "mts-data-insufficient",
+      "sourceFixtureId": "source-insufficient",
+      "expectedTrendState": "data_insufficient",
+      "expectedAlertLevel": "none"
+    }
+  ],
+  "alerts": {
+    "triggeredRule": {
+      "id": "fixture-price-alert",
+      "symbol": "AAPL",
+      "label": "AAPL 价格上穿 190",
+      "taxonomy": "price",
+      "level": "观察",
+      "condition": {
+        "kind": "price",
+        "direction": "above",
+        "threshold": 190
+      },
+      "direction": "above",
+      "price": 190,
+      "enabled": true,
+      "activationState": "enabled",
+      "triggerState": "triggered",
+      "lastTriggeredAt": 1783000000000,
+      "history": [
+        {
+          "at": 1783000000000,
+          "type": "triggered",
+          "reason": "AAPL fixture close crossed above 190"
+        }
+      ]
+    },
+    "archivedRule": {
+      "id": "fixture-archived-alert",
+      "symbol": "0700.HK",
+      "label": "0700.HK MTS 风控",
+      "taxonomy": "mts",
+      "level": "风控",
+      "condition": {
+        "kind": "mts",
+        "mtsAlertLevel": "high"
+      },
+      "direction": "above",
+      "enabled": false,
+      "activationState": "suspended_by_archive",
+      "suspendedReason": "suspended_by_archive",
+      "restoreIntent": "enabled",
+      "triggerState": "idle",
+      "history": [
+        {
+          "at": 1783000000000,
+          "type": "suspended_by_archive",
+          "reason": "标的归档，提醒暂停"
+        }
+      ]
+    }
+  },
+  "workspace": {
+    "fourMarket": {
+      "version": 2,
+      "watchlist": [
+        {
+          "id": "AAPL",
+          "symbol": "AAPL",
+          "name": "Apple",
+          "market": "US",
+          "status": "active"
+        },
+        {
+          "id": "0700.HK",
+          "symbol": "0700.HK",
+          "name": "腾讯控股",
+          "market": "HK",
+          "status": "active"
+        },
+        {
+          "id": "600519.SS",
+          "symbol": "600519.SS",
+          "name": "贵州茅台",
+          "market": "CN",
+          "status": "active"
+        },
+        {
+          "id": "005930.KS",
+          "symbol": "005930.KS",
+          "name": "Samsung Electronics",
+          "market": "KR",
+          "status": "active"
+        }
+      ],
+      "alerts": [],
+      "selectedSymbol": "AAPL",
+      "range": "6mo",
+      "layoutBySymbol": {
+        "AAPL": {
+          "mode": "focus",
+          "selectedMobileTab": "chart"
+        }
+      },
+      "globalLayoutFallback": {
+        "mode": "focus",
+        "selectedMobileTab": "chart"
+      },
+      "updatedAt": 1783000000000
+    },
+    "restoreLayout": {
+      "version": 2,
+      "watchlist": [
+        {
+          "id": "AAPL",
+          "symbol": "AAPL",
+          "name": "Apple",
+          "market": "US",
+          "status": "active"
+        },
+        {
+          "id": "0700.HK",
+          "symbol": "0700.HK",
+          "name": "腾讯控股",
+          "market": "HK",
+          "status": "active"
+        }
+      ],
+      "alerts": [
+        {
+          "id": "0700-risk",
+          "symbol": "0700.HK",
+          "label": "MTS 风控",
+          "taxonomy": "mts",
+          "level": "风控",
+          "direction": "above",
+          "enabled": true,
+          "activationState": "enabled",
+          "triggerState": "acknowledged",
+          "history": [
+            {
+              "at": 1783000000000,
+              "type": "acknowledged",
+              "reason": "用户确认"
+            }
+          ]
+        }
+      ],
+      "selectedSymbol": "0700.HK",
+      "range": "6mo",
+      "layoutBySymbol": {
+        "AAPL": {
+          "mode": "focus",
+          "selectedMobileTab": "chart"
+        },
+        "0700.HK": {
+          "mode": "dense",
+          "selectedMobileTab": "source"
+        }
+      },
+      "globalLayoutFallback": {
+        "mode": "focus",
+        "selectedMobileTab": "chart"
+      },
+      "updatedAt": 1783000000000
+    },
+    "corruptLayout": {
+      "version": 2,
+      "watchlist": [
+        {
+          "id": "AAPL",
+          "symbol": "AAPL",
+          "name": "Apple",
+          "market": "US",
+          "status": "active"
+        }
+      ],
+      "alerts": [],
+      "selectedSymbol": "AAPL",
+      "range": "6mo",
+      "layoutBySymbol": {
+        "AAPL": {
+          "mode": "broken",
+          "selectedMobileTab": "missing"
+        }
+      },
+      "globalLayoutFallback": {
+        "mode": "broken",
+        "selectedMobileTab": "chart"
+      },
+      "updatedAt": 1783000000000
+    }
+  },
+  "acMatrix": [
+    {
+      "ac": "AC-01",
+      "scenarios": [
+        "四市场自选归一",
+        "歧义输入不得静默写入"
+      ],
+      "surfaces": [
+        "SURF-WATCHLIST"
+      ],
+      "fixtureIds": [
+        "fourMarket",
+        "ambiguousInputs"
+      ]
+    },
+    {
+      "ac": "AC-02",
+      "scenarios": [
+        "默认看盘工作台",
+        "来源降级穿透",
+        "数据不足局部降级"
+      ],
+      "surfaces": [
+        "SURF-WORKBENCH",
+        "SURF-SOURCE"
+      ],
+      "fixtureIds": [
+        "source-formal-aapl",
+        "source-demo-hk",
+        "source-unavailable-cn",
+        "source-insufficient"
+      ]
+    },
+    {
+      "ac": "AC-03",
+      "scenarios": [
+        "MTS 解释卡",
+        "非投资建议边界",
+        "来源降级或数据不足不输出伪信号"
+      ],
+      "surfaces": [
+        "SURF-MTS"
+      ],
+      "fixtureIds": [
+        "mts-strong-positive",
+        "mts-source-degraded",
+        "mts-data-insufficient"
+      ]
+    },
+    {
+      "ac": "AC-04",
+      "scenarios": [
+        "分类提醒触发",
+        "提醒确认",
+        "归档暂停提醒"
+      ],
+      "surfaces": [
+        "SURF-ALERTS"
+      ],
+      "fixtureIds": [
+        "fixture-price-alert",
+        "fixture-archived-alert"
+      ]
+    },
+    {
+      "ac": "AC-05",
+      "scenarios": [
+        "浏览器重开恢复工作台",
+        "布局损坏回退默认",
+        "mobile_tab 恢复"
+      ],
+      "surfaces": [
+        "SURF-LAYOUT",
+        "SURF-RESTORE",
+        "SURF-WATCHLIST"
+      ],
+      "fixtureIds": [
+        "restoreLayout",
+        "corruptLayout",
+        "t005-restore-trace"
+      ]
+    }
+  ]
+}

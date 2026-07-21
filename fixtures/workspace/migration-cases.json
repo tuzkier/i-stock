@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "legacy-watchlist-alerts-to-v2",
+      "legacyWatchlist": [
+        { "id": "AAPL", "symbol": "AAPL", "name": "Apple", "market": "US", "status": "active" }
+      ],
+      "legacyAlerts": [
+        {
+          "id": "alert-aapl",
+          "symbol": "AAPL",
+          "label": "AAPL 价格提醒",
+          "direction": "above",
+          "price": 190,
+          "enabled": true,
+          "activationState": "enabled",
+          "triggerState": "acknowledged",
+          "history": [
+            { "at": 1783000000000, "type": "triggered", "reason": "fixture trigger" },
+            { "at": 1783000001000, "type": "acknowledged", "reason": "fixture ack" }
+          ]
+        }
+      ],
+      "expectedStatus": "partial",
+      "expectedSelectedSymbol": "AAPL",
+      "expectedHistory": ["triggered", "acknowledged"]
+    },
+    {
+      "id": "corrupt-json-default-fallback",
+      "workspaceRaw": "{bad json",
+      "expectedStatus": "default_fallback",
+      "expectedLayout": "focus"
+    },
+    {
+      "id": "per-symbol-layout-normalization",
+      "workspace": {
+        "version": 2,
+        "watchlist": [
+          { "id": "AAPL", "symbol": "AAPL", "name": "Apple", "market": "US", "status": "active" },
+          { "id": "0700.HK", "symbol": "0700.HK", "name": "腾讯控股", "market": "HK", "status": "active" }
+        ],
+        "alerts": [],
+        "selectedSymbol": "0700.hk",
+        "layoutBySymbol": {
+          "AAPL": { "mode": "dense", "selectedMobileTab": "chart" },
+          "0700.hk": { "mode": "mobile_tab", "selectedMobileTab": "source" }
+        },
+        "globalLayoutFallback": { "mode": "focus", "selectedMobileTab": "chart" },
+        "updatedAt": 1783000000000
+      },
+      "expectedStatus": "restored",
+      "expectedSelectedSymbol": "0700.HK",
+      "expectedLayoutBySymbol": {
+        "AAPL": "dense",
+        "0700.HK": "mobile_tab"
+      }
+    }
+  ]
+}

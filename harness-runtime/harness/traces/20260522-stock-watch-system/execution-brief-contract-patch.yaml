@@ -1,0 +1,739 @@
+patches:
+  - target: control_contract.work_graph_artifact
+    op: set
+    value:
+      node_id: REQ-STOCK-WATCH-SYSTEM
+      artifact_version: v1
+      promoted_by_mission: 20260522-stock-watch-system
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/execution-brief.md
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 0
+      max_rounds: 3
+      last_verdict: HOLD
+      pending_reviewer_recheck: true
+  - target: control_contract.obligations
+    op: set
+    value:
+      - id: OBL-BREAKDOWN-001
+        mission_id: 20260522-stock-watch-system
+        type: verification
+        risk: high
+        traces_to:
+          ac: [AC-01, AC-02, AC-03, AC-04, AC-05]
+          task: [T001, T002, T003, T004, T005, T006]
+        required_evidence:
+          - execution_brief_self_check
+          - coverage_check
+          - reviewer_verdict
+        required_roles:
+          - execution-plan-effectiveness-reviewer
+        blocking: true
+        source: breakdown
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-BREAKDOWN-001
+        role: delivery-slicer
+        status: DONE
+        barrier_group: breakdown-workers-parallel
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+        fulfilled_obligations: [OBL-BREAKDOWN-001]
+        decision_log:
+          - "将 mission 拆成 6 个 Parent task 与 12 个 Atomic Task，保持 Provider / Cache / Storage / Chart Gate 作为执行边界。"
+        traceability_matrix:
+          - source: AC-01
+            target: [T001, T006]
+          - source: AC-02
+            target: [T002, T006]
+          - source: AC-03
+            target: [T003, T006]
+          - source: AC-04
+            target: [T004, T006]
+          - source: AC-05
+            target: [T005, T006]
+        evidence_refs:
+          - subagent_id: 019e54e9-a878-72c2-a26c-38096e498905
+            role: delivery-slicer
+            result: DONE
+        open_questions: []
+        concerns: []
+      - id: EXE-BREAKDOWN-002
+        role: test-planning-expert
+        status: DONE
+        barrier_group: breakdown-workers-parallel
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+            section: test_obligation / e2e_obligation
+        fulfilled_obligations: [OBL-BREAKDOWN-001]
+        decision_log:
+          - "将 20 个差量规格场景映射到 Parent task 的 test_obligation 与 E2E 证据要求。"
+        traceability_matrix:
+          - source: TASK-WATCHLIST
+            target: [T001-A1, T001-A2]
+          - source: TASK-OBSERVATION
+            target: [T002-A1, T002-A2]
+          - source: TASK-MTS
+            target: [T003-A1, T003-A2]
+          - source: TASK-ALERTS
+            target: [T004-A1, T004-A2]
+          - source: TASK-SOURCE
+            target: [T002-A1, T002-A2]
+          - source: TASK-RESTORE
+            target: [T005-A1, T005-A2]
+          - source: TASK-LAYOUT
+            target: [T005-A2, T002-A2]
+          - source: TASK-VERIFY
+            target: [T006-A1, T006-A2]
+        evidence_refs:
+          - subagent_id: 019e54e9-b3d8-7920-bf17-80ec20a328a5
+            role: test-planning-expert
+            result: DONE
+        open_questions: []
+        concerns: []
+  - target: control_contract.tasks
+    op: set
+    value:
+      - id: T001
+        objective: 多市场自选归一、添加前预览、列表摘要与归档暂停恢复。
+        traces_to: [AC-01, AC-05]
+        authorized_paths:
+          - src/data/markets.ts
+          - src/domain/market-normalization.ts
+          - src/features/watchlist/**
+          - src/lib/storage.ts
+          - src/types.ts
+          - tests/unit/watchlist/**
+          - tests/e2e/watchlist/**
+          - fixtures/watchlist/**
+        prohibited_paths:
+          - harness-runtime/harness/stages/**/contracts/**
+          - harness-runtime/harness/stages/**/product/**
+          - harness-runtime/harness/stages/**/solution.md
+          - harness-runtime/harness/stages/**/tech-design.md
+          - server/index.js
+          - src/lib/signals.ts
+        required_evidence:
+          - id: re-T001-1
+            type: failing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/watchlist/normalization.spec.ts
+            description: Red 能抓到歧义输入被静默写入或归档误删除。
+          - id: re-T001-2
+            type: passing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/watchlist/archive.spec.ts
+            description: Green 证明归一预览、列表摘要和归档暂停合同成立。
+          - id: re-T001-3
+            type: regression
+            verification_type: e2e
+            command: npx playwright test tests/e2e/watchlist/archive.spec.ts
+            description: Regression 证明列表摘要与归档恢复可见。
+          - id: re-T001-4
+            type: test_effectiveness
+            verification_type: manual
+            description: 故障注入删除歧义门禁或 suspended_by_archive 更新时测试失败。
+        tdd_scope:
+          behavior_under_test: [symbol_normalization_preview, ambiguity_gate, watchlist_summary, archive_suspend_restore]
+          red_scope: [ambiguous_numeric_symbol_not_added, archived_symbol_does_not_trigger_alert]
+          green_scope: [explicit_preview_confirm_flow, summary_row_with_source_state, archive_keeps_restore_intent]
+          refactor_scope: [extract_market_normalization_domain, keep_storage_helpers_small]
+          out_of_scope: [chart_rendering, mts_scoring, provider_fetching]
+          required_assertions: [normalized_identity_is_stable, ambiguous_input_requires_confirmation, archived_alert_is_suspended]
+          test_data_boundary:
+            fixtures: [US_AAPL, HK_0700, CN_600519, KR_005930, ambiguous_numeric_symbol, archived_symbol_with_alert]
+            isolation: [localStorage_reset_per_test, fixture_first_no_live_provider]
+          test_doubles_boundary:
+            allowed_test_doubles: [source_health_fixture]
+            forbidden_test_doubles: [mocking_market_normalization_result_after_domain_call]
+          commands:
+            red: npx vitest run tests/unit/watchlist/normalization.spec.ts
+            green: npx vitest run tests/unit/watchlist/archive.spec.ts
+            regression: npx playwright test tests/e2e/watchlist/archive.spec.ts && npm run build
+          validity_probe:
+            method: targeted_fault_injection_remove_ambiguity_gate
+            expected_signal: normalization_or_archive_test_fails
+        test_obligation:
+          risk_level: high
+          surfaces: [SURF-WATCHLIST, SURF-RESTORE, SURF-ALERTS]
+          required_capabilities: [unit, browser_flow, storage_assertion, mutation_or_fault_injection]
+          evidence_required: [red_report, green_report, regression_report, screenshot_or_locator_evidence]
+        e2e_obligation:
+          risk_level: medium
+          user_surfaces: [watchlist_add_flow, watchlist_summary, archive_restore_flow]
+          required_capabilities: [browser_flow, user_visible_assertion, local_persistence_replay, accessibility_smoke]
+          evidence_required: [e2e_run_report, trace_or_video, screenshot_on_failure, assertion_summary]
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - automatic_market_guessing
+          - archive_as_physical_delete
+        atomic_task_queue:
+          status: ready
+          atomic_task_ids: [T001-A1, T001-A2]
+          detail_refs: [T001-A1, T001-A2]
+          execution_units:
+            - id: T001-A1
+              execution_order: 1
+              depends_on: []
+              write_scope: [src/domain/market-normalization.ts, src/data/markets.ts, src/features/watchlist/**, tests/unit/watchlist/**, fixtures/watchlist/**]
+              detail_ref: T001-A1
+              reviewer_verdict: pending
+            - id: T001-A2
+              execution_order: 2
+              depends_on: [T001-A1]
+              write_scope: [src/features/watchlist/**, src/lib/storage.ts, src/types.ts, tests/unit/watchlist/**, tests/e2e/watchlist/**]
+              detail_ref: T001-A2
+              reviewer_verdict: pending
+          notes:
+            parent_task_coverage: 覆盖自选 identity、预览、摘要和归档暂停。
+            ac_scenario_coverage: AC-01 与 AC-05 的 watchlist/restore 子场景。
+            code_pattern_references: src/data/markets.ts、src/lib/storage.ts、src/App.tsx 现有模式。
+            interface_or_data_contracts: WatchSymbol、NormalizationPreviewView、AlertRule.suspended_by_archive。
+            test_fixtures_and_seed_data: 四市场样本、歧义样本、归档样本。
+            validation_commands: vitest watchlist + playwright archive + build。
+            transaction_or_state_boundaries: 预览确认后才写 active；归档保留 restoreIntent。
+            evidence_requirements: Red/Green/Regression/故障注入。
+            stop_conditions: 禁止自动猜市场、物理删除归档、跨到 MTS 或 source。
+            migration_or_route_boundaries: 不新增后端 route，不改合同文档。
+        dependencies: []
+      - id: T002
+        objective: 默认工作台、来源健康、指标切换、缓存语义和可见降级。
+        traces_to: [AC-02, AC-03, AC-04]
+        authorized_paths:
+          - server/index.js
+          - src/domain/market-data-source.ts
+          - src/domain/observation.ts
+          - src/features/source/**
+          - src/features/chart/**
+          - src/features/workbench/**
+          - src/lib/indicators.ts
+          - src/App.tsx
+          - src/types.ts
+          - tests/unit/source/**
+          - tests/e2e/workbench/**
+          - fixtures/source/**
+        prohibited_paths:
+          - harness-runtime/harness/stages/**/contracts/**
+          - harness-runtime/harness/stages/**/product/**
+          - harness-runtime/harness/stages/**/solution.md
+          - harness-runtime/harness/stages/**/tech-design.md
+          - src/lib/storage.ts
+          - src/lib/signals.ts
+        required_evidence:
+          - id: re-T002-1
+            type: failing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/source/market-data-source.spec.ts
+            description: Red 能抓到缺失 sourceHealth、cache bypass 或 stale 分支。
+          - id: re-T002-2
+            type: passing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/source/market-data-source.spec.ts
+            description: Green 证明 MarketDataEnvelope、TTL 60 秒、forceRefresh bypass 成立。
+          - id: re-T002-3
+            type: regression
+            verification_type: e2e
+            command: npx playwright test tests/e2e/workbench/default.spec.ts
+            description: Regression 证明默认工作台、指标切换和降级状态可见。
+          - id: re-T002-4
+            type: test_effectiveness
+            verification_type: manual
+            description: 删除 stale 或 source banner 分支时相关测试失败。
+        tdd_scope:
+          behavior_under_test: [market_data_envelope, cache_ttl_bypass_stale, default_workbench, indicator_switch]
+          red_scope: [missing_source_health_fails, force_refresh_cache_hit_fails, indicator_data_insufficient_visible]
+          green_scope: [source_health_propagates, workbench_shell_renders, indicator_switch_updates_panel]
+          refactor_scope: [separate_source_domain_from_chart_ui, keep_provider_details_out_of_domain]
+          out_of_scope: [mts_reason_registry, alert_triggering, workspace_snapshot_migration]
+          required_assertions: [source_health_visible, stale_not_reported_as_formal, cache_bypass_observed, chart_locator_stable]
+          test_data_boundary:
+            fixtures: [yahoo_success_payload, provider_500_payload, stale_cache_payload, insufficient_bars_payload]
+            isolation: [server_cache_reset_between_tests, fixture_replay_for_gate]
+          test_doubles_boundary:
+            allowed_test_doubles: [provider_http_fixture, clock_fixture]
+            forbidden_test_doubles: [mocking_SourceHealth_after_UI_render]
+          commands:
+            red: npx vitest run tests/unit/source/market-data-source.spec.ts
+            green: npx vitest run tests/unit/source/market-data-source.spec.ts
+            regression: npx playwright test tests/e2e/workbench/default.spec.ts && npm run build
+          validity_probe:
+            method: targeted_fault_injection_remove_stale_branch
+            expected_signal: source_or_workbench_test_fails
+        test_obligation:
+          risk_level: high
+          surfaces: [SURF-WORKBENCH, SURF-SOURCE, SURF-LAYOUT]
+          required_capabilities: [unit, replay, browser_flow, cache_semantics, user_visible_assertion]
+          evidence_required: [red_report, green_report, regression_report, cache_trace]
+        e2e_obligation:
+          risk_level: high
+          user_surfaces: [workbench_default_open, indicator_switch, source_degradation]
+          required_capabilities: [browser_flow, user_visible_assertion, realtime_or_refresh, accessibility_smoke]
+          evidence_required: [e2e_run_report, trace_or_video, screenshot_on_failure, assertion_summary]
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - provider_specific_fields_enter_domain
+          - cache_written_to_localStorage
+          - chart_gate_violation
+        atomic_task_queue:
+          status: ready
+          atomic_task_ids: [T002-A1, T002-A2]
+          detail_refs: [T002-A1, T002-A2]
+          execution_units:
+            - id: T002-A1
+              execution_order: 1
+              depends_on: [T001-A1]
+              write_scope: [server/index.js, src/domain/market-data-source.ts, src/domain/observation.ts, src/types.ts, tests/unit/source/**, fixtures/source/**]
+              detail_ref: T002-A1
+              reviewer_verdict: pending
+            - id: T002-A2
+              execution_order: 2
+              depends_on: [T002-A1]
+              write_scope: [src/features/source/**, src/features/chart/**, src/features/workbench/**, src/lib/indicators.ts, src/App.tsx, tests/e2e/workbench/**]
+              detail_ref: T002-A2
+              reviewer_verdict: pending
+          notes:
+            parent_task_coverage: 覆盖数据来源合同、默认工作台、指标切换和降级可见性。
+            ac_scenario_coverage: AC-02、AC-03、AC-04 中 source/workbench 子场景。
+            code_pattern_references: server/index.js fallbackPayload、compactBars、src/types.ts ChartPayload。
+            interface_or_data_contracts: MarketDataEnvelope、SourceHealth、cacheState、PriceSeries。
+            test_fixtures_and_seed_data: provider 成功、失败、stale、数据不足与 cache 样本。
+            validation_commands: vitest source + playwright workbench + build。
+            transaction_or_state_boundaries: cache 只在 server memory 内，sourceHealth 必须向下游传播。
+            evidence_requirements: Red/Green/Regression/cache trace/故障注入。
+            stop_conditions: 禁止 provider 泄漏、cache localStorage、绕过 Chart Gate。
+            migration_or_route_boundaries: 保留 /api/chart/:symbol，不新增 public route。
+        dependencies: [T001]
+      - id: T003
+        objective: MTS 解释卡、ReasonRegistry、数据不足降级和非投资建议边界。
+        traces_to: [AC-03, AC-04]
+        authorized_paths:
+          - src/domain/mts.ts
+          - src/domain/mts-registry.ts
+          - src/lib/signals.ts
+          - src/features/mts/**
+          - src/App.tsx
+          - src/types.ts
+          - tests/unit/mts/**
+          - tests/replay/mts/**
+          - fixtures/mts/**
+        prohibited_paths:
+          - harness-runtime/harness/stages/**/contracts/**
+          - harness-runtime/harness/stages/**/product/**
+          - harness-runtime/harness/stages/**/solution.md
+          - harness-runtime/harness/stages/**/tech-design.md
+          - server/index.js
+          - src/lib/storage.ts
+        required_evidence:
+          - id: re-T003-1
+            type: failing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/mts/registry.spec.ts
+            description: Red 能抓到自由文本 reason code、未知码未降级或投资建议文案。
+          - id: re-T003-2
+            type: passing_test
+            verification_type: unit
+            command: npx vitest run tests/replay/mts/replay.spec.ts
+            description: Green 证明 MtsReasonRegistry 与 MtsExplanation 输出完整。
+          - id: re-T003-3
+            type: regression
+            verification_type: e2e
+            command: npx playwright test tests/e2e/workbench/mts.spec.ts
+            description: Regression 证明 MTS 卡、数据不足与 source 降级可见。
+          - id: re-T003-4
+            type: test_effectiveness
+            verification_type: manual
+            description: 故障注入未知码或去掉非投资建议边界时测试失败。
+        tdd_scope:
+          behavior_under_test: [mts_reason_registry, mts_explanation_shape, data_insufficient_degradation, mts_card_copy]
+          red_scope: [free_text_reason_rejected, insufficient_bars_no_fake_mts, advice_copy_rejected]
+          green_scope: [registry_codes_resolve, explanation_card_renders, degraded_source_visible]
+          refactor_scope: [replace_legacy_composite_signal_copy, keep_registry_additive]
+          out_of_scope: [alert_rule_triggering, source_fetching, workspace_persistence]
+          required_assertions: [reason_codes_registered, unknown_code_degrades, no_buy_sell_advice, data_insufficient_visible]
+          test_data_boundary:
+            fixtures: [trend_up, trend_confirmed, risk_invalidated, momentum_divergence, insufficient_bars, source_degraded]
+            isolation: [replay_fixture_first, no_live_market_dependency]
+          test_doubles_boundary:
+            allowed_test_doubles: [IndicatorSet_fixture, SourceHealth_fixture]
+            forbidden_test_doubles: [mocking_registry_lookup_to_always_pass]
+          commands:
+            red: npx vitest run tests/unit/mts/registry.spec.ts
+            green: npx vitest run tests/replay/mts/replay.spec.ts
+            regression: npx playwright test tests/e2e/workbench/mts.spec.ts && npm run build
+          validity_probe:
+            method: targeted_fault_injection_unknown_reason_code
+            expected_signal: registry_or_mts_card_test_fails
+        test_obligation:
+          risk_level: high
+          surfaces: [SURF-MTS, SURF-WORKBENCH]
+          required_capabilities: [unit, replay, mutation_or_registry_validation, screenshot_or_copy_review]
+          evidence_required: [red_report, green_report, regression_report, registry_report]
+        e2e_obligation:
+          risk_level: medium
+          user_surfaces: [mts_card_reading, source_degraded_mts]
+          required_capabilities: [browser_flow, user_visible_assertion, accessibility_smoke]
+          evidence_required: [e2e_run_report, screenshot_or_trace, assertion_summary]
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - mts_expresses_investment_advice
+          - registry_not_additive
+          - provider_details_enter_mts_contract
+        atomic_task_queue:
+          status: ready
+          atomic_task_ids: [T003-A1, T003-A2]
+          detail_refs: [T003-A1, T003-A2]
+          execution_units:
+            - id: T003-A1
+              execution_order: 1
+              depends_on: [T002-A1]
+              write_scope: [src/domain/mts.ts, src/domain/mts-registry.ts, src/lib/signals.ts, src/types.ts, tests/unit/mts/**, tests/replay/mts/**, fixtures/mts/**]
+              detail_ref: T003-A1
+              reviewer_verdict: pending
+            - id: T003-A2
+              execution_order: 2
+              depends_on: [T003-A1, T002-A2]
+              write_scope: [src/features/mts/**, src/App.tsx, tests/e2e/workbench/**]
+              detail_ref: T003-A2
+              reviewer_verdict: pending
+          notes:
+            parent_task_coverage: 覆盖 MTS 域合同、解释卡、不可解释降级和非投资建议边界。
+            ac_scenario_coverage: AC-03 与 AC-04 的 MTS 子场景。
+            code_pattern_references: src/lib/signals.ts buildSignal 与旧 CompositeSignal。
+            interface_or_data_contracts: MtsReasonRegistry、MtsExplanation、UNKNOWN_CODE。
+            test_fixtures_and_seed_data: 趋势、确认、风险、背离、数据不足和 source degraded 样本。
+            validation_commands: vitest mts + replay + playwright mts + build。
+            transaction_or_state_boundaries: MTS 不触发提醒、不承载收益概率。
+            evidence_requirements: Red/Green/Regression/registry fault injection。
+            stop_conditions: 禁止投资建议、非 additive registry、provider 细节泄漏。
+            migration_or_route_boundaries: 不新增 API route，不混入 alert 触发。
+        dependencies: [T002]
+      - id: T004
+        objective: 分类提醒、触发/确认、scheduled app-open 语义和归档暂停事件流。
+        traces_to: [AC-04, AC-05]
+        authorized_paths:
+          - src/domain/alert.ts
+          - src/lib/alerts.ts
+          - src/features/alerts/**
+          - src/App.tsx
+          - src/types.ts
+          - tests/unit/alerts/**
+          - tests/replay/alerts/**
+          - fixtures/alerts/**
+        prohibited_paths:
+          - harness-runtime/harness/stages/**/contracts/**
+          - harness-runtime/harness/stages/**/product/**
+          - harness-runtime/harness/stages/**/solution.md
+          - harness-runtime/harness/stages/**/tech-design.md
+          - server/index.js
+          - src/domain/market-data-source.ts
+        required_evidence:
+          - id: re-T004-1
+            type: failing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/alerts/rule-model.spec.ts
+            description: Red 能抓到 taxonomy 非法、状态混用或 scheduled 语义缺失。
+          - id: re-T004-2
+            type: passing_test
+            verification_type: unit
+            command: npx vitest run tests/replay/alerts/evaluator.spec.ts
+            description: Green 证明 AlertRule 状态机和 evaluator 事件流成立。
+          - id: re-T004-3
+            type: regression
+            verification_type: e2e
+            command: npx playwright test tests/e2e/alerts/alerts.spec.ts
+            description: Regression 证明创建、触发、确认、暂停和 missed_while_closed 可见。
+          - id: re-T004-4
+            type: test_effectiveness
+            verification_type: manual
+            description: 故障注入非法 taxonomy 或去掉 ack 状态时测试失败。
+        tdd_scope:
+          behavior_under_test: [alert_taxonomy, activation_and_trigger_state, scheduled_daily_time, acknowledge_history]
+          red_scope: [invalid_taxonomy_rejected, scheduled_without_local_time_fails, archived_rule_not_triggered]
+          green_scope: [threshold_mts_scheduled_rules_valid, app_open_evaluator_records_history, acknowledgement_persists]
+          refactor_scope: [extract_alert_domain, keep_ui_panel_thin]
+          out_of_scope: [external_notifications, background_worker, source_fetching]
+          required_assertions: [taxonomy_is_explicit, triggerState_transitions_are_valid, missed_while_closed_visible, archive_suspends_rule]
+          test_data_boundary:
+            fixtures: [price_alert, change_alert, indicator_alert, mts_alert, scheduled_alert, archived_symbol_alert]
+            isolation: [clock_fixture_local_timezone, replay_observation_fixture]
+          test_doubles_boundary:
+            allowed_test_doubles: [clock_fixture, observation_fixture, MtsExplanation_fixture]
+            forbidden_test_doubles: [mocking_trigger_state_after_evaluator]
+          commands:
+            red: npx vitest run tests/unit/alerts/rule-model.spec.ts
+            green: npx vitest run tests/replay/alerts/evaluator.spec.ts
+            regression: npx playwright test tests/e2e/alerts/alerts.spec.ts && npm run build
+          validity_probe:
+            method: targeted_fault_injection_remove_acknowledged_state
+            expected_signal: alert_replay_or_e2e_test_fails
+        test_obligation:
+          risk_level: high
+          surfaces: [SURF-ALERTS, SURF-MTS]
+          required_capabilities: [unit, replay, browser_flow, clock_control, mutation_or_fault_injection]
+          evidence_required: [red_report, green_report, regression_report, replay_log]
+        e2e_obligation:
+          risk_level: high
+          user_surfaces: [alert_create_flow, alert_trigger_flow, alert_ack_flow, scheduled_alert_status]
+          required_capabilities: [browser_flow, user_visible_assertion, local_persistence_replay, clock_control]
+          evidence_required: [e2e_run_report, trace_or_video, screenshot_on_failure, assertion_summary]
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - external_notification_or_worker_required
+          - alert_state_is_ui_only
+          - archive_implemented_as_delete
+        atomic_task_queue:
+          status: ready
+          atomic_task_ids: [T004-A1, T004-A2]
+          detail_refs: [T004-A1, T004-A2]
+          execution_units:
+            - id: T004-A1
+              execution_order: 1
+              depends_on: [T003-A1]
+              write_scope: [src/domain/alert.ts, src/lib/alerts.ts, src/types.ts, tests/unit/alerts/**, fixtures/alerts/**]
+              detail_ref: T004-A1
+              reviewer_verdict: pending
+            - id: T004-A2
+              execution_order: 2
+              depends_on: [T004-A1, T003-A2]
+              write_scope: [src/features/alerts/**, src/App.tsx, tests/replay/alerts/**, tests/e2e/alerts/**]
+              detail_ref: T004-A2
+              reviewer_verdict: pending
+          notes:
+            parent_task_coverage: 覆盖 AlertRule 分类、状态机、事件流和 UI 确认。
+            ac_scenario_coverage: AC-04 与 AC-05 的 alert/archive 子场景。
+            code_pattern_references: src/App.tsx addPriceAlert/addSignalAlert/triggeredAlerts。
+            interface_or_data_contracts: AlertRule taxonomy、activationState、triggerState、history。
+            test_fixtures_and_seed_data: 五类提醒、scheduled、invalid taxonomy、archived symbol。
+            validation_commands: vitest alerts + replay + playwright alerts + build。
+            transaction_or_state_boundaries: 只在 app-open evaluator 内判断 scheduled；无后台推送。
+            evidence_requirements: Red/Green/Regression/replay log/fault injection。
+            stop_conditions: 禁止外部通知、后台 worker、UI-only 状态。
+            migration_or_route_boundaries: 不新增后端 route，不改 source adapter。
+        dependencies: [T003]
+      - id: T005
+        objective: WorkspaceSnapshotV2、per-symbol layout、浏览器重开恢复和默认 focus fallback。
+        traces_to: [AC-05]
+        authorized_paths:
+          - src/domain/workspace.ts
+          - src/lib/storage.ts
+          - src/features/layout/**
+          - src/features/restore/**
+          - src/App.tsx
+          - src/types.ts
+          - tests/unit/workspace/**
+          - tests/replay/workspace/**
+          - tests/e2e/restore-layout/**
+          - fixtures/workspace/**
+        prohibited_paths:
+          - harness-runtime/harness/stages/**/contracts/**
+          - harness-runtime/harness/stages/**/product/**
+          - harness-runtime/harness/stages/**/solution.md
+          - harness-runtime/harness/stages/**/tech-design.md
+          - server/index.js
+          - src/lib/signals.ts
+        required_evidence:
+          - id: re-T005-1
+            type: failing_test
+            verification_type: unit
+            command: npx vitest run tests/unit/workspace/snapshot-migration.spec.ts
+            description: Red 能抓到旧 key 丢失、坏 snapshot 不 fallback 或 layout_scope 错误。
+          - id: re-T005-2
+            type: passing_test
+            verification_type: unit
+            command: npx vitest run tests/replay/workspace/restore.spec.ts
+            description: Green 证明 WorkspaceSnapshotV2 迁移、恢复和默认 fallback 成立。
+          - id: re-T005-3
+            type: regression
+            verification_type: e2e
+            command: npx playwright test tests/e2e/restore-layout/resume.spec.ts
+            description: Regression 证明浏览器重开、per-symbol layout 和 mobile_tab 可恢复。
+          - id: re-T005-4
+            type: test_effectiveness
+            verification_type: manual
+            description: 故障注入坏 layout 或删除 migration 分支时测试失败。
+        tdd_scope:
+          behavior_under_test: [workspace_snapshot_v2_migration, restore_status, per_symbol_layout, mobile_tab_restore]
+          red_scope: [legacy_keys_not_lost, corrupt_snapshot_falls_back, bad_layout_defaults_to_focus]
+          green_scope: [snapshot_v2_persists_watchlist_alerts_layout, per_symbol_layout_restores, restore_banner_visible]
+          refactor_scope: [centralize_storage_schema, keep_layout_as_presentation_state]
+          out_of_scope: [cloud_sync, account_system, indexedDB_or_backend_persistence]
+          required_assertions: [restoreStatus_recorded, layoutBySymbol_uses_normalized_symbol, default_focus_on_bad_layout, localStorage_size_guard]
+          test_data_boundary:
+            fixtures: [legacy_watchlist_key, legacy_alerts_key, corrupt_snapshot, large_snapshot, two_symbols_two_layouts]
+            isolation: [localStorage_reset_per_test, viewport_fixture_desktop_mobile]
+          test_doubles_boundary:
+            allowed_test_doubles: [localStorage_fixture, viewport_fixture]
+            forbidden_test_doubles: [mocking_restoreStatus_after_render]
+          commands:
+            red: npx vitest run tests/unit/workspace/snapshot-migration.spec.ts
+            green: npx vitest run tests/replay/workspace/restore.spec.ts
+            regression: npx playwright test tests/e2e/restore-layout/resume.spec.ts && npm run build
+          validity_probe:
+            method: targeted_fault_injection_corrupt_layout
+            expected_signal: restore_or_layout_test_fails
+        test_obligation:
+          risk_level: high
+          surfaces: [SURF-RESTORE, SURF-LAYOUT, SURF-WATCHLIST]
+          required_capabilities: [unit, replay, browser_flow, storage_migration_assertion, screenshot_or_restore_trace]
+          evidence_required: [red_report, green_report, regression_report, migration_report]
+        e2e_obligation:
+          risk_level: high
+          user_surfaces: [browser_reopen_restore, layout_switch, mobile_tab_restore]
+          required_capabilities: [browser_flow, user_visible_assertion, local_persistence_replay, screenshot_or_trace]
+          evidence_required: [e2e_run_report, screenshot_or_trace, assertion_summary]
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - storage_gate_threshold_exceeded
+          - layout_scope_not_symbol
+          - cloud_or_database_persistence_required
+        atomic_task_queue:
+          status: ready
+          atomic_task_ids: [T005-A1, T005-A2]
+          detail_refs: [T005-A1, T005-A2]
+          execution_units:
+            - id: T005-A1
+              execution_order: 1
+              depends_on: [T001-A2, T004-A1]
+              write_scope: [src/domain/workspace.ts, src/lib/storage.ts, src/types.ts, tests/unit/workspace/**, tests/replay/workspace/**, fixtures/workspace/**]
+              detail_ref: T005-A1
+              reviewer_verdict: pending
+            - id: T005-A2
+              execution_order: 2
+              depends_on: [T005-A1, T002-A2]
+              write_scope: [src/features/layout/**, src/features/restore/**, src/App.tsx, tests/e2e/restore-layout/**]
+              detail_ref: T005-A2
+              reviewer_verdict: pending
+          notes:
+            parent_task_coverage: 覆盖 snapshot 迁移、恢复、per-symbol layout 与默认 fallback。
+            ac_scenario_coverage: AC-05 restore/layout 场景。
+            code_pattern_references: src/lib/storage.ts read/write、src/styles.css responsive grid、src/App.tsx shell。
+            interface_or_data_contracts: WorkspaceSnapshotV2、layoutBySymbol、restoreStatus。
+            test_fixtures_and_seed_data: legacy keys、corrupt snapshot、large snapshot、desktop/mobile layouts。
+            validation_commands: vitest workspace + replay + playwright restore-layout + build。
+            transaction_or_state_boundaries: localStorage only；layout 是呈现状态。
+            evidence_requirements: Red/Green/Regression/migration report/restore trace。
+            stop_conditions: 禁止云同步、DB、全局单一 layout。
+            migration_or_route_boundaries: 不新增 route，不改 source/MTS/alert 业务。
+        dependencies: [T001, T002, T004]
+      - id: T006
+        objective: 冻结样本、回放、unit/e2e 门禁和 AC-01 到 AC-05 验收矩阵。
+        traces_to: [AC-01, AC-02, AC-03, AC-04, AC-05]
+        authorized_paths:
+          - tests/unit/**
+          - tests/replay/**
+          - tests/e2e/**
+          - fixtures/**
+          - package.json
+          - package-lock.json
+        prohibited_paths:
+          - harness-runtime/harness/stages/**/contracts/**
+          - harness-runtime/harness/stages/**/product/**
+          - harness-runtime/harness/stages/**/solution.md
+          - harness-runtime/harness/stages/**/tech-design.md
+          - server/index.js
+          - src/lib/signals.ts
+        required_evidence:
+          - id: re-T006-1
+            type: failing_test
+            verification_type: unit
+            command: npx vitest run tests/unit
+            description: Red 聚合证明核心路径缺口会被 fixture-first 测试捕获。
+          - id: re-T006-2
+            type: passing_test
+            verification_type: integration
+            command: npx vitest run tests/replay
+            description: Green 证明冻结样本与回放覆盖 source、MTS、alert、workspace。
+          - id: re-T006-3
+            type: regression
+            verification_type: e2e
+            command: npx playwright test tests/e2e
+            description: Regression 证明 AC-01 到 AC-05 的浏览器路径可复现。
+          - id: re-T006-4
+            type: test_effectiveness
+            verification_type: manual
+            description: mutation / fault injection 证明关键门禁能抓住 locator、fallback、restore 漂移。
+        tdd_scope:
+          behavior_under_test: [fixture_first_replay, ac_mapping_matrix, e2e_gate, failure_artifacts]
+          red_scope: [missing_fixture_checksum_fails, missing_ac_mapping_fails, broken_locator_fails]
+          green_scope: [all_core_paths_run_on_fixtures, failure_screenshot_and_trace_enabled, live_only_smoke]
+          refactor_scope: [organize_test_fixtures, keep_test_commands_stable]
+          out_of_scope: [runtime_product_semantics, live_market_as_gate, product_agent_runtime]
+          required_assertions: [fixture_checksum_logged, ac_matrix_complete, e2e_trace_on_failure, no_live_dependency_for_gate]
+          test_data_boundary:
+            fixtures: [watchlist_flow, workbench_flow, mts_flow, alert_flow, restore_flow, provider_failure]
+            isolation: [fixture_first_for_gate, live_yahoo_smoke_non_blocking]
+          test_doubles_boundary:
+            allowed_test_doubles: [provider_fixture, clock_fixture, localStorage_fixture]
+            forbidden_test_doubles: [mocking_user_visible_assertions]
+          commands:
+            red: npx vitest run tests/unit
+            green: npx vitest run tests/replay
+            regression: npx playwright test tests/e2e && npm run build
+          validity_probe:
+            method: mutation_or_fault_injection_break_core_locator_or_fixture
+            expected_signal: e2e_or_replay_gate_fails
+        test_obligation:
+          risk_level: high
+          surfaces: [SURF-WATCHLIST, SURF-WORKBENCH, SURF-MTS, SURF-ALERTS, SURF-SOURCE, SURF-LAYOUT, SURF-RESTORE]
+          required_capabilities: [unit, replay, browser_flow, user_visible_assertion, accessibility_smoke, fixture_first, mutation_or_fault_injection]
+          evidence_required: [red_report, green_report, regression_report, e2e_run_report, trace_or_video]
+        e2e_obligation:
+          risk_level: high
+          user_surfaces: [watchlist_flow, workbench_flow, mts_flow, alert_flow, restore_flow]
+          required_capabilities: [browser_flow, user_visible_assertion, realtime_or_refresh, accessibility_smoke, local_persistence_replay]
+          evidence_required: [e2e_run_report, trace_or_video, screenshot_on_failure, assertion_summary]
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - validation_depends_on_live_market
+          - locator_contract_is_brittle
+          - runtime_agent_required_for_tests
+        atomic_task_queue:
+          status: ready
+          atomic_task_ids: [T006-A1, T006-A2]
+          detail_refs: [T006-A1, T006-A2]
+          execution_units:
+            - id: T006-A1
+              execution_order: 1
+              depends_on: [T002-A1, T003-A1, T004-A1, T005-A1]
+              write_scope: [fixtures/**, tests/replay/**, tests/unit/**]
+              detail_ref: T006-A1
+              reviewer_verdict: pending
+            - id: T006-A2
+              execution_order: 2
+              depends_on: [T006-A1]
+              write_scope: [tests/e2e/**, tests/unit/**, package.json]
+              detail_ref: T006-A2
+              reviewer_verdict: pending
+          notes:
+            parent_task_coverage: 覆盖全部 AC 的 fixture-first 验证门禁。
+            ac_scenario_coverage: AC-01 到 AC-05 及 20 个差量规格场景。
+            code_pattern_references: interaction-spec BUC、surface registry、Playwright locator 合同。
+            interface_or_data_contracts: fixture checksum、AC mapping matrix、trace/video 输出。
+            test_fixtures_and_seed_data: watchlist、workbench、MTS、alert、restore、provider failure。
+            validation_commands: vitest unit/replay + playwright e2e + build。
+            transaction_or_state_boundaries: 不改生产语义，只增加验证资产。
+            evidence_requirements: Red/Green/Regression/E2E/trace/fixture checksum。
+            stop_conditions: 禁止 live-only gate、脆弱 locator、产品运行时 Agent。
+            migration_or_route_boundaries: 不新增 route，不改产品合同文档。
+        dependencies: [T001, T002, T003, T004, T005]

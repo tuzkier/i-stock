@@ -1,0 +1,40 @@
+operation_id: 20260522-stock-watch-system__batch_advance_stage
+type: batch
+mission_id: 20260522-stock-watch-system
+operations:
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T002
+  lane: development-lane
+  from_stage: execute
+  to_stage: code-review
+  work_graph_artifact:
+    node_id: TASK-STOCK-WATCH-T002
+    artifact_set_id: AS-20260522-stock-watch-system-execute-v1
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T002/execution-result.md
+    artifact_refs:
+    - artifact_id: 20260522-stock-watch-system:execution-result
+      role: execution-result
+      path: harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T003
+  lane: development-lane
+  from_stage: execute
+  to_stage: code-review
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T004
+  lane: development-lane
+  from_stage: execute
+  to_stage: code-review
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T005
+  lane: development-lane
+  from_stage: execute
+  to_stage: code-review
+- type: advance_stage
+  node_id: TASK-STOCK-WATCH-T006
+  lane: development-lane
+  from_stage: execute
+  to_stage: code-review

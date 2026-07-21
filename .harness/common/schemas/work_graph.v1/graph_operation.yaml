@@ -1,0 +1,133 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: work_graph.v1/graph_operation.yaml
+type: object
+required:
+  - operation_id
+  - type
+properties:
+  operation_id:
+    type: string
+  type:
+    enum:
+      - create_node
+      - advance_stage
+      - advance_lane
+      - split_node
+      - merge_nodes
+      - block_node
+      - defer_node
+      - supersede_node
+      - batch
+  node_id:
+    type: string
+  from_lane:
+    type: string
+  to_lane:
+    type: string
+  lane:
+    type: string
+  from_stage:
+    type: string
+  to_stage:
+    type: string
+  status:
+    type: string
+  mission_id:
+    type: string
+  reason:
+    type: string
+  node_ids:
+    type: array
+    items:
+      type: string
+  children:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - kind
+        - title
+        - lane
+        - stage
+        - status
+  target:
+    type: object
+    required:
+      - id
+      - kind
+      - title
+      - lane
+      - stage
+      - status
+  supersedes:
+    type: array
+    items:
+      type: string
+  operations:
+    type: array
+    items:
+      type: object
+  work_graph_artifact:
+    type: object
+    required:
+      - node_id
+      - artifact_version
+      - promoted_by_mission
+    properties:
+      node_id:
+        type: string
+      artifact_version:
+        type: string
+      promoted_by_mission:
+        type: string
+      artifact_set_id:
+        type: string
+      artifact_refs:
+        type: array
+        items:
+          type: object
+          required:
+            - artifact_id
+          properties:
+            artifact_id:
+              type: string
+            role:
+              type: string
+            path:
+              type: string
+            path_glob:
+              type: string
+            kind:
+              type: string
+            required:
+              type:
+                - boolean
+                - string
+          additionalProperties: true
+      source_stage_artifact:
+        type: string
+      canonical_artifact:
+        type: string
+      source_contract_artifact:
+        type: string
+      canonical_contract:
+        type: string
+      change_reason:
+        type: string
+      artifact_state:
+        type: object
+        properties:
+          status:
+            enum: [draft, review, accepted, superseded, archived]
+          accepted_by_mission:
+            type: string
+          supersedes:
+            type: array
+            items:
+              type: string
+          superseded_by:
+            type:
+              - string
+              - "null"
+additionalProperties: true

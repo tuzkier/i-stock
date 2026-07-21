@@ -1,0 +1,300 @@
+control_contract:
+  type: implementation_contract
+  subtype: prototype_as_frontend
+  version: 2
+  mission_id: "{{mission_id}}"
+  stage: interaction
+  # 该 contract 仅在 prototype.delivery_mode=frontend_engineering 时生效；
+  # interactive_prototype 路线使用 interaction.contract.yaml。
+  delivery_mode: frontend_engineering
+  # 本阶段交付的是"效果"——用户走查所有 path 通过。质量（lint / coverage / a11y 评分 / e2e 充分性）由
+  # code-review / verify 承接；详见 docs/methodologies/prototype-as-frontend-delivery.md。
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      sections:
+        - User Journeys
+        - System Responsibilities
+        - UI Carrying Requirements
+        - Observable Behaviors
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-domain-model.md"
+      sections:
+        - Entities
+        - States
+        - Actions
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/api-contract-draft.md"
+      sections:
+        - Endpoints
+        - Shared Types
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+  consumers:
+    - solution
+    - technical_analysis      # freeze shared types + 设计 e2e test plan
+    - breakdown
+    - execute                 # 实现 e2e + 切真 API + 联调 + 修复
+    - code-review             # 完整 a11y / lint / coverage audit
+    - verify                  # 真后端 e2e + 验收场景验证
+    - delivery
+    - stage-gate
+  role_policy:
+    stage: interaction
+    work_graph_lane: product-definition-lane
+    required_execution_roles:
+      - interaction-designer
+      - frontend-prototype-engineer
+    required_review_roles:
+      - interaction-reviewer
+      - frontend-reviewer
+  frontend_project:
+    # 实际前端工程根目录来自项目级规格 / 项目说明；缺失时 interaction 阶段必须先询问用户并回写项目级说明。
+    root: "{{frontend_project_root}}"
+    framework: "next.js@14"
+    language: "typescript"
+    package_manager: "pnpm"
+    structure:
+      app_router: "{{frontend_project_root}}/app/"
+      shared_types: "{{frontend_project_root}}/lib/types/"
+      api_client: "{{frontend_project_root}}/lib/api/"
+      mocks: "{{frontend_project_root}}/mocks/"
+      components: "{{frontend_project_root}}/components/"
+      # 注：本阶段权限 deny tests/e2e/**；e2e spec 在 execute 阶段写。
+    stack:
+      ui: "shadcn/ui + tailwindcss@3"
+      state: "react-query@5"
+      mock: "msw@2"
+      forms: "react-hook-form + zod"
+  interaction_spec:
+    canonical_dir: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec"
+    overview: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md"
+    review_status: "{{interaction_reviewer_status}}"
+    derived_from:
+      - "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      - "harness-runtime/harness/artifacts/{{mission_id}}/product/product-domain-model.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/contracts/prd.contract.yaml"
+    frontend_must_conform: true
+    conformance:
+      surfaces: []
+      flows: []
+      states: []
+      interactions: []
+      deviations: []
+    drift_checks:
+      spec_vs_prd_drift: "{{none_or_findings}}"
+      frontend_vs_spec_drift: "{{none_or_findings}}"
+      feedback_not_synced: "{{none_or_findings}}"
+  # 本次 mission 对长期前端工程的 surface patch 清单。
+  # 必须引用 interaction-spec；每条改动必须有 spec_ref + baseline_ref（非 create operation 时）+ traces_to scenario/use-case + domain_refs。
+  frontend_changeset:
+    source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/frontend-changeset.md"
+    interaction_spec_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec"
+    spec_conformance: []
+    primary_user_tasks: []
+    information_architecture:
+      navigation_model: []
+      route_hierarchy: []
+      page_sections: []
+      decision_order: []
+    domain_visibility_decisions: []
+      # 形如：
+      # - domain_ref: Entity:Workspace
+      #   visibility: primary_object | supporting_context | state_indicator | action_affordance | hidden_internal
+      #   surface_refs: [SURF-001]
+      #   reason: "用户创建 workspace 的主操作对象"
+    surface_model: []
+    state_action_matrix: []
+    surfaces: []
+    # 形如：
+    # - surface_id: SURF-001
+    #   spec_ref: "interaction-spec/surface-model.md#SURF-001"
+    #   kind: route | page | component | type
+    #   operation: create_surface | modify_surface | extend_surface | retire_surface
+    #   file_path: "{{frontend_project_root}}/app/<route>/page.tsx"
+    #   baseline_ref: null  # create 时为 null；其它必填
+    #   traces_to: [SCN-01, SUC-01-FLOW-01]
+    #   domain_refs: [Entity:Workspace, State:active, Action:create_workspace]
+    # 门 A（上游覆盖）：PRD 流步骤全集 ⊆ 所有 surfaces[].traces_to 并集（beat token 计入其 flow-step 前缀）；
+    #   漏一个 → FRONTEND_FLOWSTEP_NOT_IN_CHANGESET(FAIL)。非界面承载在 na_exemptions 声明。
+    # na_flowsteps 豁免段（取代关键词 grep；列名 / 粒度枚举与 surface-model.md 一致）：
+    na_exemptions: []
+      # 形如：
+      # - prd_node_id: SUC-07-FLOW-02
+      #   granularity: flowstep   # suc | flowstep | beat
+      #   reason: "纯后台对账步骤，无界面承载"
+      #   owner: product-owner
+    # 门 A 覆盖结论（由 changeset-check 计算并回写，供审查 / lint 取证）：
+    flowstep_coverage:
+      prd_flowsteps: []
+      traced_flowsteps: []
+      na_flowsteps: []
+      uncovered_flowsteps: []   # 非空即 FRONTEND_FLOWSTEP_NOT_IN_CHANGESET FAIL
+  # 门 B 下游键：以 PRD 流步骤为键的 e2e 义务（替代旧的 e2e_locator_obligations，按 path 列点）。
+  # 每个 user path 必须有可被 e2e 断言的 locator / aria / 可观察 DOM 标记。
+  # 本阶段只列点，不写 e2e spec；spec 在 tech-design 设计 plan，execute 实现，verify 阶段以 flow-step 全集逐条核验。
+  # 解析器同时接受旧 key e2e_locator_obligations 与新 key e2e_obligation（向后兼容，二选一）。
+  # 覆盖判定（verify / e2e_resolver.frontend_flowstep_obligation_coverage）：
+  #   flow-step 被覆盖 ⟺ 该 flow_step 在某条 e2e_obligation 且
+  #     (status==required 视为有 E2E 义务、下游核验通过) 或 (status==accepted_alternative 且 accepted_reason 非空)。
+  #   uncovered = prd_flowsteps - covered_flowsteps，非空 → resolver status=FAIL + decision_gate_reasons[{reason: frontend_flowstep_e2e_uncovered}]。
+  e2e_obligation: []
+    # 形如：
+    # - flow_step: SUC-01-FLOW-01        # 必填，作为键
+    #   surface_id: SURF-001
+    #   traces_to: [SCN-01]
+    #   status: required                 # required | accepted_alternative
+    #   accepted_reason: ""              # status=accepted_alternative 时必填非空
+    #   locator: '[data-testid="submit-workspace"]'
+    #   assertable_states: ['[aria-live] 出现"创建成功"', 'URL 跳转 /workspaces/:id']
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_set_id: "AS-{{work_graph_node_id}}-prototype-as-frontend-{{artifact_version}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    # 主产物：本次对长期前端工程的 patch 说明。长期前端工程是 living codebase，不复制进 Work Graph。
+    artifact_refs:
+      - artifact_id: "{{mission_id}}:frontend-changeset"
+        role: frontend-changeset
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/frontend-changeset.md"
+      - artifact_id: "{{mission_id}}:interaction-spec"
+        role: interaction-spec
+        required: true
+        path_glob: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/**/*"
+      - artifact_id: "{{mission_id}}:interaction"
+        role: interaction
+        required: true
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md"
+  execution_result:
+    id: EXE-FRONTEND-001
+    role: frontend-prototype-engineer
+    status: DONE
+    produced_artifacts:
+      - path: "{{frontend_project_root}}/app/"
+      - path: "{{frontend_project_root}}/lib/types/"
+      - path: "{{frontend_project_root}}/lib/api/"
+      - path: "{{frontend_project_root}}/mocks/"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/use-case-realization.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/frontend-changeset.md"
+    fulfilled_obligations:
+      - OBL-FRONTEND-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs:
+      - PNPM-DEV-001
+      - USER-WALKTHROUGH-001
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-FRONTEND-001
+      mission_id: "{{mission_id}}"
+      type: frontend_implementation_effect
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+        task: []
+      # 本阶段 required_evidence 只覆盖"效果"层面，不含 e2e / a11y / coverage 等质量门。
+      required_evidence:
+        - reviewer_verdict                  # frontend-reviewer 四维全 PASS
+        - interaction_reviewer_verdict       # interaction-spec 先通过审查
+        - interaction_spec_complete          # spec 齐全并对齐 PRD / Domain Model / Scenario
+        - pnpm_dev_starts                   # pnpm dev 启动 + 主路径 200
+        - frontend_changeset_complete       # changeset 含 spec_ref / spec_conformance / baseline ref / traces_to / domain_refs
+        - frontend_flowstep_coverage        # 门 A：PRD 流步骤全集 ⊆ surfaces.traces_to 并集 ∪ na_exemptions（无 FRONTEND_FLOWSTEP_NOT_IN_CHANGESET）
+        - e2e_obligation_keyed_by_flowstep  # 门 B 下游键：每条 PRD 流步骤有 e2e_obligation（status=required 或 accepted_alternative+reason）
+        - msw_path_coverage                 # 所有 user path 在 MSW 都有 handler / scenario
+        - api_contract_draft_present        # lib/types/ draft 覆盖 PRD api-contract-draft 全部 endpoint
+        - e2e_locator_ready                 # 关键元素 testid / aria 就位（不要求写 / 跑 e2e）
+        - user_browser_walkthrough_passed   # 用户在浏览器跑通所有 user path
+        - copy_language_zh_cn               # 中文文案默认，例外有理由
+      required_roles:
+        - interaction-reviewer
+        - frontend-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  reviewer_dimensions:
+    # frontend-reviewer 四个独立子 verdict，全部 PASS 才能整体 PASS。
+    - id: domain_coverage
+      required: true
+      description: "页面 / 组件 / 状态 / 动作联合消费 PRD + interaction-spec，再覆盖 PRD domain model + traces_to scenario/use-case；禁止领域模型一对一机械界面化"
+    - id: surface_baseline
+      required: true
+      description: "surface 优先 + baseline + spec_ref + frontend-changeset 完整"
+    - id: path_completeness
+      required: true
+      description: "所有 path 实现 + MSW 覆盖 + e2e locator 就位；每条 PRD flow-step 必须在 frontend_changeset.surfaces[].traces_to 出现或在 na_exemptions 结构化豁免（门 A：FRONTEND_FLOWSTEP_NOT_IN_CHANGESET），并在 e2e_obligation[] 声明 status=required 或 accepted_alternative+reason（门 B 下游键，verify 阶段逐 flow-step 核验）"
+    - id: walkthrough_ready
+      required: true
+      description: "pnpm dev 起来 + 用户能点遍 + 中文文案 + lib/types draft 覆盖 + scenario 切换器可用"
+  # api-contract-draft 状态。draft 形态，由 tech-design 阶段 freeze。
+  api_contract_draft:
+    source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/api-contract-draft.md"
+    lib_types_dir: "{{frontend_project_root}}/lib/types/"
+    status: draft
+    freeze_responsible: tech-design
+    endpoints: []
+    # 形如：[{ method, path, request_type, response_type, traces_to: [SCN-001] }]
+  # MSW 只在 interaction 阶段作演示工具；execute 切真 API 后不作契约证据。
+  msw:
+    scope: interaction_walkthrough_only
+    handler_dir: "{{frontend_project_root}}/mocks/handlers/"
+    fixture_dir: "{{frontend_project_root}}/mocks/fixtures/"
+    scenarios_dir: "{{frontend_project_root}}/mocks/scenarios/"
+    scenarios: []
+    # 形如：[{ id, name, path_id, behavior_override }]
+    # 必须覆盖所有 user path（happy / 错误 / 空态 / 权限 / 边界）。
+  user_acceptance:
+    checkpoint: browser_walkthrough
+    description: "用户在浏览器实际操作前端，跑通 PRD + interaction-spec 列出的全部 user path（happy / 错误 / 空态 / 权限），给出 PASS。"
+    required: true
+    evidence_ref: "harness-runtime/harness/traces/{{mission_id}}/user-walkthrough.md"
+    approval_type: checkpoint
+  prd_feedback:
+    status: no_change
+    findings: []
+    required_action: none
+  feedback_sync:
+    user_feedback_refs: []
+    synced_to_interaction_spec: "{{yes_no}}"
+    synced_to_prd_or_decision_gate: "{{yes_no_or_not_applicable}}"
+    unsynced_feedback_count: "{{count}}"
+  copy_language:
+    default: zh-CN
+    visible_copy_must_be_chinese: true
+    applies_to:
+      - app_pages
+      - components
+      - empty_error_permission_confirmation_feedback
+    allowed_exceptions:
+      - brand_name
+      - product_name
+      - code_identifier
+      - common_industry_acronym
+      - upstream_specified_copy
+  # 下游阶段需关注事项（本阶段不阻断，仅提示）。
+  downstream_handoff:
+    tech_design:
+      - 读取 interaction-spec + frontend-changeset，freeze shared types 前确认无 frontend_vs_spec_drift
+      - freeze shared types（含 Decision Gate）
+      - 设计 e2e test plan（基于 e2e_obligation[]，以 PRD flow-step 全集为键）
+    execute:
+      - 实现 Playwright e2e spec（全 path）
+      - 单元 / 组件测试
+      - MSW → 真 API 切换 + 联调
+      - bug 修复
+    code_review:
+      - lint / typecheck / coverage 达项目阈值
+      - a11y 完整 audit（含键盘焦点）
+    verify:
+      - e2e against 真后端 PASS
+      - 按 e2e_obligation[] 的 PRD flow-step 全集逐条核验：每条 flow-step 有 E2E 通过或显式 accepted_alternative+reason；缺一 FAIL（e2e_resolver.frontend_flowstep_obligations.uncovered_flowsteps，reason=frontend_flowstep_e2e_uncovered）
+      - 验收场景验证
+  knowledge_promotion_candidates:
+    - id: KPC-FRONTEND-001
+      kind: frontend_pattern
+      source_ref: "{{frontend_project_root}}/components/domain/<X>.tsx"
+      suggested_target: project-knowledge
+      reason: "{{promotion_reason}}"

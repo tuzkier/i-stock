@@ -1,0 +1,31 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: active
+  current_lane: requirement-lane
+  current_stage: intake
+  stages:
+    intake: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    related_nodes: []
+    operation: advance_stage
+    lane: requirement-lane
+    stage: intake
+    lane_action:
+      lane: requirement-lane
+      stage: intake
+      graph_operation: advance_stage
+      operation_profiles:
+        advance_stage:
+          to_stage: discovery
+      allowed_graph_operations:
+      - advance_stage
+      output_artifact: harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+      required_execution_roles:
+      - mission-framing-expert
+      required_review_roles:
+      - mission-contract-effectiveness-reviewer
+      to_stage: discovery
+  autonomy_level: 受控推进

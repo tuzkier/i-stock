@@ -1,0 +1,272 @@
+control_contract:
+  type: action_contract
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: breakdown
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Acceptance Criteria
+    - path: "harness-runtime/harness/stages/{{mission_id}}/product/product-definition.md"
+      sections:
+        - Functional Requirements
+        - Non-Functional Requirements
+    - path: "harness-runtime/harness/stages/{{mission_id}}/tech-design.md"
+      sections:
+        - 验证策略
+        - 模块级计划
+  consumers:
+    - execute
+    - code-review
+    - verify
+    - stage-gate
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    source_stage_artifact: "harness-runtime/harness/stages/{{mission_id}}/execution-brief.md"
+    canonical_artifact: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/execution-brief.md"
+  atomic_task_queue:
+    required: true
+    reason: "Every Parent task is a delivery boundary container and must carry a parent-local Atomic Task Queue before breakdown Stage Gate."
+    artifact: "harness-runtime/harness/stages/{{mission_id}}/execution-brief.md"
+    section: "Execution Units"
+    execution_unit_policy:
+      always: "parent_task_with_parent_local_atomic_task_queue"
+      parent_task_authority:
+        - order
+        - completion_boundary
+        - definition_of_done
+        - required_evidence
+        - stop_conditions
+      conflict_resolution: "halt_and_return_to_breakdown_or_decision_gate"
+    work_graph_binding:
+      always: "bind_parent_task_and_parent_local_atomic_task_queue_to_task_nodes_on_gate_advance"
+      task_node_fields:
+        - parent_task_id
+        - execution_brief_artifact
+        - execution_units_section
+        - parent_local_atomic_task_queue
+        - atomic_task_ids
+        - atomic_task_detail_refs
+        - execution_order
+        - reviewer_verdict
+    required_fields:
+      - single_action
+      - explicit_inputs_outputs
+      - parent_task_coverage
+      - ac_scenario_coverage
+      - code_pattern_references
+      - interface_or_data_contracts
+      - test_fixtures_and_seed_data
+      - validation_commands
+      - transaction_or_state_boundaries
+      - evidence_requirements
+      - stop_conditions
+      - migration_or_route_boundaries
+    forbidden_states:
+      - missing
+      - incomplete
+  # breakdown-improvement-plan M1.4: parallel-worker pattern requires
+  # `execution_results[]` (list) so both delivery-slicer and
+  # test-planning-expert can record their barrier-grouped outcome. Legacy
+  # singular `execution_result` is still accepted by `harness contract
+  # add-execution-result` for the 2-mission migration window but new
+  # templates emit the list form.
+  execution_results:
+    - id: EXE-BREAKDOWN-001
+      role: delivery-slicer
+      status: DONE
+      barrier_group: breakdown-workers-parallel
+      produced_artifacts:
+        - path: "harness-runtime/harness/stages/{{mission_id}}/execution-brief.md"
+      fulfilled_obligations:
+        - OBL-BREAKDOWN-001
+      decision_log: []
+      traceability_matrix: []
+      evidence_refs: []
+      open_questions: []
+      concerns: []
+    - id: EXE-BREAKDOWN-002
+      role: test-planning-expert
+      status: DONE
+      barrier_group: breakdown-workers-parallel
+      produced_artifacts: []
+      fulfilled_obligations:
+        - OBL-BREAKDOWN-001
+      decision_log: []
+      traceability_matrix: []
+      evidence_refs: []
+      open_questions: []
+      concerns: []
+  effectiveness_review:
+    rounds_used: 0
+    pending_reviewer_recheck: false
+    last_verdict: PASS
+  obligations:
+    - id: OBL-BREAKDOWN-001
+      mission_id: "{{mission_id}}"
+      type: verification
+      risk: medium
+      traces_to:
+        ac:
+          - AC-01
+        task:
+          - T001
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - execution-plan-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  tasks:
+    - id: T001
+      objective: "{{task_1_outcome}}"
+      traces_to:
+        - AC-01
+        - FR-01
+        - REQ-01
+        - SCN-01
+      authorized_paths:
+        - "{{task_1_file_1}}"
+      prohibited_paths: []
+      # breakdown-improvement-plan M1.4 / H3: required_evidence entries are
+      # typed triples carrying a primary key `id` (format suggestion
+      # `re-<task_id>-<seq>`). verify M1.4 references these IDs via
+      # `command_evidence[].required_evidence_id` / `result_evidence[].
+      # required_evidence_id`; the verify side does not invent IDs.
+      required_evidence:
+        - id: re-T001-1
+          type: failing_test
+          verification_type: unit
+          command: "{{task_1_red_command}}"
+          description: "Current-task test fails before implementation."
+        - id: re-T001-2
+          type: passing_test
+          verification_type: unit
+          command: "{{task_1_green_command}}"
+          description: "Current-task test passes after implementation."
+        - id: re-T001-3
+          type: regression
+          verification_type: integration
+          command: "{{task_1_regression_command}}"
+          description: "Relevant regression suite passes after implementation."
+        - id: re-T001-4
+          type: test_effectiveness
+          verification_type: manual
+          description: "For critical behavior, targeted fault injection / mutation / equivalent proof shows the test fails when the behavior is broken."
+      rules:
+        - id: RULE-001
+          statement: "{{example_mapping_rule}}"
+          traces_to:
+            - AC-01
+      examples:
+        - id: EX-001
+          given: "{{example_given}}"
+          when: "{{example_when}}"
+          then: "{{example_then}}"
+          traces_to:
+            - RULE-001
+      questions:
+        - id: Q-001
+          question: "{{open_question}}"
+          status: "{{answered_or_deferred}}"
+      deferred_scope:
+        - id: DS-001
+          reason: "{{deferred_scope_reason}}"
+          traces_to:
+            - AC-01
+      tdd_scope:
+        behavior_under_test:
+          - "{{task_1_behavior_under_test}}"
+        red_scope:
+          - "{{task_1_red_scope}}"
+        green_scope:
+          - "{{task_1_green_scope}}"
+        refactor_scope:
+          - "{{task_1_refactor_scope}}"
+        out_of_scope:
+          - "{{task_1_tdd_out_of_scope}}"
+        required_assertions:
+          - "{{task_1_required_assertion_1}}"
+        test_data_boundary:
+          fixtures:
+            - "{{task_1_fixture_or_seed_data}}"
+          isolation:
+            - "{{task_1_test_data_isolation_rule}}"
+        test_doubles_boundary:
+          allowed_test_doubles:
+            - "{{task_1_allowed_test_double}}"
+          forbidden_test_doubles:
+            - "{{task_1_forbidden_test_double}}"
+        commands:
+          red: "{{task_1_red_command_or_plan_ref}}"
+          green: "{{task_1_green_command_or_plan_ref}}"
+          regression: "{{task_1_regression_command_or_plan_ref}}"
+        validity_probe:
+          method: "{{task_1_fault_or_mutation_method}}"
+          expected_signal: "{{task_1_fault_or_mutation_signal}}"
+        delegated_to_atomic_plan: "{{task_1_tdd_scope_delegated_to_atomic_plan}}"
+      test_obligation:
+        risk_level: medium # low | medium | high
+        surfaces:
+          - backend_logic
+        required_capabilities:
+          - test_result
+          - coverage
+          - diff_coverage
+        evidence_required:
+          - red_report
+          - green_report
+          - regression_report
+          - diff_coverage_report
+        accepted_alternatives:
+          mutation_or_fault_injection:
+            - mutation_report
+            - targeted_fault_injection_report
+      e2e_obligation:
+        risk_level: high # low | medium | high
+        user_surfaces:
+          - web_ui
+          - realtime
+          - auth
+        required_capabilities:
+          - browser_flow
+          - user_visible_assertion
+          - api_backed_state
+          - realtime_or_refresh
+          - accessibility_smoke
+        evidence_required:
+          - e2e_run_report
+          - trace_or_video
+          - screenshot_on_failure
+          - assertion_summary
+        accepted_alternatives:
+          browser_flow:
+            - component_integration_with_real_api_contract
+            - manual_acceptance_walkthrough_with_recorded_steps
+      stop_if:
+        - changes_outside_authorized_paths
+        - new_public_behavior_without_delta_spec
+        - design_constraint_conflict
+        - new_external_dependency
+      atomic_task_queue:
+        status: ready
+        atomic_task_ids:
+          - "{{task_1_atomic_task_id}}"
+        detail_refs:
+          - "{{task_1_atomic_task_id}}"
+        notes:
+          parent_task_coverage: "{{task_1_parent_task_coverage_note}}"
+          ac_scenario_coverage: "{{task_1_ac_scenario_coverage_note}}"
+          code_pattern_references: "{{task_1_code_pattern_references_note}}"
+          interface_or_data_contracts: "{{task_1_interface_or_data_contract_note}}"
+          test_fixtures_and_seed_data: "{{task_1_fixture_note}}"
+          validation_commands: "{{task_1_validation_command_note}}"
+          transaction_or_state_boundaries: "{{task_1_transaction_boundary_note}}"
+          evidence_requirements: "{{task_1_evidence_requirement_note}}"
+          stop_conditions: "{{task_1_stop_condition_note}}"
+          migration_or_route_boundaries: "{{task_1_route_or_migration_boundary_note}}"
+      dependencies: []

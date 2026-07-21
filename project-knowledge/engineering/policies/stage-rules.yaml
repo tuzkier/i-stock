@@ -1,0 +1,47 @@
+# Project Knowledge Engineering Policies
+# 项目级技术规范约束 + per-stage rules。
+
+context: |
+  # 在此填写项目技术约定（会注入到所有 stage 的 AI 提示中）
+  #
+  # 建议包含：
+  # - 技术栈和版本约束
+  # - 架构约定（模块划分原则、分层规范）
+  # - 编码规范要点（命名风格、禁用的模式）
+  # - 已知的坑和历史教训
+  # - 禁止事项（绝对不能做的事）
+
+rules:
+  discovery:
+    - 分析影响面时，必须先对照 project-knowledge/specs/ 中受影响 capability 的 Requirement 清单
+    - 识别到的影响必须标注置信度：CONFIRMED（有 spec 文本证据）/ UNCERTAIN（推断）/ ASSUMED（无证据）
+    - 设计路线不得隐式破坏现有 Requirement，除非 Mission Contract 明确授权 MODIFIED；如存在多条候选路线，逐条检查此约束
+
+  prd:
+    - 每个 FR 必须对应 delta-spec 中至少一个 Requirement
+    - Requirement 名在同一 capability 内必须唯一（用于 MODIFIED 时精确匹配）
+    - 行为描述只写外部可观测行为：禁止写类名、函数名、库名（这些放 tech-design）
+    - MODIFIED 块必须包含整个 Requirement 块，不得只写变化部分
+
+  design:
+    - 设计必须以目标完成度、架构适配、风险和维护成本为主要依据，不得以"改动最小"作为默认设计路线
+    - 若存在多条实质可行路线，所选路线必须明确说明为何最符合目标和约束
+    - 若存在 demo/MVP 式路线，必须明确标注其不足和适用边界，不能作为正式验收路线默认推进
+    - tech-design 必须覆盖错误路径、兼容性、迁移/回滚、可观测性等生产就绪要求（如适用）
+
+  execute:
+    - 实现前先读 project-knowledge/specs/<capability>/spec.md，识别当前行为契约边界
+    - 代码变更不得破坏 spec 中未标注 MODIFIED 的任何 Requirement
+    - 新增公共接口必须在本 Mission 的 delta-spec 中有对应 ADDED 条目
+    - 没有对应 Scenario 的行为变更 = 超出授权范围，停止实现，发起 Decision Gate
+    - 当前 Task 必须达到 execution-brief 的完成边界；不得用 demo/happy path 实现冒充完成
+
+  code-review:
+    - 逐条核查 delta-spec 的 ADDED/MODIFIED Scenario 是否已完整实现
+    - 检查是否有代码变更隐式改变了 spec 中未列入变更的 Requirement
+    - 若代码行为与 delta-spec 不符，列为 High 级别发现
+
+  breakdown:
+    - 每个 Task 必须可对照 delta-spec 中至少一个 Scenario 进行验证
+    - Task 的测试要求应直接引用对应的 Scenario（GIVEN/WHEN/THEN）
+

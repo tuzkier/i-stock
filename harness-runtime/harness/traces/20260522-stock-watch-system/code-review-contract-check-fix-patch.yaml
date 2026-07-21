@@ -1,0 +1,138 @@
+patches:
+  - target: control_contract.toolchain_probe
+    op: set
+    value:
+      artifact: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+      status: PASS
+      signals:
+        - toolchain_status_pass
+        - node_test_pass
+        - playwright_pass
+  - target: control_contract.tdd_review.probe_artifact
+    op: set
+    value: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+  - target: control_contract.role_verdicts
+    op: set
+    value:
+      - id: REV-001
+        role: correctness-reviewer
+        verdict: PASS
+        reviewed_obligations:
+          - OBL-REVIEW-001
+        review_basis:
+          artifacts:
+            - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+            - harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+            - harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+            - harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md
+          implementation:
+            - src/App.tsx
+            - src/domain/market-normalization.ts
+            - src/domain/watchlist-state.ts
+            - src/lib/storage.ts
+          evidence:
+            - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+            - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+        matrix:
+          - target: 添加前预览归一结果
+            conclusion: pass
+          - target: 歧义输入不得静默写入
+            conclusion: pass
+          - target: 列表显示行情摘要
+            conclusion: pass
+          - target: 归档暂停提醒
+            conclusion: pass
+          - target: 恢复已归档标的与提醒意图
+            conclusion: pass
+        findings:
+          - FND-CR-001
+        blocking_gaps: []
+        non_blocking_risks:
+          - FND-CR-001
+        dispatch:
+          subagent_id: 019e5792-1d84-7a02-a095-47670f4f2087
+          model: gpt-5.4
+          execution_mode: spawn_agent
+          started_at: "2026-05-24T09:19:00+08:00"
+          completed_at: "2026-05-24T09:25:00+08:00"
+      - id: REV-002
+        role: tdd-reviewer
+        verdict: PASS
+        reviewed_obligations:
+          - OBL-REVIEW-002
+        review_basis:
+          artifacts:
+            - harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+            - harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+            - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+          tests:
+            - tests/unit/watchlist/normalization.spec.ts
+            - tests/unit/watchlist/archive.spec.ts
+            - tests/unit/watchlist/storage-replay.spec.ts
+            - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+        matrix:
+          - target: unit normalization and archive state
+            conclusion: adequate
+            fault_detection: proven
+          - target: storage replay
+            conclusion: adequate
+            fault_detection: proven
+          - target: browser flow
+            conclusion: adequate
+            fault_detection: partial
+          - target: fault injection
+            conclusion: adequate
+            fault_detection: proven
+        findings:
+          - FND-CR-002
+          - FND-CR-003
+        blocking_gaps: []
+        non_blocking_risks:
+          - FND-CR-002
+          - FND-CR-003
+        dispatch:
+          subagent_id: 019e5792-590d-7cf3-8a16-db07017fce27
+          model: gpt-5.4
+          execution_mode: spawn_agent
+          started_at: "2026-05-24T09:19:00+08:00"
+          completed_at: "2026-05-24T09:26:00+08:00"
+  - target: control_contract.findings
+    op: set
+    value:
+      - id: FND-CR-001
+        severity: medium
+        category: correctness
+        summary: Archived row always says reminders are suspended, even for symbols without a suspended alert.
+        evidence:
+          - file: src/App.tsx
+            line: 497
+        traces_to:
+          - AC-01
+        status: open
+        resolution_ref: follow-up
+      - id: FND-CR-002
+        severity: medium
+        category: tdd
+        summary: EV-RED-001 is summary-only and lacks reproducible failing command/output.
+        evidence:
+          - file: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md
+            line: 34
+          - file: harness-runtime/harness/traces/20260522-stock-watch-system/tdd/toolchain-status.json
+            line: 0
+        traces_to:
+          - AC-01
+        status: open
+        resolution_ref: follow-up
+      - id: FND-CR-003
+        severity: low
+        category: tdd
+        summary: Unit rerun path is fragile because ad hoc TS compile output collides with root ESM package mode.
+        evidence:
+          - file: package.json
+            line: 5
+          - file: harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/package.json
+            line: 1
+        traces_to:
+          - AC-01
+        status: open
+        resolution_ref: follow-up

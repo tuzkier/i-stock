@@ -1,0 +1,8 @@
+operation_id: 20260720-alibaba-trade-signals__REQ-ALIBABA-TRADE-SIGNALS__fix_lane
+type: advance_lane
+node_id: REQ-ALIBABA-TRADE-SIGNALS
+mission_id: 20260720-alibaba-trade-signals
+from_lane: intake-lane
+to_lane: requirement-lane
+to_stage: intake
+status: active

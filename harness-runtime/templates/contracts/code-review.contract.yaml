@@ -1,0 +1,142 @@
+control_contract:
+  type: evidence_contract
+  subtype: review_evidence
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: code-review
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Acceptance Scenarios
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/technical-analysis/tech-design.md"
+      sections:
+        - Control Contract
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/breakdown/execution-brief.md"
+      sections:
+        - Control Contract
+  consumers:
+    - receiving-review
+    - verify
+    - delivery
+    - retrospective
+    - stage-gate
+  obligations:
+    - id: OBL-REVIEW-001
+      mission_id: "{{mission_id}}"
+      type: correctness
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - correctness-reviewer
+      blocking: true
+      source: inferred
+    - id: OBL-REVIEW-002
+      mission_id: "{{mission_id}}"
+      type: tdd
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - tdd-reviewer
+      blocking: true
+      source: inferred
+  toolchain_probe:
+    artifact: "harness-runtime/harness/traces/{{mission_id}}/review/toolchain-probe.json"
+    status: PASS
+    signals: []
+  toolchain_status:
+    plan_artifact: "harness-runtime/harness/traces/{{mission_id}}/tdd/toolchain-plan.json"
+    run_artifact: "harness-runtime/harness/traces/{{mission_id}}/tdd/toolchain-run.json"
+    status_artifact: "harness-runtime/harness/traces/{{mission_id}}/tdd/toolchain-status.json"
+    status: PASS
+    missing_capabilities: []
+    decision_gate_reasons: []
+  e2e_status:
+    plan_artifact: "harness-runtime/harness/traces/{{mission_id}}/e2e/e2e-plan.json"
+    run_artifact: "harness-runtime/harness/traces/{{mission_id}}/e2e/e2e-run.json"
+    status_artifact: "harness-runtime/harness/traces/{{mission_id}}/e2e/e2e-status.json"
+    status: PASS
+    missing_capabilities: []
+    decision_gate_reasons: []
+    artifacts:
+      html_report: ""
+      trace: []
+      video: []
+      screenshots: []
+      ui_diff: []
+    flaky_signals: []
+    skipped_tests: []
+  effectiveness_review:
+    pending_reviewer_recheck: false
+    rounds_used: 0
+    rounds: []
+  reviewers: []
+  role_verdicts: []
+  tdd_review:
+    verdict: PENDING
+    probe_artifact: "harness-runtime/harness/traces/{{mission_id}}/review/toolchain-probe.json"
+    toolchain_status_artifact: "harness-runtime/harness/traces/{{mission_id}}/tdd/toolchain-status.json"
+    role_boundary:
+      in_scope: ["test effectiveness", "assertion strength", "adequacy", "fault detection", "TDD integrity"]
+      out_of_scope: ["business correctness verdict", "verification-report structure", "E2E report completeness", "tool installation policy"]
+    toolchain_signal_handling:
+      accepted: []
+      rejected: []
+    adequacy_matrix:
+      - target: "{{trace_target}}"
+        test_refs: ["{{test_ref}}"]
+        red_validity: valid
+        assertion_strength: strong
+        adequacy: adequate
+        fault_detection: proven
+        conclusion: pass
+    blocking_gaps: []
+    non_blocking_risks: []
+  e2e_review:
+    verdict: PENDING
+    e2e_status_artifact: "harness-runtime/harness/traces/{{mission_id}}/e2e/e2e-status.json"
+    methodology_ref: ".harness/docs/e2e-effectiveness-reviewer-methodology.md"
+    role_boundary:
+      in_scope: ["user journey coverage", "user-visible assertions", "data reality", "negative path", "realtime behavior", "E2E reliability", "diagnostics usefulness"]
+      out_of_scope: ["Playwright installation", "missing e2e-status.json", "report path correctness", "trace/video/screenshot/UI diff artifact completeness", "verification-report structure", "TDD adequacy"]
+    artifact_handling:
+      accepted: []
+      rejected: []
+    coverage_matrix:
+      - target: "{{trace_target}}"
+        obligation_refs: ["{{e2e_obligation_ref}}"]
+        e2e_test_refs: ["{{e2e_test_ref}}"]
+        user_result_assertion: strong
+        data_reality: real_api_or_seeded_fixture
+        negative_path: covered
+        realtime_or_refresh: not_applicable
+        reliability: stable
+        diagnostics: trace_or_video_available
+        conclusion: pass
+    blocking_gaps: []
+    non_blocking_risks: []
+  findings:
+    - id: FND-001
+      severity: medium
+      category: correctness
+      summary: "{{finding_summary}}"
+      evidence:
+        - file: "{{file}}"
+          line: 0
+        - command: "{{command}}"
+          exit_code: 1
+      traces_to:
+        - SCN-01
+        - MOD-01
+      status: fixed
+      resolution_ref: "{{commit_or_pr_or_decision}}"

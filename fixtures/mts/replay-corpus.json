@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "trend-up-formal",
+      "barCount": 90,
+      "startClose": 100,
+      "step": 0.8,
+      "sourceStatus": "formal",
+      "expectedReasonCodes": ["TREND_ABOVE_EMA"],
+      "forbiddenCopy": ["强买点", "强卖点", "胜率"]
+    },
+    {
+      "id": "data-insufficient",
+      "barCount": 8,
+      "startClose": 100,
+      "step": 0.2,
+      "sourceStatus": "formal",
+      "expectedTrendState": "data_insufficient",
+      "expectedAlertLevel": "none",
+      "expectedReasonCodes": ["DATA_INSUFFICIENT"]
+    },
+    {
+      "id": "source-degraded",
+      "barCount": 90,
+      "startClose": 100,
+      "step": 0.8,
+      "sourceStatus": "unavailable",
+      "expectedTrendState": "source_degraded",
+      "expectedAlertLevel": "none",
+      "expectedReasonCodes": ["SOURCE_DEGRADED"]
+    }
+  ],
+  "registryMutation": {
+    "unknownCode": "REMOVED_REASON_ENTRY",
+    "expectedFallback": "UNKNOWN_CODE"
+  }
+}

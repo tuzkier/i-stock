@@ -1,0 +1,27 @@
+{
+  "_comment": "Stage-4 design+technical_analysis hook manifest. Contract target is tech-design.contract.yaml; stage=technical_analysis in gate completion check.",
+  "stage": "design.technical_analysis",
+  "hooks": [
+    {
+      "id": "design-tech-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set tech-design.contract.yaml pending_reviewer_recheck=true after tech-design.md edit."
+    },
+    {
+      "id": "design-tech-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when tech-design.contract.yaml pending_reviewer_recheck=true."
+    },
+    {
+      "id": "design-tech-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block harness mission stage complete technical_analysis when gate has not passed."
+    }
+  ]
+}

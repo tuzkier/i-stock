@@ -1,0 +1,36 @@
+id: TASK-STOCK-WATCH-T003
+kind: task
+title: MTS 解释卡、ReasonRegistry 与非投资建议边界
+lane: delivery-lane
+stage: retrospective
+status: ready
+parent_task_id: T003
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T003-A1
+- T003-A2
+dependencies:
+- TASK-STOCK-WATCH-T001
+- TASK-STOCK-WATCH-T002
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: MTS 解释性信号
+    scenario: 输出完整 MTS 卡 / MTS 不表达投资建议 / 数据不足时不输出伪 MTS
+    evidence:
+      implementation_refs:
+      - src/lib/signals.ts
+      - src/App.tsx
+      test_refs:
+      - tests/unit/signals/mts.spec.ts
+      - tests/e2e/workbench/default.spec.ts
+updated_at: '2026-06-07T06:42:52.446973+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__batch_advance_stage__2

@@ -1,0 +1,68 @@
+control_contract:
+  type: behaviour_contract
+  subtype: discovery_brief
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: discovery
+  status: ready
+  produced_at: "{{produced_at}}"
+  upstream:
+    - path: "harness-runtime/harness/missions/{{mission_id}}/mission-contract.md"
+      sections:
+        - Objective
+        - User Stories
+        - Scope
+  consumers:
+    - prd
+    - design
+    - breakdown
+    - verify
+    - stage-gate
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_set_id: "AS-{{work_graph_node_id}}-discovery-{{artifact_version}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    artifact_refs:
+      - artifact_id: "{{mission_id}}:discovery-brief"
+        role: discovery-brief
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/discovery/discovery-brief.md"
+  obligations: []
+  role_verdicts: []
+  # ---- 探索简报（discovery-brief）差量字段（schema: discovery_brief_contract.yaml）----
+  # 每个数组在初始模板里为空，由 discovery-analyst 在第 2-7 步写入；
+  # 关键字段缺失或 confidence 越过枚举时，discovery-effectiveness-reviewer / harness-lint
+  #（M4.2 W-* 规则）会触发保持（HOLD）/ 失败（FAIL）。
+  affected_capabilities: []
+    # - capability: "<id>"
+    #   requirement_id: "<id>"
+    #   confidence: CONFIRMED | UNCERTAIN | ASSUMED
+    #   evidence_or_inference: "<string>"
+  roles: []
+    # - role: "<name>"
+    #   core_need: "<string>"
+    #   frequency: high | medium | low
+    #   tech_level: "<string>"
+  scenarios: []
+    # - kind: happy_path | exception | edge_case
+    #   description: "<string>"
+    #   related_roles:
+    #     - "<role>"
+  existing_solutions: []
+    # - description: "<string>"
+    #   source: graphify_symbol | graphify_query | grep | manual_read | web_url
+    #   reference: "<graphify path / URL / file path>"
+  design_assumptions: []
+    # - assumption: "<string>"
+    #   impact_on: prd | solution | technical_analysis | verify
+  agent_engineering_candidates: []
+    # - component: "<string>"
+    #   autonomy: true | false
+    #   runtime_context: true | false
+    #   multi_step_reasoning: true | false
+    #   uncertainty: true | false
+    #   recommended: agentize | deterministic | undecided
+  degradations: []
+    # - kind: graphify_unavailable | graphify_stale | web_failed
+    #   reason: "<string>"
+    #   compensating_action: "<string>"

@@ -1,0 +1,202 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [subtype, interaction_spec, buc_coverage]
+    properties:
+      type:
+        const: guide_contract
+      subtype:
+        const: interaction_guide
+      flows:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            priority:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+      interaction_spec:
+        type: object
+        properties:
+          structure_axis:
+            type: string
+            enum:
+              - buc
+          canonical_dir:
+            type: string
+          read_order:
+            type: array
+            items:
+              type: string
+      buc_coverage:
+        type: object
+        properties:
+          source_ref:
+            type: string
+          mappings:
+            type: array
+          gaps:
+            type: array
+      shared_surface_registry:
+        type: object
+        properties:
+          source_ref:
+            type: string
+          surfaces:
+            type: array
+      # 原型位置与 trace 脊柱的唯一权威来源。原型工程根目录、人类主入口、
+      # 对象轴、锚点策略和 SURF↔SUC↔OBJ↔SCN 绑定只在本块声明；其它块（如
+      # visual_artifacts）只引用本块、不重复定义原型位置。
+      prototype:
+        type: object
+        properties:
+          prototype_project_root:
+            type: string
+          primary_entry:
+            type: string
+          living_project:
+            type: boolean
+          per_mission_artifact_copy_allowed:
+            type: boolean
+          patch_summary_ref:
+            type: string
+          source_ref:
+            type: string
+          object_axis:
+            type: string
+          trace_anchor_policy:
+            type: object
+            properties:
+              element_attrs:
+                type: array
+                items:
+                  type: string
+              page_block_required:
+                type: boolean
+              trace_index:
+                type: string
+              never_recycle_ids:
+                type: boolean
+          surface_bindings:
+            type: array
+            items:
+              type: object
+              properties:
+                surf:
+                  type: string
+                page_entry:
+                  type: string
+                anchor_root:
+                  type: string
+                suc:
+                  type: array
+                  items:
+                    type: string
+                obj:
+                  type: array
+                  items:
+                    type: string
+                scn:
+                  type: array
+                  items:
+                    type: string
+                states:
+                  type: array
+                  items:
+                    type: string
+                fields:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+      prototype_interfaces:
+        type: array
+      information_architecture:
+        type: object
+      domain_model_coverage:
+        type: array
+      prd_feedback:
+        type: object
+      knowledge_promotion_candidates:
+        type: array
+      states:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            covers:
+              type: array
+              items:
+                type: string
+            na_reason:
+              type: string
+      scenarios:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            priority:
+              type: string
+            locator_strategy:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+      validation_rules:
+        type: array
+      consistency_report:
+        type: object
+      copy_language:
+        type: object
+        properties:
+          default:
+            type: string
+          visible_copy_must_be_chinese:
+            type: boolean
+          applies_to:
+            type: array
+            items:
+              type: string
+          allowed_exceptions:
+            type: array
+            items:
+              type: string
+          exception_refs:
+            type: array
+            items:
+              type: string
+      # 只描述可视化证据 manifest；原型主入口的真源在 prototype.primary_entry，
+      # 本块不再承载 prototype_entry。
+      visual_artifacts:
+        type: object
+        properties:
+          manifest:
+            type: string
+          required:
+            type: boolean
+          manifest_path:
+            type: string
+          required_flows:
+            type: array
+            items:
+              type: string
+          required_states:
+            type: array
+            items:
+              type: string
+          required_viewports:
+            type: array
+            items:
+              type: string

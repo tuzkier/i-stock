@@ -1,0 +1,127 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: work_graph.v1/mission_slice.yaml
+type: object
+required:
+  - mission_id
+  - control_plane
+  - lane_action
+  - work_graph
+  - operation
+properties:
+  mission_id:
+    type: string
+  objective:
+    type: string
+  control_plane:
+    type: object
+    required: [lane, stage]
+    additionalProperties: false
+    properties:
+      lane:
+        type: string
+      stage:
+        type: string
+  lane_action:
+    type: object
+    required: [lane, stage, graph_operation]
+    properties:
+      lane:
+        type: string
+      stage:
+        type: string
+      to_lane:
+        type: string
+      to_stage:
+        type: string
+      graph_operation:
+        type: string
+      operation_profiles:
+        type: object
+        additionalProperties:
+          type: object
+      allowed_graph_operations:
+        type: array
+        items:
+          type: string
+      output_artifact:
+        type:
+          - string
+          - "null"
+      required_execution_roles:
+        type: array
+        items:
+          type: string
+      required_review_roles:
+        type: array
+        items:
+          type: string
+  work_graph:
+    type: object
+    required: [primary_nodes, related_nodes]
+    properties:
+      primary_nodes:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      related_nodes:
+        type: array
+        items:
+          type: string
+      input_nodes:
+        type: array
+        items:
+          type: string
+      output_nodes:
+        type: array
+        items:
+          type: string
+      selection:
+        type: object
+        required: [relevance_score, reasons]
+        properties:
+          relevance_score:
+            type: integer
+          reasons:
+            type: array
+            items:
+              type: string
+  related_candidates:
+    type: object
+    properties:
+      deferred:
+        type: array
+        items:
+          $ref: "#/$defs/related_candidate"
+      blocked:
+        type: array
+        items:
+          $ref: "#/$defs/related_candidate"
+  operation:
+    type: string
+  graph_operation:
+    type: object
+  acceptance_scenarios:
+    type: array
+    items:
+      type: string
+additionalProperties: true
+$defs:
+  related_candidate:
+    type: object
+    required: [id, title, lane, status, relevance_score, reasons]
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      lane:
+        type: string
+      status:
+        type: string
+      relevance_score:
+        type: integer
+      reasons:
+        type: array
+        items:
+          type: string

@@ -1,0 +1,107 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [subtype, flows, states, visual_artifacts]
+    properties:
+      type:
+        const: guide_contract
+      subtype:
+        const: interaction_guide
+      flows:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            priority:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+      interaction_spec:
+        type: object
+      surface_baseline:
+        type: object
+      surface_changeset:
+        type: object
+      prototype_interfaces:
+        type: array
+      information_architecture:
+        type: object
+      domain_model_coverage:
+        type: array
+      prd_feedback:
+        type: object
+      knowledge_promotion_candidates:
+        type: array
+      states:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            covers:
+              type: array
+              items:
+                type: string
+            na_reason:
+              type: string
+      scenarios:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            priority:
+              type: string
+            locator_strategy:
+              type: string
+            traces_to:
+              type: array
+              items:
+                type: string
+      validation_rules:
+        type: array
+      consistency_report:
+        type: object
+      copy_language:
+        type: object
+        properties:
+          default:
+            type: string
+          visible_copy_must_be_chinese:
+            type: boolean
+          applies_to:
+            type: array
+            items:
+              type: string
+          allowed_exceptions:
+            type: array
+            items:
+              type: string
+          exception_refs:
+            type: array
+            items:
+              type: string
+      visual_artifacts:
+        type: object
+        properties:
+          manifest_path:
+            type: string
+          required_flows:
+            type: array
+            items:
+              type: string
+          required_states:
+            type: array
+            items:
+              type: string
+          required_viewports:
+            type: array
+            items:
+              type: string

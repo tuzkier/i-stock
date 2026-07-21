@@ -1,0 +1,368 @@
+patches:
+  - target: control_contract.affected_capabilities
+    op: set
+    value:
+      - capability: 多市场自选管理与代码归一
+        requirement_id: AC-01
+        confidence: CONFIRMED
+        evidence_or_inference: "src/data/markets.ts 已定义 US/HK/CN/KR 与 normalizeTicker；src/App.tsx 通过 watchlist + localStorage 维持本地自选。"
+      - capability: 图表主图 / 成交量 / 指标展示
+        requirement_id: AC-02
+        confidence: CONFIRMED
+        evidence_or_inference: "src/App.tsx 已用 lightweight-charts 绘制 K 线、EMA、BOLL 和 volume scale。"
+      - capability: 指标计算层
+        confidence: CONFIRMED
+        evidence_or_inference: "src/lib/indicators.ts 已实现 SMA / EMA / RSI / MACD / BOLL / ATR / OBV。"
+      - capability: MTS 多周期趋势信号与提醒语义
+        requirement_id: AC-03
+        confidence: UNCERTAIN
+        evidence_or_inference: "docs/technical-signal-research-design.md 已定义 MTS，但 src/lib/signals.ts 当前仍是 legacy composite signal，不能直接当最终 MTS。"
+      - capability: 买卖 / 风控提醒
+        requirement_id: AC-04
+        confidence: UNCERTAIN
+        evidence_or_inference: "src/App.tsx 已有 price / signal alert 草稿和 triggeredAlerts 过滤，但提醒语义仍依赖 legacy signal 与本地输入，需与 MTS 再对齐。"
+      - capability: 本地持久化与浏览器重开恢复
+        requirement_id: AC-05
+        confidence: CONFIRMED
+        evidence_or_inference: "src/lib/storage.ts 直接读写 localStorage，src/App.tsx 持久化 watchlist / alerts。"
+      - capability: 数据供应商可插拔与 fallback fixture
+        confidence: ASSUMED
+        evidence_or_inference: "server/index.js 当前只有 Yahoo 非官方 chart endpoint + demo fallback，没有显式 DataProvider 接口；需要 PRD / solution 定义。"
+      - capability: 图表分窗 / Pane 布局
+        confidence: UNCERTAIN
+        evidence_or_inference: "当前 UI 是单图 + 价格刻度的实现；TradingView Lightweight Charts 5.2 文档显示 panes 可支持主图 / 成交量 / 指标分窗。"
+
+  - target: control_contract.business_object_candidates
+    op: set
+    value:
+      - candidate_id: BO-CAND-001
+        name: WatchSymbol
+        aliases:
+          - 自选标的
+          - watchlist item
+        definition_hint: "用户在本地看盘系统中创建、删除、选择和持久化的单个观察标的。"
+        lifecycle_or_state_hints:
+          - 新增
+          - 选中
+          - 删除
+          - 持久化恢复
+        relationship_hints:
+          - 属于某个 Market
+          - 关联多个 AlertRule
+          - 指向当前选中的 PriceBar 序列
+        rule_hints:
+          - 需要支持代码归一和市场分组
+        source_refs:
+          - "src/types.ts"
+          - "src/App.tsx"
+          - "src/lib/storage.ts"
+        confidence: CONFIRMED
+        evidence_or_inference: "UI 和本地存储都围绕该对象运作，是用户直接创建 / 管理的核心实体。"
+        open_questions: []
+        downstream_action: promote_to_bo_registry
+      - candidate_id: BO-CAND-002
+        name: Market
+        aliases:
+          - MarketCode
+          - 市场
+        definition_hint: "US / HK / CN / KR 等市场分组及其代码归一规则承载体。"
+        lifecycle_or_state_hints:
+          - 选择
+          - 分组
+          - 归一化
+        relationship_hints:
+          - 容纳 WatchSymbol
+          - 影响行情后缀与代码格式
+        rule_hints:
+          - 决定 normalizeTicker 行为
+        source_refs:
+          - "src/types.ts"
+          - "src/data/markets.ts"
+        confidence: CONFIRMED
+        evidence_or_inference: "市场枚举已直接进入 UI 标签、提示文案和 ticker 归一逻辑。"
+        open_questions: []
+        downstream_action: promote_to_bo_registry
+      - candidate_id: BO-CAND-003
+        name: PriceBar
+        aliases:
+          - OHLCV
+          - K 线
+        definition_hint: "图表与指标计算的最小行情记录，包含 time/open/high/low/close/volume。"
+        lifecycle_or_state_hints:
+          - 拉取
+          - 过滤
+          - 绘制
+          - 回放
+        relationship_hints:
+          - 是 IndicatorSet 的输入
+          - 是 MtsSignal 的计算基底
+        rule_hints:
+          - 需要满足最小历史长度
+        source_refs:
+          - "server/index.js"
+          - "src/types.ts"
+          - "src/lib/indicators.ts"
+        confidence: CONFIRMED
+        evidence_or_inference: "服务端返回 bars，指标层和图表层都直接消费它。"
+        open_questions: []
+        downstream_action: promote_to_bo_registry
+      - candidate_id: BO-CAND-004
+        name: IndicatorSet
+        aliases:
+          - 技术指标集
+          - 主图 / 副图指标
+        definition_hint: "EMA / BOLL / MACD / RSI / KDJ / ATR / OBV 等可切换、可组合的指标集合。"
+        lifecycle_or_state_hints:
+          - 计算
+          - 切换
+          - 展示
+        relationship_hints:
+          - 依赖 PriceBar
+          - 参与 MtsSignal 解释
+        rule_hints:
+          - 需要主图 / 副图分层
+        source_refs:
+          - "docs/technical-signal-research-design.md"
+          - "src/lib/indicators.ts"
+          - "src/App.tsx"
+        confidence: CONFIRMED
+        evidence_or_inference: "研究文档和当前实现都已把这些指标作为核心分析层。"
+        open_questions: []
+        downstream_action: promote_to_bo_registry
+      - candidate_id: BO-CAND-005
+        name: MtsSignal
+        aliases:
+          - MTS
+          - 多周期趋势信号
+        definition_hint: "承载趋势状态、分数带、买点 / 卖点类型和提醒等级的解释性信号对象。"
+        lifecycle_or_state_hints:
+          - 计算
+          - 解释
+          - 触发提醒
+        relationship_hints:
+          - 依赖 PriceBar 和 IndicatorSet
+          - 驱动 AlertRule 触发
+        rule_hints:
+          - 不能简化成单一买卖箭头
+        source_refs:
+          - "docs/technical-signal-research-design.md"
+          - "src/lib/signals.ts"
+        confidence: UNCERTAIN
+        evidence_or_inference: "研究文档已定语义，但代码仍停留在 legacy composite signal，结构尚未定稿。"
+        open_questions:
+          - "是否需要拆成状态、评分、理由和提醒四个子对象。"
+        downstream_action: needs_decision
+      - candidate_id: BO-CAND-006
+        name: AlertRule
+        aliases:
+          - 提醒规则
+          - 风控提醒
+        definition_hint: "基于价格穿越或信号命中的本地提醒配置，支持启停与触发时间记录。"
+        lifecycle_or_state_hints:
+          - 创建
+          - 启用
+          - 触发
+          - 禁用
+        relationship_hints:
+          - 绑定 WatchSymbol
+          - 参考 MtsSignal
+        rule_hints:
+          - 需要区分观察 / 确认 / 强信号 / 风控
+        source_refs:
+          - "src/types.ts"
+          - "src/App.tsx"
+        confidence: CONFIRMED
+        evidence_or_inference: "App 里已有价格提醒和信号提醒两种草稿形态。"
+        open_questions: []
+        downstream_action: promote_to_bo_registry
+      - candidate_id: BO-CAND-007
+        name: DataProvider
+        aliases:
+          - 行情适配器
+          - data source
+        definition_hint: "行情获取、归一、缓存和 fallback 的供应层抽象。"
+        lifecycle_or_state_hints:
+          - 选择
+          - 连接
+          - fallback
+        relationship_hints:
+          - 为 PriceBar 提供数据
+          - 影响 MtsSignal 与 AlertRule 的输入质量
+        rule_hints:
+          - 供应商不应在 discovery 中锁死
+        source_refs:
+          - "server/index.js"
+          - "docs/technical-signal-research-design.md"
+        confidence: ASSUMED
+        evidence_or_inference: "当前实现是单一 Yahoo 非官方 endpoint + demo fallback，但任务要求可插拔数据源。"
+        open_questions:
+          - "DataProvider 是领域对象、应用服务还是纯技术抽象。"
+        downstream_action: needs_decision
+      - candidate_id: BO-CAND-008
+        name: ChartLayout
+        aliases:
+          - Pane
+          - 图表布局
+        definition_hint: "主图、成交量和副图指标的布局配置与持久化状态。"
+        lifecycle_or_state_hints:
+          - 选择
+          - 切换
+          - 持久化
+        relationship_hints:
+          - 影响 IndicatorSet 呈现
+          - 约束 chart library 选型
+        rule_hints:
+          - 需要决定是否保存到本地
+        source_refs:
+          - "src/App.tsx"
+          - "docs/technical-signal-research-design.md"
+        confidence: ASSUMED
+        evidence_or_inference: "当前只有 UI 级别的主图 / 副图意图，是否形成可持久化对象还未定。"
+        open_questions:
+          - "Pane 配置是否进入本地持久化。"
+        downstream_action: needs_decision
+      - candidate_id: BO-CAND-009
+        name: LegacyCompositeSignal
+        aliases:
+          - 旧复合信号
+          - composite signal
+        definition_hint: "当前 `src/lib/signals.ts` 的过渡性输出，不是最终 MTS。"
+        lifecycle_or_state_hints:
+          - 保留为样例
+          - 转换为 fixture
+          - 回归测试
+        relationship_hints:
+          - 可能被 MtsSignal 覆盖
+        rule_hints:
+          - 不可直接作为产品信号定义
+        source_refs:
+          - "src/lib/signals.ts"
+        confidence: CONFIRMED
+        evidence_or_inference: "代码已存在，但其语义与 research 文档定义的 MTS 不一致。"
+        open_questions: []
+        downstream_action: exclude_or_reclassify
+
+  - target: control_contract.roles
+    op: set
+    value:
+      - role: 个人投资者
+        core_need: "在本地网页里统一管理跨市场自选，并快速切换查看标的。"
+        frequency: high
+        tech_level: low
+      - role: 技术分析用户
+        core_need: "在同一页面查看主图、成交量和可切换副图指标。"
+        frequency: high
+        tech_level: medium
+      - role: 策略观察者
+        core_need: "获得可解释的 MTS 趋势、买卖和风控提醒。"
+        frequency: medium
+        tech_level: medium
+      - role: 本地使用者
+        core_need: "不依赖账号和云同步，重开浏览器后继续使用本地配置。"
+        frequency: high
+        tech_level: low
+
+  - target: control_contract.scenarios
+    op: set
+    value:
+      - kind: happy_path
+        description: "用户按市场添加 A/HK/US/KR 自选，关闭并重新打开页面后，watchlist 与提醒配置从本地恢复。"
+        related_roles:
+          - 个人投资者
+          - 本地使用者
+      - kind: happy_path
+        description: "用户选中标的后看到主图、成交量和默认指标快照，并能从价格变化中读出趋势状态。"
+        related_roles:
+          - 技术分析用户
+      - kind: exception
+        description: "行情源不可用或上游返回错误时，系统切到 demo fixture，并明确提示当前展示的是演示数据而不是实时行情。"
+        related_roles:
+          - 个人投资者
+          - 技术分析用户
+      - kind: edge_case
+        description: "历史数据不足时，MTS / 指标层必须降级显示数据不足或中性状态，避免把缺样本误读成信号。"
+        related_roles:
+          - 策略观察者
+      - kind: edge_case
+        description: "旧 composite signal 只能作为样例或 fixture，不得直接对外冒充最终 MTS。"
+        related_roles:
+          - 策略观察者
+
+  - target: control_contract.existing_solutions
+    op: set
+    value:
+      - description: "当前草稿实现已覆盖本地自选、行情拉取、指标计算和提醒 UI，但 MTS 仍是 legacy composite signal。"
+        source: manual_read
+        reference: "/Users/hanbin/Workspace/AI/MyInvestment/server/index.js, /Users/hanbin/Workspace/AI/MyInvestment/src/App.tsx, /Users/hanbin/Workspace/AI/MyInvestment/src/lib/indicators.ts, /Users/hanbin/Workspace/AI/MyInvestment/src/lib/signals.ts, /Users/hanbin/Workspace/AI/MyInvestment/src/data/markets.ts"
+      - description: "TradingView Lightweight Charts 5.2 文档说明 panes 可分隔主图、成交量和指标，适合在现有技术栈上低迁移增强。"
+        source: web_url
+        reference: "https://tradingview.github.io/lightweight-charts/ , https://tradingview.github.io/lightweight-charts/docs/panes"
+      - description: "KLineChart 提供 Apache-2.0、TypeScript、零依赖、内置指标与画线模型，适合作为更强的图表替换候选。"
+        source: web_url
+        reference: "https://github.com/klinecharts/KLineChart , https://klinecharts.com"
+      - description: "technicalindicators 覆盖常见技术指标，但 npm 元数据显示维护较旧，更适合作为参考或局部替代。"
+        source: web_url
+        reference: "https://www.npmjs.com/package/technicalindicators"
+      - description: "EODHD、Alpha Vantage、Finnhub、Marketstack 都是可评估的数据供应商候选，但 discovery 不锁定正式供应商。"
+        source: web_url
+        reference: "https://eodhd.com/financial-apis/node-js-typescript-sdk-for-eodhd-financial-apis , https://www.alphavantage.co/documentation/ , https://finnhubio.github.io/ , https://marketstack.com/documentation"
+
+  - target: control_contract.design_assumptions
+    op: set
+    value:
+      - assumption: "PRD 将定义 DataProvider 接口和供应商评估矩阵，而不是在 discovery 锁定单一行情源。"
+        impact_on: prd
+      - assumption: "lightweight-charts 仍然是低迁移路线，后续可利用 panes 分隔主图、成交量和指标。"
+        impact_on: solution
+      - assumption: "KLineChart 只有在内置指标、画线和移动端支持的增益足以抵消迁移成本时才应替换当前图表层。"
+        impact_on: solution
+      - assumption: "technicalindicators 可作为指标参考或局部替代，但不应成为 MTS 语义来源。"
+        impact_on: technical_analysis
+      - assumption: "MTS、提醒和行情归一保持 deterministic，不应在第一阶段 agentize。"
+        impact_on: technical_analysis
+      - assumption: "Legacy composite signal 只能回收为 fixture / 测试样例，而不是产品定义。"
+        impact_on: verify
+
+  - target: control_contract.agent_engineering_candidates
+    op: set
+    value:
+      - component: "行情适配与归一"
+        autonomy: false
+        runtime_context: false
+        multi_step_reasoning: false
+        uncertainty: true
+        recommended: deterministic
+      - component: "指标计算"
+        autonomy: false
+        runtime_context: false
+        multi_step_reasoning: false
+        uncertainty: true
+        recommended: deterministic
+      - component: "MTS 信号计算"
+        autonomy: false
+        runtime_context: false
+        multi_step_reasoning: false
+        uncertainty: true
+        recommended: deterministic
+      - component: "提醒触发与展示"
+        autonomy: false
+        runtime_context: false
+        multi_step_reasoning: false
+        uncertainty: true
+        recommended: deterministic
+      - component: "图表布局与 Pane 选择"
+        autonomy: false
+        runtime_context: false
+        multi_step_reasoning: false
+        uncertainty: true
+        recommended: deterministic
+
+  - target: control_contract.degradations
+    op: set
+    value:
+      - kind: project_context_missing
+        reason: "project-context.md 缺失，无法直接读取项目长期上下文。"
+        compensating_action: "后续补 project-context 或用 project-knowledge/context/* 临时代替。"
+      - kind: gitnexus_unavailable
+        reason: "available=false indexed=false fresh=false，且当前没有 .gitnexus/。"
+        compensating_action: "后续运行 npx gitnexus analyze；本次用手动代码搜索作为临时证据。"

@@ -1,0 +1,148 @@
+control_contract:
+  type: guide_contract
+  subtype: technical_guide
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: technical_analysis
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/stages/{{mission_id}}/solution.md"
+      sections:
+        - 所选路线与理由
+        - 关键决策
+        - 影响面
+    - path: "harness-runtime/harness/stages/{{mission_id}}/product/product-definition.md"
+      sections:
+        - Functional Requirements
+  consumers:
+    - breakdown
+    - execute
+    - code-review
+    - architecture-reviewer
+    - stage-gate
+  role_policy:
+    stage: technical_analysis
+    work_graph_lane: technical-analysis-lane
+    required_execution_roles:
+      - tech-designer
+    required_review_roles:
+      - technical-design-effectiveness-reviewer
+    conditional_roles:
+      - role: agent-capability-designer
+        kind: execution
+        when:
+          - agent_engineering
+          - agent_capability
+      - role: agent-capability-reviewer
+        kind: review
+        when:
+          - agent_engineering
+          - agent_capability
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    source_stage_artifact: "harness-runtime/harness/stages/{{mission_id}}/tech-design.md"
+    canonical_artifact: "harness-runtime/harness/work-graph/artifacts/{{work_graph_node_id}}/tech-design.md"
+  execution_result:
+    id: EXE-TECH-001
+    role: tech-designer
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/stages/{{mission_id}}/tech-design.md"
+    fulfilled_obligations:
+      - OBL-TECH-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-TECH-001
+      mission_id: "{{mission_id}}"
+      type: architecture
+      risk: medium
+      traces_to:
+        ac:
+          - AC-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - technical-design-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  modules:
+    - id: MOD-01
+      name: "{{module_name}}"
+      responsibility: "{{module_responsibility}}"
+      traces_to:
+        - DEC-01
+        - FR-01
+  # Stage-4 M1.4: typed interface_changes. `kind` enum forces canonical category;
+  # MODIFIED / REPLACED require both `before` and `after` blocks (strict in M2/M3).
+  # `module` traces to modules[].id; `traces_to` references upstream R-* / DEC-*.
+  interface_changes:
+    - id: INT-01
+      kind: ADDED
+      module: MOD-01
+      after: "{{interface_definition}}"
+      traces_to:
+        - DEC-01
+  # Stage-4 M1.4: typed data_changes. ADDED requires default OR nullable=true;
+  # MODIFIED / REMOVED require both migration and rollback (strict in M2/M3).
+  data_changes:
+    - id: DATA-01
+      kind: MODIFIED
+      entity: "{{data_entity}}"
+      migration: "{{migration_plan}}"
+      rollback: "{{rollback_plan}}"
+      traces_to:
+        - FR-01
+  verification_strategy:
+    - id: VS-01
+      layer: unit
+      target_ids:
+        - MOD-01
+      evidence_required:
+        - test_result
+  architectural_fitness_functions:
+    - id: AFF-01
+      protected_quality: "{{protected_quality}}"
+      measurement: "{{fitness_measurement}}"
+      threshold: "{{fitness_threshold}}"
+      verification_evidence:
+        - VS-01
+  # Stage-4 M1.4: production_readiness 四要素. Each may be a real value OR an
+  # explicit "N/A: <reason>" string. Empty / missing FAILs gate (M3.1 hook
+  # blocks advance until populated).
+  production_readiness:
+    error_handling: "{{error_handling}}"
+    compatibility: "{{compatibility}}"
+    observability: "{{observability}}"
+    rollback: "{{rollback}}"
+  # Stage-4 M1.4: agent_implementation[] mirror of solution.contract.yaml
+  # agent_architecture[]. Populated when mission-contract.agent_engineering.enabled=true.
+  # eval_scenarios must contain all four kinds (normal / boundary / adversarial /
+  # ambiguous) when scope=core. Strict cross-contract check (traces_to_solution_arch
+  # exists in solution.contract.yaml.agent_architecture[]) lands in M4.3.
+  agent_implementation: []
+  # Stage-4 M1.4: 3 reviewer rounds. effectiveness_review always present;
+  # agent_capability_review when agent_engineering.enabled=true; dependency_validity_review
+  # when dependency-impact triggered. rounds_used incremented per reviewer cycle.
+  effectiveness_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+  agent_capability_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+  dependency_validity_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

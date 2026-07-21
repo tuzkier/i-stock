@@ -1,0 +1,62 @@
+{
+  "_comment": "HarnessV2 discovery stage hook manifest (discovery-improvement-plan M3.1). install pipeline reads this and materializes .claude/hooks/discovery/<script>.py + a hooks section in .claude/settings.json. Each entry maps a Claude Code hook event to one of the Python scripts shipped alongside this file. Reuses intake's record_context_read.py via the shared intake hook manifest — no duplicate hook needed for project-context reads.",
+  "stage": "discovery",
+  "hooks": [
+    {
+      "id": "check-stage-worktree-discovery",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "check_stage_worktree.py",
+      "purpose": "Block discovery-brief.md / discovery-brief.contract.yaml writes outside the discovery stage worktree (enforces stage-worktree-required HARD-GATE)."
+    },
+    {
+      "id": "check-graphify-brownfield",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "check_graphify_brownfield.py",
+      "purpose": "Block discovery-brief.md writes on brownfield missions unless the contract carries graphify_* evidence in existing_solutions[] or a graphify_unavailable/graphify_stale entry in degradations[]."
+    },
+    {
+      "id": "check-dependency-validity",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_dependency_validity.py",
+      "purpose": "Block harness contract/gate advance when discovery contract.dependency_trigger.required=true but no dependency-validity-reviewer PASS verdict is recorded yet."
+    },
+    {
+      "id": "check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block `harness mission stage complete discovery` unless the latest discovery__*.json gate-report has status=PASS (prevents silent gate bypass)."
+    },
+    {
+      "id": "check-confirmation",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_confirmation.py",
+      "purpose": "Block `harness mission stage start <next>` unless approvals.json carries either a discovery_skip record or a discovery_confirmation approved checkpoint for the mission."
+    },
+    {
+      "id": "record-graphify-query",
+      "event": "PostToolUse",
+      "matcher": "mcp__graphify__.*",
+      "script": "record_graphify_query.py",
+      "purpose": "Append a structured trace event whenever the AI calls a graphify MCP tool, so retrospective + reviewer can audit brownfield missions actually exercised graphify."
+    },
+    {
+      "id": "discovery-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set discovery-brief.contract.yaml effectiveness_review.pending_reviewer_recheck=true after discovery-brief.md edit so the pre-advance check fires (修复后强制重审)."
+    },
+    {
+      "id": "discovery-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when discovery-brief.contract.yaml has pending_reviewer_recheck=true (re-run discovery-effectiveness-reviewer first)."
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+operation_id: 20260522-stock-watch-system__batch_advance_lane
+type: batch
+mission_id: 20260522-stock-watch-system
+operations:
+- type: advance_lane
+  node_id: TASK-STOCK-WATCH-T002
+  from_lane: development-lane
+  to_lane: verification-lane
+  to_stage: verify
+  status: ready
+- type: advance_lane
+  node_id: TASK-STOCK-WATCH-T003
+  from_lane: development-lane
+  to_lane: verification-lane
+  to_stage: verify
+  status: ready
+- type: advance_lane
+  node_id: TASK-STOCK-WATCH-T004
+  from_lane: development-lane
+  to_lane: verification-lane
+  to_stage: verify
+  status: ready
+- type: advance_lane
+  node_id: TASK-STOCK-WATCH-T005
+  from_lane: development-lane
+  to_lane: verification-lane
+  to_stage: verify
+  status: ready
+- type: advance_lane
+  node_id: TASK-STOCK-WATCH-T006
+  from_lane: development-lane
+  to_lane: verification-lane
+  to_stage: verify
+  status: ready

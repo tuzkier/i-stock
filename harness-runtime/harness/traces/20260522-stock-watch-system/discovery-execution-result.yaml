@@ -1,0 +1,21 @@
+execution_result:
+  id: EXE-DISCOVERY-001
+  role: discovery-analyst
+  status: DONE
+  produced_artifacts:
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/discovery-brief.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/traces/20260522-stock-watch-system/discovery-contract-fields-patch.yaml
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+  fulfilled_obligations: []
+  evidence_refs:
+    - mission-contract
+    - docs/technical-signal-research-design
+    - code-read-src-and-server
+    - web-research-open-source-libraries-and-data-apis
+  open_questions:
+    - "正式行情供应商、成本模型和授权边界需在 PRD / solution 阶段定稿。"
+    - "图表库路线需在 solution 阶段比较 lightweight-charts panes 增强与 KLineChart 引入/替换。"
+  concerns:
+    - "GitNexus 未索引，当前代码现状证据来自手动代码读取。"
+    - "project-context.md 缺失，当前用 project-knowledge/context/* 和任务契约补偿。"

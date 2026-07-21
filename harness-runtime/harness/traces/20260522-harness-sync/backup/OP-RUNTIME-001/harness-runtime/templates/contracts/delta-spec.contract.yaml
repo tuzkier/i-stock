@@ -1,0 +1,34 @@
+control_contract:
+  type: behaviour_contract
+  version: 1
+  mission_id: "<mission-id>"
+  stage: delta-spec
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/stages/<mission-id>/product/product-definition.md"
+      sections:
+        - Functional Requirements
+        - 追溯矩阵
+  consumers:
+    - breakdown
+    - execute
+    - code-review
+    - verify
+    - stage-gate
+  capabilities:
+    - id: "<capability-id>"
+      name: "<capability-name>"
+      delta_spec: "harness-runtime/harness/stages/<mission-id>/specs/<capability>/spec.md"
+      requirements:
+        - id: REQ-001
+          change_type: ADDED
+          traces_to:
+            - FR-01
+            - AC-01
+          scenarios:
+            - id: SCN-001
+              title: "<场景名称>"
+              given: "<前置状态>"
+              when: "<触发条件>"
+              then: "<预期结果>"
+              priority: must

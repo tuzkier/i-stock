@@ -1,0 +1,7 @@
+operation_id: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage
+type: advance_stage
+node_id: REQ-STOCK-WATCH-SYSTEM
+mission_id: 20260522-stock-watch-system
+lane: requirement-lane
+from_stage: intake
+to_stage: discovery

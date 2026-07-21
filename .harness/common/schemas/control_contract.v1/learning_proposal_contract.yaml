@@ -1,0 +1,100 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+# retrospective-improvement-plan M4.2: typed schema for learning proposals.
+# Every 改进行动 entry that targets a template-source artifact must be expressed
+# as a learning_proposal_contract record with requires_human_approval=true.
+# target_kind=methodology always forces requires_human_approval=true.
+title: learning_proposal_contract
+description: >
+  Typed representation of a retrospective learning proposal for a Harness
+  template-source change. Proposals targeting rule/skill/agent/schema/cli/
+  methodology require human approval before a follow-up mission can execute
+  the change.
+type: object
+required:
+  - proposal_id
+  - source_mission
+  - failure_pattern
+  - target_kind
+  - proposed_change
+  - requires_human_approval
+  - status
+properties:
+  proposal_id:
+    type: string
+    pattern: "^LP-"
+    description: "Unique identifier, e.g. LP-<mission-id>-001"
+  source_mission:
+    type: string
+    description: "Mission id that produced this proposal"
+  failure_pattern:
+    type: string
+    minLength: 1
+    description: "Short description of the failure or gap that motivates this proposal"
+  target_kind:
+    type: string
+    enum:
+      - rule
+      - skill
+      - agent
+      - schema
+      - contract_template
+      - cli
+      - project_knowledge
+      - methodology
+    description: >
+      Kind of Harness artifact targeted by the proposal. methodology always
+      requires human approval.
+  methodology_path:
+    type: string
+    pattern: "^docs/methodologies/"
+    description: "Required when target_kind=methodology; must start with docs/methodologies/"
+  target_ref:
+    type: string
+    description: "Path or identifier of the target artifact (may be empty for initial proposals)"
+  proposed_change:
+    type: string
+    minLength: 1
+    description: "Human-readable description of the proposed change"
+  risk:
+    type: string
+    enum:
+      - low
+      - medium
+      - high
+    default: medium
+  requires_human_approval:
+    type: boolean
+    description: >
+      Must be true for target_kind in [rule, skill, agent, schema,
+      contract_template, cli, methodology]. May be false for project_knowledge
+      proposals.
+  approval_ref:
+    type: string
+    description: "approval_id from approvals.json once approved; empty when proposed"
+  follow_up_mission_id:
+    type: string
+    description: "Mission id assigned to execute this proposal after approval"
+  status:
+    type: string
+    enum:
+      - proposed
+      - approved
+      - rejected
+      - superseded
+      - applied
+    description: >
+      applied is only valid when target_kind=project_knowledge and the knowledge
+      update has been written under project-knowledge with source metadata.
+  emitted_at:
+    type: string
+    format: date-time
+if:
+  properties:
+    target_kind:
+      const: methodology
+then:
+  required:
+    - methodology_path
+  properties:
+    requires_human_approval:
+      const: true

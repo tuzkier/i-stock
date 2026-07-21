@@ -1,0 +1,255 @@
+control_contract:
+  type: guide_contract
+  subtype: interaction_guide
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: interaction
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      sections:
+        - User Journeys
+        - System Responsibilities
+        - UI Carrying Requirements
+        - Observable Behaviors
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-domain-model.md"
+      sections:
+        - Entities
+        - States
+        - Actions
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/technical-analysis/tech-design.md"
+      sections:
+        - 模块划分
+        - 验证策略
+  consumers:
+    - breakdown
+    - execute
+    - code-review
+    - verify
+    - stage-gate
+  role_policy:
+    stage: interaction
+    work_graph_lane: product-definition-lane
+    required_execution_roles:
+      - interaction-designer
+    required_review_roles:
+      - interaction-reviewer
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_set_id: "AS-{{work_graph_node_id}}-interaction-{{artifact_version}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    artifact_refs:
+      - artifact_id: "{{mission_id}}:interaction"
+        role: interaction
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md"
+      - artifact_id: "{{mission_id}}:visual-interaction"
+        role: visual-interaction
+        required: true
+        path_glob: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/visual-interaction/**/*"
+      - artifact_id: "{{mission_id}}:prototype-project"
+        role: prototype-project
+        required: true
+        path: "{{prototype_project_root}}"
+        external_living_artifact: true
+      - artifact_id: "{{mission_id}}:user-prototype-confirmation"
+        role: user-prototype-confirmation
+        required: true
+        path: "harness-runtime/harness/traces/{{mission_id}}/user-prototype-confirmation.md"
+      - artifact_id: "{{mission_id}}:interaction-spec"
+        role: interaction-spec
+        required: true
+        path_glob: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/**/*"
+  execution_result:
+    id: EXE-INTERACTION-001
+    role: interaction-designer
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/use-case-realization.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md"
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/visual-interaction/visual-interaction-manifest.json"
+      - path: "{{prototype_project_root}}"
+      - path: "harness-runtime/harness/traces/{{mission_id}}/user-prototype-confirmation.md"
+    fulfilled_obligations:
+      - OBL-INTERACTION-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs:
+      - VIZ-001
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-INTERACTION-001
+      mission_id: "{{mission_id}}"
+      type: interaction
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+        - interaction_spec
+        - visual_manifest
+        - prototype_project_patch
+        - user_prototype_confirmation
+      required_roles:
+        - interaction-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  interaction_spec:
+    canonical_dir: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec"
+    ai_handoff: true
+    prototype_is_human_entry_only: true
+    structure_axis: system_surface
+    read_order:
+      - "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md"
+      - "harness-runtime/harness/stages/{{mission_id}}/contracts/interaction.contract.yaml"
+      - "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/use-case-realization.md"
+      - "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md"
+      - "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md"
+    do_not_use_as_ai_contract:
+      - "harness-runtime/harness/artifacts/{{mission_id}}/interaction/visual-interaction/**"
+  # ----------------------------------------------------------------------
+  # 原型位置与 trace 脊柱的唯一权威来源（single source of truth）。
+  # 原型工程根目录、人类主入口、对象轴、锚点策略和 SURF↔SUC↔OBJ↔SCN 绑定
+  # 只在本块声明；其它位置（如 visual_artifacts）只引用本块、不重复定义，
+  # 避免迁移 / 重做时只改一处导致自相矛盾。
+  # surface_bindings 是 surface-model.md「Surface 绑定脊柱」的机器投影，
+  # 是 `harness interaction trace-coverage-check` 的期望集——原型 HTML 的
+  # 页面级声明块和元素级 data-surf/data-suc/data-obj 必须与此对账一致。
+  # ID 一律引用上游真源（SURF=界面边界注册表 / SUC=用例模型 / OBJ=业务对象分析 / SCN=验收场景），
+  # 不在 interaction 阶段新造或改写；删除走 deprecated 标记，编号永不回收。
+  # ----------------------------------------------------------------------
+  prototype:
+    prototype_project_root: "{{prototype_project_root}}"   # 项目持有的独立原型工程目录，由 harness config snapshot 的 prototype.interactive_prototype.prototype_project_root 解析（默认建议 prototype/）；git 跟踪、随 Mission 分支隔离，不在 project-knowledge/ 下
+    primary_entry: "{{prototype_entry_path_or_url}}"        # 长期原型工程的唯一默认人类主入口
+    living_project: true
+    per_mission_artifact_copy_allowed: false               # 主原型不在 mission artifact 下另起副本
+    patch_summary_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md#原型工程增量变更"
+    source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md#Surface 绑定脊柱"
+    object_axis: OBJ                                        # 对象轴用 OBJ-xx（business-object-analysis.md），不用 DDD 聚合
+    trace_anchor_policy:
+      element_attrs: ["data-surf", "data-suc", "data-obj", "data-testid"]
+      page_block_required: true                            # 页面级声明块（harness 注释）必须存在
+      trace_index: "{{prototype_project_root}}/trace-index.json"  # 由 trace-coverage-check 生成，回溯产物
+      never_recycle_ids: true
+    surface_bindings:
+      - surf: "SURF-001"
+        page_entry: "{{page_entry_path}}"          # 相对 prototype_project_root 的页面路径
+        anchor_root: "{{anchor_root_selector}}"    # 区域根元素定位（如 [data-testid="..."]）
+        suc: ["SUC-01", "SUC-01-OP-01"]            # 实现的系统用例 / 系统操作
+        obj: ["OBJ-01"]                             # 承载的业务对象（用户可见者必须出现或写明隐藏理由）
+        scn: ["SCN-01"]                             # 覆盖的验收场景
+        states: ["STATE-SUCCESS", "STATE-ERROR"]
+  surface_baseline:
+    source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md#基线判定"
+    surfaces:
+      - id: SURF-001
+        existing: "{{yes_no}}"
+        baseline_ref: "{{baseline_ref_or_none}}"
+        decision: create_surface
+  surface_changeset:
+    source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md#界面边界与变更"
+    changes:
+      - id: CHG-SURF-001
+        surface_id: SURF-001
+        operation: create_surface
+        traces_to:
+          - SCN-01
+  prototype_interfaces:
+    - id: SCREEN-001
+      title: "{{screen_title}}"
+      surface_id: SURF-001
+      domain_refs:
+        - "{{domain_entity_or_action}}"
+      flows:
+        - FLOW-001
+      states:
+        - STATE-EMPTY
+  domain_model_coverage:
+    - ref: "{{domain_entity_or_action_or_state}}"
+      kind: entity
+      prototype_refs:
+        - SCREEN-001
+      flow_refs:
+        - FLOW-001
+      state_refs:
+        - STATE-EMPTY
+  information_architecture:
+    entry_points:
+      - "{{entry_point}}"
+    navigation_nodes:
+      - id: NAV-001
+        title: "{{navigation_node}}"
+        screens:
+          - SCREEN-001
+    source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/surface-model.md#信息架构"
+  prd_feedback:
+    status: no_change
+    findings: []
+    required_action: none
+  knowledge_promotion_candidates:
+    - id: KPC-INTERACTION-001
+      kind: prototype_pattern
+      source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction.md#沉淀候选"
+      suggested_target: project-knowledge
+      reason: "{{promotion_reason}}"
+  flows:
+    - id: FLOW-001
+      title: "{{flow_title}}"
+      traces_to:
+        - SCN-01
+      visual_refs:
+        - VIZ-001
+  states:
+    - id: STATE-EMPTY
+      title: empty
+      visual_refs:
+        - VIZ-001
+  scenarios:
+    - id: SCN-INTERACTION-001
+      title: "{{scenario_title}}"
+      traces_to:
+        - SCN-01
+      source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md#验证义务"
+  validation_rules:
+    - id: VAL-001
+      title: "{{validation_rule}}"
+      traces_to:
+        - SCN-01
+      source_ref: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md#验证义务"
+  consistency_report:
+    path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md#一致性体检"
+    unresolved_blockers: 0
+    unresolved_decisions: "{{unresolved_decisions_count}}"
+  copy_language:
+    default: zh-CN
+    visible_copy_must_be_chinese: true
+    applies_to:
+      - interaction_spec
+      - html_svg_variants
+      - preview
+      - empty_error_permission_confirmation_feedback
+    allowed_exceptions:
+      - brand_name
+      - product_name
+      - code_identifier
+      - common_industry_acronym
+      - upstream_specified_copy
+    exception_refs:
+      - "harness-runtime/harness/artifacts/{{mission_id}}/interaction/interaction-spec/interaction-contract.md#一致性体检"
+  # visual_artifacts 只描述可视化证据 manifest；原型主入口的唯一真源是
+  # control_contract.prototype.primary_entry，本块不再重复 prototype_entry。
+  visual_artifacts:
+    manifest: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/visual-interaction/visual-interaction-manifest.json"
+    required: true
+  user_acceptance:
+    checkpoint: prototype_confirmation
+    description: "用户确认长期原型工程主入口覆盖本次原型 / 交互阶段的关键路径、状态和文案。"
+    required: true
+    evidence_ref: "harness-runtime/harness/traces/{{mission_id}}/user-prototype-confirmation.md"
+    approval_type: checkpoint

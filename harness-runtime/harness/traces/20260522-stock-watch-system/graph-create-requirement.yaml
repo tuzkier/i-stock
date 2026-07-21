@@ -1,0 +1,11 @@
+operation_id: OP-CREATE-REQ-STOCK-WATCH-SYSTEM
+type: create_node
+mission_id: 20260522-stock-watch-system
+target:
+  id: REQ-STOCK-WATCH-SYSTEM
+  kind: requirement
+  title: 多市场股票看盘系统
+  lane: requirement-lane
+  stage: intake
+  status: ready
+reason: "Formal intake for a personal local stock watch system covering US, HK, CN, and KR markets."

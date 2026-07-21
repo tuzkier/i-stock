@@ -1,0 +1,282 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [subtype, reviewers, findings]
+    properties:
+      type:
+        const: evidence_contract
+      subtype:
+        const: review_evidence
+      reviewers:
+        type: array
+        minItems: 1
+      findings:
+        type: array
+      effectiveness_review:
+        # code-review-improvement-plan M2-M4: round lifecycle tracking
+        type: object
+        properties:
+          pending_reviewer_recheck:
+            type: boolean
+            description: "Set true by mark_pending_recheck hook after code edits; cleared when reviewer verdicts are accepted."
+          rounds_used:
+            type: integer
+            minimum: 0
+            description: "Number of completed review rounds (incremented by `harness contract add-round`)."
+          rounds:
+            type: array
+            description: "Per-round verdict archive written by `harness contract add-round`."
+          disputes:
+            # 改造④：worker 对 reviewer HOLD 的结构化反驳通道（区别于"修复循环"——
+            # 修复循环计 worker 反复改；反驳通道是 worker 认为问题不成立、带证据不改）。
+            # 每条反驳必须带文档集内证据引用（evidence_refs 非空），空口反驳无效、转回修复循环。
+            # 有界轮次（默认 2 轮）后仍不一致 → 升级 Decision Gate 仲裁。
+            type: array
+            items:
+              type: object
+              required: [gap_id, role, worker_rebuttal, evidence_refs, round]
+              properties:
+                gap_id:
+                  type: string
+                role:
+                  type: string          # 被反驳的 reviewer 角色
+                worker_rebuttal:
+                  type: string
+                evidence_refs:
+                  # 必须非空：反驳必须引用文档集内证据（测试 / 代码 / ID / 命令输出）。
+                  type: array
+                  minItems: 1
+                round:
+                  type: integer
+                  minimum: 1
+                status:
+                  # open=待 reviewer 回应；withdrawn_by_reviewer=reviewer 认可反驳撤 gap；
+                  # conceded_by_worker=worker 接受转修复；escalated=升级 Decision Gate 仲裁。
+                  enum: [open, withdrawn_by_reviewer, conceded_by_worker, escalated]
+      role_verdicts:
+        type: array
+        items:
+          type: object
+          required: [id, role, verdict, reviewed_obligations, review_basis, matrix, findings, blocking_gaps, non_blocking_risks]
+          properties:
+            id:
+              type: string
+            role:
+              type: string
+            verdict:
+              enum: [PASS, HOLD, PASS_WITH_RISK, BLOCKED]
+            reviewed_obligations:
+              type: array
+              minItems: 1
+            review_basis:
+              type: object
+            matrix:
+              type: array
+            findings:
+              type: array
+            blocking_gaps:
+              # 宽松 item：兼容旧的扁平 string 写法，或升级为 object。
+              # object 的 category 为可选 string，且保持开放枚举——
+              # 不写死封闭值，阶段特有 category 必须继续放行。
+              type: array
+              items:
+                oneOf:
+                  - type: string
+                  - type: object
+                    properties:
+                      category:
+                        type: string
+                      # gap_root：缺口根因归属（"该谁补"轴）。缺省视为 self（当前阶段自修复）。
+                      # upstream 表示根因在某个前序 agent 阶段，由控制面消费触发自动回退。
+                      # clarification 表示根因是"输入类材料从未提供该事实"，任何重导都补不出，
+                      # 必须由人澄清；由控制面汇总成澄清批次问人（见 reviewer_clarification_signal）。
+                      # 开放枚举：只约束已知三值，不写死封闭以保持非破坏。
+                      gap_root:
+                        enum: [self, upstream, clarification]
+                      # upstream_stage：gap_root=upstream 时填写的最近前序阶段名，
+                      # 取值为标准阶段标识（intake/prd/solution/technical_analysis/
+                      # interaction/breakdown 等）。
+                      upstream_stage:
+                        type: string
+            non_blocking_risks:
+              type: array
+            dispatch:
+              # M4.2 — Captures who actually executed the role and how. Required
+              # for reviewer-class roles so the gate runner can refuse PASS
+              # verdicts whose execution_mode degraded to main_agent_fallback
+              # (main agent self-reviewing its own work).
+              type: object
+              required: [subagent_id, model, execution_mode, started_at, completed_at]
+              properties:
+                subagent_id:
+                  type: string
+                model:
+                  type: string
+                execution_mode:
+                  enum: [spawn_agent, main_agent_fallback, sequential]
+                started_at:
+                  type: string
+                  format: date-time
+                completed_at:
+                  type: string
+                  format: date-time
+      toolchain_probe:
+        type: object
+        required: [artifact, status, signals]
+        properties:
+          artifact:
+            type: string
+          status:
+            enum: [PASS, WARN, FAIL]
+          signals:
+            type: array
+      toolchain_status:
+        type: object
+        required: [plan_artifact, status_artifact, status]
+        properties:
+          plan_artifact:
+            type: string
+          run_artifact:
+            type: string
+          status_artifact:
+            type: string
+          status:
+            enum: [PASS, WARN, FAIL, BLOCKED]
+          missing_capabilities:
+            type: array
+          decision_gate_reasons:
+            type: array
+      e2e_status:
+        type: object
+        required: [plan_artifact, status_artifact, status]
+        properties:
+          plan_artifact:
+            type: string
+          run_artifact:
+            type: string
+          status_artifact:
+            type: string
+          status:
+            enum: [PASS, WARN, FAIL, BLOCKED]
+          missing_capabilities:
+            type: array
+          decision_gate_reasons:
+            type: array
+          artifacts:
+            type: object
+            properties:
+              html_report:
+                type: string
+              trace:
+                type: array
+              video:
+                type: array
+              screenshots:
+                type: array
+              ui_diff:
+                type: array
+          flaky_signals:
+            type: array
+          skipped_tests:
+            type: array
+      tdd_review:
+        type: object
+        required: [verdict, role_boundary, adequacy_matrix, blocking_gaps, non_blocking_risks]
+        properties:
+          verdict:
+            enum: [PASS, HOLD, PASS_WITH_RISK]
+          probe_artifact:
+            type: string
+          toolchain_status_artifact:
+            type: string
+          toolchain_signal_handling:
+            type: object
+          role_boundary:
+            type: object
+          adequacy_matrix:
+            type: array
+          blocking_gaps:
+            # 宽松 item：string（旧扁平写法）或 object（category 可选、开放枚举）。
+            type: array
+            items:
+              oneOf:
+                - type: string
+                - type: object
+                  properties:
+                    category:
+                      type: string
+                    # 见 role_verdicts.blocking_gaps：上游归因信号字段（可选、开放枚举）。
+                    gap_root:
+                      enum: [self, upstream, clarification]
+                    upstream_stage:
+                      type: string
+          non_blocking_risks:
+            type: array
+      e2e_review:
+        type: object
+        required: [verdict, methodology_ref, role_boundary, coverage_matrix, blocking_gaps, non_blocking_risks]
+        properties:
+          verdict:
+            enum: [PASS, HOLD, PASS_WITH_RISK]
+          methodology_ref:
+            type: string
+          e2e_status_artifact:
+            type: string
+          artifact_handling:
+            type: object
+          role_boundary:
+            type: object
+          coverage_matrix:
+            type: array
+            items:
+              type: object
+              required:
+                - target
+                - obligation_refs
+                - e2e_test_refs
+                - user_result_assertion
+                - data_reality
+                - negative_path
+                - realtime_or_refresh
+                - reliability
+                - diagnostics
+                - conclusion
+              properties:
+                target:
+                  type: string
+                obligation_refs:
+                  type: array
+                e2e_test_refs:
+                  type: array
+                user_result_assertion:
+                  type: string
+                data_reality:
+                  type: string
+                negative_path:
+                  type: string
+                realtime_or_refresh:
+                  type: string
+                reliability:
+                  type: string
+                diagnostics:
+                  type: string
+                conclusion:
+                  type: string
+          blocking_gaps:
+            # 宽松 item：string（旧扁平写法）或 object（category 可选、开放枚举）。
+            type: array
+            items:
+              oneOf:
+                - type: string
+                - type: object
+                  properties:
+                    category:
+                      type: string
+                    # 见 role_verdicts.blocking_gaps：上游归因信号字段（可选、开放枚举）。
+                    gap_root:
+                      enum: [self, upstream, clarification]
+                    upstream_stage:
+                      type: string
+          non_blocking_risks:
+            type: array

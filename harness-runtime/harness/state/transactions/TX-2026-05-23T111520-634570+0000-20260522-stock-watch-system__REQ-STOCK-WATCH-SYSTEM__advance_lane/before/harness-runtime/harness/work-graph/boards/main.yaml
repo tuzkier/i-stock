@@ -1,0 +1,13 @@
+schema_version: 1
+generated: true
+generated_at: '2026-05-23T10:25:31.571217+00:00'
+lanes:
+  requirement-lane: []
+  product-definition-lane:
+  - REQ-STOCK-WATCH-SYSTEM
+  solution-lane: []
+  technical-analysis-lane: []
+  breakdown-lane: []
+  development-lane: []
+  verification-lane: []
+  delivery-lane: []

@@ -1,0 +1,27 @@
+{
+  "_comment": "Stage-4 design+solution hook manifest. install pipeline materializes scripts to .claude/hooks/design.solution/<script>.py and merges hook entries into .claude/settings.json. Stage 单一性 + 修复必重审 + gate exit gating per plan §M3.1.",
+  "stage": "design.solution",
+  "hooks": [
+    {
+      "id": "design-solution-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set solution.contract.yaml pending_reviewer_recheck=true after solution.md edit so the pre-advance check fires."
+    },
+    {
+      "id": "design-solution-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when solution.contract.yaml has pending_reviewer_recheck=true."
+    },
+    {
+      "id": "design-solution-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block harness mission stage complete solution when gate run has not passed."
+    }
+  ]
+}

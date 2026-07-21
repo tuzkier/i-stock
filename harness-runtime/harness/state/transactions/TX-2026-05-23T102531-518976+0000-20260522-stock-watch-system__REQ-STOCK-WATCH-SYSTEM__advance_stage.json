@@ -1,0 +1,147 @@
+{
+  "transaction_id": "TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage",
+  "status": "committed",
+  "started_at": "2026-05-23T10:25:31.519107+00:00",
+  "ended_at": "2026-05-23T10:25:31.641315+00:00",
+  "mission_id": "20260522-stock-watch-system",
+  "operation_id": "20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmpduh37yyh.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "stage_files",
+      "changed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl"
+      ]
+    },
+    {
+      "id": "commit",
+      "committed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl"
+      ]
+    },
+    {
+      "id": "post_commit_check",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "cleanup_staging",
+      "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/staging",
+      "status": "removed"
+    }
+  ],
+  "rollback": {
+    "snapshots": [
+      {
+        "original": "harness-runtime/harness/mission-status.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/mission-status.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/_index.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/_index.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/boards/main.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/boards/main.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T102531-518976+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage/before/harness-runtime/harness/work-graph/operations.log.jsonl"
+      }
+    ]
+  }
+}

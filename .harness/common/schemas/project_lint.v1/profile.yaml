@@ -1,0 +1,42 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required: [schema_version, enabled, mode]
+properties:
+  schema_version:
+    const: 1
+  enabled:
+    type: boolean
+  mode:
+    enum: [blocking, advisory]
+  reports:
+    type: object
+  changed_files:
+    type: object
+    properties:
+      protected_paths:
+        type: array
+        items:
+          type: string
+  commands:
+    type: object
+    properties:
+      required_for_code_change:
+        type: array
+        items:
+          type: string
+      accepted_results:
+        type: array
+        items:
+          type: string
+  code_change:
+    type: object
+  agent_instructions:
+    type: object
+  trace:
+    type: object
+  external_commands:
+    type: object
+    properties:
+      items:
+        type: array
+additionalProperties: true

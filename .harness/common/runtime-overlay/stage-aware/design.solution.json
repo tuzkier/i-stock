@@ -1,0 +1,25 @@
+{
+  "_comment": "Stage-4 M1.3: design+solution stage overlay. When mission slice control_plane.stage='solution', this overlay merges into .claude/settings.json. Stage 单一性 deny: in solution lane, writes to tech-design.md / interaction.md / interaction-spec/** / visual-interaction/** are physically blocked. solution.contract.yaml direct write is denied — contract writes go through harness-cli.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/solution.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/solution.contract.yaml)",
+      "Write(harness-runtime/harness/artifacts/*/technical-analysis/tech-design.md)",
+      "Edit(harness-runtime/harness/artifacts/*/technical-analysis/tech-design.md)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/interaction.md)",
+      "Edit(harness-runtime/harness/artifacts/*/interaction/interaction.md)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/interaction-spec/**)",
+      "Edit(harness-runtime/harness/artifacts/*/interaction/interaction-spec/**)",
+      "Write(harness-runtime/harness/artifacts/*/interaction/visual-interaction/**)",
+      "Edit(harness-runtime/harness/artifacts/*/interaction/visual-interaction/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/tech-design.contract.yaml)",
+      "Write(harness-runtime/harness/stages/*/contracts/interaction.contract.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/artifacts/*/solution/solution.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

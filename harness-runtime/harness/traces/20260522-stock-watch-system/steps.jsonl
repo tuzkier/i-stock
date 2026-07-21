@@ -1,0 +1,45 @@
+{"event": "log-init", "mission_id": "20260522-stock-watch-system", "stage": "intake", "timestamp": "2026-05-22T22:26:56.160418+08:00"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-1", "timestamp": "2026-05-22T22:27:02.283760+08:00"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "git-prepare", "timestamp": "2026-05-22T22:27:54.869794+08:00", "note": "git_op_skipped: 当前目录不是 Git 仓库，本 mission 按 downgraded 策略跳过 mission branch 准备。"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "git-prepare", "timestamp": "2026-05-22T22:27:55.102220+08:00", "note": "git_op_skipped: not a git repository", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "graph-bind", "timestamp": "2026-05-22T22:28:39.521450+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "graph-bind", "timestamp": "2026-05-22T22:28:58.154953+08:00", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-1", "timestamp": "2026-05-22T22:28:58.579135+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-2", "timestamp": "2026-05-22T22:29:15.243252+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-2", "timestamp": "2026-05-22T22:33:16.903844+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-3", "timestamp": "2026-05-22T22:33:34.379304+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-3", "timestamp": "2026-05-22T22:33:35.071841+08:00", "note": "governance_assessment from intent-framing: high / 受控推进; required checkpoints discovery, prd, solution, acceptance_result", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-4", "timestamp": "2026-05-22T22:33:35.630706+08:00"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-6", "timestamp": "2026-05-22T22:42:35.604630+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-5", "timestamp": "2026-05-22T22:42:35.613994+08:00", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-6", "timestamp": "2026-05-22T22:50:41.428118+08:00", "note": "user requested scope/constraint adjustment: prefer existing open-source libraries before custom implementation", "status": "blocked"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-5", "timestamp": "2026-05-22T22:50:50.667117+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "contract-patch-list-metadata", "timestamp": "2026-05-22T22:54:09.879715+08:00", "note": "contract patch cannot target role_verdicts list item field; used scoped manual metadata correction for RV-INTAKE-002 dispatch.model after CLI invalid_contract_patch", "status": "blocked"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-5-review", "timestamp": "2026-05-22T22:54:22.131148+08:00", "rounds": 2, "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-5", "timestamp": "2026-05-22T22:54:30.304208+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "phase-6", "timestamp": "2026-05-22T22:54:30.314501+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "phase-6", "timestamp": "2026-05-22T23:03:10.653949+08:00", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "stage-exit", "timestamp": "2026-05-22T23:03:10.666465+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "discovery-review", "timestamp": "2026-05-22T23:16:58.236555+08:00"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "discovery-review", "timestamp": "2026-05-22T23:18:42.176529+08:00", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "discovery-user-confirmation", "timestamp": "2026-05-22T23:22:35.776173+08:00", "note": "User confirmed discovery findings and asked to continue.", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "discovery", "timestamp": "2026-05-22T23:23:35.111086+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "prd-business-domain-modeler", "timestamp": "2026-05-22T23:27:22.625476+08:00", "phase": "prd", "note": "dispatch business-domain-modeler for BO Registry"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd-business-domain-modeler", "timestamp": "2026-05-22T23:30:32.705722+08:00", "phase": "prd", "note": "BO Registry completed by business-domain-modeler", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "prd-acceptance-scenario-designer", "timestamp": "2026-05-22T23:31:09.967785+08:00", "phase": "prd", "note": "dispatch acceptance-scenario-designer for BUC and AC"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd-acceptance-scenario-designer", "timestamp": "2026-05-22T23:34:09.289923+08:00", "phase": "prd", "note": "BUC and AC package completed by acceptance-scenario-designer", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "prd-product-scope-strategist", "timestamp": "2026-05-22T23:34:25.299383+08:00", "phase": "prd", "note": "dispatch product-scope-strategist for scope decisions"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd-product-scope-strategist", "timestamp": "2026-05-22T23:36:29.112015+08:00", "phase": "prd", "note": "scope strategy completed by product-scope-strategist", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "prd-senior-product-expert", "timestamp": "2026-05-22T23:36:59.017896+08:00", "phase": "prd", "note": "dispatch senior-product-expert for product definition package"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd-senior-product-expert", "timestamp": "2026-05-22T23:43:54.685387+08:00", "phase": "prd", "note": "product definition package completed with recorded concerns", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "prd-product-definition-reviewer-round-1", "timestamp": "2026-05-22T23:51:15.042715+08:00", "phase": "prd", "rounds": 1, "note": "dispatch readonly product-definition-reviewer"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd-product-definition-reviewer-round-1", "timestamp": "2026-05-22T23:53:59.304101+08:00", "phase": "prd", "rounds": 1, "note": "reviewer HOLD: contract/domain drift, rule traceability, archived-alert lifecycle", "status": "blocked"}
+{"event": "step-enter", "mission_id": "20260522-stock-watch-system", "step": "prd-product-definition-reviewer-round-2", "timestamp": "2026-05-22T23:57:18.762767+08:00", "phase": "prd", "rounds": 2, "note": "redispatch readonly reviewer after HOLD fixes"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd-product-definition-reviewer-round-2", "timestamp": "2026-05-22T23:59:29.223402+08:00", "phase": "prd", "rounds": 2, "note": "reviewer PASS; prior HOLD gaps closed", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260522-stock-watch-system", "step": "prd", "timestamp": "2026-05-23T00:02:17.078089+08:00", "phase": "prd", "note": "PRD contract, reviewer, self-checks, and gate passed; awaiting human checkpoint", "status": "pass"}
+{"event": "round-enter", "mission_id": "20260522-stock-watch-system", "round": 1, "timestamp": "2026-05-23T22:57:48.175747+08:00", "note": "T001 code-review reviewer loop with correctness/tdd/architecture/e2e/agent-behavior"}
+{"event": "round-enter", "mission_id": "20260522-stock-watch-system", "round": 1, "timestamp": "2026-05-24T09:18:42.952079+08:00"}
+{"event": "round-enter", "mission_id": "20260522-stock-watch-system", "round": 1, "timestamp": "2026-06-06T19:51:10.796849+08:00"}
+{"event": "stage-init", "mission_id": "20260522-stock-watch-system", "stage": "code-review", "timestamp": "2026-06-06T19:51:10.806570+08:00"}
+{"event": "stage-init", "mission_id": "20260522-stock-watch-system", "stage": "verify", "timestamp": "2026-06-07T13:46:04.985423+08:00"}
+{"event": "stage-init", "mission_id": "20260522-stock-watch-system", "stage": "delivery", "timestamp": "2026-06-07T13:59:47.888058+08:00"}

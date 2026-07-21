@@ -1,0 +1,7 @@
+operation_id: 20260720-alibaba-trade-signals__REQ-ALIBABA-TRADE-SIGNALS__advance_stage
+type: advance_stage
+node_id: REQ-ALIBABA-TRADE-SIGNALS
+mission_id: 20260720-alibaba-trade-signals
+lane: requirement-lane
+from_stage: intake
+to_stage: discovery

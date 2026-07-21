@@ -1,0 +1,68 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+# retrospective-improvement-plan M4.2: typed schema for agent-eval drift reports.
+# Consumed by harness agent-eval drift and retrospective Step 6.
+title: agent_eval_drift_contract
+description: >
+  Typed report produced by `harness agent-eval drift`. Records baseline/current
+  mission pass rates, delta, threshold, and any detected regressions.
+type: object
+required:
+  - current_mission
+  - status
+properties:
+  current_mission:
+    type: string
+    description: "Mission id being evaluated"
+  baseline_mission:
+    type: ["string", "null"]
+    description: "Mission id used as comparison baseline; null when no baseline provided"
+  current_pass_rate:
+    type: ["number", "null"]
+    minimum: 0.0
+    maximum: 1.0
+    description: "Pass rate extracted from current mission agent-eval-report.md (0.0-1.0)"
+  baseline_pass_rate:
+    type: ["number", "null"]
+    minimum: 0.0
+    maximum: 1.0
+    description: "Pass rate from baseline mission agent-eval-report.md (0.0-1.0)"
+  delta:
+    type: ["number", "null"]
+    description: "current_pass_rate - baseline_pass_rate; negative means regression"
+  threshold:
+    type: number
+    minimum: 0.0
+    maximum: 1.0
+    default: 0.1
+    description: "Regression threshold; delta below -threshold triggers a regression finding"
+  status:
+    type: string
+    enum:
+      - PASS
+      - WARN
+      - FAIL
+    description: "WARN when regression detected or baseline missing; PASS when within threshold"
+  regressions:
+    type: array
+    description: "List of regression findings"
+    items:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - pass_rate_regression
+            - scenario_class_regression
+            - new_failure_class
+        delta:
+          type: ["number", "null"]
+        threshold:
+          type: ["number", "null"]
+        message:
+          type: string
+  recommendation:
+    type: string
+    description: "Optional free-text recommendation when regressions detected"

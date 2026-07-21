@@ -1,0 +1,100 @@
+id: TASK-STOCK-WATCH-T001
+kind: task
+title: 多市场自选归一、列表摘要与归档暂停
+lane: development-lane
+stage: code-review
+status: ready
+parent_task_id: T001
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T001-A1
+- T001-A2
+dependencies: []
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+updated_at: '2026-05-23T14:39:49.257612+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__TASK-STOCK-WATCH-T001__advance_stage
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 多市场自选与归一预览
+    scenario: 添加前预览归一结果
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/domain/market-normalization.ts
+      test_refs:
+      - tests/unit/watchlist/normalization.spec.ts
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 多市场自选与归一预览
+    scenario: 歧义输入不得静默写入
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/domain/market-normalization.ts
+      test_refs:
+      - tests/unit/watchlist/normalization.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 自选列表状态摘要
+    scenario: 列表显示行情摘要
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/types.ts
+      test_refs:
+      - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 自选列表状态摘要
+    scenario: 归档暂停提醒
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/domain/watchlist-state.ts
+      - src/lib/storage.ts
+      test_refs:
+      - tests/unit/watchlist/archive.spec.ts
+      - tests/unit/watchlist/storage-replay.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+e2e_obligation:
+  risk_level: medium
+  user_surfaces:
+  - web_ui
+  - realtime
+  required_capabilities:
+  - browser_flow
+  - user_visible_assertion
+  evidence_required:
+  - e2e_run_report
+  - assertion_summary
+  - recorded_manual_steps
+  evidence_refs:
+  - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+  - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+stop_if:
+- changes_outside_authorized_paths
+- design_constraint_conflict
+- new_external_dependency
+- new_public_behavior_without_delta_spec
+artifact:
+  node_id: TASK-STOCK-WATCH-T001
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md
+  source_contract_artifact: ''
+  canonical_contract: ''
+  supplementary_artifacts: []
+  artifact_state:
+    status: accepted
+    accepted_by_mission: 20260522-stock-watch-system
+    accepted_at: '2026-05-23T14:39:49.290668+00:00'
+    supersedes: []
+    superseded_by: null
+  history: []

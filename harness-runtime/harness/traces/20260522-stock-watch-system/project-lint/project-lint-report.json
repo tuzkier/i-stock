@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "control": "project_lint",
+  "status": "WARN",
+  "mode": "blocking",
+  "gate_effect": "warn",
+  "generated_at": "2026-06-06T09:46:36.986220+00:00",
+  "config": "/Users/hanbin/Workspace/AI/MyInvestment/project-knowledge/engineering/policies/project-lint.yaml",
+  "mission_id": "20260522-stock-watch-system",
+  "changed_files": [],
+  "command_evidence_count": 0,
+  "command_evidence_refs": [],
+  "prototype_manifest": "harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json",
+  "prototype_manifest_mtime": 1779536147.367554,
+  "findings": [
+    {
+      "level": "WARN",
+      "rule_id": "P003",
+      "category": "agent_instructions",
+      "message": "Agent instruction file lacks project guidance keywords for: test, delivery.",
+      "remediation": "Update AGENTS.md so future agents can find setup commands, test commands, code style, and delivery checks without rediscovery.",
+      "paths": [
+        "AGENTS.md"
+      ]
+    }
+  ]
+}

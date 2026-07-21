@@ -1,0 +1,54 @@
+patches:
+  - target: control_contract.role_verdicts
+    op: set
+    value:
+      - id: RV-PRD-001
+        role: product-definition-reviewer
+        model: gpt-5.4
+        verdict: PASS
+        dispatch:
+          subagent_id: 019e5068-14ac-7953-8c19-bc50fe13ded7
+          model: gpt-5.4
+          execution_mode: spawn_agent
+          started_at: "2026-05-22T23:57:18+08:00"
+          completed_at: "2026-05-22T23:59:29+08:00"
+        reviewed_obligations:
+          - OBL-PRD-001
+        review_basis:
+          - product-definition.md
+          - product-evidence.md
+          - product-domain-model.md
+          - business-objects.md
+          - business-use-cases.md
+          - scope-strategy.md
+          - prd.contract.yaml
+          - mission-contract.md
+          - discovery-brief.md
+        round: 2
+        blocking_gaps_closed:
+          - id: contract_domain_model_drift
+            status: closed
+            rationale: domain_model 摘要与领域模型正文在 bounded contexts、aggregates、commands、events、invariants 上一致，且 traceability 已闭环。
+          - id: rule_traceability_misalignment
+            status: closed
+            rationale: RULE-03~RULE-10 已与 Product Rules、FR/NFR、BUC、Domain Traceability 重新对齐。
+          - id: missing_lifecycle_decision_for_archived_alerts
+            status: closed
+            rationale: archived WatchSymbol 与 AlertRule 的 suspended_by_archive 生命周期已落实到 BO、BUC、rule、command、event、invariant、state machine、permission。
+        residual_risks:
+          - id: project_context_evidence_gap
+            severity: medium
+            note: project-context.md 缺失已记录为 degradation，暂不阻断 PRD。
+          - id: gitnexus_evidence_gap
+            severity: medium
+            note: GitNexus 不可用，棕地影响面需在后续阶段补证。
+          - id: chartlayout_restore_granularity_pending
+            severity: medium
+            note: SD-25 已记录为 Decision Needed。
+          - id: marketdatasource_visibility_density_pending
+            severity: low
+            note: SD-26 已记录为 Decision Needed。
+          - id: mts_reason_taxonomy_pending
+            severity: medium
+            note: SD-27 已记录为 Decision Needed。
+        summary: 第 1 轮 3 个 blocking gaps 均已关闭，PRD 产品定义包达到可决策、可验收、可追溯标准，可进入下游阶段。

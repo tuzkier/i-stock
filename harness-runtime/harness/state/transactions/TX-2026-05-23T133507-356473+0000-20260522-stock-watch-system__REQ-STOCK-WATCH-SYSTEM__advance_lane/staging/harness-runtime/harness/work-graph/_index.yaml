@@ -1,0 +1,13 @@
+schema_version: 1
+generated: true
+generated_at: '2026-05-23T13:35:07.504266+00:00'
+nodes:
+  REQ-STOCK-WATCH-SYSTEM:
+    kind: requirement
+    title: 多市场股票看盘系统
+    lane: development-lane
+    status: ready
+    priority: null
+    updated_at: '2026-05-23T13:35:07.435942+00:00'
+    inputs: []
+    outputs: []

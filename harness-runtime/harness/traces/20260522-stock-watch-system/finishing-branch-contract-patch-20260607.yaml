@@ -1,0 +1,73 @@
+patches:
+- target: branch_status
+  op: set
+  value:
+    mission_branch: null
+    base_branch: main
+    dirty: false
+    active_stage_worktrees: []
+    blocked_stage_worktrees: []
+    note: 项目目录不是 Git repo，mission_branch 未配置。
+- target: release_readiness
+  op: set
+  value:
+    delivery_package: harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/delivery-package.md
+    acceptance_result: harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/acceptance-result.md
+    verification_report_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+    retrospective: harness-runtime/harness/artifacts/20260522-stock-watch-system/retrospective/retrospective.md
+    command_evidence_ids:
+    - CMD-VERIFY-BUILD
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+- target: test_evidence
+  op: set
+  value:
+    mode: reused_verification_evidence
+    command: CMD-VERIFY-BUILD + CMD-VERIFY-UNIT-REPLAY + CMD-VERIFY-E2E-RERUN
+    exit_code: 0
+    evidence_id: CMD-VERIFY-E2E-RERUN
+    evidence_ids:
+    - CMD-VERIFY-BUILD
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+- target: close_choice
+  op: set
+  value:
+    strategy: kept
+    selected_by: agent
+    approval_id: APR-20260607-005
+    reason: 非 Git 仓且 mission_branch 未配置；只可非破坏性保留当前工作区和 Harness artifacts。
+- target: git_ops
+  op: set
+  value:
+  - op: finishing-branch.execute keep
+    executed: false
+    exit_code: 1
+    status: failed
+    reason: mission_branch not found in mission-status.yaml
+  - op: mission.close kept
+    executed: true
+    exit_code: 0
+    status: pass
+    reason: 无 Git branch 可 merge/push/discard，按 kept 记录非破坏性关闭。
+- target: pr_body
+  op: set
+  value:
+    required: false
+    source_artifacts:
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/delivery-package.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/retrospective/retrospective.md
+    pr_url: ''
+- target: mission_close
+  op: set
+  value:
+    branch_closed: false
+    close_strategy: kept
+    close_evidence_id: mission-close-kept-20260607
+    kept_reason: 项目目录不是 Git repo，mission_branch 未配置；交付已由用户确认并保留在当前工作区与 Harness artifacts，无法执行 merge/push/discard Git 收尾。
+- target: effectiveness_review
+  op: set
+  value:
+    last_gate_run_status: PASS_WITH_WARNINGS
+    notes:
+    - retrospective gate 和 delivery gate 均因既存 project_lint WARN 以 allow-warnings 推进。

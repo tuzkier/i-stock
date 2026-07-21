@@ -1,0 +1,14 @@
+id: REQ-STOCK-WATCH-SYSTEM
+kind: requirement
+title: 多市场股票看盘系统
+lane: requirement-lane
+stage: discovery
+status: ready
+inputs: []
+outputs: []
+relations: {}
+updated_at: '2026-05-22T15:03:16.911616+00:00'
+trace:
+  created_by_mission: 20260522-stock-watch-system
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage

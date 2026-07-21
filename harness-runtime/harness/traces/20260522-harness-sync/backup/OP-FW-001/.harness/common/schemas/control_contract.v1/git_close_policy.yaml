@@ -1,0 +1,91 @@
+# finishing-branch-improvement-plan M4.3: git_close_policy schema.
+# Defines allowed git command families per close strategy.
+# Referenced by hooks, overlay, and lint rules.
+
+schema_name: git_close_policy
+schema_version: 1
+description: >
+  Policy mapping close strategies to their allowed git command families.
+  Used by finishing-branch hooks and lint to validate that only
+  strategy-appropriate git operations are executed.
+
+strategies:
+  merge_to_base:
+    allowed_commands:
+      - git checkout
+      - git pull
+      - git merge
+      - git branch -d      # soft delete only
+      - git worktree prune
+    forbidden_commands:
+      - git push --force
+      - git push -f
+      - git reset --hard
+      - git branch -D      # force delete
+      - git worktree remove
+    notes: >
+      merge_to_base: merge mission branch to base, soft-delete mission branch,
+      prune worktrees. Force-delete and reset are always forbidden.
+
+  push_pr:
+    allowed_commands:
+      - git push -u origin
+    forbidden_commands:
+      - git push --force
+      - git push -f
+      - git push --force-with-lease
+      - git reset --hard
+      - git branch -D
+      - git worktree remove
+    notes: >
+      push_pr: push mission branch to origin; PR creation is via gh cli.
+      No branch deletion or reset allowed.
+
+  keep:
+    allowed_commands: []
+    forbidden_commands:
+      - git push --force
+      - git push -f
+      - git reset --hard
+      - git branch -D
+      - git branch -d
+      - git worktree remove
+    notes: >
+      keep: no git operations; mission branch is retained as-is.
+
+  discard:
+    allowed_commands:
+      - git checkout
+      - git branch -D      # only with discard confirmation approval
+      - git worktree remove --force  # only via harness finishing-branch cleanup
+    forbidden_commands:
+      - git push --force
+      - git push -f
+      - git reset --hard
+    notes: >
+      discard: requires strict discard confirmation approval before
+      branch -D and worktree remove. Force push and hard reset are
+      still forbidden even in discard mode.
+
+# Lint rule codes emitted by harness lint when policy is violated:
+lint_rules:
+  - id: W-finishing-force-push
+    severity: FAIL
+    description: >
+      Force push detected without a boundary approval id in approvals.json.
+      Even if the push was already executed, the approval record is required.
+  - id: W-finishing-close-strategy-mismatch
+    severity: FAIL
+    description: >
+      finishing-branch.contract.yaml mission_close.close_strategy does not match
+      mission-status.yaml git.close_strategy.
+  - id: W-finishing-direct-runtime-mutation
+    severity: FAIL
+    description: >
+      Trace log contains a direct Edit of mission-status.yaml outside
+      of harness mission close invocation.
+  - id: W-finishing-readiness-missing
+    severity: FAIL
+    description: >
+      merge_to_base or push_pr strategy attempted without delivery-package.md
+      or verification evidence in release_readiness.

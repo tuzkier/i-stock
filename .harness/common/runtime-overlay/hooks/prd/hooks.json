@@ -1,0 +1,86 @@
+{
+  "_comment": "HarnessV2 prd stage hook manifest. install pipeline reads this and materializes the corresponding .claude/hooks/prd/<script>.py files plus a hooks section in .claude/settings.json.",
+  "stage": "prd",
+  "hooks": [
+    {
+      "id": "prd-check-contract-via-cli",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit",
+      "script": "check_contract_via_cli.py",
+      "purpose": "Block direct Write/Edit of prd.contract.yaml; must use harness contract fill/patch."
+    },
+    {
+      "id": "prd-check-stage-worktree",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_stage_worktree.py",
+      "purpose": "Block product/product-definition.md / spec.md writes outside the prd stage worktree."
+    },
+    {
+      "id": "prd-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set prd.contract.yaml pending_reviewer_recheck=true after product/product-definition.md edit so the pre-advance check fires."
+    },
+    {
+      "id": "prd-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when prd.contract.yaml has pending_reviewer_recheck=true (enforces no-skip-recheck-after-fix HARD-GATE)."
+    },
+    {
+      "id": "prd-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block harness mission stage complete prd when gate run --stage prd has not passed."
+    }
+  ]
+}
+#!/usr/bin/env python3
+"""HarnessV2 prd PreToolUse hook: block direct Write/Edit of prd.contract.yaml.
+
+Contract YAML must only be written through `harness contract fill/patch` commands.
+Direct Edit/Write is blocked to enforce the audit trail.
+
+Exit conventions: 0 = allow; 2 = block.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+_CONTRACT_PATTERN = re.compile(r"contracts/prd\.contract\.yaml$")
+
+
+def main() -> int:
+    try:
+        payload = json.load(sys.stdin)
+    except (json.JSONDecodeError, ValueError):
+        return 0
+
+    tool_name = payload.get("tool_name", "")
+    if tool_name not in ("Write", "Edit", "MultiEdit"):
+        return 0
+
+    tool_input = payload.get("tool_input") or {}
+    file_path = tool_input.get("file_path") or ""
+
+    if _CONTRACT_PATTERN.search(file_path):
+        print(
+            "HarnessV2 prd hook BLOCKED: direct Write/Edit of prd.contract.yaml is not allowed. "
+            "Use `harness contract fill` or `harness contract patch` instead.",
+            file=sys.stderr,
+        )
+        return 2
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

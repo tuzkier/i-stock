@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260522-stock-watch-system",
+  "stage": "verify",
+  "operation": "advance_lane",
+  "from_stage": "verify",
+  "to_stage": "delivery",
+  "decision": "continue_with_warnings",
+  "gate_effect": "warn",
+  "contract_check": {
+    "status": "PASS",
+    "artifact": "harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml",
+    "contract_type": "evidence_contract",
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "contract_valid",
+        "message": "Control Contract integrity checks passed"
+      }
+    ]
+  },
+  "artifacts": {
+    "stage_artifact": "harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md",
+    "contract_artifact": "harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml"
+  },
+  "control_reports": {
+    "status": "WARN",
+    "controls": [
+      {
+        "path": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/traces/20260522-stock-watch-system/project-lint/project-lint-report.json",
+        "control": "project_lint",
+        "status": "WARN",
+        "gate_effect": "warn"
+      }
+    ],
+    "findings": [
+      {
+        "level": "WARN",
+        "code": "control_report_warns_gate",
+        "message": "project_lint gate_effect=warn",
+        "path": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/traces/20260522-stock-watch-system/project-lint/project-lint-report.json"
+      }
+    ]
+  },
+  "required_checkpoints": [],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [],
+    "approved_checkpoints": [
+      "discovery",
+      "prd"
+    ],
+    "missing_checkpoints": [],
+    "approval_ids": {
+      "discovery": "APR-20260522-002",
+      "prd": "APR-20260523-003"
+    },
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml",
+    "primary_nodes": [
+      "TASK-STOCK-WATCH-T002",
+      "TASK-STOCK-WATCH-T003",
+      "TASK-STOCK-WATCH-T004",
+      "TASK-STOCK-WATCH-T005",
+      "TASK-STOCK-WATCH-T006"
+    ],
+    "related_nodes": [
+      "REQ-STOCK-WATCH-SYSTEM"
+    ],
+    "lane": "verification-lane",
+    "stage": "verify",
+    "operation": "advance_lane"
+  },
+  "ai_interpretation": "verify gate 已通过：verification-report contract check PASS、acceptance_trace PASS、true-e2e PASS、detect-contradictions PASS，build/unit-replay/E2E 新鲜证据均为 PASS；仅 alignment 的 CMD-* 证据别名与旧脚本兼容存在可解释 WARN，不影响 verify gate failed_checks。"
+}

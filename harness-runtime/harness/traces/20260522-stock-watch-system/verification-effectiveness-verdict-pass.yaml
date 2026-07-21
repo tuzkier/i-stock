@@ -1,0 +1,87 @@
+role_verdict:
+  id: RV-VERIFY-T001-001
+  role: verification-effectiveness-reviewer
+  verdict: PASS
+  reviewed_obligations:
+    - OBL-VERIFY-T001
+  review_basis:
+    artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+      - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-unit-2026-05-24-01-33-03.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-integration-2026-05-24-01-33-03.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-33-03.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-45-31.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/traces/result/t001-ui-summary-fresh.json
+      - harness-runtime/harness/traces/20260522-stock-watch-system/verification-evidence-graph-fix-patch.yaml
+    programmatic_checks:
+      - control: contract.check-ac-trace
+        status: PASS
+      - control: verify.true-e2e-check
+        status: PASS
+        checked_ui_acs: 5
+      - control: verify.detect-contradictions
+        status: PASS
+  coverage_summary:
+    command_and_result_evidence: PASS
+    required_evidence_id_trace: PASS
+    fresh_ui_primary_evidence: PASS
+    traceability_matrix: PASS
+    stale_auxiliary_status_handling: PASS
+  matrix:
+    - scenario: 添加前预览归一结果
+      ac: AC-01
+      verdict: PASS
+      evidence:
+        - CMD-UNIT-001
+        - CMD-E2E-001
+        - CMD-E2E-FRESH-001
+        - EV-RESULT-NORMALIZE-001
+    - scenario: 歧义输入不得静默写入
+      ac: AC-01
+      verdict: PASS
+      evidence:
+        - CMD-UNIT-001
+        - CMD-E2E-001
+        - CMD-E2E-FRESH-001
+        - EV-RESULT-AMBIGUITY-001
+        - EV-RESULT-MUTATION-001
+    - scenario: 列表显示行情摘要
+      ac: AC-01
+      verdict: PASS
+      evidence:
+        - CMD-E2E-FRESH-001
+        - EV-RESULT-SUMMARY-001
+    - scenario: 归档暂停提醒
+      ac: AC-05
+      verdict: PASS
+      evidence:
+        - CMD-UNIT-001
+        - CMD-E2E-001
+        - CMD-E2E-FRESH-001
+        - EV-RESULT-ARCHIVE-001
+    - scenario: 恢复已归档标的与提醒意图
+      ac: AC-05
+      verdict: PASS
+      evidence:
+        - CMD-UNIT-001
+        - CMD-E2E-001
+        - CMD-E2E-FRESH-001
+        - EV-RESULT-RESTORE-001
+  summary: >
+    T001 下 AC-01/AC-05 的 5 个 pass 场景现已具备可采信且充分的 command + result evidence。
+    verification contract 中 required_evidence_id 仅引用 execution brief 已定义的 re-T001-2/3/4；
+    traceability_matrix、evidence_refs、ac_trace 已与当前 fresh UI 证据
+    (CMD-E2E-FRESH-001 / t001-ui-summary-fresh.json) 对齐；e2e-status.json 已明确降级为
+    auxiliary_stale，未再作为本轮 primary UI evidence。
+  blocking_gaps: []
+  non_blocking_risks:
+    - CMD-BUILD-001 对 re-T001-2 的语义挂载偏松，但未进入当前 AC 核心证据链。
+    - mutation-report.md 更适合作为 cross-check，后续若继续复审建议补更显式的新鲜度标记。
+  dispatch:
+    subagent_id: 019e57b0-f759-7e91-8c2e-f451f89ee1cc
+    model: gpt-5.4
+    execution_mode: spawn_agent
+    started_at: "2026-05-24T01:56:00Z"
+    completed_at: "2026-05-24T01:58:42Z"

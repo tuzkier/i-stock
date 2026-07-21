@@ -1,0 +1,18 @@
+{
+  "_comment": "breakdown-improvement-plan M1.3 stage-aware overlay. Focused on hard boundaries unique to the breakdown stage: forbid direct Write/Edit of execution-brief.contract.yaml (the contract YAML must only be reached via `harness contract fill/patch/add-verdict`) and lock config files. Allow Edit/Write of execution-brief.md plus the harness CLI bash surface. NOTE (偏离修正): plan §M1.3 originally enumerated solution.md / interaction.md / tech-design.md as deny here too, but those upstream design artifacts are already protected by the lane-action overlays (`design.<lane>.json`) and cross-lane switches expect their lane-specific allow to win — pulling those denies into the always-active breakdown overlay would break the lane switch contract (Claude `deny` overrides `allow`). Upstream artifact protection therefore remains the lane overlay's responsibility; breakdown overlay focuses on its own artifact + config.",
+  "permissions": {
+    "deny": [
+      "Edit(harness-runtime/harness/mission-status.yaml)",
+      "Edit(harness-runtime/harness/work-graph/**)",
+      "Write(harness-runtime/harness/stages/*/contracts/execution-brief.contract.yaml)",
+      "Edit(harness-runtime/harness/stages/*/contracts/execution-brief.contract.yaml)",
+      "Edit(harness-runtime/config/harness.yaml)",
+      "Edit(harness-runtime/config/model-routing.yaml)"
+    ],
+    "allow": [
+      "Write(harness-runtime/harness/stages/*/execution-brief.md)",
+      "Edit(harness-runtime/harness/stages/*/execution-brief.md)",
+      "Bash(harness *)"
+    ]
+  }
+}

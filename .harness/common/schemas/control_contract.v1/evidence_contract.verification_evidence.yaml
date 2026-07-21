@@ -1,0 +1,92 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [subtype, command_evidence, result_evidence, acceptance_trace]
+    properties:
+      type:
+        const: evidence_contract
+      subtype:
+        const: verification_evidence
+      command_evidence:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            required_evidence_id:
+              type: string
+            command:
+              type: string
+            result:
+              type: string
+      result_evidence:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            required_evidence_id:
+              type: string
+            kind:
+              type: string
+              enum:
+                - dom
+                - dom_snapshot
+                - screenshot
+                - video
+                - trace
+                - accessibility_snapshot
+                - api
+                - api_response
+                - db
+                - database
+                - internal_state
+                - mock
+                - log
+                - file
+            evidence_role:
+              type: string
+              enum:
+                - primary
+                - primary_user_path
+                - user_path
+                - browser_user_flow
+                - setup
+                - cross_check
+                - auxiliary
+            api_contract_ref:
+              type: string
+            fixture_parity_evidence_id:
+              type: string
+      acceptance_trace:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+            acceptance_id:
+              type: string
+            conclusion:
+              type: string
+            surface_type:
+              type: string
+            ui_surface:
+              type: boolean
+            command_evidence_ids:
+              type: array
+              items:
+                type: string
+            result_evidence_ids:
+              type: array
+              items:
+                type: string
+      # required_evidence_id: H3 primary key for evidence reuse (M1.4 anchor)
+      required_evidence_id:
+        type: string
+        description: "Primary key for cross-stage evidence reuse (verify-improvement-plan M1.4 H3 anchor)."

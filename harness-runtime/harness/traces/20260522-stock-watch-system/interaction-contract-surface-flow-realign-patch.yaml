@@ -1,0 +1,70 @@
+patches:
+  - target: control_contract.shared_surface_registry
+    op: set
+    value:
+      source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+      surfaces:
+        - id: SURF-WATCHLIST
+          name: 自选工作台
+          carried_bucs: [BUC-01, BUC-07]
+        - id: SURF-WORKBENCH
+          name: 看盘工作台
+          carried_bucs: [BUC-02, BUC-03, BUC-04, BUC-08]
+        - id: SURF-MTS
+          name: MTS 解释卡
+          carried_bucs: [BUC-04, BUC-06]
+        - id: SURF-ALERTS
+          name: 提醒管理面板
+          carried_bucs: [BUC-05, BUC-06, BUC-07]
+        - id: SURF-SOURCE
+          name: 来源状态条
+          carried_bucs: [BUC-06]
+        - id: SURF-LAYOUT
+          name: 布局控制器
+          carried_bucs: [BUC-08]
+        - id: SURF-RESTORE
+          name: 本地恢复横幅
+          carried_bucs: [BUC-01, BUC-07]
+  - target: control_contract.prototype_interfaces
+    op: set
+    value:
+      - id: SCREEN-WORKBENCH
+        title: 多市场看盘工作台
+        buc_refs: [BUC-01, BUC-02, BUC-03, BUC-04, BUC-05, BUC-06, BUC-07, BUC-08]
+        surface_id: SURF-WORKBENCH
+        domain_refs: [WatchSymbol, IndicatorSet, MtsSignal, AlertRule, MarketDataSource]
+  - target: control_contract.flows
+    op: set
+    value:
+      - id: FLOW-WATCHLIST-MANAGE
+        title: 管理多市场自选
+        traces_to: [AC-01]
+        visual_refs: [VIZ-001]
+      - id: FLOW-OPEN-DETAIL
+        title: 打开标的进入默认看盘布局
+        traces_to: [AC-02]
+        visual_refs: [VIZ-001]
+      - id: FLOW-SWITCH-INDICATOR
+        title: 切换副图指标
+        traces_to: [AC-02]
+        visual_refs: [VIZ-001]
+      - id: FLOW-READ-MTS
+        title: 解读 MTS 多周期趋势信号
+        traces_to: [AC-03, AC-04]
+        visual_refs: [VIZ-001]
+      - id: FLOW-MANAGE-ALERT
+        title: 配置并接收四级提醒
+        traces_to: [AC-04, AC-05]
+        visual_refs: [VIZ-001]
+      - id: FLOW-RESTORE-WORKSPACE
+        title: 重开浏览器恢复本地看盘现场
+        traces_to: [AC-05]
+        visual_refs: [VIZ-001]
+      - id: FLOW-SOURCE-DEGRADED
+        title: 行情来源降级下继续看盘
+        traces_to: [AC-02, AC-03, AC-04]
+        visual_refs: [VIZ-001]
+      - id: FLOW-SWITCH-LAYOUT
+        title: 切换看盘布局
+        traces_to: [AC-02, AC-05]
+        visual_refs: [VIZ-001]

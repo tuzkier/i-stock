@@ -1,0 +1,6 @@
+patches:
+  - target: control_contract.execution_result.produced_artifacts
+    op: set
+    value:
+      - path: harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+        work_graph_node: REQ-STOCK-WATCH-SYSTEM

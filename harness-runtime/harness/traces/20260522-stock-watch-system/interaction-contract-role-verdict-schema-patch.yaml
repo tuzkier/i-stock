@@ -1,0 +1,60 @@
+patches:
+  - target: control_contract.role_verdicts
+    op: set
+    value:
+      - id: RV-INTERACTION-003
+        role: interaction-reviewer
+        verdict: PASS
+        summary: interaction contract、canonical interaction-spec、visual manifest 与主原型现已对齐；BUC-06/BUC-07 编号与语义一致，BUC-08 的 surface/flow trace 已补齐，可作为 interaction gate 的最终 reviewer verdict。
+        dispatch:
+          subagent_id: 019e5481-6321-7e51-946b-52c0e6578fef
+          model: gpt-5.4
+          execution_mode: spawn_agent
+          started_at: "2026-05-23T11:00:00Z"
+          completed_at: "2026-05-23T11:13:36Z"
+        reviewed_obligations:
+          - OBL-INTERACTION-001
+        review_basis:
+          work_graph_artifact:
+            node_id: REQ-STOCK-WATCH-SYSTEM
+            artifact_version: v1
+          artifacts:
+            - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+            - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/
+            - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+            - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+            - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+          criteria:
+            - PRD AC、BUC、领域对象到 interaction-spec、surface、state、flow、E2E obligation 的一致性
+            - BUC-06 来源健康降级与 BUC-07 本地恢复的编号、文案、surface、contract scenario 对齐
+            - prototype 用户可见文案中文默认规则
+            - visual manifest 对 contract 的支撑能力
+        scope:
+          mission_id: 20260522-stock-watch-system
+          stage: interaction
+          reviewed_artifacts:
+            - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+            - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/
+            - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+            - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+            - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+        evidence:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+            lines: "287-360,427-480,575-609"
+            supports:
+              - canonical shared surfaces 与 interaction-spec 一致
+              - SCREEN-WORKBENCH.surface_id=SURF-WORKBENCH
+              - SCREEN-WORKBENCH.buc_refs 已覆盖 BUC-08
+              - flows 已包含 FLOW-SWITCH-LAYOUT
+              - drift、copy、e2e readiness 为 pass 或 none
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+            lines: "5-11,15-24"
+            supports:
+              - canonical surface 定义已覆盖 SURF-WATCHLIST、SURF-WORKBENCH、SURF-MTS、SURF-ALERTS、SURF-SOURCE、SURF-LAYOUT、SURF-RESTORE
+              - mobile_tab 与权限、状态边界
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/design-brief.md
+            lines: "25-38"
+            supports:
+              - 布局状态文案采用中文（English）
+              - "#buc-006/#buc-007 deep link 已纠正"
+        blocking_gaps: []

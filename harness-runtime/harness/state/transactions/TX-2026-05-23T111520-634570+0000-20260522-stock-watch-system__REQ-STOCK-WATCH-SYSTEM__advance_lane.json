@@ -1,0 +1,288 @@
+{
+  "transaction_id": "TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane",
+  "status": "committed",
+  "started_at": "2026-05-23T11:15:20.634814+00:00",
+  "ended_at": "2026-05-23T11:15:20.783160+00:00",
+  "mission_id": "20260522-stock-watch-system",
+  "operation_id": "20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmpb5_0tymm.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-01.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-02.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-03.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-04.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-05.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-06.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-07.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-08.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-09.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/README.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/consistency-report.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/domain-ui-mapping.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/surface-registry.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-coverage.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-index.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/design-brief.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/evidence/seed-state.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.harness.json",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.html",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/visual-interaction-manifest.json",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/trees/REQ-STOCK-WATCH-SYSTEM.yaml"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "stage_files",
+      "changed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-01.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-02.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-03.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-04.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-05.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-06.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-07.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-08.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-09.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/README.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/consistency-report.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/domain-ui-mapping.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/surface-registry.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-coverage.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-index.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/design-brief.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/evidence/seed-state.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.harness.json",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.html",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/visual-interaction-manifest.json",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/trees/REQ-STOCK-WATCH-SYSTEM.yaml"
+      ]
+    },
+    {
+      "id": "commit",
+      "committed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-01.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-02.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-03.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-04.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-05.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-06.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-07.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-08.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-09.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/README.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/consistency-report.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/domain-ui-mapping.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/surface-registry.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-coverage.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-index.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/design-brief.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/evidence/seed-state.md",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.harness.json",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.html",
+        "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/visual-interaction-manifest.json",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/trees/REQ-STOCK-WATCH-SYSTEM.yaml"
+      ]
+    },
+    {
+      "id": "post_commit_check",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "cleanup_staging",
+      "staging_root": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/staging",
+      "status": "removed"
+    }
+  ],
+  "rollback": {
+    "snapshots": [
+      {
+        "original": "harness-runtime/harness/mission-status.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/mission-status.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/_index.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/_index.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/changelog.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-01.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-01.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-02.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-02.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-03.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-03.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-04.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-04.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-05.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-05.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-06.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-06.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-07.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-07.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-08.md",
+        "existed": false
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-09.md",
+        "existed": false
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/README.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/README.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/consistency-report.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/consistency-report.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/domain-ui-mapping.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/domain-ui-mapping.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/surface-registry.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/surface-registry.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-coverage.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-coverage.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-index.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-index.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/design-brief.md",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/design-brief.md"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/evidence/seed-state.md",
+        "existed": false
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.harness.json",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.harness.json"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.html",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.html"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/visual-interaction-manifest.json",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/visual-interaction-manifest.json"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/boards/main.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/boards/main.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/indexes/by-lane.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/operations.log.jsonl"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/trees/REQ-STOCK-WATCH-SYSTEM.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-05-23T111520-634570+0000-20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_lane/before/harness-runtime/harness/work-graph/trees/REQ-STOCK-WATCH-SYSTEM.yaml"
+      }
+    ]
+  }
+}

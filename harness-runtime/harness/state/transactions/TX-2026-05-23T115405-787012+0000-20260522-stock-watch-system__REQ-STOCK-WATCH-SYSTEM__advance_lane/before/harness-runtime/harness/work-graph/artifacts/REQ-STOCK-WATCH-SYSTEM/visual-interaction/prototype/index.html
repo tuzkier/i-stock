@@ -1,0 +1,1582 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyInvestment 多市场看盘工作台</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --bg-soft: #111a31;
+      --panel: rgba(18, 26, 48, 0.92);
+      --panel-strong: #16213c;
+      --line: #263553;
+      --line-strong: #35507f;
+      --ink: #eef3ff;
+      --muted: #9caacf;
+      --muted-strong: #7e8cb0;
+      --blue: #6e93ff;
+      --blue-strong: #9bb3ff;
+      --green: #46c48d;
+      --red: #ff7070;
+      --amber: #f4b861;
+      --cyan: #70d5ff;
+      --purple: #b58dff;
+      --shadow: 0 16px 40px rgba(5, 9, 20, 0.35);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(110, 147, 255, 0.14), transparent 28%),
+        radial-gradient(circle at right center, rgba(70, 196, 141, 0.08), transparent 24%),
+        var(--bg);
+      color: var(--ink);
+    }
+    body[data-layout="focus"] {
+      background:
+        radial-gradient(circle at top left, rgba(110, 147, 255, 0.16), transparent 30%),
+        radial-gradient(circle at center right, rgba(70, 196, 141, 0.09), transparent 22%),
+        #08101d;
+    }
+    body[data-layout="mobile_tab"] {
+      background: #07101e;
+    }
+    button, input, select { font: inherit; }
+    button {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      color: var(--ink);
+      min-height: 36px;
+      border-radius: 10px;
+      padding: 0 12px;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    button:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    button.primary {
+      background: linear-gradient(180deg, #7b9cff, #5c7dff);
+      border-color: #7f97ff;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(92, 125, 255, .22);
+    }
+    button.ghost { background: transparent; }
+    button.active, button[aria-pressed="true"] {
+      border-color: #7f97ff;
+      background: rgba(110, 147, 255, 0.18);
+      color: #e8f0ff;
+    }
+    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 2px solid #9bb3ff;
+      outline-offset: 2px;
+    }
+    input, select {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0 12px;
+      background: rgba(9, 14, 27, 0.9);
+      color: var(--ink);
+    }
+    input::placeholder { color: #7381a7; }
+    a { color: inherit; text-decoration: none; }
+    .app {
+      min-height: 100vh;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .topbar,
+    .mobilebar,
+    .shell,
+    .section-card {
+      border: 1px solid rgba(128, 149, 194, 0.14);
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+    }
+    .topbar {
+      display: flex;
+      gap: 14px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+    }
+    .brand {
+      display: grid;
+      gap: 4px;
+      min-width: 240px;
+    }
+    .brand strong {
+      font-size: 18px;
+      letter-spacing: .2px;
+    }
+    .brand small,
+    .meta,
+    .muted,
+    .subtle {
+      color: var(--muted);
+    }
+    .status-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+      white-space: nowrap;
+    }
+    .chip.good { color: #baf2d5; border-color: rgba(70,196,141,.28); background: rgba(70,196,141,.12); }
+    .chip.warn { color: #ffe0ab; border-color: rgba(244,184,97,.28); background: rgba(244,184,97,.12); }
+    .chip.bad { color: #ffc0c0; border-color: rgba(255,112,112,.28); background: rgba(255,112,112,.12); }
+    .chip.blue { color: #d8e4ff; border-color: rgba(110,147,255,.28); background: rgba(110,147,255,.12); }
+    .top-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .jump-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      flex: 1;
+    }
+    .jump-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      color: #dce5ff;
+      font-size: 13px;
+    }
+    .jump-nav a:hover { border-color: var(--line-strong); }
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(290px, 0.95fr) minmax(560px, 1.65fr) minmax(320px, 0.95fr);
+      gap: 12px;
+      padding: 12px;
+    }
+    body[data-layout="focus"] .shell {
+      grid-template-columns: minmax(250px, 0.78fr) minmax(680px, 2fr) minmax(280px, 0.82fr);
+    }
+    body[data-layout="mobile_tab"] .shell {
+      grid-template-columns: 1fr;
+    }
+    .panel {
+      min-width: 0;
+      border: 1px solid rgba(128, 149, 194, 0.16);
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(17, 26, 49, 0.96), rgba(13, 20, 37, 0.96));
+      overflow: hidden;
+    }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(128, 149, 194, 0.12);
+    }
+    .panel-head h2 {
+      margin: 0;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-body {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .stack { display: grid; gap: 10px; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .row.tight { gap: 6px; }
+    .row > * { min-width: 0; }
+    .split {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 10px;
+    }
+    .preview-card,
+    .summary-card,
+    .signal-card,
+    .alert-card,
+    .source-card,
+    .restore-card,
+    .layout-card,
+    .metric-card,
+    .watch-card,
+    .market-card,
+    .empty-state,
+    .banner {
+      border: 1px solid rgba(128, 149, 194, 0.14);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+    }
+    .banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-color: rgba(110,147,255,0.2);
+      background: linear-gradient(180deg, rgba(110,147,255,0.14), rgba(110,147,255,0.08));
+    }
+    .banner strong { display: block; }
+    .banner .subtle { font-size: 13px; }
+    .market-list {
+      display: grid;
+      gap: 10px;
+    }
+    .market-card {
+      display: grid;
+      gap: 10px;
+    }
+    .market-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: #dce5ff;
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+    .watch-card {
+      display: grid;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+    .watch-card:hover { border-color: rgba(110,147,255,0.28); transform: translateY(-1px); }
+    .watch-card.selected {
+      border-color: rgba(110,147,255,0.58);
+      background: linear-gradient(180deg, rgba(110,147,255,0.12), rgba(255,255,255,0.03));
+    }
+    .watch-card.archived { opacity: .78; }
+    .watch-head,
+    .symbol-line,
+    .source-head,
+    .alert-head,
+    .layout-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+    .watch-head b,
+    .signal-card b,
+    .alert-card b,
+    .source-card b,
+    .restore-card b,
+    .layout-card b,
+    .metric-card b { font-size: 14px; }
+    .rowline { color: var(--muted); font-size: 13px; }
+    .rowline strong { color: #e9f1ff; }
+    .price-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: #eaf1ff;
+      font-variant-numeric: tabular-nums;
+    }
+    .price-line .up { color: #a6f0c7; }
+    .price-line .down { color: #ffacac; }
+    .price-line .neutral { color: #d3dcf8; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .actions button { min-height: 32px; padding-inline: 10px; }
+    .chart-shell {
+      display: grid;
+      gap: 12px;
+    }
+    .chart-main {
+      border: 1px solid rgba(128, 149, 194, 0.14);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(12, 19, 35, 0.4), rgba(12, 19, 35, 0.65)),
+        radial-gradient(circle at top right, rgba(110,147,255,0.16), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(70,196,141,0.08), transparent 20%),
+        #0d1427;
+      padding: 14px;
+      overflow: hidden;
+    }
+    .chart-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .chart-title {
+      display: grid;
+      gap: 4px;
+    }
+    .chart-title strong { font-size: 18px; }
+    .chart-title small { color: var(--muted); }
+    .chart-stage {
+      display: grid;
+      grid-template-columns: 1.9fr 0.9fr;
+      gap: 12px;
+    }
+    .chart-canvas,
+    .chart-volume,
+    .chart-secondary,
+    .indicator-panel,
+    .signal-card,
+    .alert-card,
+    .source-card,
+    .restore-card,
+    .layout-card,
+    .preview-card {
+      border: 1px solid rgba(128, 149, 194, 0.14);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+    }
+    .chart-canvas {
+      min-height: 280px;
+      background:
+        linear-gradient(180deg, rgba(110,147,255,0.04), transparent 50%),
+        repeating-linear-gradient(90deg, transparent 0 54px, rgba(148, 166, 216, 0.07) 54px 55px),
+        repeating-linear-gradient(0deg, transparent 0 42px, rgba(148, 166, 216, 0.07) 42px 43px);
+      position: relative;
+      overflow: hidden;
+    }
+    .chart-canvas svg { width: 100%; height: 100%; display: block; }
+    .chart-volume { min-height: 92px; display: grid; gap: 8px; }
+    .chart-secondary {
+      display: grid;
+      gap: 8px;
+    }
+    .indicator-panel {
+      display: grid;
+      gap: 10px;
+    }
+    .tablist {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .tablist button { padding-inline: 8px; }
+    .tablist button.active {
+      background: rgba(110, 147, 255, 0.18);
+      color: #edf3ff;
+      border-color: rgba(110,147,255,0.4);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .metric-card {
+      display: grid;
+      gap: 6px;
+    }
+    .metric-card span { color: var(--muted); font-size: 13px; }
+    .signal-card {
+      display: grid;
+      gap: 10px;
+    }
+    .signal-card .lead {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+    .signal-card.good { border-color: rgba(70,196,141,0.22); }
+    .signal-card.warn { border-color: rgba(244,184,97,0.22); }
+    .signal-card.bad { border-color: rgba(255,112,112,0.22); }
+    .signal-card .reason-list,
+    .source-card .reason-list,
+    .alert-card .reason-list,
+    .restore-card .reason-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      display: grid;
+      gap: 6px;
+    }
+    .signal-card .reason-list strong,
+    .source-card .reason-list strong,
+    .alert-card .reason-list strong { color: #eaf1ff; }
+    .alert-list {
+      display: grid;
+      gap: 10px;
+    }
+    .alert-card[data-state="triggered"] { border-color: rgba(255,112,112,0.26); }
+    .alert-card[data-state="suspended_by_archive"] { border-color: rgba(244,184,97,0.22); }
+    .alert-card[data-state="acknowledged"] { border-color: rgba(70,196,141,0.22); }
+    .restore-card {
+      display: grid;
+      gap: 10px;
+    }
+    .source-card {
+      display: grid;
+      gap: 10px;
+    }
+    .state-switcher {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .state-switcher button { min-height: 32px; }
+    .layout-card .subtle,
+    .restore-card .subtle,
+    .source-card .subtle,
+    .alert-card .subtle,
+    .signal-card .subtle,
+    .preview-card .subtle { font-size: 13px; }
+    .mobilebar {
+      display: none;
+      padding: 10px;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .mobile-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .mobile-tabs button { min-height: 34px; }
+    body[data-layout="mobile_tab"] .mobilebar { display: flex; }
+    body[data-layout="mobile_tab"] .panel[data-mobile-group] { display: none; }
+    body[data-layout="mobile_tab"][data-mobile-tab="watchlist"] .panel[data-mobile-group="watchlist"] { display: block; }
+    body[data-layout="mobile_tab"][data-mobile-tab="chart"] .panel[data-mobile-group="chart"] { display: block; }
+    body[data-layout="mobile_tab"][data-mobile-tab="alerts"] .panel[data-mobile-group="alerts"] { display: block; }
+    body[data-layout="mobile_tab"][data-mobile-tab="source"] .panel[data-mobile-group="source"] { display: block; }
+    .section-card {
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+    .anchor { scroll-margin-top: 110px; }
+    .helper-line {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .kbd {
+      border: 1px solid var(--line);
+      border-bottom-color: #1c2741;
+      background: rgba(255,255,255,0.04);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    @media (max-width: 1280px) {
+      .shell { grid-template-columns: minmax(270px, 0.9fr) minmax(500px, 1.3fr) minmax(300px, 0.9fr); }
+      .chart-stage { grid-template-columns: 1.8fr 1fr; }
+    }
+    @media (max-width: 1080px) {
+      .topbar { position: static; flex-wrap: wrap; }
+      .jump-nav { order: 3; flex-basis: 100%; justify-content: flex-start; }
+      .shell { grid-template-columns: 1fr; }
+      .chart-stage { grid-template-columns: 1fr; }
+      .split { grid-template-columns: 1fr; }
+      body[data-layout="focus"] .shell { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .app { padding: 10px; }
+      .topbar { padding: 12px; }
+      .panel-head, .panel-body { padding-inline: 12px; }
+      .tablist { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric-grid { grid-template-columns: 1fr; }
+      .chart-canvas { min-height: 220px; }
+      .brand { min-width: 0; }
+    }
+  </style>
+</head>
+<body data-layout="dense" data-mobile-tab="watchlist">
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <strong>MyInvestment 多市场看盘工作台</strong>
+        <small>四市场自选、归一预览、三栏工作台、MTS 解释、提醒与来源健康穿透</small>
+      </div>
+      <div class="jump-nav" aria-label="深链导航">
+        <a href="#buc-001">自选</a>
+        <a href="#buc-002">工作台</a>
+        <a href="#buc-003">指标</a>
+        <a href="#buc-004">MTS</a>
+        <a href="#buc-005">提醒</a>
+        <a href="#buc-006">来源</a>
+        <a href="#buc-007">恢复</a>
+        <a href="#buc-008">布局</a>
+      </div>
+      <div class="top-controls" id="layout-controller" data-testid="layout-controller" aria-label="布局控制器">
+        <span class="chip blue" data-testid="layout-mode-label">当前布局：<strong id="layout-mode-label">紧凑（dense）</strong></span>
+        <button id="layout-toggle-dense" data-testid="layout-toggle-dense" data-layout-toggle="dense" aria-pressed="true">紧凑</button>
+        <button id="layout-toggle-focus" data-testid="layout-toggle-focus" data-layout-toggle="focus">专注</button>
+        <button id="layout-toggle-mobile-tab" data-testid="layout-toggle-mobile-tab" data-layout-toggle="mobile_tab">移动分栏</button>
+      </div>
+    </header>
+
+    <div class="mobilebar" id="mobile-tabbar" aria-label="移动分栏导航">
+      <div class="status-line">
+        <span class="chip">移动分栏（mobile_tab）</span>
+        <span class="chip" id="mobile-tab-label" data-testid="mobile-tab-label">自选（watchlist）</span>
+      </div>
+      <div class="mobile-tabs">
+        <button id="mobile-tab-watchlist" data-testid="mobile-tab-watchlist" data-mobile-tab="watchlist" aria-pressed="true">自选</button>
+        <button id="mobile-tab-chart" data-testid="mobile-tab-chart" data-mobile-tab="chart">图表</button>
+        <button id="mobile-tab-alerts" data-testid="mobile-tab-alerts" data-mobile-tab="alerts">提醒</button>
+        <button id="mobile-tab-source" data-testid="mobile-tab-source" data-mobile-tab="source">来源</button>
+      </div>
+    </div>
+
+    <section class="shell" aria-label="三栏工作台">
+      <aside class="panel anchor" id="buc-001" data-testid="watchlist-panel" data-mobile-group="watchlist">
+        <div class="panel-head">
+          <h2>自选与归一预览</h2>
+          <span class="chip good" id="restore-state-pill" data-testid="restore-state-pill">已恢复本地现场</span>
+        </div>
+        <div class="panel-body">
+          <div class="banner" id="buc-007" data-testid="restore-banner">
+            <div>
+              <strong>本地恢复</strong>
+              <div class="subtle" id="restore-summary" data-testid="restore-summary">活跃 4 个 / 归档 1 个 / 提醒 3 条 / 最近查看 AAPL</div>
+            </div>
+            <button class="primary" id="restore-continue-button" data-testid="restore-continue-button">继续看盘</button>
+          </div>
+
+          <div class="preview-card" data-testid="normalization-preview">
+            <div class="symbol-line"><b>写入前归一预览</b><span class="chip warn" id="preview-status">待确认</span></div>
+            <div class="split">
+              <div class="stack">
+                <label>
+                  <div class="subtle">市场</div>
+                  <select id="watchlist-market-select" data-testid="watchlist-market-select" aria-label="市场">
+                    <option value="">待确认</option>
+                    <option value="US">US</option>
+                    <option value="HK" selected>HK</option>
+                    <option value="CN">CN</option>
+                    <option value="KR">KR</option>
+                  </select>
+                </label>
+                <label>
+                  <div class="subtle">原始代码</div>
+                  <input id="watchlist-add-input" data-testid="watchlist-add-input" value="0700" aria-label="股票代码" placeholder="输入股票代码">
+                </label>
+              </div>
+              <div class="stack">
+                <div class="metric-card">
+                  <span>预览市场</span>
+                  <b id="preview-market" data-testid="preview-market">HK</b>
+                </div>
+                <div class="metric-card">
+                  <span>原始代码</span>
+                  <b id="preview-raw-symbol" data-testid="preview-raw-symbol">0700</b>
+                </div>
+                <div class="metric-card">
+                  <span>归一代码</span>
+                  <b id="preview-normalized-symbol" data-testid="preview-normalized-symbol">0700.HK</b>
+                </div>
+                <div class="helper-line" id="preview-note" data-testid="preview-note">歧义输入不会静默写入活跃列表（active）；确认前先看见市场 + 原始代码 + 归一代码。</div>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="primary" id="watchlist-add-button" data-testid="watchlist-add-button">加入观察</button>
+              <button id="preview-clear-button" class="ghost">清空</button>
+            </div>
+          </div>
+
+          <div class="market-list">
+            <section class="market-card" id="market-group-us" data-testid="market-group-us">
+              <div class="market-title"><span>US 美股</span><span class="chip">AAPL / MSFT / TSLA</span></div>
+              <article class="watch-card selected" id="symbol-row-aapl" data-testid="symbol-row-aapl" data-symbol="AAPL">
+                <div class="watch-head">
+                  <b>AAPL</b><span class="chip good">活跃（active）</span>
+                </div>
+                <div class="rowline">原始 AAPL / 归一 AAPL / 来源 正式（formal）</div>
+                <div class="price-line"><span>207.80</span><span class="up">+3.12</span><span class="up">+1.52%</span><span class="chip good">强信号</span></div>
+                <div class="actions">
+                  <button class="primary" data-action="select-symbol">看盘</button>
+                  <button data-action="archive-symbol" id="symbol-archive-button" data-testid="symbol-archive-button">归档</button>
+                  <button data-action="restore-symbol" hidden>恢复</button>
+                </div>
+              </article>
+            </section>
+
+            <section class="market-card" id="market-group-hk" data-testid="market-group-hk">
+              <div class="market-title"><span>HK 港股</span><span class="chip">0700.HK / 9988.HK</span></div>
+              <article class="watch-card" data-testid="symbol-row-0700-hk" data-symbol="0700.HK">
+                <div class="watch-head">
+                  <b>0700.HK</b><span class="chip good">活跃（active）</span>
+                </div>
+                <div class="rowline">原始 0700 / 归一 0700.HK / 来源 正式（formal）</div>
+                <div class="price-line"><span>312.40</span><span class="up">+2.80</span><span class="up">+0.90%</span><span class="chip blue">观察</span></div>
+                <div class="actions"><button data-action="select-symbol">看盘</button><button data-action="archive-symbol">归档</button><button data-action="restore-symbol" hidden>恢复</button></div>
+              </article>
+            </section>
+
+            <section class="market-card" id="market-group-cn" data-testid="market-group-cn">
+              <div class="market-title"><span>CN A 股</span><span class="chip">600519.SS / 000001.SZ</span></div>
+              <article class="watch-card archived" data-testid="symbol-row-600519-ss" data-symbol="600519.SS">
+                <div class="watch-head">
+                  <b>600519.SS</b><span class="chip warn">已归档（archived）</span>
+                </div>
+                <div class="rowline">原始 600519 / 归一 600519.SS / 提醒 归档暂停（suspended_by_archive）</div>
+                <div class="price-line"><span>1665.80</span><span class="down">-18.20</span><span class="down">-1.08%</span><span class="chip warn">暂停</span></div>
+                <div class="actions"><button data-action="select-symbol">查看</button><button data-action="archive-symbol" hidden>归档</button><button data-action="restore-symbol" id="symbol-restore-button" data-testid="symbol-restore-button">恢复</button></div>
+              </article>
+            </section>
+
+            <section class="market-card" id="market-group-kr" data-testid="market-group-kr">
+              <div class="market-title"><span>KR 韩股</span><span class="chip">005930.KS / 035420.KS</span></div>
+              <article class="watch-card" data-testid="symbol-row-005930-ks" data-symbol="005930.KS">
+                <div class="watch-head">
+                  <b>005930.KS</b><span class="chip good">活跃（active）</span>
+                </div>
+                <div class="rowline">原始 005930 / 归一 005930.KS / 来源 演示降级（demo_fallback）</div>
+                <div class="price-line"><span>77,600</span><span class="neutral">+0</span><span class="neutral">0.00%</span><span class="chip warn">演示</span></div>
+                <div class="actions"><button data-action="select-symbol">看盘</button><button data-action="archive-symbol">归档</button><button data-action="restore-symbol" hidden>恢复</button></div>
+              </article>
+            </section>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel anchor" id="buc-002" data-testid="workbench-shell" data-mobile-group="chart">
+        <div class="panel-head">
+          <h2>默认三栏工作台</h2>
+          <span class="chip blue" id="selected-symbol-chip" data-testid="selected-symbol-chip">AAPL / US / AAPL</span>
+        </div>
+        <div class="panel-body chart-shell">
+          <div class="chart-main" data-testid="symbol-detail-shell">
+            <div class="chart-meta">
+              <div class="chart-title">
+                <strong id="chart-symbol-title">AAPL · Apple</strong>
+                <small id="chart-symbol-subtitle">主图 / 成交量 / 副图共用同一标的上下文</small>
+              </div>
+              <div class="status-line">
+                <span class="chip good" id="chart-source-chip">正式（formal）</span>
+                <span class="chip" id="chart-layout-chip">紧凑（dense）</span>
+              </div>
+            </div>
+            <div class="rowline" id="chart-ohlc-readout" data-testid="chart-ohlc-readout">O 206.2 / H 208.9 / L 204.8 / C 207.8 / V 18.6M</div>
+            <div class="chart-stage">
+              <div class="chart-canvas" id="chart-main-panel" data-testid="chart-main-panel" aria-label="主图 K 线">
+                <svg viewBox="0 0 900 280" role="img" aria-label="K线和均线示意">
+                  <rect x="0" y="0" width="900" height="280" fill="none" />
+                  <polyline points="18,210 82,196 146,172 210,180 274,142 338,156 402,130 466,112 530,128 594,96 658,104 722,72 786,84 850,64" fill="none" stroke="#6e93ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <polyline points="18,232 82,216 146,205 210,196 274,178 338,172 402,156 466,142 530,134 594,116 658,110 722,96 786,88 850,82" fill="none" stroke="#46c48d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                  <g fill="#a6f0c7">
+                    <rect x="86" y="154" width="12" height="62" rx="4"/>
+                    <rect x="162" y="132" width="12" height="88" rx="4"/>
+                    <rect x="238" y="108" width="12" height="102" rx="4"/>
+                    <rect x="314" y="120" width="12" height="74" rx="4"/>
+                    <rect x="390" y="96" width="12" height="112" rx="4"/>
+                    <rect x="466" y="82" width="12" height="128" rx="4"/>
+                    <rect x="542" y="100" width="12" height="92" rx="4"/>
+                    <rect x="618" y="72" width="12" height="138" rx="4"/>
+                    <rect x="694" y="64" width="12" height="148" rx="4"/>
+                    <rect x="770" y="52" width="12" height="160" rx="4"/>
+                  </g>
+                  <text x="24" y="28" fill="#9caacf" font-size="20">主图：K 线 + EMA20 + EMA60 + BOLL</text>
+                  <text x="24" y="52" fill="#9caacf" font-size="16">O 206.2 / H 208.9 / L 204.8 / C 207.8</text>
+                </svg>
+              </div>
+              <div class="stack">
+                <div class="chart-volume" id="chart-volume-panel" data-testid="chart-volume-panel">
+                  <div class="rowline"><strong>成交量</strong>：近 20 期均量上方，量能确认偏强</div>
+                  <div class="metric-grid">
+                    <div class="metric-card"><span>最新量</span><b>18.6M</b></div>
+                    <div class="metric-card"><span>20 期均量</span><b>13.4M</b></div>
+                  </div>
+                </div>
+                <div class="chart-secondary" data-testid="chart-secondary-panel" id="chart-secondary-panel">
+                  <div class="rowline"><strong>当前副图：MACD</strong>，柱体转强，状态可解释</div>
+                  <div class="helper-line" id="indicator-status-note" data-testid="indicator-status-note">副图切换不会改变当前标的；数据不足时显示 局部可用（partial）/不可用（unavailable）。</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="indicator-panel anchor" id="buc-003" data-testid="indicator-panel">
+              <div class="rowline"><strong>副图切换</strong>：主图、成交量和 OHLC 始终保留同一上下文</div>
+              <div class="tablist" role="tablist" aria-label="副图指标切换">
+                <button class="active" id="indicator-tab-macd" data-indicator="MACD" role="tab" aria-selected="true">MACD</button>
+                <button id="indicator-tab-rsi" data-indicator="RSI" role="tab" aria-selected="false">RSI</button>
+                <button id="indicator-tab-kdj" data-indicator="KDJ" role="tab" aria-selected="false">KDJ</button>
+                <button id="indicator-tab-atr" data-indicator="ATR" role="tab" aria-selected="false">ATR</button>
+              </div>
+            </div>
+
+            <div class="signal-card good anchor" id="buc-004" data-testid="mts-signal-card">
+              <div class="lead">
+                <div>
+                  <div class="rowline">MTS 多周期趋势信号</div>
+                  <b id="mts-trend-state" data-testid="mts-trend-state">趋势状态：多头修复中</b>
+                </div>
+                <span class="chip good" id="mts-alert-level" data-testid="mts-alert-level">强信号</span>
+              </div>
+              <div class="metric-grid">
+                <div class="metric-card"><span>分数带</span><b id="mts-score-band" data-testid="mts-score-band">+68</b></div>
+                <div class="metric-card"><span>信号类型</span><b id="mts-signal-type" data-testid="mts-signal-type">收敛突破买点</b></div>
+              </div>
+              <div class="rowline" id="mts-reasons" data-testid="mts-reasons">理由：EMA20 上行、MACD 柱体转强、成交量放大。</div>
+              <div class="rowline" id="mts-invalidators" data-testid="mts-invalidators">失效条件：跌破 EMA20 或 ATR 风控线。</div>
+              <div class="helper-line" id="data-insufficient-note" data-testid="data-insufficient-note">当来源降级或历史不足时，这张卡切换为不可解释提示，不输出伪信号。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel anchor" id="buc-005" data-testid="alerts-panel" data-mobile-group="alerts">
+        <div class="panel-head">
+          <h2>提醒类型（taxonomy）与触发历史</h2>
+          <span class="chip warn">本地提醒</span>
+        </div>
+        <div class="panel-body alert-list">
+          <form class="alert-card" id="alert-create-form" data-testid="alert-create-form">
+            <div class="alert-head"><b>创建提醒</b><span class="chip blue">当前标的 AAPL</span></div>
+            <div class="split">
+              <label>
+                <div class="subtle">提醒类型（taxonomy）</div>
+                <select id="alert-taxonomy-select" data-testid="alert-taxonomy-select">
+                  <option>价格型</option>
+                  <option>变化型</option>
+                  <option>技术指标型</option>
+                  <option>MTS 型</option>
+                  <option>定时提醒</option>
+                </select>
+              </label>
+              <label>
+                <div class="subtle">提醒等级</div>
+                <select id="alert-level-select" data-testid="alert-level-select">
+                  <option>观察</option>
+                  <option>确认</option>
+                  <option>强信号</option>
+                  <option selected>风控</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              <div class="subtle">条件</div>
+              <input id="alert-condition-input" data-testid="alert-condition-input" value="趋势破坏或跌破 ATR 风控线" aria-label="提醒条件">
+            </label>
+            <div class="actions">
+              <button class="primary" type="button" id="alert-save-button" data-testid="alert-save-button">保存提醒</button>
+              <button type="button" id="alert-reset-button" class="ghost">重置</button>
+            </div>
+          </form>
+
+          <article class="alert-card" id="alert-rule-row-risk" data-testid="alert-rule-row-risk" data-state="triggered">
+            <div class="alert-head">
+              <b>风控 · AAPL 趋势破坏</b>
+              <span class="chip bad">已触发（triggered）</span>
+            </div>
+            <div class="rowline">类型（taxonomy）：MTS 型 / 最近原因：跌破 ATR 风控线 / 启停：启用（enabled）</div>
+            <div class="actions"><button class="primary" id="alert-ack-button" data-testid="alert-ack-button">确认</button></div>
+          </article>
+
+          <article class="alert-card" id="alert-rule-row-watch" data-testid="alert-rule-row-watch" data-state="disabled">
+            <div class="alert-head">
+              <b>观察 · 0700.HK 价格上穿</b>
+              <span class="chip">已停用（disabled）</span>
+            </div>
+            <div class="rowline">类型（taxonomy）：价格型 / 状态：已停用（disabled） / 不再触发</div>
+            <div class="actions"><button>启用</button></div>
+          </article>
+
+          <article class="alert-card" id="alert-rule-row-archive" data-testid="alert-rule-row-archive" data-state="suspended_by_archive">
+            <div class="alert-head">
+              <b>暂停 · 600519.SS 强信号</b>
+              <span class="chip warn">归档暂停（suspended_by_archive）</span>
+            </div>
+            <div class="rowline">类型（taxonomy）：技术指标型 / 因标的归档暂停 / 恢复后按原意图恢复</div>
+          </article>
+        </div>
+      </aside>
+
+      <aside class="panel anchor" id="buc-006" data-testid="source-health-panel" data-mobile-group="source">
+        <div class="panel-head">
+          <h2>来源健康与降级穿透</h2>
+        <span class="chip blue" id="source-mode-label" data-testid="source-mode-label">正式（formal）</span>
+        </div>
+        <div class="panel-body stack">
+          <div class="source-card" id="source-status-banner" data-testid="source-status-banner">
+            <div class="source-head">
+              <b>当前来源</b>
+              <span class="chip good" id="source-mode-chip" data-testid="source-mode-chip">正式（formal）</span>
+            </div>
+            <div class="rowline" id="degradation-reason" data-testid="degradation-reason">正式来源可用，图表 / MTS / 提醒保持完整可解释性。</div>
+            <div class="rowline">上次刷新：<strong id="source-last-refresh">09:42</strong></div>
+            <div class="actions">
+              <button id="source-refresh-button" data-testid="source-refresh-button" class="primary" type="button">重试</button>
+            </div>
+            <ul class="reason-list" id="affected-object-list" data-testid="affected-object-list">
+              <li>PriceSeries、IndicatorSet、MtsSignal、AlertRule 均可继续正常表达。</li>
+            </ul>
+          </div>
+
+          <div class="restore-card anchor" id="restore-status-panel" data-testid="restore-status-panel">
+            <div class="layout-head">
+              <b>本地恢复状态</b>
+            <span class="chip good" id="restore-pill" data-testid="restore-pill">已恢复（restored）</span>
+            </div>
+            <div class="rowline" id="restore-detail">已恢复自选、提醒、触发历史和基础布局；失败时回退默认三栏。</div>
+            <div class="actions">
+              <button class="primary" id="restore-recover-button">重新恢复</button>
+              <button>查看摘要</button>
+            </div>
+            <ul class="reason-list">
+              <li>活跃 4 个 / 归档 1 个 / 提醒 3 条。</li>
+              <li>最近查看标的：AAPL。</li>
+            </ul>
+          </div>
+
+          <div class="layout-card anchor" id="buc-008" data-testid="layout-controller-card">
+            <div class="layout-head">
+              <b>布局模式</b>
+              <span class="chip blue" id="layout-card-label">紧凑（dense）</span>
+            </div>
+            <div class="state-switcher" aria-label="布局切换入口">
+              <button class="active" id="layout-card-dense" data-layout-toggle="dense" aria-pressed="true">紧凑（dense）</button>
+              <button id="layout-card-focus" data-layout-toggle="focus">专注（focus）</button>
+              <button id="layout-card-mobile" data-layout-toggle="mobile_tab">移动分栏（mobile_tab）</button>
+            </div>
+            <div class="helper-line">布局切换只改变信息密度，不改变业务对象；mobile_tab 用单列 tab 访问同一信息架构。</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "myinvestment.prototype.workbench";
+
+    const indicatorDetails = {
+      MACD: {
+        text: "当前副图：MACD 柱体转强，快线位于慢线上方，状态可解释。",
+        note: "MACD 用于观察动量确认，不表达收益概率。"
+      },
+      RSI: {
+        text: "当前副图：RSI 58，动量确认中，仍保留回踩风险。",
+        note: "RSI 只用于解释超买超卖与修复节奏。"
+      },
+      KDJ: {
+        text: "当前副图：KDJ 金叉后回踩，仍需更多历史确认。",
+        note: "KDJ 数据不足时会进入局部可用（partial）或不可用（unavailable）。"
+      },
+      ATR: {
+        text: "当前副图：ATR 风控线位于 187.20，波动放大时需更保守。",
+        note: "ATR 用于风控位置与止损边界。"
+      }
+    };
+
+    const sourceDetails = {
+      formal: {
+        chip: "正式（formal）",
+        chipClass: "good",
+        reason: "正式来源可用，图表 / MTS / 提醒保持完整可解释性。",
+        refresh: "09:42",
+        affected: ["PriceSeries、IndicatorSet、MtsSignal、AlertRule 均可继续正常表达。"],
+        chartChip: "正式（formal）"
+      },
+      demo_fallback: {
+        chip: "演示降级（demo_fallback）",
+        chipClass: "warn",
+        reason: "正式来源不可用，当前展示演示 K 线；MTS 与强信号提醒仅保留观察语义。",
+        refresh: "09:18",
+        affected: ["图表仍可继续观察，但不可把演示行情当作正式行情。", "MTS / 强信号提醒切换为不可解释提示。"],
+        chartChip: "演示降级（demo_fallback）"
+      },
+      stale: {
+        chip: "过期（stale）",
+        chipClass: "warn",
+        reason: "数据已过期，当前保留上次可解释状态，并提示上次刷新时间。",
+        refresh: "08:32",
+        affected: ["图表仍可观察旧数据，但不能伪装成实时刷新成功。", "MTS / 提醒继续显示降级说明。"],
+        chartChip: "过期（stale）"
+      },
+      unavailable: {
+        chip: "不可用（unavailable）",
+        chipClass: "bad",
+        reason: "来源当前不可用，保留最后一次可解释状态与重试入口。",
+        refresh: "--",
+        affected: ["PriceSeries、IndicatorSet、MtsSignal、AlertRule 均需显示不可解释说明。"],
+        chartChip: "不可用（unavailable）"
+      }
+    };
+
+    const watchlist = [
+      {
+        symbol: "AAPL",
+        market: "US",
+        raw: "AAPL",
+        normalized: "AAPL",
+        name: "Apple",
+        status: "active",
+        source: "formal",
+        price: "207.80",
+        change: "+3.12",
+        changePct: "+1.52%",
+        tone: "up",
+        summary: "强信号",
+        trend: "趋势状态：多头修复中",
+        band: "+68",
+        signal: "收敛突破买点",
+        alert: "强信号",
+        ohlc: "O 206.2 / H 208.9 / L 204.8 / C 207.8 / V 18.6M",
+        reasons: ["EMA20 上行", "MACD 柱体转强", "成交量放大"],
+        invalidators: ["跌破 EMA20", "ATR 风控线"]
+      },
+      {
+        symbol: "0700.HK",
+        market: "HK",
+        raw: "0700",
+        normalized: "0700.HK",
+        name: "腾讯控股",
+        status: "active",
+        source: "formal",
+        price: "312.40",
+        change: "+2.80",
+        changePct: "+0.90%",
+        tone: "up",
+        summary: "观察",
+        trend: "趋势状态：震荡整理",
+        band: "+23",
+        signal: "回踩观察",
+        alert: "观察",
+        ohlc: "O 310.4 / H 314.0 / L 308.8 / C 312.4 / V 9.4M",
+        reasons: ["价格站稳均线", "量能稳定", "等待突破确认"],
+        invalidators: ["跌破区间下沿", "动量失速"]
+      },
+      {
+        symbol: "600519.SS",
+        market: "CN",
+        raw: "600519",
+        normalized: "600519.SS",
+        name: "贵州茅台",
+        status: "archived",
+        source: "formal",
+        price: "1665.80",
+        change: "-18.20",
+        changePct: "-1.08%",
+        tone: "down",
+        summary: "暂停",
+        trend: "趋势状态：转弱",
+        band: "-54",
+        signal: "趋势破坏",
+        alert: "风控",
+        ohlc: "O 1681.0 / H 1690.0 / L 1658.2 / C 1665.8 / V 3.1M",
+        reasons: ["跌破关键均线", "波动放大", "量价不配合"],
+        invalidators: ["重新站回 EMA20", "量能重新确认"]
+      },
+      {
+        symbol: "005930.KS",
+        market: "KR",
+        raw: "005930",
+        normalized: "005930.KS",
+        name: "Samsung Electronics",
+        status: "active",
+        source: "demo_fallback",
+        price: "77,600",
+        change: "+0",
+        changePct: "0.00%",
+        tone: "neutral",
+        summary: "演示",
+        trend: "趋势状态：数据不足",
+        band: "--",
+        signal: "不可解释",
+        alert: "不可解释",
+        ohlc: "O 77,580 / H 77,900 / L 76,980 / C 77,600 / V 21.2M",
+        reasons: ["来源已切换到演示数据", "历史样本不足以稳定解释"],
+        invalidators: ["正式来源恢复前不输出有效信号"]
+      }
+    ];
+
+    const state = {
+      layout: "dense",
+      mobileTab: "watchlist",
+      selectedSymbol: "AAPL",
+      selectedIndicator: "MACD",
+      sourceMode: "formal",
+      watchlist: watchlist.map((item) => ({ ...item })),
+      restoreLoaded: false
+    };
+
+    const storageRead = () => {
+      try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const storageWrite = () => {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          layout: state.layout,
+          mobileTab: state.mobileTab,
+          selectedSymbol: state.selectedSymbol,
+          selectedIndicator: state.selectedIndicator,
+          sourceMode: state.sourceMode,
+          watchlist: state.watchlist
+        }));
+      } catch {
+        // ignore storage failure; prototype must remain operable
+      }
+    };
+
+    const restored = storageRead();
+    if (restored) {
+      Object.assign(state, restored, {
+        watchlist: Array.isArray(restored.watchlist) ? restored.watchlist : state.watchlist,
+        restoreLoaded: true
+      });
+      if (!sourceDetails[state.sourceMode]) state.sourceMode = "formal";
+      if (!["dense", "focus", "mobile_tab"].includes(state.layout)) state.layout = "dense";
+      if (!["watchlist", "chart", "alerts", "source"].includes(state.mobileTab)) state.mobileTab = "watchlist";
+      if (!["MACD", "RSI", "KDJ", "ATR"].includes(state.selectedIndicator)) state.selectedIndicator = "MACD";
+    } else {
+      state.restoreLoaded = false;
+    }
+
+    const dom = {
+      body: document.body,
+      layoutModeLabel: document.getElementById("layout-mode-label"),
+      chartLayoutChip: document.getElementById("chart-layout-chip"),
+      layoutCardLabel: document.getElementById("layout-card-label"),
+      mobileTabLabel: document.getElementById("mobile-tab-label"),
+      sourceModeLabel: document.getElementById("source-mode-label"),
+      sourceModeChip: document.getElementById("source-mode-chip"),
+      sourceReason: document.getElementById("degradation-reason"),
+      sourceRefresh: document.getElementById("source-last-refresh"),
+      sourceAffected: document.getElementById("affected-object-list"),
+      chartSourceChip: document.getElementById("chart-source-chip"),
+      selectedSymbolChip: document.getElementById("selected-symbol-chip"),
+      chartSymbolTitle: document.getElementById("chart-symbol-title"),
+      chartSymbolSubtitle: document.getElementById("chart-symbol-subtitle"),
+      chartOhlcReadout: document.getElementById("chart-ohlc-readout"),
+      mtsTrendState: document.getElementById("mts-trend-state"),
+      mtsScoreBand: document.getElementById("mts-score-band"),
+      mtsSignalType: document.getElementById("mts-signal-type"),
+      mtsAlertLevel: document.getElementById("mts-alert-level"),
+      mtsReasons: document.getElementById("mts-reasons"),
+      mtsInvalidators: document.getElementById("mts-invalidators"),
+      signalCardRoot: document.getElementById("buc-004"),
+      dataInsufficientNote: document.getElementById("data-insufficient-note"),
+      chartSecondaryPanel: document.getElementById("chart-secondary-panel"),
+      previewMarket: document.getElementById("preview-market"),
+      previewRawSymbol: document.getElementById("preview-raw-symbol"),
+      previewNormalizedSymbol: document.getElementById("preview-normalized-symbol"),
+      previewNote: document.getElementById("preview-note"),
+      previewStatus: document.getElementById("preview-status"),
+      restoreSummary: document.getElementById("restore-summary"),
+      restoreStatePill: document.getElementById("restore-state-pill"),
+      restorePill: document.getElementById("restore-pill"),
+      restoreDetail: document.getElementById("restore-detail"),
+      mobileTabbar: document.getElementById("mobile-tabbar"),
+      layoutToggleButtons: Array.from(document.querySelectorAll("[data-layout-toggle]")),
+      mobileTabButtons: Array.from(document.querySelectorAll("[data-mobile-tab]")),
+      indicatorButtons: Array.from(document.querySelectorAll("[data-indicator]")),
+      watchCards: Array.from(document.querySelectorAll(".watch-card[data-symbol]")),
+      marketSelect: document.getElementById("watchlist-market-select"),
+      rawInput: document.getElementById("watchlist-add-input"),
+      addButton: document.getElementById("watchlist-add-button"),
+      clearButton: document.getElementById("preview-clear-button"),
+      alertTaxonomy: document.getElementById("alert-taxonomy-select"),
+      alertLevel: document.getElementById("alert-level-select"),
+      alertCondition: document.getElementById("alert-condition-input"),
+      alertSave: document.getElementById("alert-save-button"),
+      restoreContinue: document.getElementById("restore-continue-button"),
+      restoreRecover: document.getElementById("restore-recover-button"),
+      sourceRefreshButton: document.getElementById("source-refresh-button"),
+      alertCards: Array.from(document.querySelectorAll(".alert-card[data-state]")),
+      symbolArchiveButton: document.getElementById("symbol-archive-button"),
+      symbolRestoreButton: document.getElementById("symbol-restore-button")
+    };
+
+    function normalizeSymbol(raw, market) {
+      const clean = String(raw || "").trim().toUpperCase().replace(/\s+/g, "");
+      if (!clean) return "";
+      if (!market) return clean;
+      if (market === "HK" && /^\d{1,5}$/.test(clean)) return `${clean.padStart(4, "0")}.HK`;
+      if (market === "CN" && /^\d{6}$/.test(clean)) return `${clean}.${clean.startsWith("6") ? "SS" : "SZ"}`;
+      if (market === "KR" && /^\d{6}$/.test(clean)) return `${clean}.KS`;
+      return clean;
+    }
+
+    function selectedRow() {
+      return state.watchlist.find((item) => item.symbol === state.selectedSymbol) || state.watchlist[0];
+    }
+
+    function updatePreview() {
+      const market = dom.marketSelect.value;
+      const raw = dom.rawInput.value;
+      const normalized = normalizeSymbol(raw, market);
+      const ambiguous = !market || !raw || /^(\d+)$/.test(raw) && market === "";
+      dom.previewMarket.textContent = market || "待确认";
+      dom.previewRawSymbol.textContent = raw || "—";
+      dom.previewNormalizedSymbol.textContent = normalized || "—";
+      dom.previewStatus.textContent = ambiguous ? "待确认" : "已归一";
+      dom.previewStatus.className = `chip ${ambiguous ? "warn" : "good"}`;
+      dom.previewNote.textContent = ambiguous
+        ? "歧义输入不会静默写入活跃列表（active）；确认市场后再加入。"
+        : "已可写入，但仍建议先核对市场、原始代码和归一代码。";
+    }
+
+    function syncLayout() {
+      document.body.dataset.layout = state.layout;
+      document.body.dataset.mobileTab = state.mobileTab;
+      const layoutLabel = ({ dense: "紧凑（dense）", focus: "专注（focus）", mobile_tab: "移动分栏（mobile_tab）" }[state.layout] || state.layout);
+      dom.layoutModeLabel.textContent = layoutLabel;
+      dom.chartLayoutChip.textContent = layoutLabel;
+      dom.layoutCardLabel.textContent = layoutLabel;
+      dom.mobileTabLabel.textContent = ({ watchlist: "自选（watchlist）", chart: "图表（chart）", alerts: "提醒（alerts）", source: "来源（source）" }[state.mobileTab] || state.mobileTab);
+      dom.layoutToggleButtons.forEach((button) => {
+        const pressed = button.dataset.layoutToggle === state.layout;
+        button.setAttribute("aria-pressed", String(pressed));
+        button.classList.toggle("active", pressed);
+      });
+      dom.mobileTabButtons.forEach((button) => {
+        const active = button.dataset.mobileTab === state.mobileTab;
+        button.setAttribute("aria-pressed", String(active));
+        button.classList.toggle("active", active);
+      });
+      dom.mobileTabbar.querySelectorAll("button[data-mobile-tab]").forEach((button) => {
+        const active = button.dataset.mobileTab === state.mobileTab;
+        button.setAttribute("aria-pressed", String(active));
+        button.classList.toggle("active", active);
+      });
+      storageWrite();
+    }
+
+    function syncSource() {
+      const info = sourceDetails[state.sourceMode];
+      dom.sourceModeLabel.textContent = info.chip;
+      dom.sourceModeChip.textContent = info.chip;
+      dom.sourceModeChip.className = `chip ${info.chipClass}`;
+      dom.chartSourceChip.textContent = info.chartChip;
+      dom.chartSourceChip.className = `chip ${info.chipClass}`;
+      dom.sourceReason.textContent = info.reason;
+      dom.sourceRefresh.textContent = info.refresh;
+      dom.sourceAffected.innerHTML = info.affected.map((line) => `<li>${line}</li>`).join("");
+      dom.dataInsufficientNote.textContent = state.sourceMode === "formal"
+        ? "正式来源可用时，MTS 卡展示可解释六要素；一旦来源降级就切换为不可解释提示。"
+        : "来源降级时，MTS 与提醒区域都必须显示不可解释限制，而不是伪造有效信号。";
+      storageWrite();
+    }
+
+    function syncRestore() {
+      const activeCount = state.watchlist.filter((item) => item.status === "active").length;
+      const archivedCount = state.watchlist.filter((item) => item.status === "archived").length;
+      const alertCount = document.querySelectorAll('.alert-card[data-state]').length;
+      dom.restoreSummary.textContent = `活跃 ${activeCount} 个 / 归档 ${archivedCount} 个 / 提醒 ${alertCount} 条 / 最近查看 ${state.selectedSymbol}`;
+      dom.restorePill.textContent = state.restoreLoaded ? "已恢复（restored）" : "默认回退（default fallback）";
+      dom.restoreStatePill.textContent = state.restoreLoaded ? "已恢复本地现场" : "默认现场";
+      dom.restoreDetail.textContent = state.restoreLoaded
+        ? "已恢复自选、提醒、触发历史和基础布局；失败时回退默认三栏。"
+        : "当前为默认现场；一旦读取到本地状态会自动恢复。";
+    }
+
+    function syncWatchlist() {
+      const selected = selectedRow();
+      dom.selectedSymbolChip.textContent = `${selected.symbol} / ${selected.market} / ${selected.normalized}`;
+      dom.chartSymbolTitle.textContent = `${selected.symbol} · ${selected.name}`;
+      dom.chartSymbolSubtitle.textContent = `原始 ${selected.raw} / 归一 ${selected.normalized} / 来源 ${selected.source === "formal" ? "正式（formal）" : selected.source === "demo_fallback" ? "演示降级（demo_fallback）" : selected.source}`;
+      dom.chartOhlcReadout.textContent = selected.ohlc || "O -- / H -- / L -- / C -- / V --";
+      dom.mtsTrendState.textContent = selected.trend;
+      dom.mtsScoreBand.textContent = selected.band;
+      dom.mtsSignalType.textContent = selected.signal;
+      dom.mtsAlertLevel.textContent = selected.alert;
+      dom.mtsAlertLevel.className = `chip ${selected.alert === "风控" ? "bad" : selected.alert === "强信号" ? "good" : selected.alert === "确认" ? "blue" : "warn"}`;
+      dom.mtsReasons.textContent = `理由：${selected.reasons.join("、")}。`;
+      dom.mtsInvalidators.textContent = `失效条件：${selected.invalidators.join(" 或 ")}。`;
+      const sourceInfo = sourceDetails[state.sourceMode];
+      const signalTone = selected.alert === "风控"
+        ? "bad"
+        : selected.alert === "强信号"
+          ? "good"
+          : selected.alert === "确认"
+            ? "blue"
+            : "warn";
+      if (state.sourceMode !== "formal" || selected.source !== "formal") {
+        dom.mtsTrendState.textContent = selected.source === "demo_fallback" || state.sourceMode !== "formal"
+          ? "趋势状态：数据不足"
+          : selected.trend;
+        dom.mtsScoreBand.textContent = selected.source === "demo_fallback" || state.sourceMode !== "formal" ? "--" : selected.band;
+        dom.mtsSignalType.textContent = selected.source === "demo_fallback" || state.sourceMode !== "formal" ? "不可解释" : selected.signal;
+        dom.mtsAlertLevel.textContent = selected.source === "demo_fallback" || state.sourceMode !== "formal" ? "不可解释" : selected.alert;
+        dom.mtsAlertLevel.className = `chip ${selected.source === "formal" && state.sourceMode === "formal" ? "good" : "warn"}`;
+      }
+      dom.signalCardRoot.className = `signal-card anchor ${
+        state.sourceMode === "unavailable"
+          ? "bad"
+          : state.sourceMode !== "formal" || selected.source !== "formal"
+            ? "warn"
+            : signalTone
+      }`;
+      dom.chartSourceChip.textContent = sourceInfo.chartChip;
+      dom.chartSourceChip.className = `chip ${sourceInfo.chipClass}`;
+      dom.chartLayoutChip.textContent = ({ dense: "紧凑（dense）", focus: "专注（focus）", mobile_tab: "移动分栏（mobile_tab）" }[state.layout] || state.layout);
+      document.querySelectorAll(".watch-card[data-symbol]").forEach((card) => {
+        const isSelected = card.dataset.symbol === state.selectedSymbol;
+        card.classList.toggle("selected", isSelected);
+        card.style.outline = isSelected ? "1px solid rgba(110,147,255,0.32)" : "none";
+      });
+      storageWrite();
+    }
+
+    function renderAlertSeed() {
+      const cards = Array.from(document.querySelectorAll('.alert-card[data-state]'));
+      cards.forEach((card) => {
+        const stateName = card.dataset.state;
+        if (stateName === "triggered") {
+          card.querySelector(".chip").textContent = "已触发（triggered）";
+        }
+      });
+    }
+
+    function addAlert() {
+      const taxonomy = dom.alertTaxonomy.value;
+      const level = dom.alertLevel.value;
+      const condition = dom.alertCondition.value.trim() || "自定义条件";
+      const card = document.createElement("article");
+      card.className = "alert-card";
+      card.dataset.state = "idle";
+      card.dataset.testid = `alert-rule-row-${taxonomy.replace(/\s+/g, "-").toLowerCase()}`;
+      card.innerHTML = `
+        <div class="alert-head">
+          <b>${level} · ${taxonomy}</b>
+          <span class="chip blue">待触发（idle）</span>
+        </div>
+        <div class="rowline">条件：${condition}</div>
+        <div class="rowline">绑定标的：${state.selectedSymbol} / 类型（taxonomy）：${taxonomy}</div>
+        <div class="actions"><button type="button">确认</button></div>
+      `;
+      document.querySelector(".alert-list").appendChild(card);
+      bindAlertCardActions();
+      syncRestore();
+      storageWrite();
+    }
+
+    function bindAlertCardActions() {
+      document.querySelectorAll(".alert-card[data-state]").forEach((card) => {
+        if (card.dataset.bound === "1") return;
+        card.dataset.bound = "1";
+        const actionButton = card.querySelector("button");
+        if (!actionButton) return;
+        actionButton.addEventListener("click", () => {
+          if (card.dataset.state === "suspended_by_archive") return;
+          card.dataset.state = "acknowledged";
+          const chip = card.querySelector(".chip");
+          if (chip) chip.textContent = "已确认（acknowledged）";
+          const head = card.querySelector(".alert-head b");
+          if (head && !head.textContent.includes("已确认")) {
+            head.textContent = `${head.textContent}（已确认）`;
+          }
+        });
+      });
+    }
+
+    function switchIndicator(indicator) {
+      state.selectedIndicator = indicator;
+      dom.indicatorButtons.forEach((button) => {
+        const active = button.dataset.indicator === indicator;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-selected", String(active));
+      });
+      const detail = indicatorDetails[indicator];
+      dom.chartSecondaryPanel.innerHTML = `
+        <div class="rowline"><strong>当前副图：${indicator}</strong></div>
+        <div class="rowline">${detail.text}</div>
+        <div class="helper-line" id="indicator-status-note" data-testid="indicator-status-note">${detail.note}</div>
+      `;
+      storageWrite();
+    }
+
+    function selectSymbol(symbol) {
+      const item = state.watchlist.find((entry) => entry.symbol === symbol);
+      if (!item) return;
+      state.selectedSymbol = symbol;
+      switchIndicator(state.selectedIndicator);
+      syncWatchlist();
+      syncRestore();
+      if (state.layout === "mobile_tab") {
+        state.mobileTab = "chart";
+        syncLayout();
+      }
+      return item;
+    }
+
+    function archiveSelected() {
+      const item = state.watchlist.find((entry) => entry.symbol === state.selectedSymbol);
+      if (!item) return;
+      item.status = item.status === "archived" ? "active" : "archived";
+      if (item.status === "archived") {
+        item.summary = "暂停";
+      }
+      if (item.status === "active" && item.symbol === "600519.SS") {
+        item.summary = "恢复";
+      }
+      syncWatchlist();
+      syncRestore();
+      renderWatchlist();
+    }
+
+    function renderWatchlist() {
+      document.querySelectorAll(".watch-card[data-symbol]").forEach((card) => {
+        const symbol = card.dataset.symbol;
+        const item = state.watchlist.find((entry) => entry.symbol === symbol);
+        if (!item) return;
+        card.classList.toggle("archived", item.status === "archived");
+        const statusChip = card.querySelector(".watch-head .chip");
+        if (statusChip) {
+          statusChip.textContent = item.status === "archived" ? "已归档（archived）" : "活跃（active）";
+          statusChip.className = `chip ${item.status === "archived" ? "warn" : "good"}`;
+        }
+        const rowLine = card.querySelector(".rowline");
+        rowLine.textContent = `原始 ${item.raw} / 归一 ${item.normalized} / 来源 ${item.source === "formal" ? "正式（formal）" : item.source === "demo_fallback" ? "演示降级（demo_fallback）" : item.source}`;
+        const priceLine = card.querySelector(".price-line");
+        priceLine.innerHTML = `<span>${item.price}</span><span class="${item.tone === 'up' ? 'up' : item.tone === 'down' ? 'down' : 'neutral'}">${item.change}</span><span class="${item.tone === 'up' ? 'up' : item.tone === 'down' ? 'down' : 'neutral'}">${item.changePct}</span><span class="chip ${item.summary === '风控' ? 'bad' : item.summary === '演示' ? 'warn' : item.summary === '暂停' ? 'warn' : item.summary === '强信号' ? 'good' : 'blue'}">${item.summary}</span>`;
+        const selectButton = card.querySelector('button[data-action="select-symbol"]');
+        const archiveButton = card.querySelector('button[data-action="archive-symbol"]');
+        const restoreButton = card.querySelector('button[data-action="restore-symbol"]');
+        if (selectButton) selectButton.textContent = item.status === "archived" ? "查看" : "看盘";
+        if (archiveButton) {
+          archiveButton.textContent = item.status === "archived" ? "已归档" : "归档";
+          archiveButton.hidden = item.status === "archived";
+          archiveButton.disabled = item.status === "archived";
+        }
+        if (restoreButton) {
+          restoreButton.hidden = item.status !== "archived";
+        }
+        card.querySelector("b").textContent = item.symbol;
+        const selected = item.symbol === state.selectedSymbol;
+        card.classList.toggle("selected", selected);
+      });
+    }
+
+    function appendWatchCard(item) {
+      const marketGroup = document.getElementById(`market-group-${String(item.market).toLowerCase()}`);
+      if (!marketGroup) return;
+      const existing = marketGroup.querySelector(`[data-symbol="${item.symbol}"]`);
+      if (existing) return;
+      const article = document.createElement("article");
+      article.className = `watch-card ${item.status === "archived" ? "archived" : ""}`;
+      article.dataset.symbol = item.symbol;
+      article.dataset.testid = `symbol-row-${item.symbol.toLowerCase().replace(/\./g, "-")}`;
+      article.innerHTML = `
+        <div class="watch-head">
+          <b>${item.symbol}</b><span class="chip ${item.status === "archived" ? "warn" : "good"}">${item.status === "archived" ? "已归档（archived）" : "活跃（active）"}</span>
+        </div>
+        <div class="rowline">原始 ${item.raw} / 归一 ${item.normalized} / 来源 ${item.source === "formal" ? "正式（formal）" : item.source === "demo_fallback" ? "演示降级（demo_fallback）" : item.source}</div>
+        <div class="price-line">
+          <span>${item.price}</span>
+          <span class="${item.tone === 'up' ? 'up' : item.tone === 'down' ? 'down' : 'neutral'}">${item.change}</span>
+          <span class="${item.tone === 'up' ? 'up' : item.tone === 'down' ? 'down' : 'neutral'}">${item.changePct}</span>
+          <span class="chip ${item.summary === '风控' ? 'bad' : item.summary === '演示' ? 'warn' : item.summary === '暂停' ? 'warn' : item.summary === '强信号' ? 'good' : 'blue'}">${item.summary}</span>
+        </div>
+        <div class="actions">
+          <button data-action="select-symbol">${item.status === "archived" ? "查看" : "看盘"}</button>
+          <button data-action="archive-symbol" ${item.status === "archived" ? "hidden disabled" : ""} ${item.status === "archived" ? 'data-testid="symbol-archive-button"' : ""}>${item.status === "archived" ? "已归档" : "归档"}</button>
+          <button data-action="restore-symbol" ${item.status === "archived" ? "" : "hidden"} ${item.status === "archived" ? 'data-testid="symbol-restore-button"' : ""}>恢复</button>
+        </div>
+      `;
+      marketGroup.appendChild(article);
+    }
+
+    function bindWatchCardActions() {
+      document.querySelectorAll(".watch-card[data-symbol]").forEach((card) => {
+        if (card.dataset.bound === "1") return;
+        card.dataset.bound = "1";
+        const symbol = card.dataset.symbol;
+        card.addEventListener("click", (event) => {
+          const target = event.target;
+          if (target && target.closest && target.closest("button")) return;
+          selectSymbol(symbol);
+        });
+        card.querySelectorAll("button[data-action]").forEach((button) => {
+          button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const action = button.dataset.action;
+            if (action === "select-symbol") selectSymbol(symbol);
+            if (action === "archive-symbol") {
+              const item = state.watchlist.find((entry) => entry.symbol === symbol);
+              if (item) item.status = item.status === "archived" ? "active" : "archived";
+              renderWatchlist();
+              syncRestore();
+            }
+            if (action === "restore-symbol") {
+              const item = state.watchlist.find((entry) => entry.symbol === symbol);
+              if (item) item.status = "active";
+              renderWatchlist();
+              syncRestore();
+            }
+          });
+        });
+      });
+    }
+
+    function bindLayoutButtons() {
+      dom.layoutToggleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          state.layout = button.dataset.layoutToggle;
+          if (state.layout !== "mobile_tab" && state.mobileTab !== "watchlist") {
+            state.mobileTab = "watchlist";
+          }
+          syncLayout();
+          syncWatchlist();
+          if (state.layout === "mobile_tab") {
+            document.body.scrollIntoView({ block: "start" });
+          }
+        });
+      });
+      dom.mobileTabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          state.mobileTab = button.dataset.mobileTab;
+          syncLayout();
+        });
+      });
+    }
+
+    function bindIndicatorButtons() {
+      dom.indicatorButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          switchIndicator(button.dataset.indicator);
+        });
+      });
+    }
+
+    function bindPreview() {
+      dom.marketSelect.addEventListener("change", updatePreview);
+      dom.rawInput.addEventListener("input", updatePreview);
+      dom.addButton.addEventListener("click", () => {
+        const market = dom.marketSelect.value;
+        const raw = dom.rawInput.value.trim();
+        const normalized = normalizeSymbol(raw, market);
+        if (!raw) return;
+        if (!market) {
+          dom.previewStatus.textContent = "待确认";
+          dom.previewStatus.className = "chip warn";
+          dom.previewNote.textContent = "请先确认市场，再加入观察；歧义输入不会静默写入活跃列表（active）。";
+          return;
+        }
+        const symbol = normalized || raw.toUpperCase();
+        const existing = state.watchlist.find((item) => item.symbol === symbol);
+        if (existing) {
+          selectSymbol(existing.symbol);
+          return;
+        }
+        const next = {
+          symbol,
+          market: market || "US",
+          raw: raw.toUpperCase(),
+          normalized: symbol,
+          name: symbol,
+          status: "active",
+          source: state.sourceMode,
+          price: "--",
+          change: "--",
+          changePct: "--",
+          tone: "neutral",
+          summary: "观察",
+          trend: "趋势状态：数据待补充",
+          band: "--",
+          signal: "待解释",
+          alert: "观察",
+          reasons: ["新增后等待行情刷新"],
+          invalidators: ["数据不足前不输出有效结论"],
+          ohlc: "O -- / H -- / L -- / C -- / V --"
+        };
+        state.watchlist.unshift(next);
+        appendWatchCard(next);
+        renderWatchlist();
+        bindWatchCardActions();
+        selectSymbol(symbol);
+        syncRestore();
+        updatePreview();
+      });
+      dom.clearButton.addEventListener("click", () => {
+        dom.rawInput.value = "";
+        dom.marketSelect.value = "";
+        updatePreview();
+      });
+    }
+
+    function bindAlertForm() {
+      dom.alertSave.addEventListener("click", addAlert);
+    }
+
+    function bindRestoreAndSource() {
+      dom.restoreContinue.addEventListener("click", () => {
+        state.layout = "dense";
+        state.mobileTab = "chart";
+        syncLayout();
+        selectSymbol(state.selectedSymbol);
+      });
+      dom.restoreRecover.addEventListener("click", () => {
+        state.restoreLoaded = true;
+        syncRestore();
+      });
+      dom.sourceRefreshButton.addEventListener("click", () => {
+        const order = ["formal", "demo_fallback", "stale", "unavailable"];
+        const nextIndex = (order.indexOf(state.sourceMode) + 1) % order.length;
+        state.sourceMode = order[nextIndex];
+        syncSource();
+        syncWatchlist();
+      });
+    }
+
+    function init() {
+      if (restored) {
+        dom.restoreStatePill.textContent = "已恢复本地现场";
+      }
+      renderWatchlist();
+      bindWatchCardActions();
+      bindLayoutButtons();
+      bindIndicatorButtons();
+      bindPreview();
+      bindAlertForm();
+      bindAlertCardActions();
+      bindRestoreAndSource();
+      updatePreview();
+      syncLayout();
+      syncSource();
+      switchIndicator(state.selectedIndicator);
+      syncWatchlist();
+      syncRestore();
+      renderAlertSeed();
+      if (state.selectedSymbol) selectSymbol(state.selectedSymbol);
+      storageWrite();
+      if (location.hash) {
+        const anchor = document.querySelector(location.hash);
+        if (anchor) anchor.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+patches:
+  - target: control_contract.modules
+    op: set
+    value:
+      - id: MOD-01
+        name: market-normalization
+        responsibility: "统一处理 raw symbol / market 候选、归一预览、歧义阻断、重复添加幂等；输出可确认的 symbol identity。"
+        paths: [src/data/markets.ts, src/domain/market-normalization.ts, src/features/watchlist/NormalizationPreview.tsx]
+        traces_to: [FR-01, FR-02, AC-01]
+      - id: MOD-02
+        name: market-data-source
+        responsibility: "封装 Yahoo proxy / fallback / source health；产出 SourceHealth 与价格系列载荷；管理短 TTL cache 显式边界。"
+        paths: [server/index.js, src/domain/market-data-source.ts, src/features/source]
+        traces_to: [FR-06, AC-02, AC-03, AC-04]
+      - id: MOD-03
+        name: observation-engine
+        responsibility: "将价格条、指标可用性与来源健康组合成 PriceSeries / IndicatorState，并计算图表读数准备态。"
+        paths: [src/lib/indicators.ts, src/domain/observation.ts, src/features/chart]
+        traces_to: [FR-03, FR-06, AC-02]
+      - id: MOD-04
+        name: mts-interpreter
+        responsibility: "用纯函数把 PriceSeries、IndicatorSet 与 SourceHealth 解释成 MtsExplanation。"
+        paths: [src/lib/signals.ts, src/domain/mts.ts, src/features/mts]
+        traces_to: [FR-04, AC-03, AC-04]
+      - id: MOD-05
+        name: alert-resolution
+        responsibility: "管理提醒 taxonomy、启停、触发、确认、归档暂停、历史记录与风控优先级。"
+        paths: [src/features/alerts, src/lib/alerts.ts, src/types.ts]
+        traces_to: [FR-05, AC-04]
+      - id: MOD-06
+        name: workspace-recovery
+        responsibility: "以版本化 snapshot 管理 watchlist、alerts、selected symbol、layout、restore status；负责迁移、回退与默认布局补救。"
+        paths: [src/lib/storage.ts, src/domain/workspace.ts]
+        traces_to: [FR-07, FR-08, AC-05]
+      - id: MOD-07
+        name: surface-composition
+        responsibility: "将 App.tsx 拆分为 Watchlist / Workbench / MTS / Alerts / Source / Layout / Restore surface，并保留稳定 locator 与可访问名称。"
+        paths: [src/App.tsx, src/features/surfaces, src/styles.css]
+        traces_to: [FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08, AC-01, AC-02, AC-03, AC-04, AC-05]
+      - id: MOD-08
+        name: verification-harness
+        responsibility: "提供 frozen fixture、replay、E2E 断言和 build/test 门禁。"
+        paths: [tests/unit, tests/replay, tests/e2e, fixtures]
+        traces_to: [FR-09, NFR-05, AC-01, AC-02, AC-03, AC-04, AC-05]
+  - target: control_contract.interface_changes
+    op: set
+    value:
+      - id: INT-01
+        kind: ADDED
+        module: MOD-02
+        name: MarketDataSource.fetchSeries
+        after: "返回 MarketDataEnvelope，包含 priceSeries、sourceHealth、meta、servedAt、cacheState。"
+        traces_to: [FR-06, AC-02]
+      - id: INT-02
+        kind: MODIFIED
+        module: MOD-02
+        name: ChartPayload_to_MarketDataEnvelope
+        before: "ChartPayload 仅含 symbol/range/interval/meta/bars/dataSource/notice。"
+        after: "新增 sourceHealth、priceSeries、degradationReason、sourceName、lastRefreshedAt、retryState，保留 bars。"
+        traces_to: [FR-06, AC-02, AC-03, AC-04]
+      - id: INT-03
+        kind: ADDED
+        module: MOD-02
+        name: SourceHealth
+        after: "formal / demo_fallback / stale / unavailable，附 lastRefreshedAt、degradationReason、retryState、affectedObjects。"
+        traces_to: [FR-06]
+      - id: INT-04
+        kind: MODIFIED
+        module: MOD-03
+        name: PriceBar_to_PriceSeries
+        before: "domain 与 UI 直接使用裸 PriceBar[]。"
+        after: "PriceSeries 成为 canonical domain object，包含 bars、timeframe、latestOhlc、latestPrice、changeSummary、sourceHealth。"
+        traces_to: [FR-03, FR-06, AC-02]
+      - id: INT-05
+        kind: MODIFIED
+        module: MOD-04
+        name: CompositeSignal_to_MtsExplanation
+        before: "buildSignal 输出旧四因子 CompositeSignal。"
+        after: "MtsExplanation 包含 trendState、scoreBand、signalType、alertLevel、reasonCodes、invalidators、interpretability、sourceHealth。"
+        traces_to: [FR-04, AC-03, AC-04]
+      - id: INT-06
+        kind: MODIFIED
+        module: MOD-05
+        name: AlertRule
+        before: "仅 above/below 价格提醒或 signal 提醒，只有 enabled / lastTriggeredAt。"
+        after: "增加 taxonomy、activationState、triggerState、history、acknowledgedAt、suspendedReason、restoreIntent。"
+        traces_to: [FR-05, AC-04]
+      - id: INT-07
+        kind: ADDED
+        module: MOD-06
+        name: WorkspaceSnapshotV2
+        after: "版本化快照包含 watchlist、alerts、selectedSymbol、layoutMode、selectedMobileTab、restoreMetadata。"
+        traces_to: [FR-07, FR-08, AC-05]
+      - id: INT-08
+        kind: MODIFIED
+        module: MOD-06
+        name: storage_api_to_workspace_api
+        before: "readWatchlist/readAlerts/writeWatchlist/writeAlerts 简单 JSON 读写。"
+        after: "readWorkspace/writeWorkspace/migrateWorkspace 负责双读旧 key、生成 V2、校验 schema、写入回退信息。"
+        traces_to: [FR-01, FR-07, FR-08, AC-01, AC-05]
+  - target: control_contract.data_changes
+    op: set
+    value:
+      - id: DATA-01
+        kind: MODIFIED
+        entity: SourceHealth
+        migration: "从 dataSource + notice 迁移到 formal / demo_fallback / stale / unavailable；fallback 结果携带显式状态。"
+        rollback: "未知状态回退为 unavailable；刷新失败保留上次可解释状态并给 retry 提示。"
+        traces_to: [FR-06, AC-02, AC-03, AC-04]
+      - id: DATA-02
+        kind: MODIFIED
+        entity: PriceSeries
+        migration: "从 wire bars 生成 PriceSeries；保留原始 bars 仅用于适配层与回放。"
+        rollback: "bars 不足、字段缺失或时间序列不连续时降级为 partial/unavailable。"
+        traces_to: [FR-03, FR-06, AC-02]
+      - id: DATA-03
+        kind: MODIFIED
+        entity: MtsExplanation
+        migration: "旧四因子评分可作为内部子分项；UI、fixture 与 snapshot 只认 MtsExplanation。"
+        rollback: "评分不足或来源降级时输出 data_insufficient。"
+        traces_to: [FR-04, AC-03, AC-04]
+      - id: DATA-04
+        kind: ADDED
+        entity: WorkspaceSnapshotV2
+        migration: "从 myinvestment.watchlist / myinvestment.alerts 双 key 迁移到版本化 snapshot。"
+        rollback: "读取失败时回退默认 focus 布局并重建可用工作台。"
+        traces_to: [FR-07, FR-08, AC-05]
+      - id: DATA-05
+        kind: MODIFIED
+        entity: WatchSymbolArchiveState
+        migration: "从删除即消失迁移到 active/archived；归档暂停绑定提醒。"
+        rollback: "回退时保留 archived 条目，至少恢复为只读状态。"
+        traces_to: [FR-01, FR-02, FR-07, AC-01, AC-05]
+      - id: DATA-06
+        kind: MODIFIED
+        entity: AlertTaxonomyHistoryTriggerState
+        migration: "从 above/below + signal + enabled/lastTriggeredAt 迁移到 taxonomy、activationState、triggerState、history、acknowledged、suspended_by_archive。"
+        rollback: "旧提醒按默认 taxonomy 和状态补全；历史缺失时以无历史但可继续使用回退。"
+        traces_to: [FR-05, AC-04, AC-05]
+  - target: control_contract.verification_strategy
+    op: set
+    value:
+      - id: VS-01
+        layer: integration
+        target_ids: [MOD-02, FR-06, AC-02]
+        evidence_required: [live_smoke_result, mock_failure_result, fallback_fixture_result]
+      - id: VS-02
+        layer: replay
+        target_ids: [MOD-02, MOD-03, MOD-04, MOD-05, FR-06, AC-03, AC-04]
+        evidence_required: [source_health_fixture_replay]
+      - id: VS-03
+        layer: unit
+        target_ids: [MOD-04, FR-04, AC-03]
+        evidence_required: [mts_replay_determinism_result]
+      - id: VS-04
+        layer: integration
+        target_ids: [MOD-05, FR-05, FR-07, AC-04, AC-05]
+        evidence_required: [alert_archive_restore_result]
+      - id: VS-05
+        layer: integration
+        target_ids: [MOD-06, FR-07, FR-08, AC-05]
+        evidence_required: [localstorage_migration_result, corrupted_snapshot_result]
+      - id: VS-06
+        layer: e2e
+        target_ids: [MOD-07, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08]
+        evidence_required: [playwright_user_journey_result, locator_contract_result]
+      - id: VS-07
+        layer: gate
+        target_ids: [MOD-08, FR-09, NFR-05]
+        evidence_required: [unit_result, replay_result, e2e_result, build_result]
+      - id: VS-08
+        layer: fitness
+        target_ids: [MOD-02, MOD-03]
+        evidence_required: [cache_boundary_check, chart_render_check]

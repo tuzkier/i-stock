@@ -1,0 +1,20 @@
+# 项目级前端栈固化模板
+# 用法：复制到项目的 project-knowledge/engineering/policies/stage-rules.yaml
+#       作为顶层 `interaction:` 段。
+# 出处：.harness/docs/methodologies/prototype-as-frontend-delivery.md §6.7
+# 说明：interaction 阶段（prototype.delivery_mode=frontend_engineering 路线）
+#       直接沿用以下技术栈，不再在 solution 阶段做选型。
+#       如需替换某一项，由 solution 阶段发起 Decision Gate，结论回写本文件。
+
+interaction:
+  framework: "next.js@14"
+  state: "react-query@5"                    # 领域状态机库由项目按需自选，方法论不指定
+  ui: "shadcn/ui + tailwindcss@3"
+  mock: "msw@2"
+  e2e: "playwright"
+  forms: "react-hook-form + zod"
+  i18n: "next-intl"
+  monitoring: "sentry"
+  a11y: "axe-core"
+  # 真前端工程根目录。优先级：项目 stage-rules.yaml > harness.yaml > 默认 apps/web。
+  frontend_project_root: "apps/web"

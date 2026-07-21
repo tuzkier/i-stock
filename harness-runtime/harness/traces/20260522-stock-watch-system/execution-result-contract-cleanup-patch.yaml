@@ -1,0 +1,146 @@
+patches:
+  - target: control_contract.role_verdicts
+    op: set
+    value:
+      - id: RV-SPEC-T002-RECHECK-PASS
+        role: spec-reviewer
+        reviewed_unit: TASK-STOCK-WATCH-T002
+        verdict: PASS
+        review_basis:
+          - execution-brief.md T002
+          - local-stock-watch-workbench spec
+          - EV-T002-RED-001
+          - EV-T002-UNIT-001
+          - EV-T002-E2E-001
+          - EV-T002-FAULT-001
+          - EV-T002-WALKTHROUGH-001
+        dispatch:
+          mode: readonly
+          role_package_ref: .harness/common/agents/spec-reviewer.md
+          subagent_id: legacy-t002-spec-reviewer
+          model: gpt-5.4
+          execution_mode: readonly
+          started_at: "2026-06-06T00:00:00Z"
+          completed_at: "2026-06-06T00:00:00Z"
+        reviewed_obligations: [T002-A1, T002-A2]
+        blocking_gaps: []
+        evidence_refs:
+          - EV-T002-RED-001
+          - EV-T002-UNIT-001
+          - EV-T002-E2E-001
+          - EV-T002-BUILD-001
+          - EV-T002-FAULT-001
+          - EV-T002-WALKTHROUGH-001
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 4
+      pending_reviewer_recheck: true
+      last_gate_run_status: FAIL
+      last_verdict: FAIL
+  - target: control_contract.tdd_evidence
+    op: set
+    value:
+      - id: EV-T002-RED-001
+        type: red_report
+        phase: red
+        path: harness-runtime/harness/traces/20260522-stock-watch-system/t002-red-report.md
+        command: spec-reviewer HOLD report for TASK-STOCK-WATCH-T002
+        exit_code: 1
+        failure_signal: Missing T002-specific evidence, unavailable coverage, and SourceHealthStatus contract drift before corrective pass.
+        covers:
+          atomic_tasks: [T002-A1, T002-A2]
+          tasks: [TASK-STOCK-WATCH-T002]
+      - id: EV-T003-REGISTRY-001
+        type: green_report
+        phase: green
+        path: tests/unit/mts/registry.spec.ts
+        command: esbuild bundle tests/unit/mts/registry.spec.ts then node --test
+        exit_code: 0
+        assertion_summary: 2 tests / 0 fail
+        covers:
+          atomic_tasks: [T003-A1]
+          tasks: [TASK-STOCK-WATCH-T003]
+      - id: EV-T003-REPLAY-001
+        type: green_report
+        phase: green
+        path: tests/replay/mts/replay.spec.ts
+        command: esbuild bundle tests/replay/mts/replay.spec.ts then node --test
+        exit_code: 0
+        assertion_summary: 2 tests / 0 fail
+        covers:
+          atomic_tasks: [T003-A1]
+          tasks: [TASK-STOCK-WATCH-T003]
+      - id: EV-T004-RED-001
+        type: red_report
+        phase: red
+        path: tests/unit/alerts/rule-model.spec.ts
+        command: esbuild bundle before src/domain/alert.ts existed
+        exit_code: 1
+        failure_signal: Could not resolve ../../../src/domain/alert.ts before alert domain implementation.
+        covers:
+          atomic_tasks: [T004-A1]
+          tasks: [TASK-STOCK-WATCH-T004]
+      - id: EV-T005-RED-001
+        type: red_report
+        phase: red
+        path: tests/unit/workspace/snapshot-migration.spec.ts
+        command: esbuild bundle before src/domain/workspace.ts existed
+        exit_code: 1
+        failure_signal: Could not resolve ../../../src/domain/workspace before workspace snapshot implementation.
+        covers:
+          atomic_tasks: [T005-A1]
+          tasks: [TASK-STOCK-WATCH-T005]
+      - id: EV-T005-REPLAY-001
+        type: green_report
+        phase: green
+        path: tests/replay/workspace/migration-replay.spec.ts
+        command: esbuild bundle tests/replay/workspace/migration-replay.spec.ts then node --test
+        exit_code: 0
+        assertion_summary: 1 test / 0 fail
+        covers:
+          atomic_tasks: [T005-A1]
+          tasks: [TASK-STOCK-WATCH-T005]
+      - id: EV-T006-RED-001
+        type: red_report
+        phase: red
+        path: tests/replay/gate/fixture-corpus.spec.ts
+        command: esbuild bundle before fixtures/gate/stock-watch-core.json existed
+        exit_code: 1
+        failure_signal: Could not resolve fixtures/gate/stock-watch-core.json and checksum sidecar before fixture corpus implementation.
+        covers:
+          atomic_tasks: [T006-A1]
+          tasks: [TASK-STOCK-WATCH-T006]
+      - id: EV-T006-UNIT-REPLAY-MATRIX-001
+        type: green_report
+        phase: green
+        path: harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests
+        command: bundle tests/unit/**/*.spec.ts and tests/replay/**/*.spec.ts with esbuild, then node --test
+        exit_code: 0
+        assertion_summary: 43 tests / 0 fail
+        covers:
+          atomic_tasks: [T002-A1, T002-A2, T003-A1, T003-A2, T004-A1, T004-A2, T005-A1, T005-A2, T006-A1, T006-A2]
+          tasks: [TASK-STOCK-WATCH-T002, TASK-STOCK-WATCH-T003, TASK-STOCK-WATCH-T004, TASK-STOCK-WATCH-T005, TASK-STOCK-WATCH-T006]
+      - id: EV-T006-E2E-REGRESSION-001
+        type: regression_report
+        phase: regression
+        path: test-results
+        command: npx playwright test --config harness-runtime/harness/traces/20260522-stock-watch-system/playwright-no-webserver.config.ts --reporter=list --trace=on
+        exit_code: 0
+        assertion_summary: 22 passed
+        covers:
+          atomic_tasks: [T002-A2, T003-A2, T004-A2, T005-A2, T006-A2]
+          tasks: [TASK-STOCK-WATCH-T002, TASK-STOCK-WATCH-T003, TASK-STOCK-WATCH-T004, TASK-STOCK-WATCH-T005, TASK-STOCK-WATCH-T006]
+      - id: EV-T006-BUILD-001
+        type: toolchain_status
+        phase: toolchain
+        path: dist
+        command: npm run build
+        exit_code: 0
+        assertion_summary: tsc --noEmit and Vite production build passed
+        covers:
+          atomic_tasks: [T002-A1, T002-A2, T003-A1, T003-A2, T004-A1, T004-A2, T005-A1, T005-A2, T006-A1, T006-A2]
+          tasks: [TASK-STOCK-WATCH-T002, TASK-STOCK-WATCH-T003, TASK-STOCK-WATCH-T004, TASK-STOCK-WATCH-T005, TASK-STOCK-WATCH-T006]
+  - target: control_contract.tasks
+    op: set
+    value: []

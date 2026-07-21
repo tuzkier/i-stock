@@ -1,0 +1,40 @@
+role_verdict:
+  id: RV-SPEC-T001-PASS
+  role: spec-reviewer
+  reviewed_unit: TASK-STOCK-WATCH-T001
+  verdict: PASS
+  reviewed_obligations:
+    - T001-A1
+    - T001-A2
+    - 添加前预览归一结果
+    - 歧义输入不得静默写入
+    - 列表显示行情摘要
+    - 归档暂停提醒
+  review_basis:
+    work_graph_artifact:
+      node_id: TASK-STOCK-WATCH-T001
+      artifact_version: v1
+    artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+      - harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+      - harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+      - tests/unit/watchlist/normalization.spec.ts
+      - tests/unit/watchlist/archive.spec.ts
+      - tests/unit/watchlist/storage-replay.spec.ts
+      - src/domain/market-normalization.ts
+      - src/domain/watchlist-state.ts
+      - src/lib/storage.ts
+  dispatch:
+    subagent_id: 019e5534-6479-7280-8f18-762aa27e8fa6
+    model: gpt-5.4
+    execution_mode: spawn_agent
+    started_at: '2026-05-23T22:30:00+08:00'
+    completed_at: '2026-05-23T22:33:00+08:00'
+  blocking_gaps: []
+  evidence_refs:
+    - EV-UNIT-001
+    - EV-MUTATION-001
+    - EV-BROWSER-001
+    - EV-REGRESSION-001

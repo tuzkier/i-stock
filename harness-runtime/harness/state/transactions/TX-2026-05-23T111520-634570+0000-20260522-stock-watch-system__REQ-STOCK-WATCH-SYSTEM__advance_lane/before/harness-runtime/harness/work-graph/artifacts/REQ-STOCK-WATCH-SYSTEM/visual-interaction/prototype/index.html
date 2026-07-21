@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyInvestment 看盘原型</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #657282;
+      --line: #d8dee6;
+      --green: #127a51;
+      --red: #b42318;
+      --amber: #b76e00;
+      --blue: #1f5eff;
+      --soft-blue: #e8efff;
+      --soft-red: #fff0ed;
+      --soft-green: #eaf7ef;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+    button, input, select {
+      font: inherit;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      min-height: 34px;
+      border-radius: 6px;
+      padding: 0 10px;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    button.ghost {
+      background: transparent;
+    }
+    input, select {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 10px;
+      background: #fff;
+    }
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .source {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .source strong { color: var(--amber); }
+    .source small { color: var(--muted); }
+    .layout {
+      display: grid;
+      grid-template-columns: 300px minmax(420px, 1fr) 340px;
+      gap: 12px;
+      padding: 12px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-width: 0;
+    }
+    .panel h2 {
+      font-size: 16px;
+      margin: 0;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section { padding: 12px 14px; }
+    .stack { display: grid; gap: 10px; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row > * { min-width: 0; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: #fff;
+      white-space: nowrap;
+    }
+    .tag.green { color: var(--green); background: var(--soft-green); border-color: #b7dfc4; }
+    .tag.red { color: var(--red); background: var(--soft-red); border-color: #ffc7bd; }
+    .tag.blue { color: var(--blue); background: var(--soft-blue); border-color: #becdff; }
+    .market { display: grid; gap: 6px; }
+    .market-title {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    .symbol {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+      background: #fff;
+    }
+    .symbol.active { border-color: #9bb6ff; background: #f7f9ff; }
+    .symbol-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+    .muted { color: var(--muted); }
+    .chart {
+      height: 260px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(31,94,255,.08), transparent 55%),
+        repeating-linear-gradient(90deg, transparent 0 54px, #edf0f4 54px 55px),
+        repeating-linear-gradient(0deg, transparent 0 42px, #edf0f4 42px 43px);
+      position: relative;
+      overflow: hidden;
+    }
+    .chart svg { width: 100%; height: 100%; display: block; }
+    .volume, .secondary {
+      height: 90px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      padding: 10px;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .tabs button.active {
+      color: var(--blue);
+      border-color: #9bb6ff;
+      background: var(--soft-blue);
+    }
+    .signal {
+      border: 1px solid #b7dfc4;
+      background: var(--soft-green);
+      border-radius: 8px;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+    .signal.risk {
+      border-color: #ffc7bd;
+      background: var(--soft-red);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      background: #fff;
+    }
+    .metric b { display: block; margin-top: 4px; }
+    .alert-rule {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+    .restore {
+      background: #eefaf4;
+      border: 1px solid #b7dfc4;
+      color: var(--green);
+      border-radius: 6px;
+      padding: 10px;
+    }
+    .affected {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .source { align-items: flex-start; flex-direction: column; }
+      .row { flex-wrap: wrap; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .tabs { grid-template-columns: repeat(2, 1fr); }
+      .chart { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="source" id="buc-07" data-testid="source-status-banner">
+      <div>
+        <strong data-testid="source-mode-label">来源降级：演示模式</strong>
+        <span class="muted">Yahoo Finance 本次不可用，当前展示演示 K 线</span>
+      </div>
+      <small data-testid="degradation-reason">影响：MTS 和强信号提醒当前不可解释</small>
+    </header>
+
+    <section class="layout">
+      <aside class="panel" id="buc-01" data-testid="watchlist-shell">
+        <h2>多市场自选</h2>
+        <div class="section stack">
+          <div class="restore" id="buc-06" data-testid="restore-banner">
+            <b>已恢复本地现场</b>
+            <div data-testid="restore-summary">4 个观察中标的、2 条提醒、最近查看 AAPL</div>
+            <button class="primary" data-testid="restore-continue-button">继续看盘</button>
+          </div>
+          <div class="row">
+            <input data-testid="watchlist-add-input" value="0700" aria-label="股票代码">
+            <select data-testid="watchlist-market-select" aria-label="市场">
+              <option>HK</option><option>US</option><option>CN</option><option>KR</option>
+            </select>
+            <button class="primary" data-testid="watchlist-add-button">加入</button>
+          </div>
+          <div class="market" data-testid="market-group-us">
+            <div class="market-title">US 美股</div>
+            <div class="symbol active" data-testid="symbol-row-aapl">
+              <div class="symbol-head"><b>AAPL</b><span class="tag green">观察中</span></div>
+              <div class="muted">原始 AAPL / 归一 AAPL</div>
+              <div class="row"><button class="primary">看盘</button><button>归档</button></div>
+            </div>
+          </div>
+          <div class="market" data-testid="market-group-hk">
+            <div class="market-title">HK 港股</div>
+            <div class="symbol" data-testid="symbol-row-0700-hk">
+              <div class="symbol-head"><b>0700.HK</b><span class="tag green">观察中</span></div>
+              <div class="muted">原始 0700 / 归一 0700.HK</div>
+            </div>
+          </div>
+          <div class="market" data-testid="market-group-cn">
+            <div class="market-title">CN A 股</div>
+            <div class="symbol"><div class="symbol-head"><b>600519.SS</b><span class="tag">已归档</span></div><div class="muted">提醒因归档暂停</div><button data-testid="symbol-restore-button">恢复观察</button></div>
+          </div>
+          <div class="market" data-testid="market-group-kr">
+            <div class="market-title">KR 韩股</div>
+            <div class="symbol"><div class="symbol-head"><b>005930.KS</b><span class="tag green">观察中</span></div><div class="muted">三星电子</div></div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel" id="buc-02" data-testid="symbol-detail-shell">
+        <h2>AAPL 看盘详情 <span class="tag blue">US / AAPL</span></h2>
+        <div class="section stack">
+          <div class="chart" data-testid="chart-main-panel" aria-label="主图 K 线">
+            <svg viewBox="0 0 900 260" role="img" aria-label="K线和均线示意">
+              <polyline points="10,190 80,176 150,158 220,166 290,120 360,135 430,108 500,96 570,118 640,82 710,90 780,66 860,74" fill="none" stroke="#1f5eff" stroke-width="4"/>
+              <polyline points="10,205 100,190 190,178 280,160 370,145 460,133 550,116 640,105 730,92 860,84" fill="none" stroke="#127a51" stroke-width="3"/>
+              <text x="20" y="32" fill="#657282">主图：K线 + EMA20 + EMA60 + BOLL</text>
+            </svg>
+          </div>
+          <div class="volume" data-testid="chart-volume-panel">
+            成交量常驻：近 20 期均量上方，量能确认偏强
+          </div>
+          <div class="tabs" id="buc-03">
+            <button class="active" data-testid="indicator-tab-macd">MACD</button>
+            <button data-testid="indicator-tab-rsi">RSI</button>
+            <button data-testid="indicator-tab-kdj">KDJ</button>
+            <button data-testid="indicator-tab-atr">ATR</button>
+          </div>
+          <div class="secondary" data-testid="chart-secondary-panel">
+            当前副图：MACD 柱体转强。<span id="indicator-status-note" data-testid="indicator-status-note">状态可解释</span>
+          </div>
+          <div class="signal" id="buc-04" data-testid="mts-signal-card">
+            <div class="row">
+              <span class="tag green" data-testid="mts-alert-level">强信号</span>
+              <b data-testid="mts-trend-state">趋势状态：多头修复中</b>
+            </div>
+            <div class="metric-grid">
+              <div class="metric">分数带 <b data-testid="mts-score-band">+68</b></div>
+              <div class="metric">信号类型 <b data-testid="mts-signal-type">收敛突破买点</b></div>
+            </div>
+            <div data-testid="mts-reasons">理由：EMA20 上行、MACD 柱体转强、成交量放大。</div>
+            <div data-testid="mts-invalidators">失效条件：跌破 EMA20 或 ATR 风控线。</div>
+          </div>
+          <div class="signal risk">
+            <b data-testid="data-insufficient-note">降级提示</b>
+            <ul class="affected" data-testid="affected-object-list">
+              <li>MTS 正式结论暂停，当前只保留演示观察。</li>
+              <li>强信号提醒不触发，只保留规则。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel" id="buc-05" data-testid="alerts-shell">
+        <h2>提醒管理</h2>
+        <div class="section stack">
+          <form class="stack" data-testid="alert-create-form">
+            <div class="row">
+              <select data-testid="alert-type-select" aria-label="提醒类型"><option>信号型</option><option>价格型</option></select>
+              <select data-testid="alert-level-select" aria-label="提醒等级"><option>风控</option><option>强信号</option><option>确认</option><option>观察</option></select>
+            </div>
+            <input value="趋势破坏或跌破 ATR 风控线" aria-label="提醒条件">
+            <button class="primary" type="button" data-testid="alert-save-button">保存提醒</button>
+          </form>
+          <div class="alert-rule" data-testid="alert-rule-row-risk">
+            <div class="row"><span class="tag red">风控</span><b>AAPL 趋势破坏</b></div>
+            <div class="muted">已启用 / 已触发 / 最近原因：跌破 ATR 风控线</div>
+            <button>确认</button>
+          </div>
+          <div class="alert-rule" data-testid="alert-rule-row-watch">
+            <div class="row"><span class="tag blue">观察</span><b>0700.HK 价格上穿</b></div>
+            <div class="muted">已停用 / 不再触发</div>
+            <button>启用</button>
+          </div>
+          <div class="alert-rule">
+            <div class="row"><span class="tag">暂停</span><b>600519.SS 强信号</b></div>
+            <div class="muted">因标的归档暂停 / 标的恢复后按原启停意图恢复</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    const indicatorText = {
+      "indicator-tab-macd": "当前副图：MACD 柱体转强。状态可解释",
+      "indicator-tab-rsi": "当前副图：RSI 处于 58，动量确认中。状态可解释",
+      "indicator-tab-kdj": "当前副图：KDJ 金叉后回踩。状态部分可解释，需更多历史数据确认",
+      "indicator-tab-atr": "当前副图：ATR 风控线位于 187.20。状态可解释"
+    };
+    document.querySelectorAll(".tabs button").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("active"));
+        button.classList.add("active");
+        document.querySelector("[data-testid='chart-secondary-panel']").textContent = indicatorText[button.dataset.testid];
+      });
+    });
+    const target = location.hash;
+    if (target) {
+      const el = document.querySelector(target);
+      if (el) el.scrollIntoView({ block: "center" });
+    }
+  </script>
+</body>
+</html>

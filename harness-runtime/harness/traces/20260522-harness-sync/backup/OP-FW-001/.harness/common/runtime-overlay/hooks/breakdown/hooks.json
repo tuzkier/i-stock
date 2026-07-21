@@ -1,0 +1,55 @@
+{
+  "_comment": "breakdown-improvement-plan M3.1 hook manifest. 5 breakdown-specific hooks plus pending_recheck reuse from prd template. install pipeline materializes the listed scripts under .claude/hooks/breakdown/ and merges the matcher entries into .claude/settings.json hooks.",
+  "stage": "breakdown",
+  "hooks": [
+    {
+      "id": "breakdown-check-contract-via-cli",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_contract_via_cli.py",
+      "purpose": "Block direct Write/Edit of execution-brief.contract.yaml; must use harness contract fill/patch/add-execution-result."
+    },
+    {
+      "id": "breakdown-check-first-write-completeness",
+      "event": "PreToolUse",
+      "matcher": "Write",
+      "script": "check_first_write_completeness.py",
+      "purpose": "Forbid writing execution-brief.md without atomic_task_queue ready/accepted for every Parent task (plan §2.7 first-write completeness HARD-GATE)."
+    },
+    {
+      "id": "breakdown-check-writing-plans-boundary",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_writing_plans_boundary.py",
+      "purpose": "Reject harness writing-plans run outside breakdown stage or without --mode internal-carrier."
+    },
+    {
+      "id": "breakdown-check-barrier-complete",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_barrier_complete.py",
+      "purpose": "Block stage advance until both delivery-slicer and test-planning-expert have DONE entries in execution_results[] (parallel-worker barrier)."
+    },
+    {
+      "id": "breakdown-check-gate-pass",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_gate_pass.py",
+      "purpose": "Block `harness mission stage complete breakdown` until execution-brief gate run last_gate_run_status=PASS."
+    },
+    {
+      "id": "breakdown-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set execution-brief.contract.yaml pending_reviewer_recheck=true after execution-brief.md edit so the pre-advance hook fires."
+    },
+    {
+      "id": "breakdown-check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance while execution-brief.contract.yaml carries pending_reviewer_recheck=true."
+    }
+  ]
+}

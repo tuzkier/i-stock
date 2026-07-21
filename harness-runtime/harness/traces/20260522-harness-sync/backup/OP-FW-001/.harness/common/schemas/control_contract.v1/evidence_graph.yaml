@@ -1,0 +1,55 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+type: object
+required: [evidence_graph]
+properties:
+  evidence_graph:
+    type: object
+    required: [mission_id, nodes, edges]
+    properties:
+      mission_id:
+        type: string
+        minLength: 1
+      nodes:
+        type: object
+        required: [acceptance_criteria, tasks, obligations, evidence, role_verdicts, gate_decisions, acceptance_results]
+        properties:
+          acceptance_criteria:
+            type: array
+          tasks:
+            type: array
+          obligations:
+            type: array
+            items:
+              type: object
+              required: [id, type, risk, traces_to, required_evidence, required_roles]
+          evidence:
+            type: array
+            items:
+              type: object
+              required: [id, type, status, observed_at, git_ref, covers]
+          role_verdicts:
+            type: array
+            items:
+              type: object
+              required: [id, role, verdict, reviewed_obligations, review_basis]
+              properties:
+                reviewed_obligations:
+                  type: array
+                  minItems: 1
+          gate_decisions:
+            type: array
+          acceptance_results:
+            type: array
+      edges:
+        type: array
+        items:
+          type: object
+          required: [from, to, type]
+          properties:
+            from:
+              type: string
+            to:
+              type: string
+            type:
+              type: string
+additionalProperties: false

@@ -1,0 +1,42 @@
+patches:
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-CONTROL-001
+        role: execute-control-plane-executor
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-result.contract.yaml
+        fulfilled_obligations:
+          - 添加前预览归一结果
+          - 歧义输入不得静默写入
+          - 列表显示行情摘要
+          - 归档暂停提醒
+        evidence_refs:
+          - EV-BASELINE-001
+          - EV-SCOPE-APPROVAL-001
+          - EV-GREEN-001
+          - EV-REGRESSION-001
+        open_questions: []
+        concerns: []
+      - id: EXE-EVIDENCE-001
+        role: execute-control-plane-executor
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+          - path: harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+          - path: tests/unit/watchlist/normalization.spec.ts
+          - path: tests/unit/watchlist/archive.spec.ts
+          - path: tests/unit/watchlist/storage-replay.spec.ts
+        fulfilled_obligations:
+          - required_evidence.red_green_regression
+          - required_evidence.screenshot_or_locator_evidence
+          - required_evidence.mutation_or_fault_injection_report
+          - localStorage replay evidence
+        evidence_refs:
+          - EV-UNIT-001
+          - EV-MUTATION-001
+          - EV-BROWSER-001
+        open_questions: []
+        concerns: []

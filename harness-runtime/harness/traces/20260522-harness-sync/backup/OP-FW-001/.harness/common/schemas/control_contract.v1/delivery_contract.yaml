@@ -1,0 +1,128 @@
+# delivery_contract.yaml — delivery-improvement-plan M1.1 / M4.2
+# Schema for the delivery stage typed contract.
+# Fields match delivery.contract.yaml template exactly.
+# Consumed by: harness contract check, harness gate run --stage delivery,
+#              harness delivery check-followups, harness delivery handoff.
+
+schema: delivery_contract
+version: 1
+
+# Top-level required fields
+required_fields:
+  - mission_id
+  - stage        # must equal "delivery"
+  - artifact     # must equal "delivery"
+
+# acceptance_result section ─ user-facing acceptance evidence
+acceptance_result:
+  required_fields:
+    - mission_id
+    - stage        # must equal "delivery"
+    - artifact     # must equal "acceptance-result"
+  delivery_entry:
+    # Each entry describes one user-accessible delivery point
+    item_fields:
+      - type              # url | api | cli | test_account | branch_commit
+      - url_or_command
+      - credential_or_fixture_ref  # nullable
+      - commit_or_branch           # nullable
+  ac_acceptance_trace:
+    # Hard three-tuple per AC — all three required for status=pass
+    item_required_fields:
+      - ac_id
+      - expected
+      - actual
+      - reproduce_steps      # list
+      - verify_command_evidence_id
+      - acceptance_result_evidence_path
+      - result_status        # pass | fail | accepted_risk | blocked
+  risk_acceptance:
+    item_fields:
+      - risk_id
+      - approval_id
+      - approval_type
+      - source
+  user_checkpoint:
+    # Hard user confirmation record
+    required_fields:
+      - status   # pending_user_acceptance | approved | accepted_risk | continue_fix | blocked
+    conditional_fields:
+      - field: approval_id
+        when: "status in [approved, accepted_risk]"
+      - field: original_user_text_ref
+        when: "status in [approved, accepted_risk]"
+      - field: risk_summary
+        when: "status == accepted_risk"
+
+# delivery_package section ─ internal archive / handoff
+delivery_package:
+  required_fields:
+    - acceptance_state_ref    # must point to acceptance-result contract path + checksum
+  item_fields:
+    - scope_summary
+    - evidence_links          # list of path refs
+    - known_gaps              # list
+  follow_ups:
+    item_fields:
+      - id
+      - description
+      - severity              # blocking | advisory | can_ignore
+      - graph_op              # split_node | defer_node | block_node | none
+      - none_reason           # required when graph_op == none; only valid for severity=can_ignore
+  handoff_evidence:
+    required_fields:
+      - pause_required        # boolean — must be true for delivery exit
+    fields:
+      - delivery_gate_report_path
+      - approval_id           # acceptance approval id
+      - next_stage_candidate  # finishing-branch | bug-fix | course-correction
+      - requires_user_resume  # boolean
+  agent_capability_status:
+    comment: "Injected only by harness delivery agent-capability-status command"
+    fields:
+      - components
+      - eval_report_path
+      - overall_status
+  dora_signals:
+    comment: "Lightweight delivery/retrospective signal block; all counts are mission-local."
+    fields:
+      - lead_time
+      - rework_count
+      - review_hold_count
+      - verification_failure_count
+      - rollback_followup_count
+
+# dispatches: worker/reviewer execution envelope
+dispatches:
+  item_fields:
+    - role
+    - execution_mode          # subagent | main_agent_fallback
+    - model
+    - started_at
+    - completed_at
+    - verdict                 # PASS | FAIL | BLOCKED
+  constraint: "execution_mode=main_agent_fallback && verdict=PASS is forbidden (gate FAIL)"
+
+# Validation rules for gate run
+gate_rules:
+  - id: GR-DL-001
+    check: "ac_acceptance_trace[*].verify_command_evidence_id != null when result_status == pass"
+    on_fail: FAIL
+  - id: GR-DL-002
+    check: "ac_acceptance_trace[*].acceptance_result_evidence_path != null when result_status == pass"
+    on_fail: FAIL
+  - id: GR-DL-003
+    check: "delivery_package.acceptance_state_ref != null"
+    on_fail: FAIL
+  - id: GR-DL-004
+    check: "delivery_package.handoff_evidence.pause_required == true"
+    on_fail: BLOCKED
+  - id: GR-DL-005
+    check: "acceptance_result.user_checkpoint.status in [approved, accepted_risk]"
+    on_fail: BLOCKED
+  - id: GR-DL-006
+    check: "delivery_package.follow_ups[severity in [blocking, advisory]].graph_op != none"
+    on_fail: FAIL
+  - id: GR-DL-007
+    check: "dispatches[execution_mode == main_agent_fallback].verdict != PASS"
+    on_fail: FAIL

@@ -1,0 +1,117 @@
+patches:
+  - target: control_contract.buc_coverage
+    op: set
+    value:
+      source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+      mappings:
+        - buc_id: BUC-01
+          priority: P0
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-01.md
+          html_entry: visual-interaction/prototype/index.html#buc-001
+          surface_refs: [WatchlistPanel, NormalizationPreview, WatchlistRow, RestoreStatus]
+          status: covered
+        - buc_id: BUC-02
+          priority: P0
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-02.md
+          html_entry: visual-interaction/prototype/index.html#buc-002
+          surface_refs: [WorkbenchShell, ChartSurface, SourceHealthPanel]
+          status: covered
+        - buc_id: BUC-03
+          priority: P1
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-03.md
+          html_entry: visual-interaction/prototype/index.html#buc-003
+          surface_refs: [IndicatorPanel, ChartSurface]
+          status: covered
+        - buc_id: BUC-04
+          priority: P0
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-04.md
+          html_entry: visual-interaction/prototype/index.html#buc-004
+          surface_refs: [MtsSignalCard]
+          status: covered
+        - buc_id: BUC-05
+          priority: P0
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-05.md
+          html_entry: visual-interaction/prototype/index.html#buc-005
+          surface_refs: [AlertRulePanel]
+          status: covered
+        - buc_id: BUC-06
+          priority: P0
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-06.md
+          html_entry: visual-interaction/prototype/index.html#buc-006
+          surface_refs: [SourceHealthPanel, ChartSurface, MtsSignalCard, AlertRulePanel]
+          status: covered
+        - buc_id: BUC-07
+          priority: P0
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-07.md
+          html_entry: visual-interaction/prototype/index.html#buc-007
+          surface_refs: [RestoreStatus, WatchlistPanel, AlertRulePanel]
+          status: covered
+        - buc_id: BUC-08
+          priority: P1
+          prototype_required: true
+          spec_ref: interaction-spec/BUC-08.md
+          html_entry: visual-interaction/prototype/index.html#buc-008
+          surface_refs: [LayoutController, WorkbenchShell, mobile_tab]
+          status: covered
+        - buc_id: BUC-09
+          priority: P0
+          prototype_required: false
+          spec_ref: interaction-spec/BUC-09.md
+          html_entry: visual-interaction/prototype/index.html#buc-001
+          surface_refs: [FixtureValidation, WatchlistPanel, SourceHealthPanel, MtsSignalCard, AlertRulePanel, RestoreStatus]
+          status: covered_as_validation_mapping
+      gaps: []
+  - target: control_contract.prototype_expression
+    op: merge
+    value:
+      prototype_entry: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      buc_deep_links:
+        - buc_id: BUC-01
+          html_entry: visual-interaction/prototype/index.html#buc-001
+        - buc_id: BUC-02
+          html_entry: visual-interaction/prototype/index.html#buc-002
+        - buc_id: BUC-03
+          html_entry: visual-interaction/prototype/index.html#buc-003
+        - buc_id: BUC-04
+          html_entry: visual-interaction/prototype/index.html#buc-004
+        - buc_id: BUC-05
+          html_entry: visual-interaction/prototype/index.html#buc-005
+        - buc_id: BUC-06
+          html_entry: visual-interaction/prototype/index.html#buc-006
+        - buc_id: BUC-07
+          html_entry: visual-interaction/prototype/index.html#buc-007
+        - buc_id: BUC-08
+          html_entry: visual-interaction/prototype/index.html#buc-008
+        - buc_id: BUC-09
+          html_entry: visual-interaction/prototype/index.html#buc-001
+      product_surface_clean: true
+  - target: control_contract.consistency_report
+    op: set
+    value:
+      path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+      spec_vs_prd_drift: none
+      prototype_vs_spec_drift: none
+      feedback_not_synced: none
+      shared_surface_consistency: pass
+      e2e_seed_readiness: pass
+      copy_language: pass
+      copy_language_note: 状态类用户可见文案采用中文（English），内部 data-* 状态值不作为用户文案。
+      unresolved_blockers: 0
+      unresolved_decisions: 3
+  - target: control_contract.visual_artifacts
+    op: set
+    value:
+      manifest: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      prototype_entry: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      evidence:
+        - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/evidence/seed-state.md
+      artifact_count: 1
+      prototype_is_human_entry: true
+      required: true

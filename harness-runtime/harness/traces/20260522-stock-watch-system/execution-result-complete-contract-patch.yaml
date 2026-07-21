@@ -1,0 +1,220 @@
+patches:
+  - target: control_contract.status
+    op: set
+    value: ready
+  - target: control_contract.execute_session
+    op: set
+    value:
+      id: EXE-SESSION-T001-COMPLETE
+      skill: execute
+      carrier: execute
+      execute_mode: sdd
+      dispatch_plans:
+        - id: DISPATCH-T001-A1
+          task_id: TASK-STOCK-WATCH-T001
+          execution_unit_id: T001-A1
+          surfaces:
+            - SURF-WATCHLIST
+          primary_executors:
+            - execute-control-plane-executor
+          supporting_executors: []
+          reviewers:
+            - spec-reviewer
+          required_evidence:
+            - red_report
+            - green_report
+            - regression_report
+            - screenshot_or_locator_evidence
+            - mutation_or_fault_injection_report
+          execution_context:
+            skill: execute
+            role_package_refs:
+              execute-control-plane-executor: .harness/common/agents/execute-control-plane-executor.md
+              spec-reviewer: .harness/common/agents/spec-reviewer.md
+          write_scope:
+            - src/domain/market-normalization.ts
+            - src/domain/watchlist-state.ts
+            - src/data/markets.ts
+            - src/App.tsx
+            - src/types.ts
+            - tests/unit/watchlist/normalization.spec.ts
+          read_scope:
+            - src/data/markets.ts
+            - src/App.tsx
+            - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+          depends_on: []
+          parallel_group: serial
+          conflict_risk: high
+          missing_surfaces: []
+          blocked: false
+          blockers: []
+        - id: DISPATCH-T001-A2
+          task_id: TASK-STOCK-WATCH-T001
+          execution_unit_id: T001-A2
+          surfaces:
+            - SURF-WATCHLIST
+            - SURF-RESTORE
+            - SURF-ALERTS
+          primary_executors:
+            - execute-control-plane-executor
+          supporting_executors: []
+          reviewers:
+            - spec-reviewer
+          required_evidence:
+            - red_report
+            - green_report
+            - regression_report
+            - screenshot_or_locator_evidence
+            - mutation_or_fault_injection_report
+          execution_context:
+            skill: execute
+            role_package_refs:
+              execute-control-plane-executor: .harness/common/agents/execute-control-plane-executor.md
+              spec-reviewer: .harness/common/agents/spec-reviewer.md
+          write_scope:
+            - src/App.tsx
+            - src/domain/watchlist-state.ts
+            - src/lib/storage.ts
+            - src/types.ts
+            - tests/unit/watchlist/archive.spec.ts
+            - tests/unit/watchlist/storage-replay.spec.ts
+          read_scope:
+            - src/App.tsx
+          depends_on:
+            - T001-A1
+          parallel_group: serial
+          conflict_risk: high
+          missing_surfaces: []
+          blocked: false
+          blockers: []
+      stop_events:
+        - kind: changes_outside_authorized_paths
+          task_id: T001-A1
+          affected_paths:
+            - src/App.tsx
+          hook_source: manual
+          resolution: user approved whole src directory for TASK-STOCK-WATCH-T001
+  - target: control_contract.execution_results
+    op: set
+    value:
+      - id: EXE-CONTROL-001
+        role: execute-control-plane-executor
+        status: DONE
+        produced_artifacts:
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+          - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-result.contract.yaml
+          - path: harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+          - path: harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+        fulfilled_obligations:
+          - 添加前预览归一结果
+          - 歧义输入不得静默写入
+          - 列表显示行情摘要
+          - 归档暂停提醒
+        evidence_refs:
+          - EV-BASELINE-001
+          - EV-SCOPE-APPROVAL-001
+          - EV-UNIT-001
+          - EV-MUTATION-001
+          - EV-GREEN-001
+          - EV-REGRESSION-001
+          - EV-BROWSER-001
+        open_questions: []
+        concerns: []
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 3
+      pending_reviewer_recheck: false
+      last_gate_run_status: PENDING_GATE
+      last_verdict: PASS
+  - target: control_contract.tdd_evidence
+    op: set
+    value:
+      - id: EV-RED-001
+        type: red_report
+        phase: red
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: baseline behavior before implementation
+        exit_code: 1
+        failure_signal: Missing normalization preview, archive suspension, all-row quote summary, and restore alert intent behavior before T001 implementation.
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-GREEN-001
+        type: green_report
+        phase: green
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: npm run build
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-UNIT-001
+        type: green_report
+        phase: green
+        path: harness-runtime/harness/traces/20260522-stock-watch-system/unit-build
+        command: node --test harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/*.spec.js
+        exit_code: 0
+        assertion_summary: 10 tests, 3 suites, 0 failures
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-MUTATION-001
+        type: mutation_or_fault_injection_report
+        phase: red
+        path: harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+        command: targeted mutation runs for ambiguity gate and suspended_by_archive state
+        exit_code: 1
+        failure_signal: Removing ambiguity guard or suspended_by_archive state makes focused tests fail.
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-REGRESSION-001
+        type: regression_report
+        phase: regression
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: npm run build
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-BROWSER-001
+        type: e2e_report
+        phase: e2e
+        path: harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+        command: Google Chrome Computer Use walkthrough at http://localhost:5173
+        exit_code: 0
+        assertion_summary: Active row summaries, archive suspension, duplicate-add restore preview, and restored enabled alert checkbox observed.
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001
+      - id: EV-TOOLCHAIN-001
+        type: toolchain_status
+        phase: toolchain
+        path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+        command: harness-runtime/bin/harness frame current --mission 20260522-stock-watch-system --json
+        exit_code: 0
+        covers:
+          atomic_tasks:
+            - T001-A1
+            - T001-A2
+          tasks:
+            - TASK-STOCK-WATCH-T001

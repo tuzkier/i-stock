@@ -1,0 +1,4 @@
+patches:
+  - target: control_contract.intent_role_analysis.process_constraints
+    op: append
+    value: "方案和技术设计阶段优先考虑成熟、维护活跃、许可合适的现成开源库；只有在开源库不能满足多市场看盘、技术指标、MTS 信号或本地化约束时才自研，并记录取舍理由。"

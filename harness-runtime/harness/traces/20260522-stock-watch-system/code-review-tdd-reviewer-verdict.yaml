@@ -1,0 +1,78 @@
+id: RV-CODE-REVIEW-T002-T006-TDD-PASS
+role: tdd-reviewer
+verdict: PASS
+reviewed_unit: TASK-STOCK-WATCH-T002..TASK-STOCK-WATCH-T006
+reviewed_obligations:
+- T002 SourceHealth and workbench test adequacy
+- T003 MTS registry, replay, E2E, and copy boundary test adequacy
+- T004 alert rule model, replay, and panel E2E test adequacy
+- T005 workspace migration, replay, and restore-layout E2E test adequacy
+- T006 fixture corpus, unit/replay matrix, and acceptance-matrix E2E test adequacy
+review_basis:
+- harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+- harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+- harness-runtime/harness/traces/20260522-stock-watch-system/t002-red-report.md
+- harness-runtime/harness/traces/20260522-stock-watch-system/t003-red-report.md
+- tests/unit/alerts/rule-model.spec.ts
+- tests/replay/alerts/trigger-flow.spec.ts
+- tests/unit/workspace/snapshot-migration.spec.ts
+- tests/replay/workspace/migration-replay.spec.ts
+- tests/replay/gate/fixture-corpus.spec.ts
+- tests/e2e/gate/acceptance-matrix.spec.ts
+role_boundary:
+  in_scope:
+  - test effectiveness
+  - assertion strength
+  - Red / Green / Regression evidence adequacy
+  - fault detection
+  out_of_scope:
+  - business correctness verdict
+  - architecture ownership
+  - Harness gate mechanics
+test_adequacy_matrix:
+- target: T004 scheduled / alert state
+  red_validity: valid
+  assertion_strength: strong
+  adequacy: adequate
+  fault_detection: proven
+  conclusion: pass
+  evidence:
+  - tests/unit/alerts/rule-model.spec.ts
+  - tests/replay/alerts/trigger-flow.spec.ts
+  - tests/e2e/alerts/panel.spec.ts
+- target: T005 restore and layout persistence
+  red_validity: valid
+  assertion_strength: strong
+  adequacy: adequate
+  fault_detection: proven
+  conclusion: pass
+  evidence:
+  - tests/unit/workspace/snapshot-migration.spec.ts
+  - tests/replay/workspace/migration-replay.spec.ts
+  - tests/e2e/restore-layout/resume.spec.ts
+- target: T006 fixture-first acceptance gate
+  red_validity: valid
+  assertion_strength: strong
+  adequacy: adequate
+  fault_detection: proven
+  conclusion: pass
+  evidence:
+  - tests/replay/gate/fixture-corpus.spec.ts
+  - tests/e2e/gate/acceptance-matrix.spec.ts
+blocking_gaps: []
+findings: []
+non_blocking_risks:
+- id: TDD-RISK-001
+  severity: Med
+  summary: Scheduled missed and restore roundtrip fixes do not have separate red artifacts at the final review round.
+  follow_up: Add red/regression trace in verify or later audit hardening.
+- id: TDD-RISK-002
+  severity: Low
+  summary: Toolchain and E2E control snapshots may lag behind the latest human-readable 24-test review evidence.
+  follow_up: Refresh control-plane status before final delivery.
+dispatch:
+  subagent_id: code-review-artifact-tdd-reviewer-20260606
+  model: gpt-5.4
+  execution_mode: spawn_agent
+  started_at: '2026-06-06T00:00:00Z'
+  completed_at: '2026-06-06T00:00:00Z'

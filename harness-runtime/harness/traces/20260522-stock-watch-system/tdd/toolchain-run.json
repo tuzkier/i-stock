@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260522-stock-watch-system",
+  "status": "FAIL",
+  "mode": "execute",
+  "install_results": [],
+  "tool_runs": [
+    {
+      "tool": "pytest",
+      "category": "test_result",
+      "configured": false,
+      "available": false,
+      "result": {
+        "command": "python3 -m pytest --junitxml=harness-runtime/harness/traces/20260522-stock-watch-system/tools/pytest-junit.xml",
+        "status": "fail",
+        "exit_code": 5,
+        "started_at": "2026-06-06T11:49:22.466869+00:00",
+        "ended_at": "2026-06-06T11:49:24.517926+00:00",
+        "duration_seconds": 2.051,
+        "output_excerpt": "============================= test session starts ==============================\nplatform darwin -- Python 3.13.2, pytest-9.0.2, pluggy-1.6.0\nrootdir: /Users/hanbin/Workspace/AI/MyInvestment\nplugins: asyncio-1.3.0, typeguard-4.4.4, cov-7.0.0, anyio-4.13.0, langsmith-0.5.1\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n- generated xml file: /Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/traces/20260522-stock-watch-system/tools/pytest-junit.xml -\n============================ no tests ran in 0.48s =============================\n"
+      },
+      "report_paths": [
+        "playwright-report/index.html"
+      ]
+    },
+    {
+      "tool": "pytest",
+      "category": "test_result",
+      "configured": false,
+      "available": false,
+      "result": {
+        "command": "python3 -m pytest --json-report --json-report-file=harness-runtime/harness/traces/20260522-stock-watch-system/tools/pytest-report.json",
+        "status": "fail",
+        "exit_code": 4,
+        "started_at": "2026-06-06T11:49:24.518094+00:00",
+        "ended_at": "2026-06-06T11:49:25.491799+00:00",
+        "duration_seconds": 0.974,
+        "output_excerpt": "ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]\n__main__.py: error: unrecognized arguments: --json-report --json-report-file=harness-runtime/harness/traces/20260522-stock-watch-system/tools/pytest-report.json\n  inifile: None\n  rootdir: /Users/hanbin/Workspace/AI/MyInvestment\n\n"
+      },
+      "report_paths": [
+        "playwright-report/index.html"
+      ]
+    },
+    {
+      "tool": "coverage.py/pytest-cov",
+      "category": "coverage",
+      "configured": false,
+      "available": false,
+      "result": {
+        "command": "python3 -m pytest --cov --cov-report=xml:harness-runtime/harness/traces/20260522-stock-watch-system/tools/coverage.xml --cov-report=json:harness-runtime/harness/traces/20260522-stock-watch-system/tools/coverage.json",
+        "status": "fail",
+        "exit_code": 5,
+        "started_at": "2026-06-06T11:49:25.491948+00:00",
+        "ended_at": "2026-06-06T11:49:31.142314+00:00",
+        "duration_seconds": 5.65,
+        "output_excerpt": "/Users/hanbin/Library/Python/3.13/lib/python/site-packages/coverage/control.py:958: CoverageWarning: No data was collected. (no-data-collected); see https://coverage.readthedocs.io/en/7.13.4/messages.html#warning-no-data-collected\n  self._warn(\"No data was collected.\", slug=\"no-data-collected\")\n/Users/hanbin/Library/Python/3.13/lib/python/site-packages/pytest_cov/plugin.py:363: CovReportWarning: Failed to generate report: No data to report.\n\n  warnings.warn(CovReportWarning(message), stacklevel=1)\n============================= test session starts ==============================\nplatform darwin -- Python 3.13.2, pytest-9.0.2, pluggy-1.6.0\nrootdir: /Users/hanbin/Workspace/AI/MyInvestment\nplugins: asyncio-1.3.0, typeguard-4.4.4, cov-7.0.0, anyio-4.13.0, langsmith-0.5.1\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\nWARNING: Failed to generate report: No data to report.\n\n\n================================ tests coverage ================================\n_______________ coverage: platform darwin, python 3.13.2-final-0 _______________\n\n============================ no tests ran in 1.50s =============================\n"
+      },
+      "report_paths": []
+    },
+    {
+      "tool": "diff-cover",
+      "category": "diff_coverage",
+      "configured": false,
+      "available": false,
+      "result": {
+        "command": "diff-cover harness-runtime/harness/traces/20260522-stock-watch-system/tools/coverage.xml --compare-branch=HEAD~1",
+        "status": "fail",
+        "exit_code": 127,
+        "started_at": "2026-06-06T11:49:31.142574+00:00",
+        "ended_at": "2026-06-06T11:49:31.163786+00:00",
+        "duration_seconds": 0.021,
+        "output_excerpt": "/bin/sh: diff-cover: command not found\n"
+      },
+      "report_paths": []
+    },
+    {
+      "tool": "mutmut",
+      "category": "mutation",
+      "configured": false,
+      "available": false,
+      "result": {
+        "command": "mutmut run --paths-to-mutate <changed-python-source>",
+        "status": "fail",
+        "exit_code": 2,
+        "started_at": "2026-06-06T11:49:31.163910+00:00",
+        "ended_at": "2026-06-06T11:49:31.203793+00:00",
+        "duration_seconds": 0.04,
+        "output_excerpt": "/bin/sh: -c: line 0: syntax error near unexpected token `newline'\n/bin/sh: -c: line 0: `mutmut run --paths-to-mutate <changed-python-source>'\n"
+      },
+      "report_paths": []
+    },
+    {
+      "tool": "mutmut",
+      "category": "mutation",
+      "configured": false,
+      "available": false,
+      "result": {
+        "command": "mutmut results",
+        "status": "fail",
+        "exit_code": 127,
+        "started_at": "2026-06-06T11:49:31.204076+00:00",
+        "ended_at": "2026-06-06T11:49:31.295029+00:00",
+        "duration_seconds": 0.091,
+        "output_excerpt": "/bin/sh: mutmut: command not found\n"
+      },
+      "report_paths": []
+    },
+    {
+      "tool": "node:test",
+      "category": "test_result",
+      "configured": true,
+      "available": true,
+      "result": {
+        "command": "node --test harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/*.spec.js",
+        "status": "pass",
+        "exit_code": 0,
+        "started_at": "2026-06-06T11:49:31.295321+00:00",
+        "ended_at": "2026-06-06T11:49:31.884271+00:00",
+        "duration_seconds": 0.589,
+        "output_excerpt": "▶ watchlist archive and restore state\n  ✔ archives a symbol without physically deleting it (1.390625ms)\n  ✔ suspends enabled alerts when a symbol is archived (0.523875ms)\n  ✔ restores archived symbols and alert activation intent together (0.564167ms)\n  ✔ keeps disabled intent disabled after restore (0.148084ms)\n✔ watchlist archive and restore state (4.286333ms)\n▶ watchlist normalization preview\n  ✔ blocks ambiguous numeric input while US is selected (3.492667ms)\n  ✔ normalizes HK input before adding it to active watchlist (0.713041ms)\n  ✔ normalizes mainland China symbols with exchange suffixes (0.352917ms)\n  ✔ normalizes Korean numeric symbols with KS suffix (0.430625ms)\n  ✔ blocks numeric symbols that do not match the selected market (1.478625ms)\n  ✔ does not allow duplicate active symbols (0.260167ms)\n  ✔ marks archived symbols as restorable (8.677166ms)\n✔ watchlist normalization preview (28.426458ms)\n▶ watchlist localStorage replay\n  ✔ replays archived symbols and suspended alert restore intent from localStorage (3.903042ms)\n  ✔ migrates legacy watchlist and alert records to explicit active/enabled state (4.57125ms)\n  ✔ keeps legacy disabled alerts disabled during replay (6.427541ms)\n✔ watchlist localStorage replay (30.207166ms)\nℹ tests 14\nℹ suites 3\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 320.537792\n"
+      },
+      "report_paths": [
+        "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/archive.spec.js",
+        "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/normalization.spec.js",
+        "harness-runtime/harness/traces/20260522-stock-watch-system/unit-build/tests/unit/watchlist/storage-replay.spec.js"
+      ]
+    },
+    {
+      "tool": "vitest/jest",
+      "category": "frontend_unit_component",
+      "configured": false,
+      "available": true,
+      "result": {
+        "command": "pnpm --filter @theforce/frontend test -- --reporter=json --coverage",
+        "status": "pass",
+        "exit_code": 0,
+        "started_at": "2026-06-06T11:49:31.884395+00:00",
+        "ended_at": "2026-06-06T11:49:32.894892+00:00",
+        "duration_seconds": 1.011,
+        "output_excerpt": "No projects matched the filters in \"/Users/hanbin/Workspace/AI/MyInvestment\"\n"
+      },
+      "report_paths": []
+    },
+    {
+      "tool": "vitest/jest",
+      "category": "frontend_unit_component",
+      "configured": false,
+      "available": true,
+      "result": {
+        "command": "npm test -- --json --coverage",
+        "status": "fail",
+        "exit_code": 1,
+        "started_at": "2026-06-06T11:49:32.894953+00:00",
+        "ended_at": "2026-06-06T11:49:33.407232+00:00",
+        "duration_seconds": 0.512,
+        "output_excerpt": "npm error Missing script: \"test\"\nnpm error\nnpm error To see a list of scripts, run:\nnpm error   npm run\nnpm error A complete log of this run can be found in: /tmp/.npm/_logs/2026-06-06T11_49_33_220Z-debug-0.log\n"
+      },
+      "report_paths": []
+    },
+    {
+      "tool": "playwright",
+      "category": "e2e_ui",
+      "configured": true,
+      "available": true,
+      "result": {
+        "command": "npm run test:e2e",
+        "status": "fail",
+        "exit_code": 1,
+        "started_at": "2026-06-06T11:49:33.407346+00:00",
+        "ended_at": "2026-06-06T11:50:11.457146+00:00",
+        "duration_seconds": 38.05,
+        "output_excerpt": "LC 与来源健康 ─────────\n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      110 |   await routeBySymbol(page, (symbol) => envelope(symbol));\n      111 |\n    > 112 |   await page.goto(\"/\");\n          |              ^\n      113 |\n      114 |   await expect(page.getByTestId(\"workbench-shell\")).toContainText(\"当前 active 标的：AAPL\");\n      115 |   await expect(page.getByTestId(\"chart-main-panel\")).toBeVisible();\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:112:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-默认工作台展示主图、成交量、副图、OHLC-与来源健康-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-默认工作台展示主图、成交量、副图、OHLC-与来源健康-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-默认工作台展示主图、成交量、副图、OHLC-与来源健康-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-默认工作台展示主图、成交量、副图、OHLC-与来源健康-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  11) [chromium] › tests/e2e/workbench/default.spec.ts:122:1 › MTS 解释卡展示结构化字段且不表达投资建议 ──────────────\n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      124 |   await routeBySymbol(page, (symbol) => envelope(symbol));\n      125 |\n    > 126 |   await page.goto(\"/\");\n          |              ^\n      127 |\n      128 |   await expect(page.getByTestId(\"mts-card\")).toContainText(\"MTS 解释卡\");\n      129 |   await expect(page.getByTestId(\"mts-state-grid\")).toContainText(\"trend_state\");\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:126:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-MTS-解释卡展示结构化字段且不表达投资建议-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-MTS-解释卡展示结构化字段且不表达投资建议-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-MTS-解释卡展示结构化字段且不表达投资建议-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-MTS-解释卡展示结构化字段且不表达投资建议-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  12) [chromium] › tests/e2e/workbench/default.spec.ts:139:1 › 副图指标切换保持同一标的上下文 ─────────────────────\n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      141 |   await routeBySymbol(page, (symbol) => envelope(symbol));\n      142 |\n    > 143 |   await page.goto(\"/\");\n          |              ^\n      144 |   await expect(page.getByTestId(\"chart-main-panel\")).toContainText(\"AAPL\");\n      145 |\n      146 |   for (const id of [\"rsi\", \"kdj\", \"atr\", \"macd\"]) {\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:143:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-副图指标切换保持同一标的上下文-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-副图指标切换保持同一标的上下文-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-副图指标切换保持同一标的上下文-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-副图指标切换保持同一标的上下文-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  13) [chromium] › tests/e2e/workbench/default.spec.ts:153:1 › 数据不足时副图局部降级，不展示伪造读数 ─────────────────\n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      155 |   await routeBySymbol(page, (symbol) => envelope(symbol, { count: 5 }));\n      156 |\n    > 157 |   await page.goto(\"/\");\n          |              ^\n      158 |   const secondaryPanel = page.getByTestId(\"chart-secondary-panel\");\n      159 |   await expect(secondaryPanel).toBeVisible();\n      160 |   await expect(page.getByTestId(\"indicator-tab-rsi\")).toBeVisible();\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:157:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-数据不足时副图局部降级，不展示伪造读数-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-数据不足时副图局部降级，不展示伪造读数-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-数据不足时副图局部降级，不展示伪造读数-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-数据不足时副图局部降级，不展示伪造读数-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  14) [chromium] › tests/e2e/workbench/default.spec.ts:170:1 › demo fallback 来源健康和降级语义穿透到图表、信号与提醒区域 \n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      174 |   );\n      175 |\n    > 176 |   await page.goto(\"/\");\n          |              ^\n      177 |   await page.getByRole(\"button\", { name: /腾讯控股 0700\\.HK/ }).click();\n      178 |\n      179 |   await expect(page.getByTestId(\"source-health-panel\")).toContainText(\"demo_fallback\");\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:176:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-demo-fallback-来源健康和降级语义穿透到图表、信号与提醒区域-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-demo-fallback-来源健康和降级语义穿透到图表、信号与提醒区域-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-demo-fallback-来源健康和降级语义穿透到图表、信号与提醒区域-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-demo-fallback-来源健康和降级语义穿透到图表、信号与提醒区域-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  15) [chromium] › tests/e2e/workbench/default.spec.ts:185:1 › stale 不伪装实时成功，重试失败保留可解释状态 ───────────\n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      195 |   });\n      196 |\n    > 197 |   await page.goto(\"/\");\n          |              ^\n      198 |   await expect(page.getByTestId(\"source-health-panel\")).toContainText(\"formal\");\n      199 |\n      200 |   refreshRequested = true;\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:197:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-stale-不伪装实时成功，重试失败保留可解释状态-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-stale-不伪装实时成功，重试失败保留可解释状态-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-stale-不伪装实时成功，重试失败保留可解释状态-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-stale-不伪装实时成功，重试失败保留可解释状态-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  16) [chromium] › tests/e2e/workbench/default.spec.ts:208:1 › unavailable 来源健康穿透到图表、信号与提醒区域 ───────\n\n    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/\n    Call log:\n    \u001b[2m  - navigating to \"http://127.0.0.1:5174/\", waiting until \"load\"\u001b[22m\n\n\n      212 |   );\n      213 |\n    > 214 |   await page.goto(\"/\");\n          |              ^\n      215 |   await page.getByRole(\"button\", { name: /贵州茅台 600519\\.SS/ }).click();\n      216 |\n      217 |   await expect(page.getByTestId(\"source-health-panel\")).toContainText(\"unavailable\");\n        at /Users/hanbin/Workspace/AI/MyInvestment/tests/e2e/workbench/default.spec.ts:214:14\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results/workbench-default-unavailable-来源健康穿透到图表、信号与提醒区域-chromium/test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results/workbench-default-unavailable-来源健康穿透到图表、信号与提醒区域-chromium/error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results/workbench-default-unavailable-来源健康穿透到图表、信号与提醒区域-chromium/trace.zip\n    Usage:\n\n        npx playwright show-trace test-results/workbench-default-unavailable-来源健康穿透到图表、信号与提醒区域-chromium/trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  16 failed\n    [chromium] › tests/e2e/alerts/panel.spec.ts:98:1 › 归档 active 标的会暂停绑定提醒并展示暂停说明 ──────────────────\n    [chromium] › tests/e2e/gate/acceptance-matrix.spec.ts:46:1 › AC-02 and AC-03 fixture gate covers source degradation and non-advice MTS \n    [chromium] › tests/e2e/gate/acceptance-matrix.spec.ts:64:1 › AC-04 fixture gate covers local alert trigger and acknowledgement \n    [chromium] › tests/e2e/gate/acceptance-matrix.spec.ts:79:1 › AC-05 fixture gate covers browser restore \n    [chromium] › tests/e2e/gate/acceptance-matrix.spec.ts:93:1 › AC-05 fixture gate covers corrupt layout fallback \n    [chromium] › tests/e2e/restore-layout/resume.spec.ts:143:1 › mobile_tab 与活动 tab 会按 symbol 恢复 ───\n    [chromium] › tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:66:1 › 归档后暂停提醒，重新加入已归档港股时恢复提醒 \n    [chromium] › tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:108:1 › 歧义数字输入不会写入 active 自选 \n    [chromium] › tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:121:1 › 看盘主流程没有自动化可访问性严重违规 \n    [chromium] › tests/e2e/workbench/default.spec.ts:108:1 › 默认工作台展示主图、成交量、副图、OHLC 与来源健康 ───────────\n    [chromium] › tests/e2e/workbench/default.spec.ts:122:1 › MTS 解释卡展示结构化字段且不表达投资建议 ────────────────\n    [chromium] › tests/e2e/workbench/default.spec.ts:139:1 › 副图指标切换保持同一标的上下文 ───────────────────────\n    [chromium] › tests/e2e/workbench/default.spec.ts:153:1 › 数据不足时副图局部降级，不展示伪造读数 ───────────────────\n    [chromium] › tests/e2e/workbench/default.spec.ts:170:1 › demo fallback 来源健康和降级语义穿透到图表、信号与提醒区域 ──\n    [chromium] › tests/e2e/workbench/default.spec.ts:185:1 › stale 不伪装实时成功，重试失败保留可解释状态 ─────────────\n    [chromium] › tests/e2e/workbench/default.spec.ts:208:1 › unavailable 来源健康穿透到图表、信号与提醒区域 ─────────\n  6 passed (36.6s)\n"
+      },
+      "report_paths": [
+        "playwright-report/index.html"
+      ]
+    },
+    {
+      "tool": "StrykerJS",
+      "category": "mutation",
+      "configured": false,
+      "available": true,
+      "result": {
+        "command": "pnpm exec stryker run --incremental",
+        "status": "fail",
+        "exit_code": 254,
+        "started_at": "2026-06-06T11:50:11.457398+00:00",
+        "ended_at": "2026-06-06T11:50:11.789435+00:00",
+        "duration_seconds": 0.332,
+        "output_excerpt": "undefined\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command \"stryker\" not found\n\nDid you mean \"pnpm exec parser\"?\n"
+      },
+      "report_paths": []
+    }
+  ]
+}

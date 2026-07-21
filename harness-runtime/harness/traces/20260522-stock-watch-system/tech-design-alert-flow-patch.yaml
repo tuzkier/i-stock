@@ -1,0 +1,196 @@
+patches:
+  - target: control_contract.interface_changes
+    op: set
+    value:
+      - id: INT-01
+        kind: ADDED
+        module: MOD-02
+        name: MarketDataSource.fetchSeries
+        after: "返回 MarketDataEnvelope，包含 priceSeries、sourceHealth、meta、servedAt、cacheState。server-side 内存 cache key 为 normalizedSymbol + range + interval + provider，TTL 60 秒，forceRefresh 必须 bypass。"
+        traces_to: [FR-06, AC-02]
+      - id: INT-02
+        kind: MODIFIED
+        module: MOD-02
+        name: ChartPayload_to_MarketDataEnvelope
+        before: "ChartPayload 仅含 symbol/range/interval/meta/bars/dataSource/notice。"
+        after: "新增 sourceHealth、priceSeries、degradationReason、sourceName、lastRefreshedAt、retryState、cacheState，保留 bars；cacheState 只允许 miss/hit/bypass/stale_fallback/disabled。"
+        traces_to: [FR-06, AC-02, AC-03, AC-04]
+      - id: INT-03
+        kind: ADDED
+        module: MOD-02
+        name: SourceHealth
+        after: "formal / demo_fallback / stale / unavailable，附 lastRefreshedAt、degradationReason、retryState、affectedObjects。"
+        traces_to: [FR-06]
+      - id: INT-04
+        kind: MODIFIED
+        module: MOD-03
+        name: PriceBar_to_PriceSeries
+        before: "domain 与 UI 直接使用裸 PriceBar[]。"
+        after: "PriceSeries 成为 canonical domain object，包含 bars、timeframe、latestOhlc、latestPrice、changeSummary、sourceHealth。"
+        traces_to: [FR-03, FR-06, AC-02]
+      - id: INT-05
+        kind: MODIFIED
+        module: MOD-04
+        name: CompositeSignal_to_MtsExplanation
+        before: "buildSignal 输出旧四因子 CompositeSignal。"
+        after: "MtsExplanation 包含 trendState、scoreBand、signalType、alertLevel、reasonCodes、invalidators、interpretability、sourceHealth、registryVersion；reasonCodes 与 invalidators 必须引用 MtsReasonRegistry。"
+        traces_to: [FR-04, AC-03, AC-04]
+      - id: INT-06
+        kind: MODIFIED
+        module: MOD-05
+        name: AlertRule
+        before: "仅 above/below 价格提醒或 signal 提醒，只有 enabled / lastTriggeredAt。"
+        after: "增加 taxonomy、condition、activationState、triggerState、history、acknowledgedAt、suspendedReason、restoreIntent；scheduled condition 固定为 mode=daily_time、localTime=HH:mm、timezone=local、daysOfWeek?、skipIfMarketClosed?。"
+        traces_to: [FR-05, AC-04]
+      - id: INT-07
+        kind: ADDED
+        module: MOD-06
+        name: WorkspaceSnapshotV2
+        after: "版本化快照包含 watchlist、alerts、selectedSymbol、layoutBySymbol、globalLayoutFallback、selectedMobileTab、restoreMetadata；layoutBySymbol[normalizedSymbol] 保存 layout_scope=symbol 的 layoutMode、副图偏好、最近 range 与折叠状态。"
+        traces_to: [FR-07, FR-08, AC-05]
+      - id: INT-08
+        kind: MODIFIED
+        module: MOD-06
+        name: storage_api_to_workspace_api
+        before: "readWatchlist/readAlerts/writeWatchlist/writeAlerts 简单 JSON 读写。"
+        after: "readWorkspace/writeWorkspace/migrateWorkspace 负责双读旧 key、生成 V2、校验 schema、写入回退信息。"
+        traces_to: [FR-01, FR-07, FR-08, AC-01, AC-05]
+  - target: control_contract.data_changes
+    op: set
+    value:
+      - id: DATA-01
+        kind: MODIFIED
+        entity: SourceHealth
+        migration: "从 dataSource + notice 迁移到 formal / demo_fallback / stale / unavailable；fallback 结果携带显式状态。"
+        rollback: "未知状态回退为 unavailable；刷新失败保留上次可解释状态并给 retry 提示。"
+        traces_to: [FR-06, AC-02, AC-03, AC-04]
+      - id: DATA-02
+        kind: MODIFIED
+        entity: PriceSeries
+        migration: "从 wire bars 生成 PriceSeries；保留原始 bars 仅用于适配层与回放。"
+        rollback: "bars 不足、字段缺失或时间序列不连续时降级为 partial/unavailable。"
+        traces_to: [FR-03, FR-06, AC-02]
+      - id: DATA-03
+        kind: MODIFIED
+        entity: MtsExplanationAndReasonRegistry
+        migration: "旧四因子评分可作为内部子分项；新增 MtsReasonRegistry 作为 reason/invalidator 唯一字典。"
+        rollback: "评分不足或来源降级时输出 data_insufficient；未知 code 降级为 UNKNOWN_CODE。"
+        traces_to: [FR-04, AC-03, AC-04]
+      - id: DATA-04
+        kind: ADDED
+        entity: WorkspaceSnapshotV2AndChartLayoutPreference
+        migration: "从 myinvestment.watchlist / myinvestment.alerts 双 key 迁移到版本化 snapshot，补入 layoutBySymbol 与 global fallback。"
+        rollback: "读取失败时回退默认 focus 布局；标的级布局损坏时只回退该标的布局，不丢 watchlist/alerts。"
+        traces_to: [FR-07, FR-08, AC-05]
+      - id: DATA-05
+        kind: MODIFIED
+        entity: WatchSymbolArchiveState
+        migration: "从删除即消失迁移到 active/archived；归档暂停绑定提醒。"
+        rollback: "回退时保留 archived 条目，至少恢复为只读状态。"
+        traces_to: [FR-01, FR-02, FR-07, AC-01, AC-05]
+      - id: DATA-06
+        kind: MODIFIED
+        entity: AlertTaxonomyHistoryTriggerScheduledState
+        migration: "从 above/below + signal + enabled/lastTriggeredAt 迁移到 taxonomy、condition、activationState、triggerState、history、acknowledged、suspended_by_archive；scheduled 规则必须显式选择本地时间。"
+        rollback: "旧提醒按默认 taxonomy 和状态补全；app 关闭期间错过的 scheduled tick 不补触发，只记录 missed_while_closed 并等待下一次本地时钟命中。"
+        traces_to: [FR-05, AC-04, AC-05]
+  - target: control_contract.verification_strategy
+    op: set
+    value:
+      - id: VS-01
+        layer: integration
+        target_ids: [MOD-02, FR-06, AC-02]
+        evidence_required: [live_smoke_result, mock_failure_result, fallback_fixture_result]
+      - id: VS-02
+        layer: replay
+        target_ids: [MOD-02, MOD-03, MOD-04, MOD-05, FR-06, AC-03, AC-04]
+        evidence_required: [source_health_fixture_replay]
+      - id: VS-03
+        layer: unit
+        target_ids: [MOD-04, FR-04, AC-03]
+        evidence_required: [mts_replay_determinism_result, mts_registry_code_coverage]
+      - id: VS-04
+        layer: integration
+        target_ids: [MOD-05, FR-05, FR-07, AC-04, AC-05]
+        evidence_required: [alert_archive_restore_result, scheduled_local_clock_result, scheduled_missed_while_closed_result, alert_event_flow_result]
+      - id: VS-05
+        layer: integration
+        target_ids: [MOD-06, FR-07, FR-08, AC-05]
+        evidence_required: [localstorage_migration_result, corrupted_snapshot_result, symbol_layout_restore_result, large_snapshot_threshold_result]
+      - id: VS-06
+        layer: e2e
+        target_ids: [MOD-07, FR-02, FR-03, FR-04, FR-05, FR-06, FR-07, FR-08]
+        evidence_required: [playwright_user_journey_result, locator_contract_result, per_symbol_layout_e2e_result]
+      - id: VS-07
+        layer: gate
+        target_ids: [MOD-08, FR-09, NFR-05]
+        evidence_required: [unit_result, replay_result, e2e_result, build_result]
+      - id: VS-08
+        layer: fitness
+        target_ids: [MOD-02, MOD-03]
+        evidence_required: [cache_ttl_key_bypass_stale_check, chart_render_check]
+  - target: control_contract.state_flows
+    op: set
+    value:
+      - id: SF-01
+        command: OpenWorkbench / RefreshSourceHealth
+        producer: MOD-02
+        event: SourceHealthChanged
+        consumers: [MOD-03, MOD-04, MOD-05, MOD-07]
+        persistence: none
+        ordering: "source health before MtsSignalEvaluated and AlertRuleTriggered"
+        compensation: "unknown source state -> unavailable; provider/cache violations trigger Gate"
+      - id: SF-02
+        command: ObservationContextRefreshed
+        producer: MOD-03
+        event: IndicatorStateChanged
+        consumers: [MOD-04, MOD-07]
+        persistence: none
+        ordering: "validated PriceSeries before MTS"
+        compensation: "insufficient bars -> partial/unavailable"
+      - id: SF-03
+        command: EvaluateMts
+        producer: MOD-04
+        event: MtsSignalEvaluated
+        consumers: [MOD-05, MOD-07]
+        persistence: replay_only
+        ordering: "after SourceHealthChanged and IndicatorStateChanged"
+        compensation: "unknown registry code -> UNKNOWN_CODE; insufficient data -> data_insufficient"
+      - id: SF-04
+        command: EvaluateAlertRules
+        producer: MOD-05
+        event: AlertRuleTriggered / AlertRuleAcknowledged / ScheduledAlertMissed
+        consumers: [MOD-05, MOD-07, MOD-06]
+        persistence: AlertRule.history / lastTriggeredAt / acknowledgedAt / missedAt
+        ordering: "after MTS; risk priority before watch; scheduled only while app open local clock tick"
+        compensation: "suspended_by_archive cannot trigger; missed scheduled tick is recorded, not backfilled"
+      - id: SF-05
+        command: ArchiveWatchSymbol / RestoreWatchSymbol
+        producer: MOD-01 + MOD-06
+        event: WatchSymbolArchived / WatchSymbolRestored
+        consumers: [MOD-05, MOD-06, MOD-07]
+        persistence: WorkspaceSnapshotV2.watchlist + alert activation state
+        ordering: "watchlist state before alert activation change"
+        compensation: "restore cannot clear alert history"
+      - id: SF-06
+        command: RestoreLocalWorkbench
+        producer: MOD-06
+        event: WorkspaceRestored
+        consumers: [MOD-01, MOD-05, MOD-07]
+        persistence: read legacy/V2; may write migrated V2; never delete old keys"
+        ordering: "restore before first automatic refresh"
+        compensation: "corrupt snapshot -> default focus; Storage Gate on threshold breach"
+  - target: control_contract.scheduled_alert_contract
+    op: set
+    value:
+      condition_shape:
+        mode: daily_time
+        localTime: HH:mm
+        timezone: local
+        daysOfWeek: optional number array 1-7
+        skipIfMarketClosed: optional boolean
+      timebase: browser_local_clock
+      evaluation: "app-open only; no background worker, system notification, external push, or server scheduler"
+      missed_tick_policy: "do not backfill trigger after app close; record missed_while_closed and wait for next local tick"
+      archive_restore_policy: "archived symbols suspend scheduled alerts; restore resumes from next tick without clearing history"
+      acknowledgment_policy: "acknowledged and triggered are separate states"

@@ -1,0 +1,5 @@
+decisions:
+  brownfield: keep
+  prototype.interactive_prototype.prototype_project_root: adopt_default
+  interaction.reachability_gate_level: adopt_default
+  interaction.composition_gate_level: adopt_default

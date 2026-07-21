@@ -1,0 +1,57 @@
+patches:
+  - target: control_contract.tasks
+    op: set
+    value:
+      - id: TASK-STOCK-WATCH-T001
+        traces_to:
+          - AC-01
+          - FR-01
+          - FR-02
+        required_evidence:
+          - id: re-T001-1
+            type: red_report
+            description: Normalization preview and ambiguity guard red evidence.
+          - id: re-T001-2
+            type: green_report
+            description: Watchlist archive/restore implementation evidence.
+          - id: re-T001-3
+            type: regression_report
+            command: npm run build
+          - id: re-T001-4
+            type: mutation_or_fault_injection_report
+            path: harness-runtime/harness/traces/20260522-stock-watch-system/mutation-report.md
+          - id: re-T001-5
+            type: screenshot_or_locator_evidence
+            path: harness-runtime/harness/traces/20260522-stock-watch-system/browser-walkthrough.md
+        test_obligation:
+          risk_level: medium
+          surfaces:
+            - SURF-WATCHLIST
+            - SURF-RESTORE
+            - SURF-ALERTS
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+          evidence_required:
+            - red_report
+            - green_report
+            - regression_report
+            - mutation_or_fault_injection_report
+            - screenshot_or_locator_evidence
+        e2e_obligation:
+          risk_level: medium
+          user_surfaces:
+            - web_ui
+            - realtime
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+          evidence_required:
+            - e2e_run_report
+            - assertion_summary
+            - recorded_manual_steps
+        stop_if:
+          - changes_outside_authorized_paths
+          - design_constraint_conflict
+          - new_external_dependency
+          - new_public_behavior_without_delta_spec

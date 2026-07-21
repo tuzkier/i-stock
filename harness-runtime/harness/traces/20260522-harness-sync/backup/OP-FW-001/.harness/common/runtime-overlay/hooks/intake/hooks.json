@@ -1,0 +1,41 @@
+{
+  "_comment": "HarnessV2 intake stage hook manifest. install pipeline reads this and materializes the corresponding .claude/hooks/intake/<script>.py files plus a hooks section in .claude/settings.json. Each entry maps a Claude Code hook event to one of the Python scripts shipped alongside this file.",
+  "stage": "intake",
+  "hooks": [
+    {
+      "id": "check-mission-branch",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+      "script": "check_mission_branch.py",
+      "purpose": "Block runtime YAML edits when not on a mission branch (enforces git-prepare-before-runtime-write HARD-GATE)."
+    },
+    {
+      "id": "check-stage-worktree",
+      "event": "PreToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "check_stage_worktree.py",
+      "purpose": "Block mission-contract writes outside the intake stage worktree (enforces stage-worktree-required HARD-GATE)."
+    },
+    {
+      "id": "check-pending-recheck",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pending_recheck.py",
+      "purpose": "Block harness gate/contract advance when contract.yaml has pending_reviewer_recheck=true (enforces no-skip-recheck-after-fix HARD-GATE)."
+    },
+    {
+      "id": "mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Edit|Write|MultiEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set contract.yaml pending_reviewer_recheck=true after mission-contract edit so the pre-advance check fires."
+    },
+    {
+      "id": "record-context-read",
+      "event": "PostToolUse",
+      "matcher": "Read",
+      "script": "record_context_read.py",
+      "purpose": "Append a structured trace event when the AI reads project-context.md."
+    }
+  ]
+}

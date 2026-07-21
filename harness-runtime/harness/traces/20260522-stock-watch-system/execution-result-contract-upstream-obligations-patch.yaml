@@ -1,0 +1,290 @@
+patches:
+  - target: control_contract.upstream
+    op: set
+    value:
+      - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/prd.contract.yaml
+        sections:
+          - work_graph_artifact
+          - acceptance_criteria
+          - capabilities
+      - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+        sections:
+          - tasks
+          - atomic_task_queue
+      - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+        sections:
+          - Parent Task Index
+          - Execution Units
+          - Definition of Done
+      - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+        sections:
+          - scenarios
+  - target: control_contract.tasks
+    op: set
+    value:
+      - id: TASK-STOCK-WATCH-T002
+        traces_to:
+          - REQ-STOCK-WATCH-SYSTEM
+        required_evidence:
+          - id: re-T002-unit
+            type: green_report
+            command: bundle tests/unit/source/market-data-source.spec.ts then node --test
+          - id: re-T002-e2e
+            type: e2e_run_report
+            command: npx playwright test workbench/default.spec.ts
+        test_obligation:
+          risk_level: high
+          surfaces:
+            - SURF-WORKBENCH
+            - SURF-SOURCE
+            - SURF-LAYOUT
+          required_capabilities:
+            - unit
+            - replay
+            - browser_flow
+            - cache_semantics
+            - user_visible_assertion
+          evidence_required:
+            - red_report
+            - green_report
+            - regression_report
+            - cache_trace
+        e2e_obligation:
+          risk_level: high
+          user_surfaces:
+            - workbench_default_open
+            - indicator_switch
+            - source_degradation
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+            - realtime_or_refresh
+            - accessibility_smoke
+          evidence_required:
+            - e2e_run_report
+            - trace_or_video
+            - screenshot_on_failure
+            - assertion_summary
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - provider_specific_fields_enter_domain
+          - cache_written_to_localStorage
+          - chart_gate_violation
+      - id: TASK-STOCK-WATCH-T003
+        traces_to:
+          - REQ-STOCK-WATCH-SYSTEM
+        required_evidence:
+          - id: re-T003-registry
+            type: registry_report
+            command: bundle tests/unit/mts/registry.spec.ts then node --test
+          - id: re-T003-replay
+            type: replay_report
+            command: bundle tests/replay/mts/replay.spec.ts then node --test
+          - id: re-T003-e2e
+            type: e2e_run_report
+            command: npx playwright test mts/card.spec.ts
+        test_obligation:
+          risk_level: high
+          surfaces:
+            - SURF-MTS
+            - SURF-WORKBENCH
+          required_capabilities:
+            - unit
+            - replay
+            - mutation_or_registry_validation
+            - screenshot_or_copy_review
+          evidence_required:
+            - red_report
+            - green_report
+            - regression_report
+            - registry_report
+        e2e_obligation:
+          risk_level: medium
+          user_surfaces:
+            - mts_card_reading
+            - source_degraded_mts
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+            - accessibility_smoke
+          evidence_required:
+            - e2e_run_report
+            - trace_or_video
+            - assertion_summary
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - mts_expresses_investment_advice
+          - registry_not_additive
+          - provider_details_enter_mts_contract
+      - id: TASK-STOCK-WATCH-T004
+        traces_to:
+          - REQ-STOCK-WATCH-SYSTEM
+        required_evidence:
+          - id: re-T004-unit
+            type: green_report
+            command: bundle tests/unit/alerts/rule-model.spec.ts then node --test
+          - id: re-T004-replay
+            type: state_transition_report
+            command: bundle tests/replay/alerts/trigger-flow.spec.ts then node --test
+          - id: re-T004-e2e
+            type: e2e_run_report
+            command: npx playwright test alerts/panel.spec.ts
+        test_obligation:
+          risk_level: high
+          surfaces:
+            - SURF-ALERTS
+            - SURF-MTS
+          required_capabilities:
+            - unit
+            - replay
+            - browser_flow
+            - clock_control
+            - mutation_or_fault_injection
+          evidence_required:
+            - red_report
+            - green_report
+            - regression_report
+            - replay_log
+        e2e_obligation:
+          risk_level: high
+          user_surfaces:
+            - alert_create_flow
+            - alert_trigger_flow
+            - alert_ack_flow
+            - scheduled_alert_status
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+            - api_or_contract_evidence
+          evidence_required:
+            - e2e_run_report
+            - trace_or_video
+            - screenshot_on_failure
+            - assertion_summary
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - external_notification_or_worker_required
+          - alert_state_is_ui_only
+          - archive_implemented_as_delete
+      - id: TASK-STOCK-WATCH-T005
+        traces_to:
+          - REQ-STOCK-WATCH-SYSTEM
+        required_evidence:
+          - id: re-T005-unit
+            type: green_report
+            command: bundle tests/unit/workspace/snapshot-migration.spec.ts then node --test
+          - id: re-T005-replay
+            type: migration_report
+            command: bundle tests/replay/workspace/migration-replay.spec.ts then node --test
+          - id: re-T005-e2e
+            type: e2e_run_report
+            command: npx playwright test restore-layout/resume.spec.ts
+        test_obligation:
+          risk_level: high
+          surfaces:
+            - SURF-RESTORE
+            - SURF-LAYOUT
+            - SURF-WATCHLIST
+          required_capabilities:
+            - unit
+            - replay
+            - browser_flow
+            - storage_migration_assertion
+            - screenshot_or_restore_trace
+          evidence_required:
+            - red_report
+            - green_report
+            - regression_report
+            - migration_report
+        e2e_obligation:
+          risk_level: high
+          user_surfaces:
+            - browser_reopen_restore
+            - layout_switch
+            - mobile_tab_restore
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+            - api_or_contract_evidence
+          evidence_required:
+            - e2e_run_report
+            - trace_or_video
+            - assertion_summary
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - storage_gate_threshold_exceeded
+          - layout_scope_not_symbol
+          - cloud_or_database_persistence_required
+      - id: TASK-STOCK-WATCH-T006
+        traces_to:
+          - REQ-STOCK-WATCH-SYSTEM
+        required_evidence:
+          - id: re-T006-replay
+            type: fixture_checksum_or_replay_log
+            command: bundle tests/replay/gate/fixture-corpus.spec.ts then node --test
+          - id: re-T006-e2e
+            type: e2e_run_report
+            command: npx playwright test gate/acceptance-matrix.spec.ts
+        test_obligation:
+          risk_level: high
+          surfaces:
+            - SURF-WATCHLIST
+            - SURF-WORKBENCH
+            - SURF-MTS
+            - SURF-ALERTS
+            - SURF-SOURCE
+            - SURF-LAYOUT
+            - SURF-RESTORE
+          required_capabilities:
+            - unit
+            - replay
+            - browser_flow
+            - user_visible_assertion
+            - accessibility_smoke
+            - fixture_first
+            - mutation_or_fault_injection
+          evidence_required:
+            - red_report
+            - green_report
+            - regression_report
+            - e2e_run_report
+            - trace_or_video
+        e2e_obligation:
+          risk_level: high
+          user_surfaces:
+            - watchlist_flow
+            - workbench_flow
+            - mts_flow
+            - alert_flow
+            - restore_flow
+          required_capabilities:
+            - browser_flow
+            - user_visible_assertion
+            - realtime_or_refresh
+            - accessibility_smoke
+            - api_or_contract_evidence
+          evidence_required:
+            - e2e_run_report
+            - trace_or_video
+            - screenshot_on_failure
+            - assertion_summary
+        stop_if:
+          - changes_outside_authorized_paths
+          - new_public_behavior_without_delta_spec
+          - design_constraint_conflict
+          - new_external_dependency
+          - validation_depends_on_live_market
+          - locator_contract_is_brittle
+          - runtime_agent_required_for_tests

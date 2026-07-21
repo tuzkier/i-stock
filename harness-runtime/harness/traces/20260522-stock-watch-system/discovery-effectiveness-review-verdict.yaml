@@ -1,0 +1,32 @@
+role_verdict:
+  id: RV-DISCOVERY-001
+  role: discovery-effectiveness-reviewer
+  verdict: PASS
+  reviewed_obligations:
+    - OBL-DISCOVERY-001
+  review_basis:
+    focus: "审查 discovery 产物是否足以支撑下游 PRD，且未静默忽略关键降级与风险边界。"
+    files:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/discovery-brief.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/discovery-brief.contract.yaml
+      - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+      - harness-runtime/harness/missions/20260522-stock-watch-system/contracts/mission-contract.contract.yaml
+      - harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+      - docs/technical-signal-research-design.md
+      - .harness/common/rules/project-context.md
+  summary: "PASS：discovery-brief 已覆盖问题空间摘要、受影响 capability、业务对象候选、依赖约束、用户角色画像、现有方案分析、关键发现和 PRD 输入建议；contract 中的 affected_capabilities、business_object_candidates、roles、scenarios、existing_solutions、design_assumptions、agent_engineering_candidates、degradations 已把多市场看盘、自选、图表、MTS、提醒、本地化、数据供应与图表选型的关键边界写实，足以避免下游自行发明核心业务对象、用户场景或关键约束。project-context.md 缺失与 GitNexus unavailable 均已显式记录并给出补偿路径，没有静默忽略；同时遵守了“优先考虑成熟开源库但不直接锁定具体库/供应商/架构”的约束，且把 legacy composite signal 与最终 MTS 清楚区分，继续保持禁止自动交易、收益承诺和投资建议的边界。未发现需要 HOLD 的阻塞缺口，可进入 PRD。"
+  coverage:
+    workflow_required_sections: pass
+    downstream_guesswork_prevention: pass
+    degradation_visibility: pass
+    open_source_preference_without_lock_in: pass
+    legacy_signal_vs_mts_boundary: pass
+    financial_risk_boundary: pass
+    hold_gap_check: pass
+  blocking_gaps: []
+  dispatch:
+    subagent_id: "local-role-run-discovery-effectiveness-review"
+    model: "gpt-5.4"
+    execution_mode: sequential
+    started_at: "2026-05-22T23:16:58+08:00"
+    completed_at: "2026-05-22T23:18:00+08:00"

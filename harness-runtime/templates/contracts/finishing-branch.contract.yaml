@@ -1,0 +1,41 @@
+stage: finishing-branch
+mission_id: "{{mission_id}}"
+
+branch_status:
+  mission_branch: "{{mission_branch}}"
+  base_branch: "{{base_branch}}"
+  dirty: false
+  active_stage_worktrees: []
+  blocked_stage_worktrees: []
+
+release_readiness:
+  delivery_package: "harness-runtime/harness/artifacts/{{mission_id}}/delivery/delivery-package.md"
+  acceptance_result: "harness-runtime/harness/artifacts/{{mission_id}}/verify/acceptance-result.md"
+  verification_report_contract: "harness-runtime/harness/stages/{{mission_id}}/contracts/verification-report.contract.yaml"
+  command_evidence_ids: []
+
+test_evidence:
+  mode: rerun
+  command: ""
+  exit_code: null
+  evidence_id: ""
+
+close_choice:
+  strategy: ""
+  selected_by: user
+  approval_id: ""
+
+git_ops: []
+
+pr_body:
+  required: false
+  source_artifacts: []
+  pr_url: ""
+
+mission_close:
+  branch_closed: false
+  close_strategy: ""
+  close_evidence_id: ""
+
+effectiveness_review:
+  last_gate_run_status: ""

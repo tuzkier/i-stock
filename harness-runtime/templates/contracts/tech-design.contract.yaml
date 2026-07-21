@@ -1,0 +1,223 @@
+control_contract:
+  type: guide_contract
+  subtype: technical_guide
+  version: 1
+  mission_id: "{{mission_id}}"
+  stage: technical_analysis
+  status: ready
+  upstream:
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/solution/solution.md"
+      sections:
+        - 所选路线与理由
+        - 关键决策
+        - 影响面
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/product/product-definition.md"
+      sections:
+        - 用户场景
+        - 验收项
+        - 非功能约束
+    # 仅当该 mission 跑过 interaction 阶段、存在原型产物时填写：
+    # behavior-graph.yaml 是原型 SSOT（page_state PS-<surf>-<state> / surface SURF-xxx / step / flow / edge），
+    # surface-model.md 是界面边界 catalog（每个 SURF 标 create/modify/extend/retire + baseline）。
+    # tech-design 的 modules / interface_changes / data_changes 需对每个 mission SURF 显式承载（traces_to 指向 SURF-/PS-），
+    # 否则覆盖率门报 SURFACE_NOT_CARRIED；要么承载、要么经决策门改写并登记 prototype_coverage_exemptions。
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/behavior-graph.yaml"
+      optional: true   # 未跑 interaction 的 mission 此文件不存在，gate 跳过 missing_upstream；存在则 SURF-/PS- 进许可集
+      sections:
+        - surfaces
+        - page_states
+        - flows
+    - path: "harness-runtime/harness/artifacts/{{mission_id}}/interaction/surface-model.md"
+      optional: true   # 同上：界面边界 catalog 仅在跑过 interaction 时存在
+      sections:
+        - 界面边界 catalog
+  consumers:
+    - breakdown
+    - execute
+    - code-review
+    - architecture-reviewer
+    - stage-gate
+  role_policy:
+    stage: technical_analysis
+    work_graph_lane: technical-analysis-lane
+    required_execution_roles:
+      - tech-designer
+    required_review_roles:
+      - technical-design-effectiveness-reviewer
+    conditional_roles:
+      - role: agent-capability-designer
+        kind: execution
+        when:
+          - agent_engineering
+          - agent_capability
+      - role: agent-capability-reviewer
+        kind: review
+        when:
+          - agent_engineering
+          - agent_capability
+  work_graph_artifact:
+    node_id: "{{work_graph_node_id}}"
+    artifact_set_id: "AS-{{work_graph_node_id}}-technical-analysis-{{artifact_version}}"
+    artifact_version: "{{artifact_version}}"
+    promoted_by_mission: "{{mission_id}}"
+    artifact_refs:
+      - artifact_id: "{{mission_id}}:tech-design"
+        role: tech-design
+        path: "harness-runtime/harness/artifacts/{{mission_id}}/technical-analysis/tech-design.md"
+  execution_result:
+    id: EXE-TECH-001
+    role: tech-designer
+    status: DONE
+    produced_artifacts:
+      - path: "harness-runtime/harness/artifacts/{{mission_id}}/technical-analysis/tech-design.md"
+    fulfilled_obligations:
+      - OBL-TECH-001
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+    - id: OBL-TECH-001
+      mission_id: "{{mission_id}}"
+      type: architecture
+      risk: medium
+      traces_to:
+        acceptance:
+          - SCN-01
+        task: []
+      required_evidence:
+        - reviewer_verdict
+      required_roles:
+        - technical-design-effectiveness-reviewer
+      blocking: true
+      source: inferred
+  role_verdicts: []
+  upstream_obligations:
+    - id: UO-TECH-001
+      source: "{{upstream_source_ref}}"
+      obligation: "{{user_visible_or_quality_obligation}}"
+      engineering_meaning: "{{engineering_meaning}}"
+      design_landing:
+        modules:
+          - MOD-01
+        interfaces:
+          - INT-01
+        data_or_state:
+          - DATA-01
+        verification:
+          - VS-01
+      status: addressed
+      return_needed: false
+  # `traces_to` 指向上游需求 / 验收项 / 方案决策（DEC- / CAP- 等）；
+  # 该 mission 有原型产物时，承载某个界面的模块还应 traces_to 对应 SURF-（界面边界）或 PS-（页面状态），
+  # 否则覆盖率门报 SURFACE_NOT_CARRIED——要么承载、要么经决策门改写并登记 prototype_coverage_exemptions。
+  modules:
+    - id: MOD-01
+      name: "{{module_name}}"
+      responsibility: "{{module_responsibility}}"
+      forbidden_responsibilities:
+        - "{{module_forbidden_responsibility}}"
+      affected_paths:
+        - "{{module_affected_path}}"
+      dependency_direction: "{{module_dependency_direction}}"
+      traces_to:
+        - DEC-01
+        - CAP-01
+        - SURF-EXAMPLE  # 该 mission 有原型时，承载界面的模块指向其 SURF-
+  architecture_carrier:
+    selected_solution_ref: DEC-01
+    reused_structures:
+      - "{{reused_structure}}"
+    extended_structures:
+      - "{{extended_structure}}"
+    replaced_structures:
+      - "{{replaced_structure}}"
+    isolated_risks:
+      - "{{isolated_risk}}"
+  # 接口变化采用结构化分类。修改 / 替换类接口必须同时说明变更前和变更后；
+  # `module` 指向 modules[].id，`traces_to` 指向上游需求、验收项或方案决策。
+  # 该 mission 有原型产物时，支撑某界面 / 页面状态的接口可 traces_to 对应 SURF-/PS- 以共同承载（计入 SURFACE_NOT_CARRIED 覆盖率门）。
+  interface_changes:
+    - id: INT-01
+      kind: ADDED
+      module: MOD-01
+      caller: "{{interface_caller}}"
+      before: "{{interface_before_or_na}}"
+      after: "{{interface_definition}}"
+      error_semantics: "{{interface_error_semantics}}"
+      compatibility: "{{interface_compatibility_strategy}}"
+      migration_path: "{{interface_migration_path}}"
+      traces_to:
+        - DEC-01
+  # 数据 / 状态变化必须说明迁移、回滚和不变量校验；不涉及数据或状态时应在 Markdown 中写明原因。
+  # 该 mission 有原型产物时，承载某页面状态（PS-）的数据 / 状态变化可 traces_to 对应 PS-/SURF-（计入 SURFACE_NOT_CARRIED 覆盖率门）。
+  data_changes:
+    - id: DATA-01
+      kind: MODIFIED
+      entity: "{{data_entity}}"
+      state_transition: "{{state_transition_or_na}}"
+      invariant_checks:
+        - "{{invariant_check}}"
+      migration: "{{migration_plan}}"
+      rollback: "{{rollback_plan}}"
+      exception_paths:
+        - "{{state_exception_path}}"
+      traces_to:
+        - CAP-01
+  # 可选出口：当该 mission 有原型产物、但某些 SURF-/PS- 经决策门确认本 mission 不承载（显式改写 / 范围外 / N/A）时，
+  # 在此登记豁免；覆盖率门（SURFACE_NOT_CARRIED）据此放行对应原型 ref。
+  # 每项必须含 reason，否则报 PROTOTYPE_EXEMPTION_NO_REASON。无原型产物或无豁免时保持空列表。
+  prototype_coverage_exemptions: []
+    # - id: SURF-EXAMPLE
+    #   reason: "{{exemption_reason}}"
+  verification_strategy:
+    - id: VS-01
+      layer: unit
+      target_ids:
+        - MOD-01
+      proves: "{{behavior_or_risk_proved}}"
+      scenario: "{{verification_scenario}}"
+      evidence_required:
+        - test_result
+  risk_validation:
+    - risk_id: RISK-01
+      handling: validate
+      validation_method: "{{prototype_contract_test_migration_or_manual_method}}"
+      expected_conclusion: "{{risk_expected_conclusion}}"
+      return_condition: "{{risk_return_condition}}"
+  architectural_fitness_functions:
+    - id: AFF-01
+      protected_quality: "{{protected_quality}}"
+      measurement: "{{fitness_measurement}}"
+      threshold: "{{fitness_threshold}}"
+      verification_evidence:
+        - VS-01
+  # 生产就绪四要素。每一项必须是真实设计，或显式写成 "N/A: <reason>"。
+  # 空值表示技术设计没有说明正式交付所需的错误处理、兼容性、可观测性或回滚策略。
+  production_readiness:
+    error_handling: "{{error_handling}}"
+    compatibility: "{{compatibility}}"
+    observability: "{{observability}}"
+    rollback: "{{rollback}}"
+  # Agent 实现设计只在任务涉及 Agent 能力时填写；它必须追溯到方案中的 Agent 架构和产品定义中的能力需求。
+  # 核心能力范围内的评估场景应覆盖正常、边界、对抗和歧义输入。
+  agent_implementation: []
+  # 审查轮次由工作流维护。effectiveness_review 始终存在；
+  # agent_capability_review 仅在 Agent 能力设计触发时使用；
+  # dependency_validity_review 仅在依赖影响分析触发时使用。
+  effectiveness_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+  agent_capability_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+  dependency_validity_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

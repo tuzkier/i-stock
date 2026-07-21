@@ -1,0 +1,69 @@
+{
+  "_comment": "finishing-branch-improvement-plan M1 + M3.1 hook manifest. Registers 9 hooks total.",
+  "stage": "finishing-branch",
+  "hooks": [
+    {
+      "id": "finishing-branch-check-legacy-alias",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_legacy_alias.py",
+      "purpose": "Soft-block (advisory) for legacy mission close aliases (manual/cancelled); hard-block when finishing_branch.legacy_alias_window=closed."
+    },
+    {
+      "id": "finishing-branch-deny-force-push",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "deny_force_push.py",
+      "purpose": "Block git push --force / -f / --force-with-lease without boundary approval."
+    },
+    {
+      "id": "finishing-branch-deny-hard-reset",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "deny_hard_reset.py",
+      "purpose": "Block git reset --hard without decision gate approval."
+    },
+    {
+      "id": "finishing-branch-check-cleanup-authorization",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_cleanup_authorization.py",
+      "purpose": "Block git branch -D and git worktree remove without discard confirmation approval."
+    },
+    {
+      "id": "finishing-branch-check-branch-cleanliness",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_branch_cleanliness.py",
+      "purpose": "Advisory/block before git merge or push based on branch_status evidence in contract."
+    },
+    {
+      "id": "finishing-branch-check-pr-body",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_pr_body.py",
+      "purpose": "Advisory/block before gh pr create if pr_body.source_artifacts is empty."
+    },
+    {
+      "id": "finishing-branch-check-close-gate",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_close_gate.py",
+      "purpose": "Block harness mission close if effectiveness_review.last_gate_run_status != PASS."
+    },
+    {
+      "id": "finishing-branch-deny-direct-runtime-mutation",
+      "event": "PreToolUse",
+      "matcher": ["Edit", "Write"],
+      "script": "deny_direct_runtime_mutation.py",
+      "purpose": "Block Edit/Write tool calls targeting mission-status.yaml directly."
+    },
+    {
+      "id": "finishing-branch-record-git-ops",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "script": "record_git_ops.py",
+      "purpose": "Record git_ops evidence to finishing-branch contract after execute commands."
+    }
+  ]
+}

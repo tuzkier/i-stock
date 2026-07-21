@@ -1,0 +1,236 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [tasks]
+    properties:
+      type:
+        const: action_contract
+      # breakdown-improvement-plan M1.4: effectiveness review rounds count must
+      # be a non-negative integer when present. Tracks how many reviewer rounds
+      # have run; consumed by M3.2 AskUserQuestion (max_rounds) and by the
+      # `harness contract patch --add-round` flow (matching prd / solution /
+      # technical_analysis schema).
+      effectiveness_review:
+        type: object
+        properties:
+          rounds_used:
+            type: integer
+            minimum: 0
+          pending_reviewer_recheck:
+            type: boolean
+          last_verdict:
+            enum: [PASS, FAIL, BLOCKED]
+        additionalProperties: true
+      # breakdown is the only stage with a parallel-worker pattern
+      # (delivery-slicer + test-planning-expert). Singular `execution_result`
+      # remains accepted for backwards compatibility during the 2-mission
+      # migration window; new templates emit `execution_results[]` instead.
+      # H1: `barrier_group` enables the M3.1 check_barrier_complete hook to
+      # verify both parallel workers reached DONE before stage gate advance.
+      execution_results:
+        type: array
+        minItems: 2
+        items:
+          type: object
+          required: [id, role, status]
+          properties:
+            id:
+              type: string
+              minLength: 1
+            role:
+              type: string
+              minLength: 1
+            status:
+              enum: [DONE, BLOCKED, FAIL]
+            barrier_group:
+              type: string
+              minLength: 1
+      execution_result:
+        # Singular form: legacy; accepted for backwards compatibility but
+        # `contract check` will warn when both forms are present, and 2 mission
+        # cycles after M1.4 lands the singular form is rejected.
+        type: object
+        properties:
+          id:
+            type: string
+          role:
+            type: string
+          status:
+            type: string
+      tasks:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required: [id, traces_to, required_evidence]
+          properties:
+            traces_to:
+              # H3 + analysis §4.2: traces_to is a typed cross-contract pointer
+              # set referencing AC- / FR- / NFR- / DEC- / MOD- / IF- / DATA- /
+              # VS- / INT-FLOW- / INT-STATE- / INT-OBL- / REQ- / SCN- IDs from
+              # the 5 upstream contracts (mission-contract / prd / solution /
+              # tech-design / interaction). `contract check --upstream` cross
+              # validates each ID against the upstream contract registry.
+              type: array
+              minItems: 1
+              items:
+                type: string
+                minLength: 1
+            required_evidence:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                # H3: each evidence triple carries a typed ID so verify M1.4
+                # can reference the breakdown-side primary key via
+                # `command_evidence[].required_evidence_id` /
+                # `result_evidence[].required_evidence_id`. Verify does not
+                # invent IDs.
+                required: [id]
+                properties:
+                  id:
+                    type: string
+                    # format hint: re-<task_id>-<seq> (e.g. re-T-001-1).
+                    pattern: "^[A-Za-z0-9._-]+$"
+                    minLength: 3
+                  path:
+                    type: string
+                  command:
+                    type: string
+                  description:
+                    type: string
+                  type:
+                    type: string
+                  verification_type:
+                    enum:
+                      - unit
+                      - integration
+                      - e2e
+                      - manual
+                      - ui
+                      - api
+                      - cli
+                      - data
+                      - doc
+                additionalProperties: true
+            test_obligation:
+              type: object
+              required: [risk_level, surfaces, required_capabilities, evidence_required]
+              properties:
+                risk_level:
+                  enum: [low, medium, high]
+                surfaces:
+                  type: array
+                  minItems: 1
+                required_capabilities:
+                  type: array
+                  minItems: 1
+                evidence_required:
+                  type: array
+                  minItems: 1
+                accepted_alternatives:
+                  type: object
+            # Example Mapping: every executable task can carry rules,
+            # examples, open questions, and deferred scope instead of hiding
+            # ambiguity in prose.
+            rules:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  statement:
+                    type: string
+                  traces_to:
+                    type: array
+                    items:
+                      type: string
+            examples:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  given:
+                    type: string
+                  when:
+                    type: string
+                  then:
+                    type: string
+                  traces_to:
+                    type: array
+                    items:
+                      type: string
+            questions:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  question:
+                    type: string
+                  status:
+                    type: string
+            deferred_scope:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  reason:
+                    type: string
+                  traces_to:
+                    type: array
+                    items:
+                      type: string
+            e2e_obligation:
+              type: object
+              required: [risk_level, user_surfaces, required_capabilities, evidence_required]
+              properties:
+                risk_level:
+                  enum: [low, medium, high]
+                user_surfaces:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    minLength: 1
+                required_capabilities:
+                  type: array
+                  minItems: 1
+                  items:
+                    enum:
+                      - browser_flow
+                      - user_visible_assertion
+                      - api_backed_state
+                      - realtime_or_refresh
+                      - accessibility_smoke
+                      - auth_state
+                      - negative_path
+                      - full_user_journey
+                      - api_or_contract_evidence
+                evidence_required:
+                  type: array
+                  minItems: 1
+                  items:
+                    enum:
+                      - e2e_run_report
+                      - trace_or_video
+                      - screenshot_on_failure
+                      - assertion_summary
+                      - accessibility_report
+                      - api_contract_report
+                      - recorded_manual_steps
+                accepted_alternatives:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    minItems: 1
+                    items:
+                      type: string
+                      minLength: 1

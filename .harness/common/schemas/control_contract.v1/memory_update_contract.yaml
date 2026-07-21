@@ -1,0 +1,11 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+allOf:
+  - $ref: common.yaml
+  - type: object
+    required: [decisions]
+    properties:
+      type:
+        const: memory_update_contract
+      decisions:
+        type: array
+        minItems: 1

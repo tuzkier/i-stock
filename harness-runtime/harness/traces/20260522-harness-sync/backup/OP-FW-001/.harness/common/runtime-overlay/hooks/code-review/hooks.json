@@ -1,0 +1,55 @@
+{
+  "_comment": "code-review-improvement-plan M3.1 hook manifest. Pure-review stage: contract-via-CLI + review-ready gate + reviewer write guard + dangerous-git guard + pending-recheck lifecycle + dispatch envelope recording.",
+  "stage": "code-review",
+  "hooks": [
+    {
+      "id": "code-review-check-contract-via-cli",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit",
+      "script": "check_contract_via_cli.py",
+      "purpose": "Block direct Write/Edit of code-review.contract.yaml."
+    },
+    {
+      "id": "code-review-check-review-ready",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "check_review_ready.py",
+      "purpose": "Block `harness mission stage complete code-review` until pending_reviewer_recheck=false and no unresolved High findings."
+    },
+    {
+      "id": "code-review-deny-reviewer-write",
+      "event": "PreToolUse",
+      "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+      "script": "deny_reviewer_write.py",
+      "purpose": "Block reviewer sub-agents from directly editing source files; reviewers may only write findings to the contract via harness CLI."
+    },
+    {
+      "id": "code-review-deny-dangerous-git",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "script": "deny_dangerous_git.py",
+      "purpose": "Block destructive git commands (force push, reset --hard, branch -D, clean -f, checkout --, restore .) during code-review stage."
+    },
+    {
+      "id": "code-review-mark-pending-recheck",
+      "event": "PostToolUse",
+      "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+      "script": "mark_pending_recheck.py",
+      "purpose": "Set pending_reviewer_recheck=true in the contract after any code edit (excluding edits to the contract and code-review.md themselves)."
+    },
+    {
+      "id": "code-review-reject-pass-without-recheck",
+      "event": "PreToolUse",
+      "matcher": "Write",
+      "script": "reject_pass_without_recheck.py",
+      "purpose": "Block writing PASS conclusion to code-review artifacts when pending_reviewer_recheck=true."
+    },
+    {
+      "id": "code-review-record-dispatch-envelope",
+      "event": "PostToolUse",
+      "matcher": "Task",
+      "script": "record_dispatch_envelope.py",
+      "purpose": "Append reviewer sub-agent dispatch envelopes to the contract for audit trail when a reviewer Task is dispatched."
+    }
+  ]
+}

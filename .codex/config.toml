@@ -1,0 +1,199 @@
+# harness:codex-agents begin
+
+[agents.acceptance-package-reviewer]
+description = "交付包审查员：当验收结果（acceptance-result.md）和交付包（delivery-package.md）准备交给用户验收前使用。以用户只有交付包为前提，模拟独立验收，审查验收场景 / 条件覆盖、复现步骤、结果证据、风险披露和自包含性；任何通过的验收场景 / 条件缺证据、验收步骤不可执行或风险被包装成完成都必须暂停。"
+config_file = "agents/acceptance-package-reviewer.toml"
+
+[agents.acceptance-scenario-designer]
+description = "验收场景设计专家：在 PRD / 产品定义阶段把真实问题、业务规则、用户场景和领域对象转成可观察、可验证、可追溯的验收场景、验收条件和验证证据。"
+config_file = "agents/acceptance-scenario-designer.toml"
+
+[agents.agent-behavior-reviewer]
+description = "Agent 行为合规审查员。检查 Agent 定义、skill/tool/MCP、policy/hook、runtime 配置和 eval 是否实现 solution / tech-design 中的 Agent 工作权、边界权和责任权；由 code-review 技能在 Agent 相关变更时启动。"
+config_file = "agents/agent-behavior-reviewer.toml"
+
+[agents.agent-capability-designer]
+description = "Agent 能力设计专家。当任务涉及 Agent 能力、工作权、Agent 定义、skill/tool/MCP、policy/hook、runtime 激活或 eval 设计时，由 design 阶段调用。"
+config_file = "agents/agent-capability-designer.toml"
+
+[agents.agent-capability-reviewer]
+description = "Agent 能力设计审查专家。检查 solution.md 的 `## Agent 架构` 和 tech-design.md 的 `## Agent 实现` 是否完整、一致、可执行、可约束、可评估。由 design 阶段在涉及 Agent 能力时调用。"
+config_file = "agents/agent-capability-reviewer.toml"
+
+[agents.architecture-reviewer]
+description = "架构审查员。检查实现是否遵守 tech-design / solution / project-context 定义的模块边界、依赖方向、接口契约、数据流和禁止路径；由 code-review 技能按变更特征启动。"
+config_file = "agents/architecture-reviewer.toml"
+
+[agents.backend-engineer]
+description = "后端工程专家。仅在 execute stage 作为工程执行角色使用，负责 backend_api / backend_logic / business_logic / state_machine / concurrency surface 的 API、服务、领域逻辑、事务、持久化协作和后端错误语义。"
+config_file = "agents/backend-engineer.toml"
+
+[agents.business-domain-modeler]
+description = "业务领域建模专家：在 PRD / 产品定义阶段从业务材料中抽取业务对象、状态机、属性、引用关系、业务规则和领域约束，产出可被产品定义综合消费的业务领域模型草案。专注业务模型，不做技术设计。"
+config_file = "agents/business-domain-modeler.toml"
+
+[agents.client-engineer]
+description = "客户端工程专家。仅在 execute stage 作为工程执行角色使用，负责 mobile / desktop / native client surface 的 UI、状态、平台能力、权限、生命周期、离线/缓存、同步和客户端集成。"
+config_file = "agents/client-engineer.toml"
+
+[agents.correctness-reviewer]
+description = "正确性审查员。检查实现是否真正满足任务验收条件、产品定义验收场景、差量规格和任务项声明的用户可观察行为；由 code-review 技能默认启动。"
+config_file = "agents/correctness-reviewer.toml"
+
+[agents.data-engineer]
+description = "数据工程专家：当任务要做 schema / DDL 变更、数据迁移、批量数据改写或数据恢复路径，且必须提供可校验、可回滚、不破坏不变量的实现时使用。执行数据变更并产出 dry-run、invariant checks、rollback / recovery 证据；未取得用户 Decision Gate 不得执行破坏性数据操作。"
+config_file = "agents/data-engineer.toml"
+
+[agents.data-migration-reviewer]
+description = "数据迁移审查员。审查 schema / DDL、批量数据改写、数据修复、回填和恢复脚本是否能安全作用于线上数据；由 code-review 在数据变更相关 diff 中条件启动。"
+config_file = "agents/data-migration-reviewer.toml"
+
+[agents.debugging-expert]
+description = "调试专家。仅在 execute / bug-fix 语境中作为主执行或 supporting 角色使用，负责复现、假设树、根因定位、修复策略和回归证明；复杂失败、并发、状态机、集成失败优先调用。"
+config_file = "agents/debugging-expert.toml"
+
+[agents.delivery-slicer]
+description = "交付切片专家：当已有一份技术设计或方案文档，需要把它拆成一组可独立交付、可执行的纵切任务（每个任务带作用面（surface）、授权路径、停止条件、依赖，且内含原子任务队列）时使用。把设计切成父任务（Parent task），为每个父任务生成父任务本地原子任务队列（parent-local Atomic Task Queue），标注作用面（surface）/ 授权路径（authorized_paths）/ 停止条件（stop_if）/ 依赖（dependencies），并把每个任务追溯到验收场景 / 条件 / 场景（Scenario）；不拆出只覆盖演示路径（demo happy path）的任务。"
+config_file = "agents/delivery-slicer.toml"
+
+[agents.dependency-validity-reviewer]
+description = "依赖有效性审查员：当手里有一份依赖与影响面分析（含 dependency claim、blast radius 估计、假设依赖），需要在继续动手前判断这些分析结论是否有证据支撑时使用。判断每条 dependency claim 是否引用 source evidence、假设依赖是否配了验证动作、blast radius 置信度是否可信；无来源依赖声明必须 HOLD。"
+config_file = "agents/dependency-validity-reviewer.toml"
+
+[agents.discovery-analyst]
+description = "问题空间取证专家：当任务在进入产品定义阶段（PRD）、方案或技术分析前仍存在事实边界、现有实现、影响能力、用户场景、依赖或假设不清时使用。负责把模糊任务拆成可追溯的问题地图，区分已确认、推断和假设，产出能被下游阶段消费的探索简报（discovery-brief.md）与探索契约。"
+config_file = "agents/discovery-analyst.toml"
+
+[agents.discovery-effectiveness-reviewer]
+description = "探索有效性审查员：当 discovery-analyst 写完探索简报（discovery-brief）和外部 contract.yaml，需要在进入产品定义阶段（PRD）之前判断它能否支撑下游决策时使用。判断受影响能力置信度是否合理、角色 / 场景是否覆盖、既有方案来源是否真实、设计假设是否可被下游消费、既有项目任务的 Graphify 证据是否充分、智能体化（Agent 化）决策 4 问一致性；保持（HOLD）/ 阻断（BLOCKED）必须列阻断缺口。不重写探索简报正文（修复循环除外）。"
+config_file = "agents/discovery-effectiveness-reviewer.toml"
+
+[agents.e2e-reviewer]
+description = "E2E 有效性审查员。检查 E2E 是否做到位、充分、准确、可靠，并判断它是否能证明真实用户路径、用户可观察结果和跨层集成边界正确。由 code-review 技能在 e2e.enabled=true 时启动，与 correctness-reviewer / tdd-reviewer 正交。"
+config_file = "agents/e2e-reviewer.toml"
+
+[agents.execution-plan-effectiveness-reviewer]
+description = "执行计划有效性审查员：当手里有一份执行计划（父任务 Parent task + 父任务本地原子任务队列 parent-local Atomic Task Queue 形态的执行简报 execution-brief），需要在交给执行者动手前判断这份计划本身是否已经可被可靠执行时使用。判断父任务边界、验收场景 / 条件追溯、完成定义（DoD）、必需证据（required_evidence）、停止条件（stop conditions）是否齐全，每个父任务是否内嵌 ready 状态的原子任务队列，每个原子任务（Atomic Task）是否具备文件级行动、测试驱动开发范围（TDD scope）、代码模式参考、验证命令和证据要求；只评价计划有效性，不评价实现正确性，不把篇幅或展开程度当通过依据。"
+config_file = "agents/execution-plan-effectiveness-reviewer.toml"
+
+[agents.frontend-engineer]
+description = "前端工程专家。仅在 execute stage 作为工程执行角色使用，负责 web frontend 的生产页面、组件、状态、路由、表单、API client、联调、测试加固和用户可见行为。原型即前端交付的 interaction stage 使用 frontend-prototype-engineer。"
+config_file = "agents/frontend-engineer.toml"
+
+[agents.frontend-prototype-engineer]
+description = "前端原型交付专家。仅在 prototype.delivery_mode=frontend_engineering 且当前 stage=interaction 时使用，先从用户任务、信息架构和领域可见性推导前端界面边界，再把产品定义、领域模型和接口草案落成可运行前端工程增量变更、MSW 场景、共享类型草案和 frontend-changeset，让用户在浏览器走查所有路径。"
+config_file = "agents/frontend-prototype-engineer.toml"
+
+[agents.frontend-reviewer]
+description = "前端工程审查员（原型即前端交付）：当 prototype.delivery_mode=frontend_engineering 且当前 stage=interaction 时使用。在领域覆盖、界面边界基线、路径完整性、走查就绪四个维度独立给出结论；重点检查信息架构和领域可见性，防止把领域模型机械界面化；不评端到端充分性、可访问性评分、覆盖率和代码风格阈值（属于下游代码审查 / 验证范围）。"
+config_file = "agents/frontend-reviewer.toml"
+
+[agents.general-engineer]
+description = "通用工程专家。仅在 execute stage 兜底处理 cli / tooling / installer / script / developer_tooling / build_pipeline / harness_rule / harness_skill / documentation 等无法归入专业 surface 的单个 Atomic Task；不得作为万能工程角色吞掉应由专业专家处理的任务。"
+config_file = "agents/general-engineer.toml"
+
+[agents.integration-engineer]
+description = "集成工程专家：当任务涉及系统边界、外部依赖、跨服务协议、第三方 API、消息总线或集成失败路径的实现，需要在保证契约证据和失败路径证据的前提下接入时使用。实现集成行为并产出 contract、integration run 和 failure path 证据；不引入白名单外工具或真实 secret，需要时发起 Decision Gate。"
+config_file = "agents/integration-engineer.toml"
+
+[agents.integration-impact-expert]
+description = "集成影响分析专家：当一项变更对外部系统、跨模块或跨服务有未知的连带影响面，需要在动手前把依赖与 blast radius 取证清楚、避免靠\"先改了再说\"踩坑时使用。用 API 文档、配置、代码索引、Graphify 报告等确认依赖，对 blast radius 标注 CONFIRMED / UNCERTAIN / ASSUMED，并为假设依赖写验证动作；产出 dependency-impact artifact 供后续消费。"
+config_file = "agents/integration-impact-expert.toml"
+
+[agents.interaction-designer]
+description = "原型交互设计专家：当任务涉及界面、用户旅程或原型设计，需要根据产品定义阶段产出的产品定义、验收场景 / 条件和领域模型，把需求转成可实现、可验证、可追溯且易用的交互合同。核心职责是判断真实系统界面边界如何组织信息、承载领域对象、安排用户动作、状态、权限、错误和反馈；固定产出少量标准文档，不以文件数量证明设计质量。"
+config_file = "agents/interaction-designer.toml"
+
+[agents.interaction-engineer]
+description = "交互工程专家：当任务要实现前端交互行为本身（状态机、键盘 / 焦点、可访问操作、用户可见断言），而不是布局、响应式或视觉还原时使用。实现交互逻辑并产出 component / E2E、keyboard / focus、user-visible assertion 证据；布局、截图、响应式和对比度证据由 frontend-engineer 负责，不替代。"
+config_file = "agents/interaction-engineer.toml"
+
+[agents.interaction-reviewer]
+description = "原型交互审查员：当手里有一份原型交互设计文档和交互规格智能体交接合同时，需要在进入方案、技术分析或实现前判断它是否能证明需求被正确承载。判断结构化原型合同对产品定义验收场景 / 条件、差量规格和领域模型的覆盖、信息架构、用户路径、状态、错误、权限、键盘 / 焦点、端到端验证义务和可视化资产证据；HTML / SVG / 截图 / 预览 / 资产清单只能作为设计证据，结论必须仍落到验收场景 / 条件、领域实体、路径、状态和端到端验证义务。"
+config_file = "agents/interaction-reviewer.toml"
+
+[agents.mission-contract-effectiveness-reviewer]
+description = "任务契约有效性审查员：当手里有一份任务契约，需要在驱动后续工作流前判断契约是否充分时使用。重点审查目标忠实性（task_goal_fidelity）：目标、交付物和验收条件是否来自用户真实任务目标，而不是智能体（Agent）工作指令、阅读动作、流程要求、讨论产物或纠偏反馈。"
+config_file = "agents/mission-contract-effectiveness-reviewer.toml"
+
+[agents.mission-framing-expert]
+description = "任务框定专家：当用户已自然表达执行意图，且真实任务目标、范围、用户故事、验收条件和自治级别仍需整理成结构化意图框定（intent framing）时使用。先区分真实任务目标、智能体（Agent）工作指令、流程约束、输入材料、讨论产物和纠偏反馈；只允许真实任务目标进入目标、交付物和验收条件。"
+config_file = "agents/mission-framing-expert.toml"
+
+[agents.planning-analyst]
+description = "无责规划与过程分析员。由 retrospective 技能启动，对比 Mission 计划、阶段产物、执行轨迹、质量/缺陷记录和交付结果，分析规划偏差、假设生命周期、信号质量、返工链和系统性改进机会；只输出分析，不写文件，不评价个人。"
+config_file = "agents/planning-analyst.toml"
+
+[agents.product-definition-reviewer]
+description = "产品定义有效性审查员：只读审查 PRD 阶段最终产品定义包是否足以支撑方案、交互、技术分析、拆解和验证，并确认业务对象分析、验收场景和范围策略已被正确消费。"
+config_file = "agents/product-definition-reviewer.toml"
+
+[agents.product-scope-strategist]
+description = "产品范围策略专家：在 PRD / 产品定义阶段判断范围内、范围外、延后和需要决策的事项，识别范围扩张、非目标、依赖、风险接受和阶段化交付边界。"
+config_file = "agents/product-scope-strategist.toml"
+
+[agents.refactoring-expert]
+description = "重构专家：当任务目标是改善内部结构（重命名、内部抽象、模块拆合、技术债清理），且明确不引入用户可见行为变更时使用。在保持 public behavior 不变的前提下实现重构，并产出 before/after behavior evidence、相关 regression suite 和 changed surface summary；一旦发现行为会变更必须立刻停止并发起 Decision Gate。"
+config_file = "agents/refactoring-expert.toml"
+
+[agents.release-readiness-expert]
+description = "发布就绪专家：当实现、代码审查和验证已完成，需要把“做完了”转化为用户可独立验收的交付事实时使用。逐条判定验收场景 / 条件真实性、证据可信度、用户验收路径、风险披露和移交完整性，产出验收结果（acceptance-result.md）与交付包（delivery-package.md）；不得把测试通过、聊天说明或未验证范围包装成已交付。"
+config_file = "agents/release-readiness-expert.toml"
+
+[agents.security-engineer]
+description = "安全工程专家。仅在 execute stage 作为工程执行角色使用，负责 auth / permission / authorization / authentication / payload_safety surface 的认证、授权、信任边界、负向路径和安全约束实现。"
+config_file = "agents/security-engineer.toml"
+
+[agents.security-reviewer]
+description = "安全审查员。基于威胁建模检查变更是否引入可利用的安全风险；由 code-review 技能在认证、授权、输入、加密、API 暴露、secret 或敏感数据相关变更时启动。"
+config_file = "agents/security-reviewer.toml"
+
+[agents.senior-product-expert]
+description = "资深产品专家：在 PRD / 产品定义阶段综合任务契约、探索证据和专业子专家产物，完成问题诊断、产品定义包整合、下游契约和验证闭环。不把领域建模、验收场景和范围策略都塞进单一提示；这些由专业子专家产出后由本角色裁剪和综合。"
+config_file = "agents/senior-product-expert.toml"
+
+[agents.solution-architect]
+description = "方案架构师：在进入技术分析阶段（technical_analysis）之前，根据任务目标、产品定义、领域模型、探索事实、交互约束和项目上下文，说明本次需求应该走哪条实现路线、为什么走这条路线、哪些做法不能采用、关键风险怎么处理，以及后续技术分析需要继续展开什么。使用 RUP 细化阶段（Elaboration）中用例驱动、以架构为核心、尽早处理高风险问题的思想。"
+config_file = "agents/solution-architect.toml"
+
+[agents.solution-effectiveness-reviewer]
+description = "方案有效性审查员：在进入技术分析阶段（technical_analysis）之前，按 RUP 细化阶段（Elaboration）中用例驱动、以架构为核心、尽早处理高风险问题的思想，判断 solution.md 是否完整保留上游需求，并说明本次需求应该走哪条路线、为什么这样选、哪些做法不能采用、关键风险怎么处理，以及技术分析接下来能否直接展开。"
+config_file = "agents/solution-effectiveness-reviewer.toml"
+
+[agents.spec-reviewer]
+description = "任务项规格合规审查员。验证单个执行子 Agent 的实现是否严格符合该任务项规格；主要由 execute 的 SDD 模式启动，不作为 Code Review 默认全局审查员。"
+config_file = "agents/spec-reviewer.toml"
+
+[agents.tdd-reviewer]
+description = "TDD 有效性审查员。检查测试体系是否足以支撑交付判断。由 code-review 技能默认启动，与 correctness-reviewer 正交：correctness-reviewer 看实现是否满足验收场景 / 条件，tdd-reviewer 看测试是否能发现实现偏离。"
+config_file = "agents/tdd-reviewer.toml"
+
+[agents.tech-designer]
+description = "技术设计专家。把 solution.md、产品定义、领域模型、交互规格和项目现状转化为可实施、可拆分、可审查、可验证的 tech-design.md；Agent 能力实现规格由 agent-capability-designer 负责。由 technical_analysis 阶段调用。"
+config_file = "agents/tech-designer.toml"
+
+[agents.technical-design-effectiveness-reviewer]
+description = "技术设计有效性审查员:当手里有一份技术设计文档(含用例实现、模块职责、接口契约、数据 / 状态流、生产就绪和验证策略,可能含 Agent、界面、迁移等分域规格),需要在进入任务拆分之前判断它是否可实施、可验证、可追溯时使用。审查重点是方案是否被系统承载、上游行为是否有工程落点、风险是否有验证方式;HOLD 必须列 blocking_gaps。"
+config_file = "agents/technical-design-effectiveness-reviewer.toml"
+
+[agents.test-engineer]
+description = "测试工程专家。仅在 execute stage 作为执行或 supporting 角色使用，负责把验收场景 / 条件、test_obligation、e2e_obligation 和风险面转化为可运行、可诊断、能证明错误实现会失败的测试与证据。"
+config_file = "agents/test-engineer.toml"
+
+[agents.test-planning-expert]
+description = "测试规划专家：当任务已被切成可执行任务项、但每个任务项的测试义务（测试驱动开发 TDD / 端到端 E2E / 集成 integration / 负路径 / 恢复证据）尚未规定清楚时使用。根据每个任务的作用面（surface）和风险（risk）推导必需证据（required evidence）：UI / 用户旅程添加端到端义务（E2E obligation）或明确已接受替代方案（accepted alternative），鉴权 / 迁移 / 数据一致性添加负路径与恢复证据；产出任务级测试义务矩阵（task-level test obligation matrix）。"
+config_file = "agents/test-planning-expert.toml"
+
+[agents.use-case-modeler]
+description = "用例建模专家：在 PRD / 产品定义阶段基于任务契约、探索事实和业务对象分析，建立 RUP 风格的业务用例、系统边界、系统用例和界面承载要求。专注需求模型，不做界面方案或技术设计。"
+config_file = "agents/use-case-modeler.toml"
+
+[agents.verification-effectiveness-reviewer]
+description = "验证有效性审查员：当手里有一份验证报告，需要在交付前判断验证模型和证据链是否足以支撑验收场景 / 条件结论时使用。检查通过项是否同时具备命令证据与结果证据，验证依据、判定标准、验证层次、风险验证和用户可见结果是否一致；不运行实现修复，不用专业通过覆盖程序化失败，不把报告结构完整当作结果正确。"
+config_file = "agents/verification-effectiveness-reviewer.toml"
+
+[agents.verification-engineer]
+description = "验证工程师：当实现与代码审查已完成，需要为每条验收场景 / 条件建立验证模型、运行或引用验证命令、收集真实运行证据，并产出预期结果 / 实际结果报告时使用。必须先定义验证依据、判定标准、验证层次和风险验证计划，再收集命令证据与结果证据；对过期、缺失、矛盾或阻塞证据写明原因、影响和下一步；不把测试通过等同于验收通过，不替代验证有效性审查员给出专业通过结论。"
+config_file = "agents/verification-engineer.toml"
+
+# harness:codex-agents end

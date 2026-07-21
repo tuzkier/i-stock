@@ -1,0 +1,8 @@
+patches:
+  - target: control_contract.effectiveness_review
+    op: set
+    value:
+      rounds_used: 2
+      max_rounds: 3
+      last_verdict: PASS
+      pending_reviewer_recheck: false

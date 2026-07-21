@@ -1,0 +1,141 @@
+# 行为图（behavior graph）= 交互阶段唯一手写真相源（SSOT）
+#
+# 由 interaction-designer 直接编写（不经 CLI patch）。四张规范化表，各自单一职责：
+#   page_states  节点：surface × 状态，去重的可渲染原子
+#   steps        拍：flow步骤 × 结局，每个绑定一个 page_state（= 覆盖颗粒）
+#   edges        转移：from→to + 触发（唯一的图结构真相；不再用 step.seq/from_step/next）
+#   flows        路径：拍的有序列表（走查脚本；seq = path 下标，天然 per-flow）
+#
+# 派生：`harness interaction project` 生成 views/by-suc|by-surface|by-object.md + walkthrough.js
+# 对账：`harness interaction prototype-check`（graph 自洽 + 原型忠实完整实现）
+#
+# 命名约定：
+#   page_state id  PS-<surf>-<state>             如 PS-SURF-BOARD-empty
+#   step id        SUC-xx-FLOW-xx.<state>        如 SUC-01-FLOW-01.empty
+#   surf           SURF-xxx（必须在 surface-model 的「surface 目录」机器段里）
+#   edge.via       <surf>/<控件名>（system_event 必填；控件须在 surface 目录的 via 清单 + 原型 data-via）
+#   region         R-<name>（组成轴：必须在 surface-model 的「布局骨架（机器段）」区域树里，
+#                  且区域的 surf 必须 == 该 page_state 的 surf；原型对应元素打 data-region）
+#
+# 组成轴（线框级）：行为图管「有哪些态、怎么流转」，surface-model 的区域树管「页面怎么排」。
+# page_state 里每个可见对象（objects[].fields 非空）必须用 region 落到一个声明区域——否则
+# 写 HTML 时该对象无家可归 = 控件乱堆（prototype-check 报 OBJECT_UNPLACED, FAIL）。非 OBJ
+# 内容（动作 / 空态 CTA / 状态提示）用 placements 落区。原型是「行为图 ⊗ 布局骨架」的可视化实现。
+#
+# 两层模型（行为轴 + 组成轴共享同一套基线机制）：本文件是 mission-local 增量图。
+# 项目级累积图在 project-knowledge/product/system-use-cases/behavior-graph.yaml，是所有
+# 已关闭 mission 图的并集，内联自带 surface catalog（surfaces:）与区域树（regions:）。
+# prototype-check 对账 (项目级 ∪ 本 mission) 合并图：
+#   - 沉淀的 page_state / step / region 必须仍被锚定 + 渲染（回归门）——本 mission 改原型
+#     不能悄悄退化旧 SUC 或改坏旧布局。
+#   - 在既有 surface 上迭代（modify/extend）时，必须继承项目级累积图里该 surface 的区域树，
+#     只写增量增改，不重造一套骨架。
+# 删除沉淀内容须显式（顶层 retired，合并时从累积图剔除，含相关 edge/flow/绑定）：
+#   retired: [PS-..., SUC-..-FLOW-..., R-...]   # page_state / step / region 均可 retire
+#
+# 迭代取代沉淀 surface/锚点须显式（顶层 superseded：换代而非删除——前驱被后继承接）。
+# 用于"同一界面换代成改名/换结构的后继"（如 lane×node 看板 → mission×stage 看板）：前驱
+# 锚点从合并图丢弃（原型只留后继一个面、不与旧面并存），但 prototype-check 强制后继真实
+# 存在 + 被覆盖（SUPERSEDE_SUCCESSOR_MISSING FAIL 防"假取代真删除"）。详见 prototype-standard.md。
+#   superseded:
+#     - predecessor: SURF-BOARD          # surface | suc | page_state | step
+#       successor:   SURF-CP-BOARD        # 必填：承接覆盖的后继（本 mission 增量）
+#       kind: surface
+#       anchor_map: {PS-SURF-BOARD-readable: PS-CP-BOARD-ready}   # 可选：逐个对应（血缘）
+#       dropped: []                       # 显式承认未承接的覆盖（非空须 reviewer bless）
+#       rationale: "lane×node 看板进化为 mission×stage 看板（同一组件扩展）"
+#
+# 可选 surfaces / regions（项目级累积图必填——它没有 surface-model.md，内联自带 catalog；
+# mission 增量图可省，surface 目录 + 区域树走 surface-model.md 机器段）：
+#   surfaces:
+#     - {surf: SURF-BOARD, name: 看板, type: page, baseline: create, page_entry: board.html, via_controls: [workspace-switcher]}
+#   regions:
+#     - {region: R-BOARD-main, surf: SURF-BOARD, parent: root, layout: grid, priority: primary, role: content, scan_order: 2}
+
+page_states:
+  - id: PS-SURF-BOARD-loading
+    surf: SURF-BOARD
+    page_entry: board.html          # 载体文件 / 单壳 #hash；overlay 指宿主页 #hash
+    carrier: toggle                 # standalone_page | toggle | overlay
+    state: loading
+    state_owner: ui                 # 业务态填 STM-xx；纯 UI 态（loading/skeleton）填 ui
+    objects: []                     # [{obj: OBJ-01, fields: [id,title], state: 加载中}]
+    anchor_root: '[data-state="loading"]'
+    rationale: "首次加载骨架"
+  - id: PS-SURF-BOARD-data
+    surf: SURF-BOARD
+    page_entry: board.html
+    carrier: standalone_page
+    state: readable
+    state_owner: STM-01
+    objects:
+      # region：可见对象必须落到 surface-model 区域树里的某个区域（组成轴）
+      # bizcomp（可选）：该对象由哪个业务组件渲染（引 ui-design-system 的 design-system/business-components.md 的 UC-*）；
+      #   项目采用业务组件库后，可见对象应经业务组件承载而非裸控件（design_system 治理门，warn 滚动）
+      - {obj: OBJ-01, fields: [id, title, status], state: readable, region: R-BOARD-main, bizcomp: UC-mission-card}
+    placements:                       # 可选：非 OBJ 内容（动作 / CTA / 状态）落区
+      - {kind: action, ref: refresh-btn, region: R-BOARD-toolbar}
+    anchor_root: '[data-state="data"]'
+    rationale: "有节点的主数据态"
+  - id: PS-SURF-BOARD-empty
+    surf: SURF-BOARD
+    page_entry: board.html
+    carrier: toggle
+    state: empty
+    state_owner: STM-01
+    objects: [{obj: OBJ-01, fields: [], state: empty}]   # fields 空 = 缺位态，可不绑 region
+    placements:
+      - {kind: cta, ref: 新建第一个节点, region: R-BOARD-main}   # 空态恢复入口落主区
+    anchor_root: '[data-state="empty"]'
+    rationale: "无节点的空态恢复入口"
+
+steps:
+  - id: SUC-01-FLOW-01.loading
+    suc: SUC-01
+    from_flow_step: SUC-01-FLOW-01   # 追溯到 use-case-model 流步骤（非连边）
+    page_state: PS-SURF-BOARD-loading
+    acceptance_refs: []
+    rationale: ""
+  - id: SUC-01-FLOW-01.data
+    suc: SUC-01
+    from_flow_step: SUC-01-FLOW-01
+    page_state: PS-SURF-BOARD-data
+    acceptance_refs: [SCN-01]
+    rationale: ""
+  - id: SUC-01-FLOW-01.empty
+    suc: SUC-01
+    from_flow_step: SUC-01-FLOW-01
+    page_state: PS-SURF-BOARD-empty
+    acceptance_refs: [SCN-02]
+    rationale: ""
+
+edges:
+  - from: ENTRY                      # ENTRY = surface 入口（无前驱拍）；可达性以此为根
+    to: SUC-01-FLOW-01.loading
+    kind: action                     # action | system_event
+    desc: 用户打开 Board
+    via: null                        # action 可空；system_event 必填
+    e2e_obligation: true
+    testid: board-open               # e2e_obligation=true 时声明定位器，须命中原型 data-testid
+  - from: SUC-01-FLOW-01.loading
+    to: SUC-01-FLOW-01.data
+    kind: system_event
+    desc: 加载完成·有节点
+    via: SURF-BOARD/workspace-switcher
+    e2e_obligation: false
+  - from: SUC-01-FLOW-01.loading
+    to: SUC-01-FLOW-01.empty
+    kind: system_event
+    desc: 加载完成·无节点
+    via: SURF-BOARD/workspace-switcher
+    e2e_obligation: false
+
+flows:
+  - id: 主成功流
+    suc: SUC-01
+    path: [SUC-01-FLOW-01.loading, SUC-01-FLOW-01.data]
+    rationale: "打开看板看到数据"
+  - id: 备选流-空
+    suc: SUC-01
+    path: [SUC-01-FLOW-01.loading, SUC-01-FLOW-01.empty]
+    rationale: "无节点时的空态"

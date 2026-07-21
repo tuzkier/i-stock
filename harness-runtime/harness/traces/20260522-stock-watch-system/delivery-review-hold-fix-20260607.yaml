@@ -1,0 +1,106 @@
+patches:
+- target: control_contract.acceptance_result.acceptance_trace
+  op: set
+  value:
+  - acceptance_id: T002
+    expected: 默认工作台展示主图、成交量、副图、OHLC、来源健康与指标切换；demo/stale/unavailable 降级语义可见且不伪装实时成功。
+    actual: E2E 结果显示 workbench 默认、指标切换、数据不足、demo fallback、stale、unavailable 全部通过。
+    reproduce_steps:
+    - PORT=5174 npm run dev
+    - 浏览器打开 http://localhost:5174
+    - 观察默认工作台、来源健康和指标切换
+    - 复核 CMD-VERIFY-E2E-RERUN
+    verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+    acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result_evidence_id: EV-RESULT-T002-WORKBENCH
+    result_status: pass
+  - acceptance_id: T003
+    expected: AAPL 的 MTS 卡应展示 trend_state、mts_score、score_band、signal_type、alert_level 和原因 TREND_ABOVE_EMA；文案必须包含“不构成收益承诺”，且不得出现“强买点 / 强卖点 / 胜率”。
+    actual: E2E 与 unit/replay 均通过；MTS 卡、非建议文案和 unavailable 降级均已验证。
+    reproduce_steps:
+    - PORT=5174 npm run dev
+    - 浏览器打开 http://localhost:5174
+    - 选择或保持 AAPL
+    - 找到“MTS 解释卡”
+    - 确认字段名包含 trend_state、mts_score、score_band、signal_type、alert_level，原因列表包含 TREND_ABOVE_EMA，非建议文案出现“不构成收益承诺”
+    - 若出现“强买点 / 强卖点 / 胜率”则判失败
+    verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+    acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result_evidence_id: EV-RESULT-T003-MTS
+    result_status: pass
+  - acceptance_id: T004
+    expected: AAPL 价格型提醒阈值 190 应触发并可确认；MTS 强信号提醒在归档 Apple 后应显示 suspended_by_archive 和“归档暂停”；scheduled missed 只记录历史，不补发触发。
+    actual: alerts panel 的创建、确认、归档暂停路径通过；unit/replay 也通过。
+    reproduce_steps:
+    - PORT=5174 npm run dev
+    - 浏览器打开 http://localhost:5174
+    - 在提醒面板选择分类 price、等级“观察”、条件输入 190 并保存
+    - 确认提醒行显示“价格型”“enabled / triggered”“历史：triggered”
+    - 点击确认按钮后确认显示“enabled / acknowledged”“历史：acknowledged”
+    - 再创建分类 mts、等级“强信号”的提醒并归档 Apple，确认提醒行显示 suspended_by_archive 与“归档暂停”
+    - 若触发后不能确认、归档后仍 active，或 scheduled missed 被补发触发，则判失败
+    verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+    acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result_evidence_id: EV-RESULT-T004-ALERTS
+    result_status: pass
+  - acceptance_id: T005
+    expected: 重开后应恢复 selectedSymbol=0700.HK、0700.HK 的 dense layout、source mobile tab 和 MTS 风控 acknowledged 提醒；坏布局应回退默认且页面仍可用。
+    actual: restore-layout 的 E2E 路径通过；unit/replay 也通过。
+    reproduce_steps:
+    - PORT=5174 npm run dev
+    - 浏览器打开 http://localhost:5174
+    - 选择“腾讯控股 / 0700.HK”
+    - 切换布局到 dense
+    - 在移动宽度下切到 mobile tab 并选 source tab
+    - 刷新或重开页面
+    - 确认恢复状态显示“已恢复”、选择摘要包含 0700.HK、布局控制器显示 dense、MTS 风控提醒显示 acknowledged
+    - 对坏 layout snapshot，确认恢复状态显示“已回退默认布局”且主图仍显示 AAPL；任一恢复点缺失则判失败
+    verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+    acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result_evidence_id: EV-RESULT-T005-RESTORE
+    result_status: pass
+  - acceptance_id: T006
+    expected: 冻结样本、回放与浏览器门禁覆盖 AC-01 到 AC-05 核心验收场景。
+    actual: gate acceptance matrix 与 unit/replay matrix 均通过；全量 E2E 24 条通过。
+    reproduce_steps:
+    - PORT=5174 npm run dev
+    - 运行 unit/replay matrix
+    - 运行 Playwright E2E rerun
+    - 复核 gate matrix
+    verify_command_evidence_id: CMD-VERIFY-E2E-RERUN
+    acceptance_result_evidence_path: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result_evidence_id: EV-RESULT-T006-GATE
+    result_status: pass
+- target: control_contract.delivery_package.evidence_links
+  op: set
+  value:
+  - harness-runtime/harness/stages/20260522-stock-watch-system/acceptance-result.md
+  - harness-runtime/harness/artifacts/20260522-stock-watch-system/delivery/acceptance-result.md
+  - harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+  - harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+  - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+  - harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/verify__advance_lane.json
+  - harness-runtime/harness/traces/20260522-stock-watch-system/delivery-closure-check-20260607.json
+- target: control_contract.delivery_package.known_gaps
+  op: set
+  value:
+  - id: KG-RED-TRACE-GRANULARITY
+    description: final-round red artifact 粒度可继续增强。
+    severity: advisory
+    user_impact: 不影响当前验收，但后续审计证据可更细。
+    source: code-review.md
+  - id: KG-MTS-INPUT-SINGLE-SOURCE
+    description: MTS 内部指标输入可进一步单源化。
+    severity: advisory
+    user_impact: 当前用户可见结果已通过，但内部实现存在未来漂移风险。
+    source: code-review.md
+  - id: KG-SCN-CLOSURE-WARN
+    description: 全 mission 闭包检查提示 SCN-01 到 SCN-05 悬空引用。
+    severity: advisory
+    user_impact: 不影响当前用户验收，但影响文档集闭包洁净度。
+    source: harness-runtime/harness/traces/20260522-stock-watch-system/delivery-closure-check-20260607.json
+  - id: KG-PROVIDER-SLA
+    description: 真实外部行情供应商 SLA / auth / quota 未纳入本次范围。
+    severity: advisory
+    user_impact: 生产化接入仍需单独验证；当前本地验收不受影响。
+    source: mission-contract.md

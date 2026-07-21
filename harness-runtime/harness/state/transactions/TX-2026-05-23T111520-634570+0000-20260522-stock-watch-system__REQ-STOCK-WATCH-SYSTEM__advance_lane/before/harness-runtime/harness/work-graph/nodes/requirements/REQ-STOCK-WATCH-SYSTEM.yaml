@@ -1,0 +1,165 @@
+id: REQ-STOCK-WATCH-SYSTEM
+kind: requirement
+title: 多市场股票看盘系统
+lane: product-definition-lane
+stage: interaction
+status: ready
+inputs: []
+outputs: []
+relations: {}
+updated_at: '2026-05-23T10:25:31.555145+00:00'
+trace:
+  created_by_mission: 20260522-stock-watch-system
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__advance_stage
+  reset_by_mission: 20260522-stock-watch-system
+  reset_to_stage: prd
+  reset_reason: 用户要求在 PRD 重写后将控制面回退到 PRD 完成边界，废弃当前 solution 阶段状态，后续需从新版 PRD 重新推进。
+artifact:
+  node_id: REQ-STOCK-WATCH-SYSTEM
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md
+  source_contract_artifact: ''
+  canonical_contract: ''
+  supplementary_artifacts:
+  - id: product_definition
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md
+  - id: product_evidence
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-evidence.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md
+  - id: product_domain_model
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md
+  - id: business_objects
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md
+  - id: business_use_cases
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md
+  - id: scope_strategy
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/scope-strategy.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md
+  artifact_state:
+    status: accepted
+    accepted_by_mission: 20260522-stock-watch-system
+    accepted_at: '2026-05-23T10:25:31.563072+00:00'
+    supersedes: []
+    superseded_by: null
+  history:
+  - node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/discovery-brief.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/discovery-brief.md
+    source_contract_artifact: ''
+    canonical_contract: ''
+    supplementary_artifacts: []
+    artifact_state:
+      status: accepted
+      accepted_by_mission: 20260522-stock-watch-system
+      accepted_at: '2026-05-22T15:23:44.715472+00:00'
+      supersedes: []
+      superseded_by: null
+  - node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md
+    source_contract_artifact: ''
+    canonical_contract: ''
+    supplementary_artifacts:
+    - id: product_definition
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-definition.md
+    - id: product_evidence
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-evidence.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-evidence.md
+    - id: product_domain_model
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/product-domain-model.md
+    - id: business_objects
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-objects.md
+    - id: business_use_cases
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/business-use-cases.md
+    - id: scope_strategy
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/product/scope-strategy.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/scope-strategy.md
+    artifact_state:
+      status: accepted
+      accepted_by_mission: 20260522-stock-watch-system
+      accepted_at: '2026-05-23T01:10:12.121727+00:00'
+      supersedes: []
+      superseded_by: null
+  - node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md
+    source_contract_artifact: ''
+    canonical_contract: ''
+    supplementary_artifacts:
+    - id: visual_interaction_artifacts
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/design-brief.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/design-brief.md
+    - id: visual_interaction_artifacts
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.harness.json
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.harness.json
+    - id: visual_interaction_artifacts
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/prototype/index.html
+    - id: visual_interaction_artifacts
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction/visual-interaction-manifest.json
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-01.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-01.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-02.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-02.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-03.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-03.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-04.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-04.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-05.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-05.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-06.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-06.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-07.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/BUC-07.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/README.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/README.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/consistency-report.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/domain-ui-mapping.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/domain-ui-mapping.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/surface-registry.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/view-models.ts
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-coverage.md
+    - id: interaction_spec
+      source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+      canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/buc-index.md
+    artifact_state:
+      status: accepted
+      accepted_by_mission: 20260522-stock-watch-system
+      accepted_at: '2026-05-23T01:41:32.486007+00:00'
+      supersedes: []
+      superseded_by: null

@@ -1,0 +1,850 @@
+control_contract:
+  type: guide_contract
+  subtype: technical_guide
+  version: 1
+  mission_id: 20260522-stock-watch-system
+  stage: technical_analysis
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+    sections:
+    - 所选路线与理由
+    - 关键决策
+    - 影响面
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+    sections:
+    - Functional Requirements
+  consumers:
+  - breakdown
+  - execute
+  - code-review
+  - architecture-reviewer
+  - stage-gate
+  role_policy:
+    stage: technical_analysis
+    work_graph_lane: technical-analysis-lane
+    required_execution_roles:
+    - tech-designer
+    required_review_roles:
+    - technical-design-effectiveness-reviewer
+    conditional_roles:
+    - role: agent-capability-designer
+      kind: execution
+      when:
+      - agent_engineering
+      - agent_capability
+    - role: agent-capability-reviewer
+      kind: review
+      when:
+      - agent_engineering
+      - agent_capability
+  work_graph_artifact:
+    node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/tech-design.md
+  execution_result:
+    id: EXE-TECH-001
+    role: tech-designer
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+    fulfilled_obligations:
+    - OBL-TECH-001
+    decision_log:
+    - id: TD-DESIGN-BOUNDARY
+      summary: 保持本地 React/Vite/Express 边界；不引入账号、云同步、自动交易、数据库、外部推送或运行时 Agent。
+    - id: TD-GATES
+      summary: Provider / Cache / Storage / Chart 相关不确定项按门禁前提处理，不作为已确认事实。
+    traceability_matrix:
+    - source: FR-01
+      target:
+      - MOD-01
+      - MOD-06
+      - VS-05
+    - source: FR-02
+      target:
+      - MOD-01
+      - MOD-07
+      - VS-06
+    - source: FR-03
+      target:
+      - MOD-03
+      - MOD-04
+      - VS-03
+    - source: FR-04
+      target:
+      - MOD-04
+      - MOD-05
+      - VS-03
+      - VS-04
+    - source: FR-05
+      target:
+      - MOD-05
+      - MOD-06
+      - VS-04
+    - source: FR-06
+      target:
+      - MOD-02
+      - MOD-03
+      - VS-01
+      - VS-02
+      - VS-08
+    - source: FR-07
+      target:
+      - MOD-06
+      - MOD-05
+      - VS-05
+    - source: FR-08
+      target:
+      - MOD-06
+      - MOD-07
+      - VS-05
+      - VS-06
+    - source: FR-09
+      target:
+      - MOD-08
+      - VS-07
+    - source: AC-01
+      target:
+      - MOD-01
+      - MOD-06
+      - VS-05
+      - VS-06
+    - source: AC-02
+      target:
+      - MOD-02
+      - MOD-03
+      - MOD-07
+      - VS-01
+      - VS-06
+    - source: AC-03
+      target:
+      - MOD-04
+      - MOD-02
+      - VS-02
+      - VS-03
+    - source: AC-04
+      target:
+      - MOD-05
+      - MOD-04
+      - VS-04
+    - source: AC-05
+      target:
+      - MOD-06
+      - MOD-05
+      - VS-05
+    evidence_refs:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/dependency-impact.md
+    open_questions: []
+    concerns:
+    - 正式行情供应商未锁定；必须保持 MarketDataSource provider-agnostic，并用 Provider Gate 处理 auth/quota/schema
+      渗透。
+    - localStorage 是否足以承载版本化 snapshot 仍需 execute/verify 用旧版本、损坏、大体量 fixture 证明。
+  obligations:
+  - id: OBL-TECH-001
+    mission_id: 20260522-stock-watch-system
+    type: architecture
+    risk: high
+    traces_to:
+      ac:
+      - AC-01
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+      fr:
+      - FR-01
+      - FR-02
+      - FR-03
+      - FR-04
+      - FR-05
+      - FR-06
+      - FR-07
+      - FR-08
+      - FR-09
+      decisions:
+      - D-01
+      - D-02
+      - D-03
+      - D-04
+      - D-05
+      - D-06
+      - D-07
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    - contract_check
+    - alignment_check
+    required_roles:
+    - technical-design-effectiveness-reviewer
+    blocking: true
+    source: solution_and_prd
+  role_verdicts:
+  - id: RV-TECH-001
+    role: technical-design-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-TECH-001
+    round: 3
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-STOCK-WATCH-SYSTEM
+        artifact_version: v1
+      artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/tech-design.contract.yaml
+      - harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/solution.contract.yaml
+    coverage_summary:
+      module_boundary: PASS
+      interface_contract: PASS
+      data_state_model: PASS
+      verification_strategy: PASS
+      production_readiness: PASS
+      agent_boundary: PASS
+    summary: AlertRule 事件流与 scheduled alert 合同已补齐；WorkspaceSnapshotV2 标的级布局、MtsReasonRegistry、Cache
+      合同缺口已闭合。
+    blocking_gaps: []
+    non_blocking_risks: []
+    dispatch:
+      subagent_id: 019e54e4-0484-7a63-b19e-92748b4b20b7
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-23T00:00:00Z'
+      completed_at: '2026-05-23T00:00:00Z'
+  - id: RV-TECH-DEP-001
+    role: dependency-validity-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-TECH-001
+    round: 2
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-STOCK-WATCH-SYSTEM
+        artifact_version: v1
+      artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/dependency-impact.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/tech-design.contract.yaml
+    coverage_summary:
+      dependency_classification: PASS
+      gate_closure: PASS
+      cache_contract: PASS
+      storage_contract: PASS
+      provider_boundary: PASS
+    summary: dependency-impact 与 tech-design 的依赖分类、Gate、验证动作、合同字段已形成闭环。
+    blocking_gaps: []
+    non_blocking_risks: []
+    dispatch:
+      subagent_id: 019e54de-1c13-7a90-b1b9-f6702b46c67a
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-23T00:00:00Z'
+      completed_at: '2026-05-23T00:00:00Z'
+  - id: RV-TECH-AGENT-001
+    role: agent-capability-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-TECH-001
+    round: 2
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-STOCK-WATCH-SYSTEM
+        artifact_version: v1
+      artifacts:
+      - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/solution.contract.yaml
+      - harness-runtime/harness/stages/20260522-stock-watch-system/tech-design.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/tech-design.contract.yaml
+    coverage_summary:
+      agent_not_applicable: PASS
+      runtime_agent_absent: PASS
+      boundary_fail_closed: PASS
+    summary: Agent capability 不适用结论成立；不新增产品运行时 Agent、tool/MCP、policy/hook、worker、runtime
+      gating 或 agent eval。
+    blocking_gaps: []
+    non_blocking_risks: []
+    dispatch:
+      subagent_id: 019e54de-1ebf-7453-b715-342e08a1f063
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-23T00:00:00Z'
+      completed_at: '2026-05-23T00:00:00Z'
+  modules:
+  - id: MOD-01
+    name: market-normalization
+    responsibility: 统一处理 raw symbol / market 候选、归一预览、歧义阻断、重复添加幂等；输出可确认的 symbol identity。
+    paths:
+    - src/data/markets.ts
+    - src/domain/market-normalization.ts
+    - src/features/watchlist/NormalizationPreview.tsx
+    traces_to:
+    - FR-01
+    - FR-02
+    - AC-01
+  - id: MOD-02
+    name: market-data-source
+    responsibility: 封装 Yahoo proxy / fallback / source health；产出 SourceHealth 与价格系列载荷；管理短
+      TTL cache 显式边界。
+    paths:
+    - server/index.js
+    - src/domain/market-data-source.ts
+    - src/features/source
+    traces_to:
+    - FR-06
+    - AC-02
+    - AC-03
+    - AC-04
+  - id: MOD-03
+    name: observation-engine
+    responsibility: 将价格条、指标可用性与来源健康组合成 PriceSeries / IndicatorState，并计算图表读数准备态。
+    paths:
+    - src/lib/indicators.ts
+    - src/domain/observation.ts
+    - src/features/chart
+    traces_to:
+    - FR-03
+    - FR-06
+    - AC-02
+  - id: MOD-04
+    name: mts-interpreter
+    responsibility: 用纯函数把 PriceSeries、IndicatorSet 与 SourceHealth 解释成 MtsExplanation。
+    paths:
+    - src/lib/signals.ts
+    - src/domain/mts.ts
+    - src/features/mts
+    traces_to:
+    - FR-04
+    - AC-03
+    - AC-04
+  - id: MOD-05
+    name: alert-resolution
+    responsibility: 管理提醒 taxonomy、启停、触发、确认、归档暂停、历史记录与风控优先级。
+    paths:
+    - src/features/alerts
+    - src/lib/alerts.ts
+    - src/types.ts
+    traces_to:
+    - FR-05
+    - AC-04
+  - id: MOD-06
+    name: workspace-recovery
+    responsibility: 以版本化 snapshot 管理 watchlist、alerts、selected symbol、layout、restore
+      status；负责迁移、回退与默认布局补救。
+    paths:
+    - src/lib/storage.ts
+    - src/domain/workspace.ts
+    traces_to:
+    - FR-07
+    - FR-08
+    - AC-05
+  - id: MOD-07
+    name: surface-composition
+    responsibility: 将 App.tsx 拆分为 Watchlist / Workbench / MTS / Alerts / Source /
+      Layout / Restore surface，并保留稳定 locator 与可访问名称。
+    paths:
+    - src/App.tsx
+    - src/features/surfaces
+    - src/styles.css
+    traces_to:
+    - FR-02
+    - FR-03
+    - FR-04
+    - FR-05
+    - FR-06
+    - FR-07
+    - FR-08
+    - AC-01
+    - AC-02
+    - AC-03
+    - AC-04
+    - AC-05
+  - id: MOD-08
+    name: verification-harness
+    responsibility: 提供 frozen fixture、replay、E2E 断言和 build/test 门禁。
+    paths:
+    - tests/unit
+    - tests/replay
+    - tests/e2e
+    - fixtures
+    traces_to:
+    - FR-09
+    - NFR-05
+    - AC-01
+    - AC-02
+    - AC-03
+    - AC-04
+    - AC-05
+  interface_changes:
+  - id: INT-01
+    kind: ADDED
+    module: MOD-02
+    name: MarketDataSource.fetchSeries
+    after: 返回 MarketDataEnvelope，包含 priceSeries、sourceHealth、meta、servedAt、cacheState。server-side
+      内存 cache key 为 normalizedSymbol + range + interval + provider，TTL 60 秒，forceRefresh
+      必须 bypass。
+    traces_to:
+    - FR-06
+    - AC-02
+  - id: INT-02
+    kind: MODIFIED
+    module: MOD-02
+    name: ChartPayload_to_MarketDataEnvelope
+    before: ChartPayload 仅含 symbol/range/interval/meta/bars/dataSource/notice。
+    after: 新增 sourceHealth、priceSeries、degradationReason、sourceName、lastRefreshedAt、retryState、cacheState，保留
+      bars；cacheState 只允许 miss/hit/bypass/stale_fallback/disabled。
+    traces_to:
+    - FR-06
+    - AC-02
+    - AC-03
+    - AC-04
+  - id: INT-03
+    kind: ADDED
+    module: MOD-02
+    name: SourceHealth
+    after: formal / demo_fallback / stale / unavailable，附 lastRefreshedAt、degradationReason、retryState、affectedObjects。
+    traces_to:
+    - FR-06
+  - id: INT-04
+    kind: MODIFIED
+    module: MOD-03
+    name: PriceBar_to_PriceSeries
+    before: domain 与 UI 直接使用裸 PriceBar[]。
+    after: PriceSeries 成为 canonical domain object，包含 bars、timeframe、latestOhlc、latestPrice、changeSummary、sourceHealth。
+    traces_to:
+    - FR-03
+    - FR-06
+    - AC-02
+  - id: INT-05
+    kind: MODIFIED
+    module: MOD-04
+    name: CompositeSignal_to_MtsExplanation
+    before: buildSignal 输出旧四因子 CompositeSignal。
+    after: MtsExplanation 包含 trendState、scoreBand、signalType、alertLevel、reasonCodes、invalidators、interpretability、sourceHealth、registryVersion；reasonCodes
+      与 invalidators 必须引用 MtsReasonRegistry。
+    traces_to:
+    - FR-04
+    - AC-03
+    - AC-04
+  - id: INT-06
+    kind: MODIFIED
+    module: MOD-05
+    name: AlertRule
+    before: 仅 above/below 价格提醒或 signal 提醒，只有 enabled / lastTriggeredAt。
+    after: 增加 taxonomy、condition、activationState、triggerState、history、acknowledgedAt、suspendedReason、restoreIntent；scheduled
+      condition 固定为 mode=daily_time、localTime=HH:mm、timezone=local、daysOfWeek?、skipIfMarketClosed?。
+    traces_to:
+    - FR-05
+    - AC-04
+  - id: INT-07
+    kind: ADDED
+    module: MOD-06
+    name: WorkspaceSnapshotV2
+    after: 版本化快照包含 watchlist、alerts、selectedSymbol、layoutBySymbol、globalLayoutFallback、selectedMobileTab、restoreMetadata；layoutBySymbol[normalizedSymbol]
+      保存 layout_scope=symbol 的 layoutMode、副图偏好、最近 range 与折叠状态。
+    traces_to:
+    - FR-07
+    - FR-08
+    - AC-05
+  - id: INT-08
+    kind: MODIFIED
+    module: MOD-06
+    name: storage_api_to_workspace_api
+    before: readWatchlist/readAlerts/writeWatchlist/writeAlerts 简单 JSON 读写。
+    after: readWorkspace/writeWorkspace/migrateWorkspace 负责双读旧 key、生成 V2、校验 schema、写入回退信息。
+    traces_to:
+    - FR-01
+    - FR-07
+    - FR-08
+    - AC-01
+    - AC-05
+  data_changes:
+  - id: DATA-01
+    kind: MODIFIED
+    entity: SourceHealth
+    migration: 从 dataSource + notice 迁移到 formal / demo_fallback / stale / unavailable；fallback
+      结果携带显式状态。
+    rollback: 未知状态回退为 unavailable；刷新失败保留上次可解释状态并给 retry 提示。
+    traces_to:
+    - FR-06
+    - AC-02
+    - AC-03
+    - AC-04
+  - id: DATA-02
+    kind: MODIFIED
+    entity: PriceSeries
+    migration: 从 wire bars 生成 PriceSeries；保留原始 bars 仅用于适配层与回放。
+    rollback: bars 不足、字段缺失或时间序列不连续时降级为 partial/unavailable。
+    traces_to:
+    - FR-03
+    - FR-06
+    - AC-02
+  - id: DATA-03
+    kind: MODIFIED
+    entity: MtsExplanationAndReasonRegistry
+    migration: 旧四因子评分可作为内部子分项；新增 MtsReasonRegistry 作为 reason/invalidator 唯一字典。
+    rollback: 评分不足或来源降级时输出 data_insufficient；未知 code 降级为 UNKNOWN_CODE。
+    traces_to:
+    - FR-04
+    - AC-03
+    - AC-04
+  - id: DATA-04
+    kind: ADDED
+    entity: WorkspaceSnapshotV2AndChartLayoutPreference
+    migration: 从 myinvestment.watchlist / myinvestment.alerts 双 key 迁移到版本化 snapshot，补入
+      layoutBySymbol 与 global fallback。
+    rollback: 读取失败时回退默认 focus 布局；标的级布局损坏时只回退该标的布局，不丢 watchlist/alerts。
+    traces_to:
+    - FR-07
+    - FR-08
+    - AC-05
+  - id: DATA-05
+    kind: MODIFIED
+    entity: WatchSymbolArchiveState
+    migration: 从删除即消失迁移到 active/archived；归档暂停绑定提醒。
+    rollback: 回退时保留 archived 条目，至少恢复为只读状态。
+    traces_to:
+    - FR-01
+    - FR-02
+    - FR-07
+    - AC-01
+    - AC-05
+  - id: DATA-06
+    kind: MODIFIED
+    entity: AlertTaxonomyHistoryTriggerScheduledState
+    migration: 从 above/below + signal + enabled/lastTriggeredAt 迁移到 taxonomy、condition、activationState、triggerState、history、acknowledged、suspended_by_archive；scheduled
+      规则必须显式选择本地时间。
+    rollback: 旧提醒按默认 taxonomy 和状态补全；app 关闭期间错过的 scheduled tick 不补触发，只记录 missed_while_closed
+      并等待下一次本地时钟命中。
+    traces_to:
+    - FR-05
+    - AC-04
+    - AC-05
+  verification_strategy:
+  - id: VS-01
+    layer: integration
+    target_ids:
+    - MOD-02
+    - FR-06
+    - AC-02
+    evidence_required:
+    - live_smoke_result
+    - mock_failure_result
+    - fallback_fixture_result
+  - id: VS-02
+    layer: replay
+    target_ids:
+    - MOD-02
+    - MOD-03
+    - MOD-04
+    - MOD-05
+    - FR-06
+    - AC-03
+    - AC-04
+    evidence_required:
+    - source_health_fixture_replay
+  - id: VS-03
+    layer: unit
+    target_ids:
+    - MOD-04
+    - FR-04
+    - AC-03
+    evidence_required:
+    - mts_replay_determinism_result
+    - mts_registry_code_coverage
+  - id: VS-04
+    layer: integration
+    target_ids:
+    - MOD-05
+    - FR-05
+    - FR-07
+    - AC-04
+    - AC-05
+    evidence_required:
+    - alert_archive_restore_result
+    - scheduled_local_clock_result
+    - scheduled_missed_while_closed_result
+    - alert_event_flow_result
+  - id: VS-05
+    layer: integration
+    target_ids:
+    - MOD-06
+    - FR-07
+    - FR-08
+    - AC-05
+    evidence_required:
+    - localstorage_migration_result
+    - corrupted_snapshot_result
+    - symbol_layout_restore_result
+    - large_snapshot_threshold_result
+  - id: VS-06
+    layer: e2e
+    target_ids:
+    - MOD-07
+    - FR-02
+    - FR-03
+    - FR-04
+    - FR-05
+    - FR-06
+    - FR-07
+    - FR-08
+    evidence_required:
+    - playwright_user_journey_result
+    - locator_contract_result
+    - per_symbol_layout_e2e_result
+  - id: VS-07
+    layer: gate
+    target_ids:
+    - MOD-08
+    - FR-09
+    - NFR-05
+    evidence_required:
+    - unit_result
+    - replay_result
+    - e2e_result
+    - build_result
+  - id: VS-08
+    layer: fitness
+    target_ids:
+    - MOD-02
+    - MOD-03
+    evidence_required:
+    - cache_ttl_key_bypass_stale_check
+    - chart_render_check
+  architectural_fitness_functions:
+  - id: AFF-01
+    protected_quality: provider_agnostic_domain
+    measurement: domain objects 与 WorkspaceSnapshot 不含 provider-specific auth/quota/response
+      schema 字段。
+    threshold: 0 provider-specific 字段进入 WatchSymbol / PriceSeries / AlertRule / WorkspaceSnapshot。
+    verification_evidence:
+    - VS-01
+    - VS-02
+  - id: AFF-02
+    protected_quality: local_recovery_integrity
+    measurement: legacy key、V2 snapshot、损坏 snapshot、大体量 fixture 均可给出明确恢复结果。
+    threshold: 无静默数据丢失；失败时 UI 显示恢复状态。
+    verification_evidence:
+    - VS-05
+  - id: AFF-03
+    protected_quality: deterministic_signal_explanation
+    measurement: 同一 fixture 回放得到同一 MtsExplanation，且 reasonCodes/invalidators 可解释。
+    threshold: replay 结果稳定；数据不足显式为 data_insufficient。
+    verification_evidence:
+    - VS-03
+  production_readiness:
+    error_handling: 行情失败以 SourceHealth 和降级文案呈现；MTS 数据不足输出 data_insufficient；本地恢复失败回退默认
+      focus 布局；提醒校验失败阻断写入并显示原因。
+    compatibility: ChartPayload 过渡期保留 bars；legacy watchlist/alerts key 可读；旧四因子评分仅可内部复用，不能作为用户可见正式
+      MTS 名称。
+    observability: 后端记录 upstream 成功/失败、fallback 原因与 cache 状态；前端展示 SourceHealth、恢复结果、提醒触发理由和降级状态；fixture
+      名称可定位 AC/FR。
+    rollback: snapshot 迁移失败不清空旧 key；provider 失败切到显式 demo_fallback；图表库不满足合同则降级到读数摘要并走
+      Chart Gate；cache 影响恢复或 stale 语义时停用并重审。
+  agent_implementation: []
+  effectiveness_review:
+    rounds_used: 3
+    max_rounds: 3
+    last_verdict: PASS
+    pending_reviewer_recheck: false
+  agent_capability_review:
+    rounds_used: 2
+    max_rounds: 3
+    last_verdict: PASS
+    pending_reviewer_recheck: false
+  dependency_validity_review:
+    rounds_used: 2
+    max_rounds: 3
+    last_verdict: PASS
+    pending_reviewer_recheck: false
+  decision_gates:
+  - id: Provider Gate
+    owner_stage: technical_analysis / execute / verify
+    failure_mode: provider-specific auth/quota/response schema 渗透进 WatchSymbol、PriceSeries、AlertRule
+      或 WorkspaceSnapshot。
+    blocking_threshold: 任一 provider-specific 字段进入领域对象或持久化 schema；fake provider fixture
+      无法通过同一 domain contract。
+    required_evidence:
+    - yahoo_fixture
+    - demo_fixture
+    - fake_provider_fixture
+    - schema_scan
+    - AFF-01
+  - id: Cache Gate
+    owner_stage: technical_analysis / execute / verify
+    failure_mode: cache 被当成本地恢复存储，或 stale 语义无法解释。
+    blocking_threshold: cache 需要持久化、跨重启、跨 provider 复用，或 stale 服务超过 15 分钟；显式刷新无法绕过
+      cache。
+    required_evidence:
+    - ttl_60s_hit_miss
+    - force_refresh_bypass
+    - range_provider_invalidation
+    - upstream_failure_stale_fixture
+    - VS-08
+  - id: Storage Gate
+    owner_stage: technical_analysis / execute / verify
+    failure_mode: WorkspaceSnapshotV2 无法在 localStorage 内可靠迁移、保存或恢复。
+    blocking_threshold: 500 个标的 + 2000 条 alert history fixture 超过 2 MB；单次读写/迁移超过 500
+      ms；legacy/corrupt fixture 造成 watchlist/alerts 静默丢失。
+    required_evidence:
+    - legacy_key_fixture
+    - corrupt_snapshot_fixture
+    - large_snapshot_fixture
+    - browser_reopen_restore
+    - VS-05
+  - id: Chart Gate
+    owner_stage: execute / verify
+    failure_mode: lightweight-charts 无法稳定承载主图、成交量、副图与 locator contract。
+    blocking_threshold: 主图/成交量/副图任一 pane 无法在 fixture e2e 稳定渲染，或 locator 不能绑定用户可见状态。
+    required_evidence:
+    - chart_fixture_screenshot
+    - playwright_locator_assertion
+    - fallback_readout_evidence
+    - VS-06
+    - VS-08
+  cache_contract:
+    owner: server-side MarketDataSource memory cache
+    key: normalizedSymbol + range + interval + provider
+    ttl_seconds: 60
+    stale_max_minutes: 15
+    allowed_states:
+    - miss
+    - hit
+    - bypass
+    - stale_fallback
+    - disabled
+    invalidation:
+    - forceRefresh
+    - range_change
+    - provider_change
+    - ttl_expired
+    forbidden:
+    - localStorage_persistence
+    - cross_restart_restore
+    - provider_specific_domain_fields
+  workspace_layout_contract:
+    snapshot_version: 2
+    layout_scope:
+    - symbol
+    - global_fallback
+    per_symbol_key: normalizedSymbol
+    fields:
+    - layoutMode
+    - secondaryPanePreference
+    - range
+    - collapsedSections
+    - updatedAt
+    restore_status:
+    - restored
+    - partial
+    - default_fallback
+    - failed
+    fallback_rule: 标的级布局缺失或损坏时只回退该标的到 globalLayoutFallback/default focus，不清空 watchlist/alerts。
+  mts_reason_registry:
+    version: mts-registry-v1
+    code_shape: UPPER_SNAKE_CASE
+    categories:
+    - trend
+    - momentum
+    - volatility
+    - volume
+    - risk
+    - source
+    - data_quality
+    required_entry_fields:
+    - id
+    - kind
+    - category
+    - severityHint
+    - displayKey
+    - introducedIn
+    - deprecated
+    compatibility: 已发布 code 不删除，只能 deprecated；未知 code 降级为 UNKNOWN_CODE。
+  state_flows:
+  - id: SF-01
+    command: OpenWorkbench / RefreshSourceHealth
+    producer: MOD-02
+    event: SourceHealthChanged
+    consumers:
+    - MOD-03
+    - MOD-04
+    - MOD-05
+    - MOD-07
+    persistence: none
+    ordering: source health before MtsSignalEvaluated and AlertRuleTriggered
+    compensation: unknown source state -> unavailable; provider/cache violations trigger
+      Gate
+  - id: SF-02
+    command: ObservationContextRefreshed
+    producer: MOD-03
+    event: IndicatorStateChanged
+    consumers:
+    - MOD-04
+    - MOD-07
+    persistence: none
+    ordering: validated PriceSeries before MTS
+    compensation: insufficient bars -> partial/unavailable
+  - id: SF-03
+    command: EvaluateMts
+    producer: MOD-04
+    event: MtsSignalEvaluated
+    consumers:
+    - MOD-05
+    - MOD-07
+    persistence: replay_only
+    ordering: after SourceHealthChanged and IndicatorStateChanged
+    compensation: unknown registry code -> UNKNOWN_CODE; insufficient data -> data_insufficient
+  - id: SF-04
+    command: EvaluateAlertRules
+    producer: MOD-05
+    event: AlertRuleTriggered / AlertRuleAcknowledged / ScheduledAlertMissed
+    consumers:
+    - MOD-05
+    - MOD-07
+    - MOD-06
+    persistence: AlertRule.history / lastTriggeredAt / acknowledgedAt / missedAt
+    ordering: after MTS; risk priority before watch; scheduled only while app open
+      local clock tick
+    compensation: suspended_by_archive cannot trigger; missed scheduled tick is recorded,
+      not backfilled
+  - id: SF-05
+    command: ArchiveWatchSymbol / RestoreWatchSymbol
+    producer: MOD-01 + MOD-06
+    event: WatchSymbolArchived / WatchSymbolRestored
+    consumers:
+    - MOD-05
+    - MOD-06
+    - MOD-07
+    persistence: WorkspaceSnapshotV2.watchlist + alert activation state
+    ordering: watchlist state before alert activation change
+    compensation: restore cannot clear alert history
+  - id: SF-06
+    command: RestoreLocalWorkbench
+    producer: MOD-06
+    event: WorkspaceRestored
+    consumers:
+    - MOD-01
+    - MOD-05
+    - MOD-07
+    persistence: read legacy/V2; may write migrated V2; never delete old keys"
+    ordering: restore before first automatic refresh
+    compensation: corrupt snapshot -> default focus; Storage Gate on threshold breach
+  scheduled_alert_contract:
+    condition_shape:
+      mode: daily_time
+      localTime: HH:mm
+      timezone: local
+      daysOfWeek: optional number array 1-7
+      skipIfMarketClosed: optional boolean
+    timebase: browser_local_clock
+    evaluation: app-open only; no background worker, system notification, external
+      push, or server scheduler
+    missed_tick_policy: do not backfill trigger after app close; record missed_while_closed
+      and wait for next local tick
+    archive_restore_policy: archived symbols suspend scheduled alerts; restore resumes
+      from next tick without clearing history
+    acknowledgment_policy: acknowledged and triggered are separate states

@@ -11,6 +11,8 @@
     "backtest:9988": "node scripts/backtest.mjs HK.09988",
     "backtest:700": "node scripts/backtest.mjs HK.00700",
     "backtest:3690": "node scripts/backtest.mjs HK.03690",
+    "backtest:981": "node scripts/backtest.mjs HK.00981",
+    "backtest:1810": "node scripts/backtest.mjs HK.01810",
     "preview": "NODE_ENV=production node server/index.js"
   },
   "dependencies": {

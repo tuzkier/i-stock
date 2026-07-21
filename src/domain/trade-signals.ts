@@ -546,6 +546,33 @@ export const STRATEGIES: TradeStrategyDefinition[] = [
   }
 ];
 
+STRATEGIES.push(
+  {
+    key: "smic",
+    strategyId: "smic-0981-meanrev-v1",
+    label: "0981.HK 买卖信号",
+    styleTag: "均值回归",
+    displaySymbol: "HK.00981",
+    matches: (symbol) => matchHkSymbol(symbol, ["HK.00981", "HK.0981", "00981.HK", "0981.HK", "981.HK"]),
+    config: { kind: "mean_revert", lowLookback: 10, exitSmaPeriod: 20, maxHoldBars: 10, stopAtrMultiple: 2.0 },
+    nonAdvice: "信号由「10 日收盘新低买入 + 站上 SMA20 / 止损 / 超时离场」的固定规则计算，仅作技术分析提醒，不构成投资建议或收益承诺。",
+    dataWarning: "该标的日波动约 3.7%（38% 交易日振幅超 3%），信号执行价与触发价可能偏差较大；未纳入财报、消息面与持仓约束。"
+  },
+  {
+    key: "xiaomi",
+    strategyId: "xiaomi-1810-defensive-v1",
+    label: "1810.HK 买卖信号",
+    styleTag: "防守门控",
+    displaySymbol: "HK.01810",
+    matches: (symbol) => matchHkSymbol(symbol, ["HK.01810", "HK.1810", "01810.HK", "1810.HK"]),
+    config: { kind: "breakout_trail", lookback: 20, trailAtrMultiple: 3, smaGatePeriod: 60 },
+    fanT: { sellLookback: 15, smaPeriod: 20, buyLookback: 15, chaseAtrMultiple: 1.0 },
+    nonAdvice:
+      "该标的过去一年抄底与追涨均为负期望；本策略为防守型（站上 SMA60 且 20 日新高才试仓，3×ATR20 跟踪离场），大部分时间输出空仓观望。仅作技术分析提醒，不构成投资建议。",
+    dataWarning: "实证提示：该标的 15 日新低后 10 日均值 -2.57%（胜率 29%）、20 日新高后 10 日均值 -4.03%（胜率 25%），系统靠少交易避险，非盈利引擎。"
+  }
+);
+
 export function resolveTradeStrategy(symbol = "") {
   return STRATEGIES.find((strategy) => strategy.matches(symbol));
 }
@@ -585,7 +612,7 @@ export function buildTradeSignalState(observation: MarketObservation): TradeSign
       status: "not_target_symbol",
       stance: "watch",
       stanceLabel: "该标的暂无定制算法",
-      reasons: ["当前只为 HK.09988 / HK.00700 / HK.03690 提供定制信号算法。"]
+      reasons: ["当前只为 HK.09988 / HK.00700 / HK.03690 / HK.00981 / HK.01810 提供定制信号算法。"]
     };
   }
 

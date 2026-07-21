@@ -50,6 +50,8 @@ test("策略注册：三只标的各自解析到不同策略", () => {
   assert.equal(resolveTradeStrategy("HK.09988")?.key, "alibaba");
   assert.equal(resolveTradeStrategy("0700.HK")?.key, "tencent");
   assert.equal(resolveTradeStrategy("HK.03690")?.key, "meituan");
+  assert.equal(resolveTradeStrategy("HK.00981")?.key, "smic");
+  assert.equal(resolveTradeStrategy("HK.01810")?.key, "xiaomi");
   assert.equal(resolveTradeStrategy("US.AAPL"), undefined);
 });
 

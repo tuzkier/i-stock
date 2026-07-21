@@ -11,14 +11,14 @@ import { computeTradeSignalEvents, resolveTradeStrategy, runTradeBacktest } from
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
 const asJson = process.argv.includes("--json");
-const aliases = { "9988": "HK.09988", "700": "HK.00700", "0700": "HK.00700", "3690": "HK.03690" };
+const aliases = { "9988": "HK.09988", "700": "HK.00700", "0700": "HK.00700", "3690": "HK.03690", "981": "HK.00981", "0981": "HK.00981", "1810": "HK.01810" };
 const rawSymbol = args[0] ?? "HK.09988";
 const symbol = aliases[rawSymbol] ?? rawSymbol.toUpperCase();
 const range = args[1] ?? "1y";
 
 const strategy = resolveTradeStrategy(symbol);
 if (!strategy) {
-  console.error(`未注册的标的: ${symbol}（已注册: HK.09988 / HK.00700 / HK.03690）`);
+  console.error(`未注册的标的: ${symbol}（已注册: HK.09988 / HK.00700 / HK.03690 / HK.00981 / HK.01810）`);
   process.exit(1);
 }
 

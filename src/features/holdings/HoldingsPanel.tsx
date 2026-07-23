@@ -82,12 +82,19 @@ function HoldingCard({ holding }: { holding: CoveredHolding }) {
         )}
       </div>
 
+      {holding.lastDeal && (
+        <div className="holding-lastdeal">
+          最近真实成交：<strong className={holding.lastDeal.side === "SELL" ? "pl-down" : "pl-up"}>{holding.lastDeal.side === "SELL" ? "卖" : "买"}</strong>{" "}
+          {holding.lastDeal.qty} @ {fmt(holding.lastDeal.price)}　<span className="deal-time">{holding.lastDeal.time.slice(0, 16)}</span>
+        </div>
+      )}
+
       <div className={`holding-fant ${fanT.enabled ? "on" : "off"}`}>
         {fanT.enabled ? (
-          fanT.phase === "full" ? (
-            <>反T·满仓等高卖：高卖触发 <strong>{fmt(fanT.sellTrigger)}</strong>（近1年累计价差 {pct(fanT.totalSpreadPct)}）</>
+          holding.fanTRealPhase === "reduced" ? (
+            <>反T·已减档（按你真实成交）→ 等买回：买回触发 <strong>{fmt(holding.fanTBuyBackTrigger)}</strong>（回落跌破即买回降成本）</>
           ) : (
-            <>反T·已高卖等买回：买回触发 <strong>{fmt(fanT.buyBackTrigger)}</strong>，认错追高 {fmt(fanT.chaseStop)}（累计价差 {pct(fanT.totalSpreadPct)}）</>
+            <>反T·满仓（按你真实成交）→ 可高卖：高卖触发 <strong>{fmt(holding.fanTSellTrigger)}</strong>（反弹站上即减一档，需高于 SMA20）</>
           )
         ) : (
           <>反T 不适用：本票实证为负期望（趋势票易卖飞），只做趋势持有与离场。</>

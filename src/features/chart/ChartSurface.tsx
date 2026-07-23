@@ -5,6 +5,7 @@ import {
   createSeriesMarkers,
   HistogramSeries,
   LineSeries,
+  LineStyle,
   type CandlestickData,
   type HistogramData,
   type IChartApi,
@@ -21,7 +22,7 @@ import {
   seriesToPoints,
   type SecondaryIndicator
 } from "../../domain/observation";
-import { computeTradeSignalEvents, resolveTradeStrategy } from "../../domain/trade-signals";
+import { buildFanTState, buildTradeSignalState, computeTradeSignalEvents, resolveTradeStrategy } from "../../domain/trade-signals";
 import { resolveSourceTone } from "../presentation/tone";
 
 type ChartSurfaceProps = {
@@ -186,6 +187,97 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
     );
   }, [bars, payload?.symbol, sourceHealth?.status]);
 
+  // 当前操作点位横线：止损/止盈/买点/加仓/卖出目标/反T 高卖买回。
+  const priceLines = useMemo(() => {
+    const symbol = payload?.symbol ?? "";
+    if (!resolveTradeStrategy(symbol) || sourceHealth?.status !== "formal" || bars.length === 0) return [];
+    const signal = buildTradeSignalState({ symbol, bars, indicators: observation.indicators });
+    const fanT = buildFanTState(symbol, bars);
+    const L = signal.levels;
+    const RED = "#f15f5f";
+    const GREEN = "#33c481";
+    const BLUE = "#64a9ff";
+    const YELLOW = "#f0c75e";
+    const lines: Array<{ price: number; color: string; title: string; dashed?: boolean }> = [];
+    const push = (price: number | undefined, color: string, title: string, dashed = false) => {
+      if (price !== undefined && Number.isFinite(price)) lines.push({ price, color, title, dashed });
+    };
+    if (signal.status === "ready") {
+      if (signal.holding) {
+        push(L.takeProfit, GREEN, "止盈线");
+        push(L.stopLoss, RED, "止损线");
+        push(L.addPositionTrigger, GREEN, "加仓位", true);
+        push(L.sellTargetSma, BLUE, "卖出目标");
+      } else {
+        push(L.nextBuyTrigger, GREEN, "买点");
+        push(L.sellTargetSma, BLUE, "回归卖出目标");
+      }
+      if (fanT.enabled) {
+        push(fanT.sellTrigger, YELLOW, "反T高卖", true);
+        push(fanT.buyBackTrigger, YELLOW, "反T买回", true);
+      }
+    }
+    return lines;
+  }, [bars, observation.indicators, payload?.symbol, sourceHealth?.status]);
+
+  // 拉当前标的的真实成交（只读），做成图上标记，与算法历史信号区分。
+  const [realDeals, setRealDeals] = useState<Array<{ side: string; price: number; time: string }>>([]);
+  useEffect(() => {
+    const symbol = payload?.symbol ?? "";
+    if (!symbol || !resolveTradeStrategy(symbol)) {
+      setRealDeals([]);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/deals?symbol=${encodeURIComponent(symbol)}`)
+      .then((res) => (res.ok ? res.json() : { deals: [] }))
+      .then((payloadJson) => {
+        if (cancelled) return;
+        const deals = (payloadJson.deals ?? []).map((d: { trd_side?: string; price?: number; create_time?: string }) => ({
+          side: String(d.trd_side ?? ""),
+          price: Number(d.price ?? 0),
+          time: String(d.create_time ?? "")
+        }));
+        setRealDeals(deals);
+      })
+      .catch(() => {
+        if (!cancelled) setRealDeals([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [payload?.symbol]);
+
+  const realTradeMarkers = useMemo(() => {
+    if (realDeals.length === 0 || bars.length === 0) return [] as SeriesMarker<Time>[];
+    // 日线图：把成交日期对齐到对应交易日的 K 线时间。
+    const dateToBarTime = new Map<string, number>();
+    for (const bar of bars) {
+      const day = new Date((bar.time as number) * 1000).toISOString().slice(0, 10);
+      dateToBarTime.set(day, bar.time as number);
+    }
+    const markers: SeriesMarker<Time>[] = [];
+    for (const deal of realDeals) {
+      const day = deal.time.slice(0, 10);
+      const barTime = dateToBarTime.get(day);
+      if (barTime === undefined) continue;
+      const isBuy = deal.side === "BUY";
+      markers.push({
+        time: barTime as Time,
+        position: isBuy ? "belowBar" : "aboveBar",
+        shape: "circle",
+        color: isBuy ? "#2ee6a6" : "#ff9d9d",
+        text: isBuy ? `实买${deal.price.toFixed(2)}` : `实卖${deal.price.toFixed(2)}`
+      });
+    }
+    return markers;
+  }, [realDeals, bars]);
+
+  // 合并算法历史信号（箭头）+ 真实成交（圆点），按时间升序（lightweight-charts 要求）。
+  const allMarkers = useMemo(() => {
+    return [...signalMarkers, ...realTradeMarkers].sort((a, b) => (a.time as number) - (b.time as number));
+  }, [signalMarkers, realTradeMarkers]);
+
   const volumeSeries = useMemo(
     () =>
       bars.map(
@@ -238,8 +330,18 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
                 candleSeries.setData(mainChartSeries.candles);
                 ema20Series.setData(mainChartSeries.ema20);
                 ema60Series.setData(mainChartSeries.ema60);
-                if (signalMarkers.length > 0) {
-                  createSeriesMarkers(candleSeries, signalMarkers);
+                for (const line of priceLines) {
+                  candleSeries.createPriceLine({
+                    price: line.price,
+                    color: line.color,
+                    lineWidth: 1,
+                    lineStyle: line.dashed ? LineStyle.Dashed : LineStyle.Solid,
+                    axisLabelVisible: true,
+                    title: line.title
+                  });
+                }
+                if (allMarkers.length > 0) {
+                  createSeriesMarkers(candleSeries, allMarkers);
                 }
               }}
             />

@@ -1306,3 +1306,5 @@ small,
 .holdings-uncovered { margin-top: 4px; }
 .uncovered-row { display: flex; justify-content: space-between; font-size: 12px; color: #8d96a5; padding: 3px 0; }
 .uncovered-row em { color: #6c7482; font-style: normal; }
+.holding-lastdeal { font-size: 11.5px; color: #b7bec9; }
+.holding-lastdeal .deal-time { color: #6c7482; }

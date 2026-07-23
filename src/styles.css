@@ -1308,3 +1308,16 @@ small,
 .uncovered-row em { color: #6c7482; font-style: normal; }
 .holding-lastdeal { font-size: 11.5px; color: #b7bec9; }
 .holding-lastdeal .deal-time { color: #6c7482; }
+
+/* 图表叠加开关（点位线 / 我的成交） */
+.chart-overlay-toggles { display: flex; gap: 6px; margin-bottom: 6px; }
+.overlay-chip { font-size: 11px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1); color: #8d96a5; cursor: pointer; }
+.overlay-chip:hover { background: var(--surface-hover); }
+.overlay-chip.active { border-color: var(--accent); color: #d9f7e8; background: var(--accent-soft); }
+.holding-incomplete { font-size: 11px; color: var(--tone-warning); background: rgba(240,199,94,0.08); padding: 4px 8px; border-radius: var(--radius-sm); }
+
+/* 信号卡顶部：你的真实持仓块 */
+.my-position-block { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; margin: 4px 0; background: rgba(124,156,240,0.08); border-radius: var(--radius-sm); }
+.my-position-block .mp-label { font-size: 11px; color: var(--tone-info); }
+.my-position-block .mp-body { font-size: 13px; color: #eef1f6; font-variant-numeric: tabular-nums; }
+.my-position-block .mp-none { color: #8d96a5; font-size: 12px; }

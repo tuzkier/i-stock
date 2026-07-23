@@ -88,6 +88,9 @@ function HoldingCard({ holding }: { holding: CoveredHolding }) {
           {holding.lastDeal.qty} @ {fmt(holding.lastDeal.price)}　<span className="deal-time">{holding.lastDeal.time.slice(0, 16)}</span>
         </div>
       )}
+      {holding.dealsIncomplete && (
+        <div className="holding-incomplete">⚠ 部分更早的建仓超出 FutuOpenD 约两年成交上限，未取回；买卖点与成本不完全对应。</div>
+      )}
 
       <div className={`holding-fant ${fanT.enabled ? "on" : "off"}`}>
         {fanT.enabled ? (

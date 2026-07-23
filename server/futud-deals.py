@@ -21,7 +21,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Read-only deal-history query from local FutuOpenD.")
     parser.add_argument("--market", default="HK", choices=["HK", "US", "CN"])
     parser.add_argument("--env", default="REAL", choices=["REAL", "SIMULATE"])
-    parser.add_argument("--start", default=(today - dt.timedelta(days=400)).isoformat())
+    # 默认拉近 2 年（FutuOpenD 历史成交约只提供近两年；再长会被券商侧截断）。
+    parser.add_argument("--start", default=(today - dt.timedelta(days=730)).isoformat())
     parser.add_argument("--end", default=today.isoformat())
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=11111)

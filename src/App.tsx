@@ -155,6 +155,43 @@ export function App() {
     const id = setInterval(() => setRefreshTick((current) => current + 1), 60_000);
     return () => clearInterval(id);
   }, []);
+
+  // 拉真实持仓（FutuOpenD），供信号卡以“你的真实仓”为准，而非策略模拟仓。
+  const [myHoldings, setMyHoldings] = useState<
+    Array<{
+      code: string;
+      name: string;
+      qty: number;
+      cost: number;
+      price: number;
+      plRatio: number;
+      dealsIncomplete?: boolean;
+      chandelierStop?: number;
+      chandelierBreached?: boolean;
+    }>
+  >([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/holdings?env=REAL&range=1y")
+      .then((r) => (r.ok ? r.json() : { holdings: [] }))
+      .then((d) => {
+        if (!cancelled) setMyHoldings(d.holdings ?? []);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshTick]);
+  const myPosition = useMemo(() => {
+    // 归一化港股代码：HK.00700 / 0700.HK / 00700.HK / 700.HK 都归一成 HK.700，避免自选与持仓写法不一致导致匹配失败。
+    const symbolKey = (s: string) => {
+      const u = (s ?? "").toUpperCase().replace(/\s/g, "");
+      const m = u.match(/^HK\.?0*(\d+)$/) ?? u.match(/^0*(\d+)\.HK$/);
+      return m ? `HK.${m[1]}` : u;
+    };
+    const sel = symbolKey(selected.symbol);
+    return myHoldings.find((h) => symbolKey(h.code) === sel);
+  }, [myHoldings, selected.symbol]);
   const [mtsReasonDetailsOpen, setMtsReasonDetailsOpen] = useState(false);
   const selectedFetchesRef = useRef(new Map<string, Promise<ChartPayload>>());
   const selectedRequestTokenRef = useRef(0);
@@ -597,14 +634,34 @@ export function App() {
                 <div className="signal-topline">
                   <span>{tradeSignal.strategyLabel} · {tradeSignal.styleTag}</span>
                   <strong data-testid="trade-signal-status">
-                    {tradeSignal.status === "ready"
-                      ? tradeSignal.holding
-                        ? "持仓中"
-                        : "空仓"
-                      : humanizeTradeStatus(tradeSignal.status, tradeSignal.stanceLabel)}
+                    {myPosition
+                      ? `持有 ${myPosition.qty} 股`
+                      : tradeSignal.status === "ready"
+                        ? "未持有"
+                        : humanizeTradeStatus(tradeSignal.status, tradeSignal.stanceLabel)}
                   </strong>
                 </div>
-                <strong data-testid="trade-signal-stance">{tradeSignal.stanceLabel}</strong>
+                <div className="my-position-block" data-testid="my-position">
+                  {myPosition ? (
+                    <>
+                      <span className="mp-label">你的真实持仓</span>
+                      <span className="mp-body">
+                        {myPosition.qty} 股 @ 成本 {formatNumber(myPosition.cost)}｜盈亏{" "}
+                        <strong className={myPosition.plRatio > 0 ? "pl-up" : myPosition.plRatio < 0 ? "pl-down" : ""}>
+                          {myPosition.plRatio.toFixed(1)}%
+                        </strong>
+                      </span>
+                    </>
+                  ) : (
+                    <span className="mp-body mp-none">你未持有该标的 · 下方为策略信号（模拟仓视角）</span>
+                  )}
+                </div>
+                <strong data-testid="trade-signal-stance">
+                  策略信号 ·{" "}
+                  {myPosition
+                    ? tradeSignal.stanceLabel.replaceAll("（空仓）", "").replaceAll("空仓", "").replace(/观望/g, "策略暂无买入信号")
+                    : tradeSignal.stanceLabel}
+                </strong>
                 {tradeSignal.status === "ready" && tradeBacktest && (
                   <p className="trade-signal-kpi" data-testid="trade-backtest-summary">
                     胜率 {tradeBacktest.winRate === null ? "--" : `${formatNumber(tradeBacktest.winRate, 0)}%`} · 策略累计{" "}
@@ -636,8 +693,17 @@ export function App() {
                                   <div className="level-secondary"><span>阶段减仓观察二*</span><strong>{formatNumber(tradeSignal.levels.sellWatchTwo)}</strong></div>
                                 )}
                               </>
+                            ) : myPosition ? (
+                              myPosition.chandelierStop !== undefined ? (
+                                <div>
+                                  <span>持仓者止损参考（吊灯）{myPosition.chandelierBreached ? "·已破" : ""}</span>
+                                  <strong>{formatNumber(myPosition.chandelierStop)}</strong>
+                                </div>
+                              ) : (
+                                <div><span>离场参考</span><strong>见「持仓」页</strong></div>
+                              )
                             ) : (
-                              <div><span>离场线</span><strong>空仓，无</strong></div>
+                              <div><span>离场线</span><strong>未持有</strong></div>
                             )}
                           </div>
                           <p className="plan-group-title">买入侧</p>

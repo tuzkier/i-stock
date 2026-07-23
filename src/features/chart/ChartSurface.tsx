@@ -22,7 +22,7 @@ import {
   seriesToPoints,
   type SecondaryIndicator
 } from "../../domain/observation";
-import { buildFanTState, buildTradeSignalState, computeTradeSignalEvents, resolveTradeStrategy } from "../../domain/trade-signals";
+import { buildTradeSignalState, computeTradeSignalEvents, resolveTradeStrategy } from "../../domain/trade-signals";
 import { resolveSourceTone } from "../presentation/tone";
 
 type ChartSurfaceProps = {
@@ -187,38 +187,30 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
     );
   }, [bars, payload?.symbol, sourceHealth?.status]);
 
-  // 当前操作点位横线：止损/止盈/买点/加仓/卖出目标/反T 高卖买回。
+  // 当前操作点位横线：默认只画一条最关键的（持仓=止损/止盈，空仓=买点），避免图上过多横线。
+  // 其余点位（加仓/卖出目标/反T 等）在信号卡与持仓面板里给出，不上图。
   const priceLines = useMemo(() => {
     const symbol = payload?.symbol ?? "";
     if (!resolveTradeStrategy(symbol) || sourceHealth?.status !== "formal" || bars.length === 0) return [];
     const signal = buildTradeSignalState({ symbol, bars, indicators: observation.indicators });
-    const fanT = buildFanTState(symbol, bars);
     const L = signal.levels;
     const RED = "#f15f5f";
     const GREEN = "#33c481";
-    const BLUE = "#64a9ff";
-    const YELLOW = "#f0c75e";
     const lines: Array<{ price: number; color: string; title: string; dashed?: boolean }> = [];
-    const push = (price: number | undefined, color: string, title: string, dashed = false) => {
-      if (price !== undefined && Number.isFinite(price)) lines.push({ price, color, title, dashed });
-    };
     if (signal.status === "ready") {
       if (signal.holding) {
-        push(L.takeProfit, GREEN, "止盈线");
-        push(L.stopLoss, RED, "止损线");
-        push(L.addPositionTrigger, GREEN, "加仓位", true);
-        push(L.sellTargetSma, BLUE, "卖出目标");
-      } else {
-        push(L.nextBuyTrigger, GREEN, "买点");
-        push(L.sellTargetSma, BLUE, "回归卖出目标");
-      }
-      if (fanT.enabled) {
-        push(fanT.sellTrigger, YELLOW, "反T高卖", true);
-        push(fanT.buyBackTrigger, YELLOW, "反T买回", true);
+        if (L.takeProfit !== undefined && Number.isFinite(L.takeProfit)) lines.push({ price: L.takeProfit, color: GREEN, title: "止盈" });
+        else if (L.stopLoss !== undefined && Number.isFinite(L.stopLoss)) lines.push({ price: L.stopLoss, color: RED, title: "止损" });
+      } else if (L.nextBuyTrigger !== undefined && Number.isFinite(L.nextBuyTrigger)) {
+        lines.push({ price: L.nextBuyTrigger, color: GREEN, title: "买点" });
       }
     }
     return lines;
   }, [bars, observation.indicators, payload?.symbol, sourceHealth?.status]);
+
+  // 图上叠加开关：默认只显示极简点位线；真实成交默认关闭，避免图面杂乱。
+  const [showLevels, setShowLevels] = useState(true);
+  const [showTrades, setShowTrades] = useState(false);
 
   // 拉当前标的的真实成交（只读），做成图上标记，与算法历史信号区分。
   const [realDeals, setRealDeals] = useState<Array<{ side: string; price: number; time: string }>>([]);
@@ -273,10 +265,11 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
     return markers;
   }, [realDeals, bars]);
 
-  // 合并算法历史信号（箭头）+ 真实成交（圆点），按时间升序（lightweight-charts 要求）。
+  // 合并算法历史信号（箭头）+（可选）真实成交（圆点），按时间升序（lightweight-charts 要求）。
   const allMarkers = useMemo(() => {
-    return [...signalMarkers, ...realTradeMarkers].sort((a, b) => (a.time as number) - (b.time as number));
-  }, [signalMarkers, realTradeMarkers]);
+    const merged = showTrades ? [...signalMarkers, ...realTradeMarkers] : [...signalMarkers];
+    return merged.sort((a, b) => (a.time as number) - (b.time as number));
+  }, [signalMarkers, realTradeMarkers, showTrades]);
 
   const volumeSeries = useMemo(
     () =>
@@ -306,6 +299,26 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
 
       <div className="chart-panels">
         <PanelShell testId="chart-main-panel" title="主图" subtitle={payload?.symbol || "—"} bodyHeight={260}>
+          {resolveTradeStrategy(payload?.symbol ?? "") && bars.length > 0 && (
+            <div className="chart-overlay-toggles" data-testid="chart-overlay-toggles">
+              <button
+                type="button"
+                className={showLevels ? "overlay-chip active" : "overlay-chip"}
+                aria-pressed={showLevels}
+                onClick={() => setShowLevels((v) => !v)}
+              >
+                点位线
+              </button>
+              <button
+                type="button"
+                className={showTrades ? "overlay-chip active" : "overlay-chip"}
+                aria-pressed={showTrades}
+                onClick={() => setShowTrades((v) => !v)}
+              >
+                我的成交
+              </button>
+            </div>
+          )}
           {bars.length === 0 ? (
             <div className="empty-state" style={{ minHeight: 260 }}>
               {loading ? "加载主图中" : error || "暂无主图数据"}
@@ -330,15 +343,17 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
                 candleSeries.setData(mainChartSeries.candles);
                 ema20Series.setData(mainChartSeries.ema20);
                 ema60Series.setData(mainChartSeries.ema60);
-                for (const line of priceLines) {
-                  candleSeries.createPriceLine({
-                    price: line.price,
-                    color: line.color,
-                    lineWidth: 1,
-                    lineStyle: line.dashed ? LineStyle.Dashed : LineStyle.Solid,
-                    axisLabelVisible: true,
-                    title: line.title
-                  });
+                if (showLevels) {
+                  for (const line of priceLines) {
+                    candleSeries.createPriceLine({
+                      price: line.price,
+                      color: line.color,
+                      lineWidth: 1,
+                      lineStyle: line.dashed ? LineStyle.Dashed : LineStyle.Solid,
+                      axisLabelVisible: true,
+                      title: line.title
+                    });
+                  }
                 }
                 if (allMarkers.length > 0) {
                   createSeriesMarkers(candleSeries, allMarkers);

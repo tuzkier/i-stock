@@ -71,6 +71,11 @@ export type CoveredHolding = HoldingBase & {
   fanTSellTrigger?: number;
   /** 反T 买回触发位（近 buyLookback 日最低收盘）；始终计算，供已减档阶段用。 */
   fanTBuyBackTrigger?: number;
+  /**
+   * 成交是否不完整：可见成交的买卖净额与当前持仓股数对不上，
+   * 说明有更早（超出 FutuOpenD 约两年成交上限）的建仓未取回，图上买卖点不全。
+   */
+  dealsIncomplete?: boolean;
 };
 
 export type HoldingsPanel = {
@@ -175,8 +180,12 @@ export function buildHoldingsPanel(
       if (stop !== undefined) breached = base.price < stop;
     }
 
-    const recentDeals = toDealRecords(dealsBySymbol[base.code] ?? dealsBySymbol[position.code] ?? []);
-    const lastDeal = recentDeals[0];
+    const allDeals = toDealRecords(dealsBySymbol[base.code] ?? dealsBySymbol[position.code] ?? []);
+    const recentDeals = allDeals.slice(0, 6);
+    const lastDeal = allDeals[0];
+    // 可见成交净额（买-卖）与持仓对不上 → 有更早成交未取回，买卖点不全。
+    const dealNetQty = allDeals.reduce((sum, d) => sum + (d.side === "BUY" ? d.qty : d.side === "SELL" ? -d.qty : 0), 0);
+    const dealsIncomplete = allDeals.length > 0 && Math.abs(dealNetQty - base.qty) > 1;
     const fanTRealPhase = fanT.enabled ? (lastDeal?.side === "SELL" ? "reduced" : "full") : undefined;
     let fanTSellTrigger: number | undefined;
     let fanTBuyBackTrigger: number | undefined;
@@ -193,11 +202,12 @@ export function buildHoldingsPanel(
       chandelierStop: stop,
       chandelierBreached: breached,
       fanT,
-      recentDeals: recentDeals.slice(0, 6),
+      recentDeals,
       lastDeal,
       fanTRealPhase,
       fanTSellTrigger,
-      fanTBuyBackTrigger
+      fanTBuyBackTrigger,
+      dealsIncomplete
     });
   }
 

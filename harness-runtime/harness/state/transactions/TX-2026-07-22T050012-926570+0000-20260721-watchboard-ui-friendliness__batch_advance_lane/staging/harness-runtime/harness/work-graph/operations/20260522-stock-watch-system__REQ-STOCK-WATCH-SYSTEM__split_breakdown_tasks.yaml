@@ -1,0 +1,82 @@
+operation_id: 20260522-stock-watch-system__REQ-STOCK-WATCH-SYSTEM__split_breakdown_tasks
+type: split_node
+node_id: REQ-STOCK-WATCH-SYSTEM
+mission_id: 20260522-stock-watch-system
+children:
+  - id: TASK-STOCK-WATCH-T001
+    kind: task
+    title: 多市场自选归一、列表摘要与归档暂停
+    lane: development-lane
+    stage: execute
+    status: ready
+    parent_task_id: T001
+    execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    atomic_task_ids: [T001-A1, T001-A2]
+    dependencies: []
+  - id: TASK-STOCK-WATCH-T002
+    kind: task
+    title: 默认工作台、来源健康、指标切换与可见降级
+    lane: development-lane
+    stage: execute
+    status: ready
+    parent_task_id: T002
+    execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    atomic_task_ids: [T002-A1, T002-A2]
+    dependencies: [TASK-STOCK-WATCH-T001]
+  - id: TASK-STOCK-WATCH-T003
+    kind: task
+    title: MTS 解释卡、ReasonRegistry 与非投资建议边界
+    lane: development-lane
+    stage: execute
+    status: ready
+    parent_task_id: T003
+    execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    atomic_task_ids: [T003-A1, T003-A2]
+    dependencies: [TASK-STOCK-WATCH-T001, TASK-STOCK-WATCH-T002]
+  - id: TASK-STOCK-WATCH-T004
+    kind: task
+    title: 分类提醒、触发确认、scheduled 与归档暂停
+    lane: development-lane
+    stage: execute
+    status: ready
+    parent_task_id: T004
+    execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    atomic_task_ids: [T004-A1, T004-A2]
+    dependencies: [TASK-STOCK-WATCH-T001, TASK-STOCK-WATCH-T002, TASK-STOCK-WATCH-T003]
+  - id: TASK-STOCK-WATCH-T005
+    kind: task
+    title: WorkspaceSnapshotV2、per-symbol layout 与浏览器重开恢复
+    lane: development-lane
+    stage: execute
+    status: ready
+    parent_task_id: T005
+    execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    atomic_task_ids: [T005-A1, T005-A2]
+    dependencies: [TASK-STOCK-WATCH-T001, TASK-STOCK-WATCH-T002, TASK-STOCK-WATCH-T003, TASK-STOCK-WATCH-T004]
+  - id: TASK-STOCK-WATCH-T006
+    kind: task
+    title: 冻结样本、回放、unit/e2e 门禁与 AC 验收矩阵
+    lane: development-lane
+    stage: execute
+    status: ready
+    parent_task_id: T006
+    execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    atomic_task_ids: [T006-A1, T006-A2]
+    dependencies: [TASK-STOCK-WATCH-T001, TASK-STOCK-WATCH-T002, TASK-STOCK-WATCH-T003, TASK-STOCK-WATCH-T004, TASK-STOCK-WATCH-T005]
+work_graph_artifact:
+  node_id: REQ-STOCK-WATCH-SYSTEM
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/execution-brief.md
+  source_contract_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+  canonical_contract: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/execution-brief.contract.yaml
+  change_reason: breakdown accepted and split into executable task nodes
+  artifact_state:
+    status: accepted

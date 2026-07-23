@@ -1,0 +1,266 @@
+# intent-framing —— 20260723-bespoke-signal-strategies
+#
+# 由 mission-framing-expert 产出。只做意图取证与框定，不写最终 mission-contract.md，
+# 不填充 work_graph.primary_nodes 之外的派生链路。
+
+intent_role_analysis:
+  actual_task_goal: >-
+    为看盘系统里的 6 只自选港股逐股做实证分析、各自量身定制一套买卖信号（买点/卖点）策略并落到
+    src/domain/trade-signals.ts 引擎，用各自历史数据实证推导策略参数，并以回测按"分档口径"证明达标：
+    下跌/震荡票严格跑赢同期买入持有，强单边上涨票以趋势跟随+拖尾锁利做到"最大回撤至少比买入持有低10个百分点、
+    累计收益≥买入持有的60%"。6 只为 HK.09988 阿里巴巴、HK.00700 腾讯、HK.03690 美团、
+    HK.01810 小米、HK.00981 中芯国际、HK.01888 建滔积层板（本次新增注册）。核心原则：一股一策、
+    无统一模板——每只票的交易逻辑必须从它自己的历史数据实证推导，不得从现有 3 个模板（突破跟踪/
+    均值回归/防守门控）里挑一个直接套用。完成后引擎为这 6 只各自输出经回测验证的买卖信号，并新增 1888 策略注册。
+  source_materials:
+    - path: "src/domain/trade-signals.ts"
+      provides: "现有 5 只票的策略引擎与回测函数 runTradeBacktest —— 本任务改造与新增 1888 注册的落点与既有约定来源"
+    - path: "scripts/backtest.mjs"
+      provides: "回测 CLI，经 server/futud-client.py 取 FutuOpenD 真实日线 —— 验证证据的运行入口与数据口径来源"
+    - path: "docs/technical-signal-research-design.md"
+      provides: "既有信号研究设计 —— 逐股策略选型时的既有方法学背景与术语口径参考"
+    - path: "FutuOpenD 本地实时日线（127.0.0.1:11111）"
+      provides: "逐股实证与回测所依赖的真实历史日线数据源，已可用；不新增/不改动接入方式"
+  agent_instructions:
+    - "重新计算回测"
+    - "分析每一只股票"
+    - "一起再分析"
+  process_constraints:
+    - "不使用最小实现（MVP）（AGENTS.md 要求）"
+    - "走完整 Harness 流程，本任务不跳过 discovery（逐股实证是核心）"
+    - "保留 nonAdvice 免责框架，产出定位为技术分析提醒、非个性化投资建议"
+  discussion_outputs:
+    - "本会话已跑一轮体检（截至 2026-07-22）：阿里 +29.45% vs 持有 +1.14%；腾讯 +35.66% vs -12.35%；美团 -2.66% vs -36.15%；小米 -9.53% vs -48.44%；中芯 +56.66% vs 持有 +79.34%（跑输约 23pp）；1888 未注册，实证画像：近1年买入持有约 +450%、日均振幅 6.78%、87% 交易日振幅 >3%。仅作 discovery 起点参考，不作为验收结论。"
+  corrections:
+    - "用户澄清：一开始就不是要用一个算法匹配所有，而是分析每一只股票为它们量身定做一套算法"
+    - "用户澄清：没有模板，每个股票都不一样"
+  execution_confirmation: "用户明确执行确认：\"对啊 没有模版呀 每个股票都不一样\"，并经三轮 AskUserQuestion 定案：范围=6只全部从零重做；验收=回测跑赢买入持有（分档口径）；1888=必须给出买卖信号。"
+  open_intent_gaps:
+    - id: GAP-01
+      question: "每只票具体适配哪种策略结构（趋势跟随/均值回归/防守门控/其它）与具体参数？"
+      source: "一股一策原则 + 用户纠偏（没有模板，每个股票都不一样）"
+      impact: "影响 discovery 的事实取证与策略选型输入，进而决定后续技术设计的模块与参数"
+      why_to_discovery: "需逐股跑各自历史数据实证后才能确定结构与参数，intake 阶段无法也不应替其拍板"
+      boundary: "discovery 只做逐股事实取证与策略结构候选，不得直接拍板最终参数，也不得替代后续技术设计与实现"
+  excluded_from_objective:
+    - source: "重新计算回测 / 分析每一只股票 / 一起再分析"
+      reason: "是智能体工作动作，不是完成后的外部结果；结果是引擎输出经回测验证的买卖信号"
+    - source: "走完整 Harness 流程、不跳过 discovery"
+      reason: "流程治理约束，不是用户要交付的外部结果"
+    - source: "本会话一轮体检的收益数字"
+      reason: "中间讨论产物，仅作 discovery 参考；最终达标以本任务重做后的回测证据为准"
+
+objective:
+  statement: >-
+    看盘系统 src/domain/trade-signals.ts 引擎对 6 只港股（9988/0700/3690/1810/0981/1888）各自输出
+    一套从自身历史数据实证推导、经回测按分档口径验证达标的买卖信号，且 1888 完成策略注册并给出买卖点位。
+
+intake_decision:
+  confirmed: true
+  confirmation_source: "用户明确执行确认：\"对啊 没有模版呀 每个股票都不一样\"，三轮 AskUserQuestion 定案范围/验收/1888 口径。"
+  confirmed_at_or_turn: "本会话执行确认轮"
+
+success_definition:
+  desired_effect: >-
+    每只自选港股都拥有从自身历史数据实证推导的专属买卖信号策略；引擎按各自逻辑输出买卖点位；
+    每只策略以回测证据按分档口径证明优于同期买入持有（强单边票口径：最大回撤比持有低≥10个百分点且累计收益≥持有的60%）；1888 新增注册并给出买卖信号。
+  deliverables:
+    - id: DEL-01
+      name: "6 只票逐股专属买卖信号策略引擎"
+      format: "src/domain/trade-signals.ts 中每只票一套独立策略（参数由各自数据实证推导），含 1888 新增注册"
+      observable_done: "引擎对 9988/0700/3690/1810/0981/1888 各自输出买卖点位；1888 输出买卖信号而非仅观察位"
+      acceptance_link:
+        acceptance: [SCN-01, SCN-02, SCN-05]
+    - id: DEL-02
+      name: "逐股回测报告存档（6 份）"
+      format: "每只票一份回测报告，含信号明细 + 交易明细 + 胜率/累计收益/对比买入持有；样本内/样本外口径一致"
+      observable_done: "6 份报告可复现落盘，报告中分档判定结论明确标注达标/未达标"
+      acceptance_link:
+        acceptance: [SCN-01, SCN-02, SCN-03, SCN-04]
+  validation_evidence:
+    - id: EVD-01
+      type: "command"
+      method: "运行 scripts/backtest.mjs 对每只票经 FutuOpenD 真实日线跑近1年回测，产出累计收益与买入持有对比"
+      proves:
+        acceptance: [SCN-01, SCN-02, SCN-03, SCN-04]
+    - id: EVD-02
+      type: "report"
+      method: "核对 6 份回测报告：策略累计/胜率、买入持有基准、最大回撤，逐项对照分档判定标准"
+      proves:
+        acceptance: [SCN-01, SCN-02, SCN-03, SCN-04]
+    - id: EVD-03
+      type: "code"
+      method: "核对 trade-signals.ts：6 只票各有独立策略与参数、1888 已注册并输出买卖信号，且未沿用统一模板套用"
+      proves:
+        acceptance: [SCN-05, SCN-06]
+    - id: EVD-04
+      type: "build"
+      method: "运行 npm run build，确认 tsc --noEmit && vite build exit code 0（项目无独立 test script，build 为质量口径）"
+      proves:
+        acceptance: [SCN-05]
+  non_goals:
+    - "个性化投资建议（保留 nonAdvice 免责声明，产出定位为技术分析提醒）"
+    - "引入新数据源或改动 FutuOpenD 接入方式"
+    - "重构与信号无关的 UI / 布局"
+    - "为强单边上涨票（中芯 0981、建滔 1888）硬性承诺绝对数跑赢 +450%/+79%（日振幅极高、样本外不可承诺）"
+
+user_stories:
+  - id: US-01
+    role: "看盘系统使用者（跟踪这 6 只自选港股的用户）"
+    goal: "对每只自选港股看到一套贴合它自身走势的买卖信号，而不是同一套模板信号"
+    value: "在下跌/震荡票上少亏、在强单边票上尽量吃到趋势并锁住利润"
+    story_context:
+      user: "用看盘系统跟踪 9988/0700/3690/1810/0981/1888 的个人用户"
+      problem: "现有信号用统一模板套所有票，逆势票和单边票用同一逻辑，导致部分票跑输买入持有"
+      scenario: "用户打开某只自选票，查看该票专属策略给出的买卖点位与回测表现"
+      value: "每只票的信号来自其自身历史实证，参考价值更高"
+      success_metrics:
+        - id: SM-01
+          signal: "6 只票各自策略参数来自自身数据、互不相同，非模板套用"
+          target: "trade-signals.ts 中 6 只票策略结构/参数各自独立可核对"
+    acceptance_refs: [SCN-01, SCN-05, SCN-06]
+  - id: US-02
+    role: "跟踪下跌/震荡票（阿里9988、腾讯0700、美团3690、小米1810）的用户"
+    goal: "这四只票的策略近1年回测累计收益严格高于同期买入持有"
+    value: "在弱势/震荡行情中通过择时明确优于被动持有"
+    story_context:
+      user: "持有或观察四只下跌/震荡港股的用户"
+      problem: "被动买入持有在这些票上近1年为负或低收益"
+      scenario: "用户查看四只票的回测报告，对照策略累计收益与买入持有基准"
+      value: "有证据表明择时策略在这些票上确实减亏/增益"
+      success_metrics:
+        - id: SM-02
+          signal: "四只票回测策略累计收益严格 > 同期买入持有"
+          target: "9988/0700/3690/1810 各自策略累计 > 持有累计"
+    acceptance_refs: [SCN-01]
+  - id: US-03
+    role: "跟踪强单边上涨票（中芯0981、建滔1888）的用户"
+    goal: "这两只票用趋势跟随+拖尾锁利，最大回撤比买入持有低≥10个百分点且累计收益≥买入持有的60%"
+    value: "享受单边上涨的同时避免高振幅带来的大回撤"
+    story_context:
+      user: "持有或观察两只高振幅强单边港股的用户"
+      problem: "买入持有虽收益高但回撤剧烈（日均振幅高、87%交易日振幅>3%），全程满仓风险大"
+      scenario: "用户查看两只票回测报告，对照最大回撤与买入持有及累计收益差距"
+      value: "以更小回撤（比持有低≥10个百分点）获得保住的收益（≥持有的60%），风险体验更好且有据可查"
+      success_metrics:
+        - id: SM-03
+          signal: "两只票策略最大回撤至少比买入持有低10个百分点，且累计收益≥买入持有的60%"
+          target: "0981/1888 最大回撤比买入持有低≥10个百分点，且累计收益≥买入持有的60%"
+    acceptance_refs: [SCN-02]
+  - id: US-04
+    role: "跟踪新增建滔积层板 1888 的用户"
+    goal: "1888 被纳入引擎并输出明确买卖信号"
+    value: "新增自选票也能得到可操作的买卖点位而非只有观察位"
+    story_context:
+      user: "把 1888 加入自选、期待与其它票同等信号能力的用户"
+      problem: "1888 当前未注册，引擎不为其输出买卖信号"
+      scenario: "用户查看 1888，看到已注册的专属策略输出的买点/卖点"
+      value: "新增票与既有票获得一致的信号能力"
+      success_metrics:
+        - id: SM-04
+          signal: "1888 已注册且输出买卖信号（含买点与卖点）"
+          target: "引擎对 1888 返回非空买卖点位，非仅观察位"
+    acceptance_refs: [SCN-02, SCN-05]
+
+scope:
+  in:
+    - "为 9988/0700/3690/1810/0981/1888 各自实证推导并实现一套独立买卖信号策略（trade-signals.ts）"
+    - "新增 HK.01888 建滔积层板策略注册与买卖信号输出"
+    - "每只票的样本内/样本外一致口径回测，并产出可复现回测报告"
+    - "保留 nonAdvice 免责框架"
+    - statement: "经 scripts/backtest.mjs + FutuOpenD 真实日线完成回测验证"
+  out:
+    - statement: "个性化投资建议"
+      reason: "保留技术分析提醒边界，非投资建议（PIT-003 / process_constraints）"
+    - statement: "引入新数据源或改动 FutuOpenD 接入方式"
+      reason: "用户明确非目标；保持数据口径稳定"
+    - statement: "与信号无关的 UI / 布局重构"
+      reason: "用户明确非目标，避免范围膨胀"
+    - statement: "为强单边票硬性承诺绝对数跑赢 +450%/+79%"
+      reason: "日振幅极高、样本外不可承诺，验收改用回撤+逼近口径"
+
+acceptance_scenarios:
+  - id: SCN-01
+    statement: "下跌/震荡票策略近1年回测累计收益严格跑赢买入持有"
+    given: "9988/0700/3690/1810 各自已实现从自身数据实证推导的策略"
+    when: "经 scripts/backtest.mjs 用 FutuOpenD 真实日线跑近1年回测"
+    then: "每只票策略累计收益严格 > 同期买入持有累计收益"
+  - id: SCN-02
+    statement: "强单边上涨票以趋势跟随+拖尾锁利达成量化的更小回撤且保住收益"
+    given: "0981/1888 已实现趋势跟随+拖尾锁利策略，1888 已注册并输出买卖信号"
+    when: "经 scripts/backtest.mjs 跑近1年回测并计算最大回撤"
+    then: "策略最大回撤至少比买入持有的最大回撤低10个百分点，且策略累计收益≥买入持有累计收益的60%（两条同时满足才判达标）"
+  - id: SCN-03
+    statement: "每只票参数从自身数据实证推导且样本内/样本外口径一致"
+    given: "6 只票各自策略与回测配置"
+    when: "核对回测报告的样本内/样本外划分与参数来源"
+    then: "样本内/样本外使用同一口径，参数可回指到该票自身历史数据"
+  - id: SCN-04
+    statement: "每只票产出可复现回测报告"
+    verification_method: "核对 6 份回测报告均含信号明细 + 交易明细 + 胜率/累计收益/对比买入持有，且回测可重跑复现"
+  - id: SCN-05
+    statement: "1888 完成注册并输出买卖信号，全量构建通过"
+    given: "trade-signals.ts 已新增 1888 策略"
+    when: "对 1888 请求信号并运行 npm run build"
+    then: "1888 返回非空买卖点位（非仅观察位），且 build exit code 0"
+  - id: SCN-06
+    statement: "6 只票为一股一策而非统一模板套用"
+    verification_method: "核对 trade-signals.ts：6 只票策略结构/参数各自独立，未从 3 个既有模板中直接挑一个套用"
+
+work_graph:
+  primary_nodes: [REQ-BESPOKE-SIGNAL-STRATEGIES]
+  related_nodes: []
+  operation: advance_stage
+  from_stage: intake
+  to_stage: discovery
+
+autonomy_level: "专家确认"
+governance_risk: "medium"
+governance_assessment:
+  hard_triggers: []
+  dimensions:
+    decision_authority:
+      level: "medium"
+      rationale: "逐股策略选型是可审查的技术取舍，但需专家确认结构与参数方向。"
+    reversibility:
+      level: "low"
+      rationale: "改动集中在 trade-signals.ts，可回滚代码撤销。"
+    blast_radius:
+      level: "medium"
+      rationale: "买卖信号是用户可见核心链路，影响用户看到的点位。"
+    verification_reliability:
+      level: "low"
+      rationale: "回测是可自动化的确定性验证，证据可复现。"
+    data_permission:
+      level: "low"
+      rationale: "沿用现有 FutuOpenD 本地数据，无新增权限或数据迁移。"
+    external_dependency:
+      level: "low"
+      rationale: "不引入新外部依赖，FutuOpenD 已可用。"
+    agent_authority:
+      level: "low"
+      rationale: "无 AI Agent 行动权变化；产品无 Agent 承载物。"
+    uncertainty:
+      level: "medium"
+      rationale: "逐股策略存在真实不确定性，需 discovery 实证收敛。"
+  scale_signals:
+    change_surface:
+      level: "medium"
+      rationale: "集中在 trade-signals.ts 与回测报告，但覆盖 6 只票。"
+    user_roles:
+      level: "low"
+      rationale: "单一看盘用户视角。"
+    module_span:
+      level: "low"
+      rationale: "主要 domain 策略层 + 回测 CLI。"
+  decision_rule: "无 hard trigger；核心风险以 medium 为主（信号为用户可见核心链路、策略选型有真实不确定性但可审查可回测），建议专家确认。"
+  user_confirmation_required: true
+  downgrade_or_checkpoint_removal_requires_approval: true
+  # 本任务不涉及 AI Agent 组件（agent_engineering 虽 enabled，但产品无 Agent 承载物）；
+  # 后续设计阶段无需调度 agent-capability-designer / agent-capability-reviewer。
+required_checkpoints:
+  - delivery
+escalation_triggers:
+  - scope_change
+  - external_dependency
+  - "分档验收口径变更（如强单边票改回硬性绝对数跑赢）"

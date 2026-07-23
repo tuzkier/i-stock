@@ -1,0 +1,46 @@
+operation_id: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_stage
+type: advance_stage
+node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+mission_id: 20260721-watchboard-ui-friendliness
+lane: product-definition-lane
+from_stage: prd
+to_stage: interaction
+work_graph_artifact:
+  node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+  artifact_set_id: AS--prd-v1
+  artifact_version: v1
+  promoted_by_mission: 20260721-watchboard-ui-friendliness
+  artifact_refs:
+  - artifact_id: 20260721-watchboard-ui-friendliness:product-definition
+    role: product-definition
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:product-evidence
+    role: product-evidence
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-evidence.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:product-domain-model
+    role: product-domain-model
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-domain-model.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:business-object-analysis
+    role: business-object-analysis
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/business-object-analysis.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:use-case-model
+    role: use-case-model
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:acceptance-scenarios
+    role: acceptance-scenarios
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:scope-strategy
+    role: scope-strategy
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/scope-strategy.md
+  - artifact_id: 20260721-watchboard-ui-friendliness:delta-specs
+    role: delta-spec
+    required: true
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs
+    path_glob: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/*/spec.md

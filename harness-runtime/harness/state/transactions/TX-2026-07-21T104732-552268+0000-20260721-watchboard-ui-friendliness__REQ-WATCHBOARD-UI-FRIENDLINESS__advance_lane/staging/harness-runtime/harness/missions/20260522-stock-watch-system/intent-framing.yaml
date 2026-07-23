@@ -1,0 +1,303 @@
+intent_role_analysis:
+  actual_task_goal: "构建一个个人本地股票看盘系统，覆盖港股、A股、美股、韩股；支持按市场管理自选股、看盘图表、主图/副图技术指标、基于研究设计的 MTS 多周期趋势信号、买卖/风险提醒；第一阶段以前端本地网页为形态，后续可扩展到正式行情 API、基本面分析、回测和桌面封装。"
+  source_materials:
+    - "docs/technical-signal-research-design.md：已确认的技术信号研究基础，包含 MTS 模型、指标分层、买点/卖点/风控与回测要求。"
+    - "README.md：现有草稿应用说明，仅用于了解当前草稿现状。"
+    - "现有代码：早期草稿实现，只能作为参考，不能当作最终目标。"
+  agent_instructions:
+    - "用户多次纠正：必须按工作区 Harness 规则推进，不能直接实现。"
+    - "不要使用“最小实现（MVP）”口径。"
+  process_constraints:
+    - "每轮先走 skill-router；正式执行必须通过 intake / discovery / 后续阶段。"
+    - "当前项目不是 Git 仓库，git-workflow 已按 downgraded 记录 tradeoff approval。"
+    - "project-context.md 缺失，已作为 context.check 输入缺口记录。"
+    - "方案和技术设计阶段优先考虑成熟、维护活跃、许可合适的现成开源库；只有在开源库不能满足多市场看盘、技术指标、MTS 信号或本地化约束时才自研，并记录取舍理由。"
+  discussion_outputs:
+    - "技术信号研究设计文档已写入 docs/technical-signal-research-design.md。"
+  corrections:
+    - "用户指出此前直接实现违反规则；越界实现已回退。"
+  execution_confirmation: "用户明确回复“授权”，授权按 Harness 正式 intake 流程创建 Mission 并调用 framing expert。"
+  excluded_from_objective:
+    - source: "用户多次纠正：必须按工作区 Harness 规则推进，不能直接实现。"
+      reason: "这是流程约束，不是产品交付结果。"
+    - source: "不要使用“最小实现（MVP）”口径。"
+      reason: "这是表达与治理要求，不是系统完成后的可观察状态。"
+    - source: "docs/technical-signal-research-design.md"
+      reason: "这是研究与实现依据，不是本轮要求直接交付的外部结果。"
+    - source: "README.md"
+      reason: "这是现有草稿说明，仅能用于现状参考，不能升级为最终目标。"
+    - source: "现有代码：早期草稿实现"
+      reason: "这是参考现状，不是本轮目标来源。"
+
+objective:
+  statement: "交付一个以本地网页为入口的多市场股票看盘系统，支持港股、A股、美股、韩股的自选管理、图表与技术指标展示、MTS 多周期趋势信号和买卖/风险提醒，并保留后续扩展到正式行情 API、基本面分析、回测和桌面封装的结构。"
+
+intake_decision:
+  confirmed: true
+  confirmation_source: "用户明确回复“授权”，授权按 Harness 正式 intake 流程创建 Mission 并调用 framing expert。"
+  confirmed_at_or_turn: "本轮（用户明确回复“授权”）"
+
+success_definition:
+  desired_effect: "用户能够在本地浏览器里统一管理四个市场的自选股，快速查看价格趋势、技术形态与 MTS 风险/提醒，并且不依赖云账号即可持续使用。"
+  deliverables:
+    - id: DEL-01
+      name: "本地网页看盘界面"
+      format: "浏览器入口的本地网页应用"
+      acceptance_link:
+        ac:
+          - AC-01
+          - AC-02
+          - AC-05
+    - id: DEL-02
+      name: "多市场自选管理与代码归一"
+      format: "前端交互 + 本地持久化 + 市场分组"
+      acceptance_link:
+        ac:
+          - AC-01
+          - AC-05
+    - id: DEL-03
+      name: "技术指标、MTS 信号与提醒层"
+      format: "用户可见的图表信号、提醒等级与触发理由"
+      acceptance_link:
+        ac:
+          - AC-02
+          - AC-03
+          - AC-04
+  validation_evidence:
+    - id: EVD-01
+      type: "test"
+      method: "运行单元与集成测试，覆盖股票代码归一、市场分组、MTS 评分带与提醒规则，确认 exit code 0。"
+      proves:
+        ac:
+          - AC-01
+          - AC-03
+          - AC-04
+          - AC-05
+    - id: EVD-02
+      type: "screenshot"
+      method: "打开本地网页，对四个市场的代表性标的截图，确认图表、主/副图指标和信号标签均可见。"
+      proves:
+        ac:
+          - AC-02
+          - AC-03
+    - id: EVD-03
+      type: "fixture_replay"
+      method: "使用冻结行情 fixture 或可回放样本片段分别覆盖趋势回调、收敛突破、趋势破坏和风控止损场景，确认 MTS 信号类型、提醒等级和触发理由稳定一致。"
+      proves:
+        ac:
+          - AC-03
+          - AC-04
+    - id: EVD-05
+      type: "manual_acceptance"
+      method: "在页面中加载同一批冻结样本对应的代表性标的，截图确认图表、信号标签和提醒理由与 fixture 预期一致。"
+      proves:
+        ac:
+          - AC-03
+          - AC-04
+    - id: EVD-04
+      type: "manual_acceptance"
+      method: "关闭浏览器并重新打开同一浏览器配置，确认自选和提醒设置从本地持久化恢复。"
+      proves:
+        ac:
+          - AC-05
+  non_goals:
+    - "自动交易"
+    - "确定性投资建议或收益承诺"
+    - "云同步或账号体系"
+    - "完整基本面分析模块"
+    - "在本次 intake 阶段锁定正式行情供应商、回测数据源和成本模型"
+
+user_stories:
+  - role: "个人投资者"
+    goal: "在本地网页里按市场管理自选股，并快速切换查看跨市场标的。"
+    value: "减少不同市场代码和观察清单之间的切换成本。"
+    story_context:
+      user: "每天需要盯盘但不想依赖云端账号的个人投资者。"
+      problem: "港股、A 股、美股、韩股的代码格式和观察清单分散，切换成本高。"
+      scenario: "在本地浏览器打开看盘系统，按市场添加、整理和查看自选股。"
+      value: "把跨市场观察集中到一个入口。"
+      success_metrics:
+        - id: SM-01
+          signal: "新增、移除、刷新后自选分组保持一致。"
+          target: "重开页面后分组与归一化代码不丢失。"
+    traces_to:
+      ac:
+        - AC-01
+        - AC-05
+  - role: "技术分析用户"
+    goal: "在图表上同时看主图、成交量和可切换副图指标。"
+    value: "更快判断趋势强弱、波动位置和风险边界。"
+    story_context:
+      user: "以图表观察为主的自用看盘用户。"
+      problem: "只看价格很难判断趋势、动量和风险是否共振。"
+      scenario: "选择一只股票后查看 K 线、EMA、BOLL、MACD、RSI、KDJ 和 ATR 等指标。"
+      value: "让价格、动量和波动在同一页面被同时判断。"
+      success_metrics:
+        - id: SM-02
+          signal: "打开标的后默认图表与副图面板直接可见。"
+          target: "主图和至少一个副图在首次加载时完成渲染。"
+    traces_to:
+      ac:
+        - AC-02
+  - role: "策略观察者"
+    goal: "把研究设计中的 MTS 多周期趋势信号用于观察、确认和风控提醒。"
+    value: "把技术研究落成可解释的信号层，而不是黑箱评分。"
+    story_context:
+      user: "关注中短期趋势和风控位置的研究驱动用户。"
+      problem: "只有零散指标，没有统一的趋势、买卖和风控语义。"
+      scenario: "行情刷新后，系统对趋势、突破和风险场景输出 MTS 状态与提醒等级。"
+      value: "让研究设计中的分层规则变成可执行的日常提醒。"
+      success_metrics:
+        - id: SM-03
+          signal: "代表性标的能显示信号级别、趋势状态和触发理由。"
+          target: "观察、确认、强信号、风控四类提醒可被区分。"
+    traces_to:
+      ac:
+        - AC-03
+        - AC-04
+  - role: "本地使用者"
+    goal: "在不创建账号的情况下继续使用本地看盘配置。"
+    value: "降低使用门槛，并保持工具完全本地化。"
+    story_context:
+      user: "希望把看盘数据留在本机的个人用户。"
+      problem: "不想把自选股和提醒配置放到云端。"
+      scenario: "关闭浏览器并重新打开后继续使用系统。"
+      value: "减少账号和同步带来的维护成本。"
+      success_metrics:
+        - id: SM-04
+          signal: "浏览器重开后看盘配置自动恢复。"
+          target: "同一浏览器配置下无需重新添加常用自选。"
+    traces_to:
+      ac:
+        - AC-05
+
+scope:
+  in:
+    - id: SCOPE-IN-001
+      statement: "以本地网页形态提供多市场股票看盘入口。"
+    - id: SCOPE-IN-002
+      statement: "支持港股、A股、美股、韩股的自选管理与市场分组。"
+    - id: SCOPE-IN-003
+      statement: "展示 K 线、成交量、主图指标和可切换副图指标。"
+    - id: SCOPE-IN-004
+      statement: "实现基于研究设计的 MTS 多周期趋势信号与提醒展示。"
+    - id: SCOPE-IN-005
+      statement: "保留本地持久化，默认不依赖云账号。"
+  out:
+    - id: SCOPE-OUT-001
+      statement: "自动交易。"
+      reason: "用户明确排除，第一阶段只做提醒和观察。"
+    - id: SCOPE-OUT-002
+      statement: "确定性投资建议或收益承诺。"
+      reason: "产品定位只做技术分析提醒，不提供收益保证。"
+    - id: SCOPE-OUT-003
+      statement: "云同步或账号体系。"
+      reason: "用户明确要求第一阶段保持本地化。"
+    - id: SCOPE-OUT-004
+      statement: "完整基本面分析模块。"
+      reason: "用户已说明第一阶段不做完整基本面模块。"
+    - id: SCOPE-OUT-005
+      statement: "在 intake 阶段锁定正式行情供应商、回测数据源和成本模型。"
+      reason: "这些取舍留给 discovery / PRD / solution 进一步定稿。"
+
+acceptance_criteria:
+  - id: AC-01
+    statement: "系统能按市场管理自选股并保持代码归一。"
+    given: "用户输入来自港股、A 股、美股和韩股的原始股票代码。"
+    when: "用户把这些标的加入同一个本地自选清单并重新打开页面。"
+    then: "系统保留市场分组，且代码按各市场规则保持可识别、可重载。"
+  - id: AC-02
+    statement: "打开个股时能看到默认图表与可切换指标面板。"
+    given: "当前选中任意一只可显示行情的数据标的。"
+    when: "用户进入该标的的看盘页面。"
+    then: "主图、成交量和默认指标组合自动渲染，并可切换副图指标。"
+  - id: AC-03
+    statement: "系统能按研究设计输出 MTS 多周期趋势信号。"
+    given: "当前标的具备足够的历史行情数据。"
+    when: "系统完成一次信号计算或数据刷新。"
+    then: "页面同时展示趋势状态、MTS 分数带、信号类型和提醒等级，而不是只显示单一买卖箭头。"
+  - id: AC-04
+    statement: "当价格或指标触发风险条件时，系统能输出买卖/风控提醒。"
+    given: "当前标的在刷新后触发趋势破坏、突破确认或风控阈值。"
+    when: "系统重新计算提醒状态。"
+    then: "页面显示相应提醒等级与触发理由，且能区分观察、确认、强信号和风控。"
+  - id: AC-05
+    statement: "系统在本地浏览器环境中能恢复自选和提醒设置。"
+    given: "用户已保存自选股和提醒配置。"
+    when: "用户关闭浏览器并在同一浏览器配置中重新打开应用。"
+    then: "系统从本地持久化恢复配置，无需重新登录或创建账号。"
+
+autonomy_level: "受控推进"
+governance_risk: "high"
+governance_assessment:
+  hard_triggers:
+    - id: HT-01
+      category: "external_dependency"
+      rationale: "正式行情供应商、授权边界和成本模型尚未定稿，外部数据可用性会直接影响看盘系统能否稳定成立。"
+    - id: HT-02
+      category: "verification_gap"
+      rationale: "MTS 信号和提醒属于研究型规则，必须通过后续验证、样本核验和回测口径确认，不能在当前阶段当作确定性结论。"
+    - id: HT-03
+      category: "product_decision"
+      rationale: "跨市场代码规范、提醒阈值和信号解释边界仍需 discovery / PRD / solution 细化，当前阶段不能自行补全。"
+  dimensions:
+    decision_authority:
+      level: "high"
+      rationale: "产品边界、数据源和信号解释口径存在尚未定稿的取舍，不能由执行 Agent 自行拍板。"
+    reversibility:
+      level: "medium"
+      rationale: "前期结构可调整，但一旦进入图表、数据和信号链路，跨市场改动会牵动多个层面。"
+    blast_radius:
+      level: "medium"
+      rationale: "看盘、自选、指标、信号和提醒是同一用户路径上的核心功能，偏差会直接影响用户判断。"
+    verification_reliability:
+      level: "high"
+      rationale: "接口可用性、数据质量和信号有效性都需要后续验证，单靠代码完成状态不足以证明正确。"
+    data_permission:
+      level: "medium"
+      rationale: "跨市场行情可能受授权、延迟和使用条款约束，需要在 discovery 阶段明确数据边界。"
+    external_dependency:
+      level: "high"
+      rationale: "本任务天然依赖行情数据和后续提醒适配，且正式供应商与成本模型未锁定。"
+    agent_authority:
+      level: "medium"
+      rationale: "系统不会自动交易，但提醒会影响用户决策，因此不能把信号层当作无风险展示层。"
+    uncertainty:
+      level: "high"
+      rationale: "用户已明确把正式供应商、回测数据源和成本模型留给后续阶段，说明当前存在显著不确定性。"
+  scale_signals:
+    change_surface:
+      level: "high"
+      rationale: "涉及自选、图表、指标、MTS 信号、提醒和本地持久化，覆盖完整看盘路径。"
+    user_roles:
+      level: "low"
+      rationale: "当前主要面向个人本地使用者，没有复杂的多角色权限体系。"
+    module_span:
+      level: "high"
+      rationale: "前端展示、行情归一、指标计算、信号引擎和提醒逻辑都在同一任务中出现。"
+  required_checkpoints:
+    - "prd"
+    - "solution"
+    - "tech-design"
+    - "execution-brief"
+    - "verification-report"
+    - "acceptance-result"
+    - "delivery-package"
+  escalation_triggers:
+    - "scope_change"
+    - "new_external_dependency"
+    - "signal_rule_change"
+    - "auto_trading_request"
+    - "verification_failure"
+  decision_rule: "只要出现新的外部数据依赖、信号规则改动、自动交易诉求或验证口径不稳，就保持受控推进，不允许把未定稿的市场数据和提醒逻辑直接写成最终承诺。"
+  user_confirmation_required: true
+  downgrade_or_checkpoint_removal_requires_approval: true
+
+work_graph:
+  primary_nodes:
+    - "REQ-STOCK-WATCH-SYSTEM"
+  related_nodes:
+    - "harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml"
+  operation: "advance_stage"
+  from_lane: "requirement-lane"
+  to_lane: "requirement-lane"

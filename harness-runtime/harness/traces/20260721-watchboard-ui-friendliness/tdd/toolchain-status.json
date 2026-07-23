@@ -1,0 +1,5 @@
+{
+  "status": "PASS",
+  "build": {"command": "npm run build", "exit_code": 0},
+  "e2e": {"command": "npx playwright test", "total": 49, "passed": 49, "failed": 0, "skipped": 0}
+}

@@ -1,0 +1,13 @@
+operation_id: 20260522-stock-watch-system__TASK-STOCK-WATCH-T001__advance_stage
+type: advance_stage
+node_id: TASK-STOCK-WATCH-T001
+mission_id: 20260522-stock-watch-system
+lane: development-lane
+from_stage: execute
+to_stage: code-review
+work_graph_artifact:
+  node_id: TASK-STOCK-WATCH-T001
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T001/execution-result.md

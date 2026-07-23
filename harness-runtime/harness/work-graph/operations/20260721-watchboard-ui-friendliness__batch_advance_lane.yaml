@@ -1,0 +1,52 @@
+operation_id: 20260721-watchboard-ui-friendliness__batch_advance_lane
+type: batch
+mission_id: 20260721-watchboard-ui-friendliness
+operations:
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T001
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready
+  work_graph_artifact:
+    node_id: TASK-WATCHBOARD-UI-T001
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    source_stage_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/verification-report.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-WATCHBOARD-UI-T001/verification-report.md
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T002
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T003
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T004
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T005
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T006
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready
+- type: advance_lane
+  node_id: TASK-WATCHBOARD-UI-T007
+  from_lane: verification-lane
+  to_lane: delivery-lane
+  to_stage: delivery
+  status: ready

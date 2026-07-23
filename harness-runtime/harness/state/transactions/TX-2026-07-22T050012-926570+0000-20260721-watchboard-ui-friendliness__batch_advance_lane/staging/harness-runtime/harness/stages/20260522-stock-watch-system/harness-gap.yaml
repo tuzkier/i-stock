@@ -1,0 +1,24 @@
+mission: 20260522-stock-watch-system
+gaps:
+- gap_id: HG-20260607-DELIVERY-CONTRACT-CHECKER
+  pattern_key: delivery-contract-checker-drift
+  target_kind: schema
+  severity: high
+  description: delivery_contract schema existed but stage-gate checker did not register
+    or semantically validate delivery_contract, so delivery gate blocked after user
+    acceptance until runtime contract/checker were repaired.
+  first_seen: '2026-06-07'
+  repeat_count: 1
+  status: open
+  verification_ref: harness-runtime/harness/state/gate-reports/20260522-stock-watch-system/delivery__advance_stage.json
+- gap_id: HG-20260607-VERIFY-NO-WEBSERVER-PREFLIGHT
+  pattern_key: verify-no-webserver-preflight-missing
+  target_kind: workflow
+  severity: medium
+  description: verify workflow did not preflight localhost dev server availability
+    before running Playwright no-webserver config, producing ERR_CONNECTION_REFUSED
+    before the same E2E suite passed after starting port 5174.
+  first_seen: '2026-06-07'
+  repeat_count: 1
+  status: open
+  verification_ref: harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md

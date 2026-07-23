@@ -1,0 +1,34 @@
+id: TASK-WATCHBOARD-UI-T006
+kind: task
+title: 恢复态四档归位 + 范围内 data-notice 收尾迁移
+lane: delivery-lane
+stage: retrospective
+status: ready
+parent_task_id: T006
+execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- AT-0601
+- AT-0602
+dependencies:
+- TASK-WATCHBOARD-UI-T005
+inputs:
+- REQ-WATCHBOARD-UI-FRIENDLINESS
+outputs: []
+relations:
+  split_from: REQ-WATCHBOARD-UI-FRIENDLINESS
+updated_at: '2026-07-22T14:51:13.796111+00:00'
+trace:
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__batch_advance_stage__6
+specs:
+  consumes:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    requirement: 状态色语义分档忠实呈现
+    scenario: 工作台正常恢复态不出现警告色黄条
+    evidence:
+      implementation_refs:
+      - src/features/restore/RestoreStatus.tsx
+      - src/features/chart/ChartSurface.tsx
+      test_refs:
+      - tests/e2e/restore-layout/tone.spec.ts

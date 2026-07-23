@@ -3,11 +3,13 @@ generated: true
 lanes:
   requirement-lane:
   - REQ-ALIBABA-TRADE-SIGNALS
+  - REQ-BESPOKE-SIGNAL-STRATEGIES
   product-definition-lane: []
   solution-lane: []
   technical-analysis-lane: []
   breakdown-lane:
   - REQ-STOCK-WATCH-SYSTEM
+  - REQ-WATCHBOARD-UI-FRIENDLINESS
   development-lane: []
   verification-lane: []
   delivery-lane:
@@ -17,3 +19,10 @@ lanes:
   - TASK-STOCK-WATCH-T004
   - TASK-STOCK-WATCH-T005
   - TASK-STOCK-WATCH-T006
+  - TASK-WATCHBOARD-UI-T001
+  - TASK-WATCHBOARD-UI-T002
+  - TASK-WATCHBOARD-UI-T003
+  - TASK-WATCHBOARD-UI-T004
+  - TASK-WATCHBOARD-UI-T005
+  - TASK-WATCHBOARD-UI-T006
+  - TASK-WATCHBOARD-UI-T007

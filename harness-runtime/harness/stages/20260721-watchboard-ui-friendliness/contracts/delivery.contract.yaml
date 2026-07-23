@@ -1,0 +1,492 @@
+control_contract:
+  type: delivery_contract
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: delivery
+  artifact: delivery
+  acceptance_result:
+    mission_id: 20260721-watchboard-ui-friendliness
+    stage: delivery
+    artifact: acceptance-result
+    delivery_entry:
+    - type: cli
+      url_or_command: npm run dev
+      credential_or_fixture_ref: null
+      commit_or_branch: main（工作区未提交改动，本 mission 全程未 commit，见交付包）
+    - type: url
+      url_or_command: http://localhost:5173
+      credential_or_fixture_ref: null
+      commit_or_branch: null
+    acceptance_trace:
+    - acceptance_id: SCN-01-COND-01
+      expected: 来源为 formal（真实健康数据）或应用未选中任何标的（not_loaded）时，主区不出现黄色警告横幅，呈中性语义。
+      actual: 真实浏览器路径验证：formal/not_loaded 态下来源承载处无 notice--warning/data-notice 类；单测确认
+        resolveSourceTone(formal)=normal、resolveSourceTone(not_loaded)=normal。本次交付整理时人工连接沙盒环境实测：因沙盒未接入真实
+        FutuOpenD 行情网关，本机演示环境下全部标的呈现的是 unavailable（见 SCN-01-COND-03），未能在本次人工走查中直接观察到
+        formal 态；formal 态的用户可观察结果以 E2E 固定证据（tests/e2e/mts/card.spec.ts、tests/e2e/workbench/default.spec.ts）为准，用户在自己接入真实
+        FutuOpenD 网关的环境中可直接观察。
+      reproduce_steps:
+      - 在已连接真实行情源（FutuOpenD 网关正常运行）的环境下执行 npm run dev，浏览器打开 http://localhost:5173
+      - 选择任意自选标的（如「腾讯控股」），等待行情加载完成
+      - 观察标的标题下方来源提示区：应为中性文字/无色块提示，不出现黄色警告横幅
+      - 应用刚打开、尚未选中任何标的时（not_loaded），同样应无黄色警告横幅
+      verify_command_evidence_id: CMD-E2E-T002/CMD-E2E-T005A
+      acceptance_result_evidence_path: tests/e2e/mts/card.spec.ts; tests/e2e/workbench/default.spec.ts;
+        本次交付整理人工核实：沙盒环境因无 FutuOpenD 连接无法复现 formal 态，见「关键结果证据」说明
+      result_status: pass
+    - acceptance_id: SCN-01-COND-02
+      expected: 来源为 demo_fallback（降级可用/演示数据）时呈现信息级/次级提示，不使用与 stale/unavailable 相同的高危警告色。
+      actual: 真实浏览器路径验证（Playwright 固定 fixture 注入 demo_fallback 状态）：呈现 notice--info
+        类，非 notice--warning。经查当前 src/domain/market-data-source.ts 的真实数据获取逻辑目前只会产出
+        formal / stale / unavailable 三态，demo_fallback 是类型层面已支持、但当前真实数据链路尚未有代码路径主动产出的状态（非本次改造引入，属既有产品未接通场景）。
+      reproduce_steps:
+      - 当前构建下，demo_fallback 状态无法通过真实点击操作在界面上触发（真实数据源不产出该状态）
+      - 可复核方式：查看 tests/e2e/gate/acceptance-matrix.spec.ts 中 AC-02/AC-03 用例的 Playwright
+        HTML 报告（playwright-report/index.html），该报告以受控数据直接驱动 demo_fallback 渲染并断言样式
+      verify_command_evidence_id: CMD-E2E-T003
+      acceptance_result_evidence_path: tests/e2e/gate/acceptance-matrix.spec.ts:47;
+        tests/e2e/workbench/default.spec.ts:193-194; playwright-report/index.html（AC-02/AC-03
+        用例）
+      result_status: pass
+    - acceptance_id: SCN-01-COND-03
+      expected: 来源为 stale（数据陈旧）或 unavailable（来源失败）时出现警告/错误色提示，呈现降级原因与受影响范围（图表/信号/提醒）。
+      actual: '真实浏览器路径验证通过；本次交付整理时人工在浏览器中亲自复现：沙盒环境因未连接真实 FutuOpenD 网关，全部标的自然处于 unavailable
+        态，主区顶部与标的详情区均出现琥珀色警告提示框，文案为「unavailable · FutuOpenD 行情不可用：Command failed:
+        python3 .../futud-client.py ...」，MTS 卡同步显示「来源状态：unavailable · ...」与「数据不足，暂不输出
+        MTS」，主图/成交量区显示「暂无主图数据」「暂无成交量数据」——受影响范围（图表、MTS 卡）清晰标注，与正常态形成对比。'
+      reproduce_steps:
+      - 执行 npm run dev，浏览器打开 http://localhost:5173
+      - 若本地未连接 FutuOpenD 网关（或临时停止网关/断开网络），选择任意标的
+      - 观察标的标题下方与图表上方：应出现琥珀色警告提示框，文案含「unavailable」或「stale」及具体原因
+      - 观察主图/成交量/MTS 解释卡：应同步显示「暂无数据」「数据不足」等受影响提示，而非假装正常
+      verify_command_evidence_id: CMD-E2E-T007A/CMD-E2E-T005A
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，沙盒环境自然处于 unavailable
+        态，见上方「关键结果证据」原文摘录）; tests/e2e/gate/consistency.spec.ts; tests/e2e/workbench/default.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-01-COND-04
+      expected: 应用启动读取快照后，restored（快照完好）/partial（旧存储迁移）/default_fallback（缺失/损坏/超限回退）三态均不渲染黄色警告横幅；restored
+        呈中性/成功，partial/default_fallback 呈信息级。
+      actual: 真实浏览器路径验证：三态逐一构造快照 fixture 驱动，DOM 断言均无 notice--warning 类；本次交付整理时人工实测：当前浏览器会话顶部恢复状态区显示「已恢复」（restored
+        中性文字，无警告色）。
+      reproduce_steps:
+      - restored：正常使用应用后关闭标签页重新打开，顶部应显示「已恢复」，无黄色提示
+      - partial：浏览器 DevTools → Console，执行 localStorage.removeItem('myinvestment.workspace.v2')
+        后写入旧版键 localStorage.setItem('myinvestment.watchlist', JSON.stringify([{id:'AAPL',symbol:'AAPL',name:'Apple',market:'US',status:'active'}]))
+        并刷新页面，顶部应显示「已从旧存储迁移」的信息级提示（非警告色）
+      - default_fallback：DevTools → Console 执行 localStorage.clear() 后刷新页面（相当于全新访客首次打开），顶部应显示「已回退默认布局」的信息级提示（非警告色）
+      verify_command_evidence_id: CMD-E2E-T006
+      acceptance_result_evidence_path: 本次交付整理人工实测：当前会话顶部显示「已恢复」（截图见上方页面文本摘录）; tests/e2e/restore-layout/resume.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-01-COND-05
+      expected: restoreMetadata.status=failed 或存在被丢弃的坏布局（discardedLayoutKeys 非空）时，出现警告/需关注提示，与正常恢复态形成对比。
+      actual: discardedLayoutKeys 非空路径已被真实 E2E 验证（构造坏布局 fixture 驱动，断言出现 notice--warning
+        及「已丢弃坏布局」明细）；status=failed 这一具体枚举值经 execute/verify 两阶段确认在当前 src/domain/workspace.ts
+        的真实恢复代码路径中没有可达分支产出（属既有代码结构限制，非本次改造引入），因此以等价单测（tests/unit/presentation/tone.spec.ts）覆盖该分支的纯函数正确性，未做浏览器层真实触发。
+      reproduce_steps:
+      - DevTools → Console：先正常使用应用一次以生成 localStorage['myinvestment.workspace.v2']，然后执行
+        JSON 编辑将其中某个 layoutBySymbol 项改成缺少必需字段的非法对象（如 mode 写成不存在的枚举值），保存回 localStorage
+        后刷新页面
+      - 顶部恢复状态区应出现警告色提示，展开「技术详情」可见「已丢弃坏布局：具体标的代码」
+      verify_command_evidence_id: CMD-E2E-T006/CMD-UNIT-01
+      acceptance_result_evidence_path: tests/e2e/restore-layout/resume.spec.ts; tests/unit/presentation/tone.spec.ts:140-142;
+        verification-report.md 「未覆盖范围」章节对 status=failed 结构性不可达的说明（DEV-01）
+      result_status: pass
+    - acceptance_id: SCN-01-COND-06
+      expected: scoreBand 为 negative/strong_negative 或 alertLevel=风控 时，评分呈谨慎/风险语义色，且该色与来源
+        stale/unavailable 的警告横幅物理区分（不同类名/视觉）。
+      actual: 真实浏览器路径验证：negative 评分与 stale 来源在同一标的并置对比，caution 类与 warning 类互不相同，截图存档
+        pt02-mts-negative-score-tone.png；tdd-reviewer 已用真实故障注入（把 caution 误改 warning）证明断言确实会捕获该类回归。
+      reproduce_steps:
+      - 找到当前技术面偏空（MTS 评分为负）的自选标的，或等待某标的评分转为负向
+      - 查看该标的 MTS 解释卡：评分条与「技术提醒」文字应呈谨慎/风险色（如红色系），且与「来源不可用」的黄色警告横幅在视觉上明显不同
+      - 对比同一或另一标的处于来源异常（stale/unavailable）时的黄色警告横幅，确认两种颜色不是同一套视觉语言
+      verify_command_evidence_id: CMD-E2E-T002
+      acceptance_result_evidence_path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt02-mts-negative-score-tone.png;
+        tests/e2e/mts/friendliness.spec.ts ("GAP-02")
+      result_status: pass
+    - acceptance_id: SCN-02-COND-01
+      expected: MTS 解释卡主视图不出现 trend_state/mts_score/score_band/signal_type/alert_level
+        裸字段前缀，也不出现如 TREND_ABOVE_EMA 等理由代码；改为人话文案。
+      actual: 真实浏览器路径验证 + 本次人工实测：当前 unavailable 态下 MTS 卡主视图显示「数据不足，暂不输出 MTS」「数据不足」及一段人话说明，未见任何裸枚举字符串；「展开原始理由码」为独立可展开控件，默认收起。
+      reproduce_steps:
+      - 打开任意标的详情页，查看「解释」标签页下的 MTS 解释卡
+      - 确认主视图文字为中文描述（如「数据不足」「多头趋势」等），不出现 trend_state/score_band 等英文字段名或 TREND_ABOVE_EMA
+        等大写代码
+      verify_command_evidence_id: CMD-E2E-T002
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，见「关键结果证据」页面文本摘录：“数据不足，暂不输出
+        MTS”）; tests/e2e/mts/card.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-02-COND-02
+      expected: mtsScore 以进度条/可视化条呈现，而非仅裸数字。
+      actual: 真实浏览器路径验证：进度条承载 DOM 存在；当前 unavailable 态因数据不足未渲染具体评分值，进度条组件在数据充足场景下的存在性已由既有
+        E2E 断言确认。
+      reproduce_steps:
+      - 打开一个数据充足、MTS 已给出评分的标的
+      - 在解释卡中应看到一条可视化进度条（而非仅一个数字），条的填充长度随评分高低变化
+      verify_command_evidence_id: CMD-E2E-T002
+      acceptance_result_evidence_path: tests/e2e/mts/card.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-02-COND-03
+      expected: 原始 trend_state/score_band/signal_type/alert_level 与理由 code 默认隐藏，仅用户展开详情/调试区后可见。
+      actual: 真实浏览器路径验证 + 本次人工实测：默认态「展开原始理由码」为收起状态，人话说明「数据不足需要至少 60 根 K 线来稳定计算趋势、动量和波动率」已可见，原始
+        code 需点击展开后才出现。
+      reproduce_steps:
+      - 打开任意标的详情页 MTS 解释卡
+      - 默认态确认不出现原始 code / 枚举值
+      - 点击「展开原始理由码」/「展开技术详情」，确认此时才出现原始枚举与代码
+      verify_command_evidence_id: CMD-E2E-T002
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，确认「展开原始理由码」控件默认收起）; tests/e2e/mts/card.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-02-COND-04
+      expected: trendState=data_insufficient/source_degraded 或 TradeSignalState.status
+        非 ready 时，呈现人话说明而非裸枚举串。
+      actual: 真实浏览器路径验证 + 本次人工实测：当前 unavailable 态下 MTS 卡显示「数据不足，暂不输出 MTS」，未见 data_insufficient/source_degraded/not_target_symbol
+        等裸枚举字符串。
+      reproduce_steps:
+      - 打开一个数据不足或来源降级的标的（如本次沙盒环境的任意标的）
+      - 查看 MTS 解释卡与交易信号卡：应显示「数据不足」「数据来源降级，暂不给出买卖价位」等中文说明，而非英文枚举串
+      verify_command_evidence_id: CMD-E2E-T007A
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22）; tests/e2e/gate/consistency.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-03-COND-01
+      expected: 来源状态在主区仅保留 1 处权威呈现点；侧栏来源仅作弱化次级信号（小圆点），不构成第二个来源主源。
+      actual: 真实浏览器路径验证：DOM 断言 source-authority 元素计数=1；本次人工实测确认页面顶部仅一处「来源」权威提示，侧栏各标的行仅有一个小圆点标记来源，无第二条文字状态。
+      reproduce_steps:
+      - 打开应用，观察顶部/图表区来源提示：应只有一处明确的「来源」权威说明文字
+      - 对照侧栏自选列表：各条目应只有一个小圆点表示来源，不应再出现另一段文字重复说明来源状态
+      verify_command_evidence_id: CMD-E2E-T005A/CMD-E2E-T007A
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22）; tests/e2e/workbench/friendliness.spec.ts:92;
+        tests/e2e/gate/consistency.spec.ts:172
+      result_status: pass
+    - acceptance_id: SCN-03-COND-02
+      expected: 价格/涨跌仅 1 处权威主源；涨跌红绿色不等同于来源/布局警告色。
+      actual: 真实浏览器路径验证：DOM 断言 price-authority 计数=1；涨跌色（.up/.down）定义未被改动，与警告色（notice--warning）类名及配色物理区分。
+      reproduce_steps:
+      - 打开某标的详情页，找到价格与涨跌幅显示位置：全页应只有一处标注为权威涨跌数字（通常在图表顶部报价行）
+      - 对比涨跌红绿色与警告黄色横幅：两者应为不同色系，不会混淆
+      verify_command_evidence_id: CMD-E2E-T005A
+      acceptance_result_evidence_path: tests/e2e/workbench/friendliness.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-04-COND-01
+      expected: 顶部标的标题字号/权重最高，为视觉主位，先于操作控件被注意到。
+      actual: 真实浏览器路径验证（computed style 比较，标题字号/字重 > 控件）+ 本次人工实测：打开应用后「Apple · AAPL」等标题以全页最大字号呈现，周期（1d/5d/1mo…）与视图切换按钮明显小于标题；截图存档
+        pt05-top-hierarchy-colors.png。
+      reproduce_steps:
+      - 打开任意标的详情页
+      - 观察顶部区域：标的名称+代码（如「Apple · AAPL」）应为全页最大、最醒目的文字
+      - 对比右侧周期切换（1d/5d/1mo...）与视图切换按钮：应明显小于标题，不抢视线
+      verify_command_evidence_id: CMD-E2E-T005A
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，见「关键结果证据」截图摘录）; harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt05-top-hierarchy-colors.png;
+        tests/e2e/workbench/friendliness.spec.ts:110
+      result_status: pass
+    - acceptance_id: SCN-04-COND-02
+      expected: 周期/视图（布局模式）控件降一级、右对齐，不与标题抢焦点；切换后标题仍主位，切换功能与语义不减。
+      actual: 真实浏览器路径验证：切换周期/布局模式后标题仍保持最大字号；LayoutController.tsx 零 diff（切换语义完全未改）。
+      reproduce_steps:
+      - 打开标的详情页，点击不同周期按钮（1d/5d/1mo/3mo/6mo/1y）
+      - 点击右上角视图切换（总览/专注/单栏）
+      - 每次切换后确认标题仍是最大字号、仍在最左侧主位，切换功能本身（K 线区间变化/布局变化）正常生效
+      verify_command_evidence_id: CMD-INT-T005
+      acceptance_result_evidence_path: tests/e2e/workbench/friendliness.spec.ts; git
+        diff --exit-code src/features/layout/LayoutController.tsx（零改动）
+      result_status: pass
+    - acceptance_id: SCN-05-COND-01
+      expected: 主卡（建议+关键数字）视觉突出；回测/理由/原始字段为次级灰字，与主卡有明确层级差。
+      actual: 真实浏览器路径验证（computed style 比较，KPI 字号/字重严格大于次级明细）；截图存档 pt03-trade-signal-hierarchy.png。
+      reproduce_steps:
+      - 打开某标的交易信号卡（「提醒」标签页或交易信号区）
+      - 观察默认呈现的持仓/建议/关键数字：应为高对比度、较大字号
+      - 展开明细后观察回测/理由等次级信息：应为灰色小字，与主卡形成明显层级差
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt03-trade-signal-hierarchy.png;
+        tests/e2e/trade-signal/friendliness.spec.ts:93
+      result_status: pass
+    - acceptance_id: SCN-05-COND-02
+      expected: 信息层级重排与折叠后，nonAdvice 免责声明仍可见，不被降级隐藏。
+      actual: 真实浏览器路径验证：默认态与折叠态均可见免责声明；本次人工实测在 MTS 卡观察到「MTS 仅用于技术提醒和风险观察，不构成收益承诺或确定性买卖建议」始终展示、不随折叠消失。
+      reproduce_steps:
+      - 打开标的详情页
+      - 查看 MTS 卡 / 交易信号卡默认态：应有一行免责声明文字始终展示
+      - 展开明细后再次确认该免责声明仍然可见，未被折叠或隐藏
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，见「MTS 仅用于技术提醒...」页面文本摘录）;
+        tests/e2e trade-signal/mts 全套
+      result_status: pass
+    - acceptance_id: SCN-06-COND-01
+      expected: 侧栏每条以名称+代码为一行、价格+涨跌右对齐为主看数字，结构清晰可快速扫读。
+      actual: 真实浏览器路径验证 + 本次人工实测：侧栏各条目显示「腾讯控股 / 0700.HK · 港股」等名称+代码同行结构，价格与涨跌幅右对齐（本次沙盒环境因无行情连接显示「--
+        / 0.00%」占位，结构本身已确认）。
+      reproduce_steps:
+      - 打开应用首页，观察左侧自选列表
+      - 确认每条为「名称」+「代码·市场」同一行，价格与涨跌幅在该行右侧对齐显示
+      verify_command_evidence_id: CMD-E2E-T004
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，见侧栏页面文本摘录）; tests/e2e/watchlist/friendliness.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-06-COND-02
+      expected: 条目来源为小圆点弱化次级信号：formal 呈中性圆点，非 formal 呈需关注弱提示圆点。
+      actual: 真实浏览器路径验证 + 本次人工实测：侧栏各条目名称右侧有一个小圆点（本次沙盒环境因来源 unavailable，圆点呈需关注色），未见文字横幅重复。
+      reproduce_steps:
+      - 观察侧栏各条目：名称/代码旁应有一个小圆点（而非文字提示）表示来源健康度
+      - 来源正常的标的圆点应为中性色；来源异常的标的圆点应为提示色，但都不应是完整文字警告条
+      verify_command_evidence_id: CMD-E2E-T004
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22）; tests/e2e/watchlist/friendliness.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-06-COND-03
+      expected: archived 条目弱化呈现，与 active 条目视觉区分，不作主看强调。
+      actual: 真实浏览器路径验证（构造 active+archived 并置 fixture，DOM 断言 archived 条目 opacity 明显低于
+        active）；截图存档 pt04-watchlist-archived.png。当前沙盒会话侧栏 11 条均为 active，未含 archived
+        条目；用户可通过归档按钮实时验证。
+      reproduce_steps:
+      - 在侧栏任意自选条目上点击归档图标（不影响该标的的实际交易/告警数据，操作可逆）
+      - 确认该条目变暗（透明度降低）、与其余 active 条目形成明显视觉区分
+      - 如需还原，点击同一图标的恢复操作即可
+      verify_command_evidence_id: CMD-E2E-T004
+      acceptance_result_evidence_path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt04-watchlist-archived.png;
+        tests/e2e/watchlist/friendliness.spec.ts:124
+      result_status: pass
+    - acceptance_id: SCN-07-COND-01
+      expected: ready 态信号卡默认呈现关键数字（stanceLabel/持仓/胜率/累计收益），无三段回测流水账铺开。
+      actual: 真实浏览器路径验证（DOM 断言默认态含关键数字、无回测明细流水）；本次沙盒环境标的均为非 ready（数据不足/来源降级），未能人工直接观察到
+        ready 态默认呈现，以既有 E2E 证据为准。
+      reproduce_steps:
+      - 打开一个数据充足、交易信号状态为 ready 的标的
+      - 在交易信号卡默认态观察：应显示建议方向、持仓状态、胜率、累计收益等关键数字，不应看到逐笔回测记录
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: tests/e2e/trade-signal/friendliness.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-07-COND-02
+      expected: 三段回测明细/反T回合默认折叠；用户展开后才呈现。
+      actual: 真实浏览器路径验证（Playwright 折叠/展开交互：默认断言明细不可见→点击展开→断言明细可见）。
+      reproduce_steps:
+      - 打开一个 ready 态标的的交易信号卡
+      - 默认态确认无回测明细列表
+      - 点击「展开明细」控件，确认此时出现三段回测/反T回合记录
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: tests/e2e/trade-signal/friendliness.spec.ts
+      result_status: pass
+    - acceptance_id: SCN-07-COND-03
+      expected: 仅 status=ready 时呈现回测块；展开的关键价位区分正式信号位与 ATR 投影观察位。
+      actual: 真实浏览器路径验证（DOM 断言非 ready 态无回测块）；本次人工实测确认当前 unavailable/data_insufficient
+        标的均未显示回测块，符合预期（非 ready 不应有回测块）。
+      reproduce_steps:
+      - 打开一个非 ready（数据不足/来源降级）标的：确认交易信号卡不出现回测块
+      - 打开一个 ready 标的并展开明细：确认关键价位区分「正式信号位」与「ATR 观察位」两个层级
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22，确认非 ready 态无回测块）; tests/e2e/trade-signal/friendliness.spec.ts
+      result_status: pass
+    - acceptance_id: NEG-01
+      expected: 某标的来源变为 stale/unavailable 时，交易信号卡须同步降级为 source_degraded 人话说明，不再显示
+        ready 买卖价位，不得出现「来源已异常但信号卡仍 ready」的矛盾呈现。
+      actual: 真实浏览器路径验证（真实 domain 门控驱动，非 mock）；本次人工实测：当前 unavailable 态下，来源提示、MTS 卡、交易信号卡三处呈现一致降级，未见矛盾。
+      reproduce_steps:
+      - 观察来源为 unavailable/stale 的标的：确认顶部来源提示、MTS 卡、交易信号卡三处的降级说明彼此一致（都表达「数据来源降级/不可用」），不会出现某一处仍显示正常买卖建议
+      verify_command_evidence_id: CMD-E2E-T007A
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22）; tests/e2e/gate/consistency.spec.ts:107
+      result_status: pass
+    - acceptance_id: NEG-02
+      expected: status 非 ready 时不呈现空回测容器/空图表占位误导，呈现对应人话说明。
+      actual: 真实浏览器路径验证（DOM 计数断言回测容器计数=0）；本次人工实测未见空占位框。
+      reproduce_steps:
+      - 打开非 ready 标的交易信号卡：确认没有空白的回测图表/表格占位，只有人话说明文字
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22）; tests/e2e trade-signal
+        全套
+      result_status: pass
+    - acceptance_id: NEG-03
+      expected: 恢复态（工作台快照）与来源态（行情数据源）互不嵌套、不共用同一条黄条。
+      actual: 真实浏览器路径验证（DOM 结构+几何断言两者为独立元素）；本次人工实测：顶部「已恢复」文字与「来源 不可用」警告框为两个独立区块，非同一元素。
+      reproduce_steps:
+      - 打开应用观察顶部：「已恢复」（或其他恢复状态）文字与「来源」相关提示应是两个独立的区块，不是同一个提示框里混合两种信息
+      verify_command_evidence_id: CMD-E2E-T007A/CMD-E2E-T006
+      acceptance_result_evidence_path: 本次交付整理人工实测（2026-07-22）; tests/e2e/gate/consistency.spec.ts;
+        tests/e2e/restore-layout/resume.spec.ts
+      result_status: pass
+    - acceptance_id: NEG-04
+      expected: 理由 code 未在注册表注册时，回落 UNKNOWN_CODE 处理，不裸露原始 code。
+      actual: 单元测试（node --test humanize.spec.ts）以故障注入方式验证纯函数安全属性；现有 E2E 只驱动已注册 code，未在浏览器层注入未注册
+        code 验证真实渲染路径。此为 code-review/verify 阶段已知、已由用户在 verify 阶段 Decision Gate（approval_id=APR-20260722-007）显式接受的非阻断残留风险（E2E-FND-002，Med）。
+      reproduce_steps:
+      - 该条件目前无法仅凭点击界面复现（需要后端返回一个不在注册表中的理由码，属人为构造的边缘输入，非正常操作可触达）
+      - 可复核方式：查看 tests/unit/presentation/humanize.spec.ts 的断言与运行结果
+      verify_command_evidence_id: CMD-UNIT-01
+      acceptance_result_evidence_path: tests/unit/presentation/humanize.spec.ts; harness-runtime/harness/state/approvals.json（APR-20260722-007）
+      result_status: accepted_risk
+    - acceptance_id: NEG-05
+      expected: 交易信号卡明细折叠态下，nonAdvice 免责声明仍可见，不被隐藏。
+      actual: 真实浏览器路径验证（DOM 可见性断言，折叠态下免责仍可见）。
+      reproduce_steps:
+      - 打开交易信号卡，保持默认折叠态
+      - 确认免责声明文字仍然显示，不需要展开明细才能看到
+      verify_command_evidence_id: CMD-E2E-FULL
+      acceptance_result_evidence_path: tests/e2e trade-signal/mts 全套
+      result_status: pass
+    - acceptance_id: NEG-06
+      expected: 布局模式为非法值时由既有归一化处理回退默认 focus，标题主位不变，不新增失败分支。
+      actual: 真实浏览器路径验证（构造坏快照驱动 E2E，确认回退 focus、标题仍主位）。
+      reproduce_steps:
+      - DevTools → Console：往 localStorage['myinvestment.workspace.v2'] 的某个 layout
+        项写入不存在的布局模式字符串（如 'not_a_real_mode'），刷新页面
+      - 确认应用未崩溃、自动回退为默认 focus 布局，标题仍在顶部主位
+      verify_command_evidence_id: CMD-E2E-T006/CMD-E2E-T003
+      acceptance_result_evidence_path: tests/e2e/restore-layout/resume.spec.ts; tests/e2e/gate
+        相关用例
+      result_status: pass
+    - acceptance_id: NEG-07
+      expected: 改造不引入 axe 可访问性回归（无新增 critical/serious 违规）；既有 E2E 用户路径不回归。
+      actual: axe 扫描覆盖了 formal 态首页与 alerts 面板，均无新增 critical/serious 违规；全量 Playwright
+        回归 50/50 通过。已知限制：axe 扫描未覆盖本次新增的 demo_fallback/notice--warning/notice--info/tone-*
+        等大量新颜色语义承载态（仅测了首页正常态和 alerts 面板）。此为 code-review/verify 阶段已知、已由用户在 verify 阶段
+        Decision Gate（approval_id=APR-20260722-007）显式接受的非阻断残留风险（E2E-FND-001，Med）。
+      reproduce_steps:
+      - 查看 tests/e2e/gate/scope-guard.spec.ts 与 tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+        中的 axe 扫描用例及运行结果
+      - 运行 npx playwright test 可复跑全量回归（此为内部复核手段，不作为用户日常验收步骤）
+      verify_command_evidence_id: CMD-E2E-T007B/CMD-E2E-FULL
+      acceptance_result_evidence_path: tests/e2e/gate/scope-guard.spec.ts:216; tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:152;
+        harness-runtime/harness/state/approvals.json（APR-20260722-007）
+      result_status: accepted_risk
+    risk_acceptance:
+    - risk_id: E2E-FND-001
+      severity: Med
+      description: axe 可访问性扫描未覆盖本次新增的大量颜色语义状态（demo_fallback/notice--warning/notice--info/tone-*
+        等），仅测了首页正常态和 alerts 面板
+      accepted_by: user
+      approval_id: APR-20260722-007
+      approval_type: risk
+      source: verify_stage_decision_gate
+      stage: verify
+    - risk_id: E2E-FND-002
+      severity: Med
+      description: NEG-04 未注册理由码兜底只有单元测试证据，无真实浏览器路径 DOM/截图证据
+      accepted_by: user
+      approval_id: APR-20260722-007
+      approval_type: risk
+      source: verify_stage_decision_gate
+      stage: verify
+    user_checkpoint:
+      status: approved
+      approval_id: APR-20260722-008
+      original_user_text_ref: 用户回复：接受交付（推荐）——确认 29/29 验收条件通过，入口 http://localhost:4271，残留风险已在
+        verify 阶段接受
+      risk_summary: 2 项 Med 级已接受残留风险（E2E-FND-001 axe 覆盖面、E2E-FND-002 NEG-04 缺浏览器层证据），已于
+        verify 阶段经 APR-20260722-007 记录接受；delivery 阶段最终验收于 APR-20260722-008 由用户明确确认接受交付。
+  delivery_package:
+    acceptance_state_ref: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/acceptance-result.md
+    scope_summary: 看盘终端界面友好化改造：状态色语义归位、内部枚举人话化、重复信息去重、顶部/主看/侧栏信息层级重排，纯前端呈现层变更，无数据/后端/算法变更
+    evidence_links:
+    - harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/acceptance-result.md
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/verify/verification-report.md
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/code-review/code-review.md
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    - harness-runtime/harness/state/approvals.json
+    known_gaps:
+    - id: E2E-FND-001
+      severity: advisory
+      description: axe 可访问性扫描覆盖面不足，未覆盖本次新增颜色语义状态
+      source: verify/code-review
+      approval_id: APR-20260722-007
+    - id: E2E-FND-002
+      severity: advisory
+      description: NEG-04 未注册理由码回落缺浏览器层验证
+      source: verify/code-review
+      approval_id: APR-20260722-007
+    - id: TDD-FND-002
+      severity: can_ignore
+      description: 交易信号卡非 ready 子态（data_insufficient/not_target_symbol）仅单测等价验证，E2E
+        未逐态交叉覆盖
+      source: code-review
+      approval_id: null
+    - id: TDD-FND-003
+      severity: can_ignore
+      description: Harness toolchain 探测口径对 node:test/Playwright 项目存在系统性误报（非真实缺陷）
+      source: code-review
+      approval_id: null
+    - id: TDD-FND-004
+      severity: can_ignore
+      description: restoreMetadata.status=failed 具体枚举值在当前 src/domain/workspace.ts
+        无生产可达路径，仅单测覆盖
+      source: code-review
+      approval_id: null
+    - id: TDD-FND-005
+      severity: can_ignore
+      description: 全项目未配置 JS/TS mutation testing 工具（StrykerJS 等），除 2 处关键分支人工故障注入外无系统性变异测试信号
+      source: code-review
+      approval_id: null
+    - id: RISK-DOC-01
+      severity: can_ignore
+      description: tech-design.md 未回写 price-authority 实际落点（ChartSurface.tsx 而非文字标注的
+        App.tsx/M6）
+      source: code-review
+      approval_id: null
+    - id: RISK-CSS-01
+      severity: can_ignore
+      description: SR-01“范围外零改动”措辞与“CSS-only 重排 LayoutController 计算样式”授权之间存在字面张力（经核实非违规）
+      source: code-review
+      approval_id: null
+    - id: DEMO-FALLBACK-UNREACHABLE
+      severity: can_ignore
+      description: demo_fallback 来源状态在当前真实数据链路（src/domain/market-data-source.ts）没有代码路径产出，SCN-01-COND-02
+        的验收证据只能是等价的自动化 fixture 证据，用户无法通过真实操作复现该状态；本次交付整理时新发现并披露，不构成正确性缺陷（既有产品既有限制，非本次改造引入）
+      source: delivery（release-readiness-expert 本轮复核新发现）
+      approval_id: null
+    follow_ups:
+    - id: FU-001
+      description: 补充 axe 可访问性扫描覆盖 demo_fallback/notice--warning/notice--info/tone-*
+        及展开态
+      severity: advisory
+      graph_op: defer_node
+    - id: FU-002
+      description: 补 1 条浏览器层 route 注入未注册理由码的 E2E，证明 humanizeReason 安全回落路径真实接线
+      severity: advisory
+      graph_op: defer_node
+    - id: FU-003
+      description: tech-design.md 补登记 price-authority 实际文件落点（ChartSurface.tsx）
+      severity: can_ignore
+      graph_op: none
+      none_reason: 纯文档同步，无用户可感后果
+    - id: FU-004
+      description: 澄清 SR-01“范围外零改动”措辞，显式区分“文件零编辑”与“渲染结果零改变”两种边界承诺
+      severity: can_ignore
+      graph_op: none
+      none_reason: 纯治理措辞澄清，无用户可感后果
+    - id: FU-005
+      description: 若产品决定启用 demo_fallback 数据源路径（DEC-01 相关后续），需在 market-data-source.ts
+        补真实产出该状态的代码路径，并补浏览器层可复现的验收证据
+      severity: advisory
+      graph_op: defer_node
+    handoff_evidence:
+      pause_required: true
+      requires_user_resume: true
+      next_stage_candidate: finishing-branch
+      approval_id: APR-20260722-008
+    dora_signals:
+      lead_time: 2026-07-21 ~ 2026-07-22（约 2 天，intake→delivery 单 Mission Slice 内完成）
+      rework_count: 7
+      review_hold_count: 3
+      verification_failure_count: 0
+      rollback_followup_count: 0
+  dispatches:
+  - role: release-readiness-expert
+    execution_mode: subagent
+    model: claude-sonnet-5
+    started_at: '2026-07-22T18:00:00+08:00'
+    completed_at: '2026-07-22T18:13:00+08:00'
+    verdict: PASS
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+    sections:
+    - 验收条件
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    sections:
+    - Control Contract
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/code-review/code-review.md
+    sections:
+    - Control Contract
+  - path: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/verification-report.contract.yaml
+    sections:
+    - control_contract
+  consumers:
+  - finishing-branch
+  - retrospective
+

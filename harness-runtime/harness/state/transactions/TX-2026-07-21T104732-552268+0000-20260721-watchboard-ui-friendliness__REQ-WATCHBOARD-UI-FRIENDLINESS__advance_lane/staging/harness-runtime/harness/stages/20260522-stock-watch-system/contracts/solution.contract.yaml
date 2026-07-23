@@ -1,0 +1,529 @@
+control_contract:
+  type: guide_contract
+  subtype: solution_guide
+  version: 1
+  mission_id: 20260522-stock-watch-system
+  stage: solution
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    sections:
+    - Acceptance Criteria
+    - Constraints
+    - Agent 工程
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+    sections:
+    - Functional Requirements
+    - Non-Functional Requirements
+    - Agent Capability Requirements
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+    sections:
+    - Bounded Context
+    - Context Map
+    - Aggregates
+    - Policies
+    - Domain Events
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+    sections:
+    - Surface / BUC 覆盖
+    - 关键流程
+    - 状态矩阵
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/README.md
+    sections:
+    - Surface Interaction Spec
+  consumers:
+  - tech-design
+  - breakdown
+  - code-review
+  - stage-gate
+  role_policy:
+    stage: solution
+    work_graph_lane: solution-lane
+    required_execution_roles:
+    - solution-architect
+    required_review_roles:
+    - solution-effectiveness-reviewer
+    conditional_roles:
+    - role: agent-capability-designer
+      kind: execution
+      when:
+      - agent_engineering
+      - agent_capability
+    - role: agent-capability-reviewer
+      kind: review
+      when:
+      - agent_engineering
+      - agent_capability
+  work_graph_artifact:
+    node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/solution.md
+  execution_result:
+    id: EXE-SOLUTION-002
+    role: solution-architect
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    fulfilled_obligations:
+    - OBL-SOLUTION-001
+    decision_log:
+    - D-01
+    - D-02
+    - D-03
+    - D-04
+    - D-05
+    - D-06
+    - D-07
+    - D-08
+    traceability_matrix:
+    - decision: D-01
+      traces_to:
+      - AC-02
+      - AC-03
+      - AC-05
+      - FR-02
+      - FR-03
+      - FR-05
+      extended_refs:
+      - BUC-02
+      - BUC-03
+      - BUC-04
+      - BUC-08
+      - SURF-WORKBENCH
+      - SURF-LAYOUT
+    - decision: D-02
+      traces_to:
+      - AC-01
+      - AC-05
+      - FR-01
+      extended_refs:
+      - BUC-01
+      - BO-001
+      - BO-002
+      - SURF-WATCHLIST
+    - decision: D-03
+      traces_to:
+      - FR-06
+      - AC-02
+      - AC-03
+      - AC-04
+      extended_refs:
+      - BUC-06
+      - BO-007
+      - SURF-SOURCE
+      - SURF-WORKBENCH
+      - SURF-MTS
+      - SURF-ALERTS
+      - FLOW-SOURCE-DEGRADED
+    - decision: D-04
+      traces_to:
+      - FR-02
+      - FR-03
+      - FR-04
+      - NFR-06
+      extended_refs:
+      - BUC-02
+      - BUC-03
+      - BUC-04
+      - BUC-08
+      - BO-004
+      - BO-005
+      - SURF-WORKBENCH
+      - SURF-MTS
+    - decision: D-05
+      traces_to:
+      - AC-03
+      - AC-04
+      - FR-03
+      - FR-04
+      extended_refs:
+      - BUC-04
+      - BUC-05
+      - BUC-06
+      - SURF-MTS
+      - SURF-ALERTS
+      - SURF-WORKBENCH
+    - decision: D-06
+      traces_to:
+      - AC-05
+      - FR-05
+      - FR-07
+      - FR-08
+      extended_refs:
+      - BUC-01
+      - BUC-02
+      - BUC-05
+      - BUC-07
+      - BUC-08
+      - SURF-WATCHLIST
+      - SURF-WORKBENCH
+      - SURF-ALERTS
+      - SURF-RESTORE
+      - SURF-LAYOUT
+    - decision: D-07
+      traces_to:
+      - AC-01
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+      - FR-09
+      - NFR-05
+      extended_refs:
+      - BUC-01
+      - BUC-02
+      - BUC-03
+      - BUC-04
+      - BUC-05
+      - BUC-06
+      - BUC-07
+      - BUC-08
+      - BUC-09
+      - SURF-WATCHLIST
+      - SURF-WORKBENCH
+      - SURF-MTS
+      - SURF-ALERTS
+      - SURF-SOURCE
+      - SURF-LAYOUT
+      - SURF-RESTORE
+    - decision: D-08
+      traces_to:
+      - NFR-06
+      - FR-03
+      - FR-04
+      extended_refs:
+      - mission-agent-engineering-none
+      - audit-boundary
+    evidence_refs:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+    open_questions:
+    - MTS reason code / invalidator 的完整枚举留给 technical_analysis 细化。
+    - formal provider 的最终品牌和授权留给后续供应商决策。
+    - localStorage 容量与迁移细节留给 technical_analysis 定义迁移器和回退策略。
+    concerns:
+    - Yahoo Finance 非授权和限流风险必须由 MarketDataSource 边界、可见降级和 fixture-first 验证管理。
+    - 当前项目尚无 e2e 基础设施，后续必须建立 Playwright fixture-first 门禁。
+    summary: solution.md 已按 interaction 密度反馈后的新版合同重新对齐，更新为七个共享 surface、BUC-01 到 BUC-09、默认
+      focus / dense 诊断验收展开策略，并确认该调整只改变信息架构与布局策略，不改变 PRD 语义。
+  obligations:
+  - id: OBL-SOLUTION-001
+    mission_id: 20260522-stock-watch-system
+    type: architecture
+    risk: medium
+    traces_to:
+      ac:
+      - AC-01
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    - decision_scan
+    - contract_check
+    - alignment_check
+    required_roles:
+    - solution-effectiveness-reviewer
+    blocking: true
+    source: inferred
+  role_verdicts:
+  - id: RV-SOLUTION-001
+    role: solution-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-SOLUTION-001
+    round: 2
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-STOCK-WATCH-SYSTEM
+        artifact_version: v1
+      artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/solution.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/solution.contract.yaml
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+      - harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    coverage_summary:
+      mission_prd: PASS
+      domain_interaction: PASS
+      decision_soundness: PASS
+      boundary_integrity: PASS
+      risk_closure: PASS
+      tech_design_readiness: PASS
+      trace_hygiene: PASS
+    summary: solution.md 已解除上一轮 HOLD 的三项阻断；主交互合同稳定收束为 7 个 surface，BUC-09 明确为验证映射而非主交互合同；上下文已对齐
+      6 个 bounded contexts，保留 BC-06 Verification Context 为非 runtime 验证边界；D-06 / D-07
+      已直接追到 FR-07 / FR-08 / FR-09 / NFR-05，且 contract decision 与 traceability matrix
+      已同步。当前方案无静默丢失上游承诺、无越界 scope / non-goals / runtime Agent，风险已转为具名缓解、证据要求和下游 obligation。
+    blocking_gaps: []
+    non_blocking_risks: []
+    evidence:
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/solution.md:42-46
+      supports: 明确 7 个 surface、BUC-09 仅为冻结样本验收映射、6 个限界上下文。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md:5
+      supports: 当前主交互合同确认为 7 个 surface。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md:21
+      supports: BUC-09 不进入主交互合同。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md:41
+      supports: 领域模型固定为 BC-01 到 BC-06。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/solution.contract.yaml:149
+      supports: execution_result.traceability_matrix 已把 D-06 对齐 FR-07/FR-08，D-07 对齐
+        FR-09/NFR-05。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/solution.contract.yaml:417
+      supports: decision 级 traces_to 已同步。
+    dispatch:
+      subagent_id: 019e54bb-9bb6-7e53-bd00-65ddae6b3417
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-23T12:06:00Z'
+      completed_at: '2026-05-23T12:09:18Z'
+  decisions:
+  - id: D-01
+    title: 前端架构边界与图表库路线
+    chosen: 本地单体 React SPA + Express 本地代理 + lightweight-charts 延续
+    rejected:
+    - 迁移到 KLineChart 或更重图表栈作为本阶段主路线
+    rationale: 保持现有本地栈和成熟图表库，覆盖主图/成交量/副图交互，同时避免图表引擎迁移分散 MTS、提醒和恢复闭环。
+    traces_to:
+    - AC-02
+    - AC-03
+    - AC-05
+    - FR-02
+    - FR-03
+    - FR-05
+    reversibility: medium
+    confidence: high
+    appetite: 当前阶段保持本地工作台主路由，图表替换仅作为后续单独决策。
+    bet_boundary: 不重写图表核心引擎，不改变本地网页边界。
+    circuit_breaker: 若 lightweight-charts 无法满足主图/成交量/副图或关键交互，再发起图表库替换 Decision Gate。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - frontend-engineer
+    informed:
+    - stage-gate
+    - verify
+  - id: D-02
+    title: 多市场代码识别与自选准入
+    chosen: 显式市场提示 + 归一结果预览 + 歧义门禁
+    rejected:
+    - 静默自动猜测市场并直接入库
+    rationale: 自选标的是领域身份主键，数字代码歧义必须在加入前可见和可确认，避免错误 identity 污染提醒与恢复。
+    traces_to:
+    - AC-01
+    - AC-05
+    - FR-01
+    reversibility: medium
+    confidence: high
+    appetite: 在加入自选前解决市场歧义。
+    bet_boundary: 不引入账号或云端代码解析服务。
+    circuit_breaker: 若市场规则不能确定候选归一代码，必须阻断 active 化并展示错误态。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - interaction-spec
+    informed:
+    - verify
+  - id: D-03
+    title: 行情源、缓存与降级边界
+    chosen: MarketDataSource 显式边界 + 短 TTL cache + formal/demo_fallback/unavailable
+      可见降级
+    rejected:
+    - 静默 fallback 保证页面可运行
+    rationale: 供应商未授权和限流风险必须通过来源边界隔离，并穿透到 SURF-SOURCE 与局部不可解释状态，不能伪装真实行情。
+    traces_to:
+    - FR-06
+    - AC-02
+    - AC-03
+    - AC-04
+    reversibility: high
+    confidence: high
+    appetite: 保持供应商可替换和降级可审计。
+    bet_boundary: cache 只做短期可用性，不承担行情持久化。
+    circuit_breaker: 若无法显示来源模式和降级原因，不允许把数据用于 MTS 或提醒解释。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - backend-engineer
+    informed:
+    - code-review
+    - verify
+  - id: D-04
+    title: 图表指标与 MTS 计算位置
+    chosen: 共享纯 TypeScript 领域层 + 浏览器端确定性计算，必要时再迁移 worker
+    rejected:
+    - Express 后端预计算指标和信号
+    rationale: 指标、MTS 和提醒需要同输入同输出的可回放语义；后端保持来源适配职责，避免业务策略和 UI 状态分裂。
+    traces_to:
+    - FR-02
+    - FR-03
+    - FR-04
+    - NFR-06
+    reversibility: medium
+    confidence: high
+    appetite: 先建立纯函数领域流水线，再视性能决定 worker。
+    bet_boundary: 不把策略计算塞入 UI 组件或 Express 代理。
+    circuit_breaker: 若浏览器端计算性能无法满足目标样本量，technical_analysis 必须提出 worker 分流方案。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - frontend-engineer
+    informed:
+    - tdd-reviewer
+    - verify
+  - id: D-05
+    title: MTS 信号与提醒规则编排
+    chosen: 聚合 + Policy + Domain Event 流水线
+    rejected:
+    - UI 组件内直接判断信号与提醒状态
+    rationale: MtsSignal 与 AlertRule 必须可解释、可回放、可审计；风控优先级和归档暂停应由领域策略保证。
+    traces_to:
+    - AC-03
+    - AC-04
+    - FR-03
+    - FR-04
+    reversibility: medium
+    confidence: high
+    appetite: 在 solution 阶段固定编排方向，枚举细节交给 technical_analysis。
+    bet_boundary: 不冻结全部 reason code / invalidator 枚举，但禁止自由文本进入主逻辑。
+    circuit_breaker: 若 MTS taxonomy 无法形成稳定语义类别，必须回到方案层重新决策信号边界。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - test-planning-expert
+    informed:
+    - verify
+  - id: D-06
+    title: 本地持久化与恢复粒度
+    chosen: 版本化 localStorage snapshot + 标的级布局恢复 + 默认布局回退
+    rejected:
+    - 非版本化整体应用状态序列化
+    rationale: 本地连续使用需要 schema 可演进和恢复可回退；布局以标的级为主，失败时回到默认看盘布局。
+    traces_to:
+    - AC-05
+    - FR-05
+    - FR-07
+    - FR-08
+    reversibility: medium
+    confidence: medium
+    appetite: 先用 localStorage 版本化快照承载本地恢复。
+    bet_boundary: 不引入账号、云同步或 IndexedDB，除非后续容量证据触发新决策。
+    circuit_breaker: 若 snapshot 迁移失败影响首屏看盘，必须降级到默认布局并保留自选/提醒可恢复证据。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - frontend-engineer
+    informed:
+    - verify
+  - id: D-07
+    title: 可验证性与 E2E 方案
+    chosen: fixture-first E2E + live source 非门禁 smoke
+    rejected:
+    - live Yahoo Finance 作为 E2E 门禁
+    rationale: 外部行情不稳定，门禁必须建立在可回放 fixture、mock source、localStorage 恢复和 interaction-spec
+      locator 上。
+    traces_to:
+    - AC-01
+    - AC-02
+    - AC-03
+    - AC-04
+    - AC-05
+    - FR-09
+    - NFR-05
+    reversibility: high
+    confidence: high
+    appetite: 以稳定用户路径证明 AC，不把供应商可用性当产品门禁。
+    bet_boundary: live smoke 只能提供补充信号，不能替代 fixture-first 回归。
+    circuit_breaker: 若缺少稳定 locator 或 fixture，verify 不得宣称 AC 完成。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - technical_analysis
+    - test-planning-expert
+    informed:
+    - code-review
+    - verify
+  - id: D-08
+    title: Agent 运行时边界
+    chosen: 产品运行时不引入 Agent，仅保留阶段治理 Agent
+    rejected:
+    - 用运行时 Agent 自动解释行情、生成提醒或辅助交易判断
+    rationale: 上游明确无 Agent 组件，MTS 和提醒链路必须 deterministic；Agent 不得替代信号生成、提醒触发或任何交易动作。
+    traces_to:
+    - NFR-06
+    - FR-03
+    - FR-04
+    reversibility: high
+    confidence: high
+    appetite: 明确拒绝运行时 Agent，保持产品行为确定性。
+    bet_boundary: 后续若引入 Agent，只能作为非默认、只读、可关闭辅助层，并重新发起 Decision Gate。
+    circuit_breaker: 任何进入 MTS、AlertRule 或交易路径的 Agent 设计都必须阻断。
+    driver: solution-architect
+    approver: user
+    contributors:
+    - agent-capability-reviewer
+    - technical_analysis
+    informed:
+    - stage-gate
+    - verify
+  forbidden_paths:
+  - id: FB-01
+    statement: 禁止把 fallback / demo 数据伪装成真实行情。
+    reason: 会破坏来源透明、误导用户并违反 AC-02/AC-03/AC-04 的解释边界。
+  - id: FB-02
+    statement: 禁止引入账号、云同步、跨设备同步或自动交易。
+    reason: 超出 Mission Contract 和 PRD non-goals。
+  - id: FB-03
+    statement: 禁止把技术指标或 MTS 写成投资建议、收益承诺或胜率表达。
+    reason: NFR-06 和审计边界要求信号只用于提醒强度与观察。
+  - id: FB-04
+    statement: 禁止忽略多市场代码歧义或静默猜测市场。
+    reason: 错误 identity 会污染自选、提醒和恢复链路。
+  - id: FB-05
+    statement: 禁止手写核心 K 线渲染引擎。
+    reason: 项目约束要求优先成熟开源图表库，领域层只处理计算与解释。
+  - id: FB-06
+    statement: 禁止用运行时 Agent 生成或替代信号/提醒。
+    reason: 上游明确无 Agent 组件，信号和提醒必须 deterministic。
+  risks:
+  - id: RISK-01
+    statement: Yahoo Finance 非授权与限流导致来源不稳定。
+    mitigation: 通过 MarketDataSource 可替换边界、短 TTL cache、demo_fallback/unavailable 可见状态和
+      fixture-first 验证隔离供应商风险。
+  - id: RISK-02
+    statement: 多市场数字代码歧义导致自选 identity 错误。
+    mitigation: 输入时展示市场选择或归一预览，歧义状态阻断 active 化并提供用户可见错误。
+  - id: RISK-03
+    statement: MTS reason code / invalidator taxonomy 未完全冻结。
+    mitigation: 方案固定稳定语义类别与版本化登记，technical_analysis 负责枚举草案、fixture 和断言。
+  - id: RISK-04
+    statement: localStorage schema 演进可能破坏重开恢复。
+    mitigation: 使用版本化 snapshot、迁移器、默认布局回退和旧版本回放测试。
+  - id: RISK-05
+    statement: 当前项目尚无 E2E 基础设施。
+    mitigation: technical_analysis / breakdown 必须建立 Playwright fixture-first 路径、稳定
+      locator 断言、截图和结果证据。
+  agent_architecture: []
+  effectiveness_review:
+    rounds_used: 2
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

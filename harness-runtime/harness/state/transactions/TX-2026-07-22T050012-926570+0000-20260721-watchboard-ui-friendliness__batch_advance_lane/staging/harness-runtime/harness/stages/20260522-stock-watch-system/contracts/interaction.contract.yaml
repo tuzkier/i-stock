@@ -1,0 +1,755 @@
+control_contract:
+  type: guide_contract
+  subtype: interaction_guide
+  version: 1
+  mission_id: 20260522-stock-watch-system
+  stage: interaction
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+    sections:
+    - Business Use Case Map
+    - Functional Requirements
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+    sections:
+    - BUC Index
+    - BUC Detail
+    - Prototype Triggers
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+    sections:
+    - BO Registry
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+    sections:
+    - Entities
+    - States
+    - Actions
+  consumers:
+  - breakdown
+  - execute
+  - code-review
+  - verify
+  - stage-gate
+  role_policy:
+    stage: interaction
+    work_graph_lane: product-definition-lane
+    required_execution_roles:
+    - interaction-designer
+    required_review_roles:
+    - interaction-reviewer
+  work_graph_artifact:
+    node_id: REQ-STOCK-WATCH-SYSTEM
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction.md
+    supplementary_artifacts:
+    - id: visual_interaction_artifacts
+      required: true
+      source_stage_artifact_glob: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/**/*
+      strip_source_prefix: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction
+      canonical_artifact_dir: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/visual-interaction
+    - id: interaction_spec
+      required: true
+      source_stage_artifact_glob: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/**/*
+      strip_source_prefix: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec
+      canonical_artifact_dir: harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec
+  execution_result:
+    id: EXE-INTERACTION-20260523-001
+    role: interaction-designer
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/README.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-01.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-02.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-03.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-04.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-05.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-06.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-07.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-08.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/domain-ui-mapping.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/view-models.ts
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/design-brief.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/evidence/seed-state.md
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      work_graph_node: REQ-STOCK-WATCH-SYSTEM
+    fulfilled_obligations:
+    - OBL-INTERACTION-001
+    traceability_matrix:
+    - artifact: interaction-spec/buc-coverage.md
+      traces_to:
+      - AC-01
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+    - artifact: visual-interaction/prototype/index.html
+      traces_to:
+      - BUC-01
+      - BUC-02
+      - BUC-03
+      - BUC-04
+      - BUC-05
+      - BUC-06
+      - BUC-07
+      - BUC-08
+    evidence_refs:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/evidence/seed-state.md
+    open_questions:
+    - ChartLayout 恢复粒度、MarketDataSource 信息密度、MTS reason code / invalidator taxonomy
+      留给 solution / technical_analysis 定稿。
+    concerns: []
+    summary: interaction-designer 已按新版 PRD 产出 standard 档 BUC-first interaction package，覆盖
+      BUC-01 到 BUC-08，无 PRD 回流需求。
+  obligations:
+  - id: OBL-INTERACTION-001
+    mission_id: 20260522-stock-watch-system
+    type: interaction
+    risk: medium
+    traces_to:
+      ac:
+      - AC-01
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    - interaction_spec
+    - visual_artifact
+    required_roles:
+    - interaction-reviewer
+    blocking: true
+    source: inferred
+  role_verdicts:
+  - id: RVW-INTERACTION-REVIEWER-20260523-001
+    role: interaction-reviewer
+    verdict: PASS
+    summary: 默认 focus / dense 语义、中文文案、BUC-05 到 BUC-08 可达路径、spec / prototype / contract
+      / PRD 一致性已收敛，本轮 interaction 产物可作为下游 AI handoff 合同。
+    dispatch:
+      subagent_id: 019e5497-0a77-7df0-a663-353e20002184
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-23T11:27:00Z'
+      completed_at: '2026-05-23T11:38:37Z'
+    reviewed_obligations:
+    - OBL-INTERACTION-001
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-STOCK-WATCH-SYSTEM
+        artifact_version: v1
+        source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/
+      - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+    evidence:
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-08.md#interaction-rules
+      supports: 布局恢复失败统一回到默认日常看盘 focus。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+      supports: spec_vs_prd_drift none、prototype_vs_spec_drift none、feedback_not_synced
+        none、copy_language pass。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+      supports: density_feedback_synced pass、unresolved_blockers 0、interaction contract
+        ready for reviewer verdict。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      supports: 默认 focus、人类可操作原型、daily-dock / top-controls / mobile_tab / restore-banner
+        提供 BUC-05 到 BUC-08 可达路径。
+    - ref: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/evidence/seed-state.md
+      supports: desktop focus 默认、desktop dense 诊断 / 验收、mobile_tab 视口覆盖。
+    - ref: harness-runtime/harness/traces/20260522-stock-watch-system
+      supports: spec-check、ux-quality-check、visual-coverage-check、feedback-sync-check、locator-check、alignment
+        check 全部 PASS。
+    blocking_gaps: []
+  - id: RV-INTERACTION-003
+    role: interaction-reviewer
+    verdict: PASS
+    summary: interaction contract、canonical interaction-spec、visual manifest 与主原型现已对齐；BUC-06/BUC-07
+      编号与语义一致，BUC-08 的 surface/flow trace 已补齐，可作为 interaction gate 的最终 reviewer verdict。
+    dispatch:
+      subagent_id: 019e5481-6321-7e51-946b-52c0e6578fef
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-05-23T11:00:00Z'
+      completed_at: '2026-05-23T11:13:36Z'
+    scope:
+      mission_id: 20260522-stock-watch-system
+      stage: interaction
+      reviewed_artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/
+      - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+    evidence:
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+      lines: 287-360,427-480,575-609
+      supports:
+      - canonical shared surfaces 与 interaction-spec 一致
+      - SCREEN-WORKBENCH.surface_id=SURF-WORKBENCH
+      - SCREEN-WORKBENCH.buc_refs 已覆盖 BUC-08
+      - flows 已包含 FLOW-SWITCH-LAYOUT
+      - drift、copy、e2e readiness 为 pass 或 none
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+      lines: 5-11,15-24
+      supports:
+      - SURF-WATCHLIST、SURF-WORKBENCH、SURF-MTS、SURF-ALERTS、SURF-SOURCE、SURF-LAYOUT、SURF-RESTORE
+        canonical surface 定义
+      - mobile_tab 与权限、状态边界
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+      lines: 5-12,21-23
+      supports:
+      - BUC-01 到 BUC-08 prototype-required 覆盖
+      - BUC-09 仅为 validation mapping，不属于主交互合同
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+      lines: 5-10,14-22
+      supports:
+      - spec_vs_prd_drift=none
+      - prototype_vs_spec_drift=none
+      - feedback_not_synced=none
+      - copy_language=pass
+      - e2e_seed_readiness=pass
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/design-brief.md
+      lines: 25-38
+      supports:
+      - 布局状态文案采用中文（English）
+      - '#buc-006/#buc-007 deep link 已纠正'
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      lines: 18-40,60-84
+      supports:
+      - 主原型覆盖 AC-01 到 AC-05
+      - 覆盖 BUC-01 到 BUC-08 与 FLOW-SWITCH-LAYOUT
+      - visual artifact 可支撑 interaction contract
+    - path: harness-runtime/harness/traces/20260522-stock-watch-system/interaction-contract-surface-flow-realign-patch.yaml
+      lines: 1-70
+      supports:
+      - 本轮 contract surface/flow realign 修复记录
+    reviewed_obligations:
+    - OBL-INTERACTION-001
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-STOCK-WATCH-SYSTEM
+        artifact_version: v1
+      artifacts:
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+      - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/
+      - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+      - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+      - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/interaction.contract.yaml
+      criteria:
+      - PRD AC、BUC、领域对象到 interaction-spec、surface、state、flow、E2E obligation 的一致性
+      - BUC-06 来源健康降级与 BUC-07 本地恢复的编号、文案、surface、contract scenario 对齐
+      - prototype 用户可见文案中文默认规则
+      - visual manifest 对 contract 的支撑能力
+    blocking_gaps: []
+  interaction_spec:
+    canonical_dir: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec
+    ai_handoff: true
+    derived_from:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/product/product-definition.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/product/business-use-cases.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/product/business-objects.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/product/product-domain-model.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/prd.contract.yaml
+    renderer_independent: true
+    consumed_by_delivery_modes:
+    - interactive_prototype
+    - frontend_engineering
+    prototype_is_human_entry_only: true
+    structure_axis: buc
+    read_order:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/README.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-index.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-01.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-02.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-03.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-04.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-05.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-06.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-07.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-08.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/domain-ui-mapping.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/view-models.ts
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+    do_not_use_as_ai_contract:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype
+    - harness-runtime/harness/stages/20260522-stock-watch-system/frontend-changeset.md
+    drift_checks:
+      spec_vs_prd_drift: none
+      prototype_vs_spec_drift: none
+      frontend_vs_spec_drift: not_applicable
+      feedback_not_synced: none
+    artifact_tier: standard
+  buc_coverage:
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/buc-coverage.md
+    mappings:
+    - buc_id: BUC-01
+      priority: P0
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-01.md
+      html_entry: visual-interaction/prototype/index.html#buc-001
+      surface_refs:
+      - WatchlistPanel
+      - NormalizationPreview
+      - WatchlistRow
+      - RestoreStatus
+      status: covered
+    - buc_id: BUC-02
+      priority: P0
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-02.md
+      html_entry: visual-interaction/prototype/index.html#buc-002
+      surface_refs:
+      - WorkbenchShell
+      - ChartSurface
+      - SourceHealthPanel
+      status: covered
+    - buc_id: BUC-03
+      priority: P1
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-03.md
+      html_entry: visual-interaction/prototype/index.html#buc-003
+      surface_refs:
+      - IndicatorPanel
+      - ChartSurface
+      status: covered
+    - buc_id: BUC-04
+      priority: P0
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-04.md
+      html_entry: visual-interaction/prototype/index.html#buc-004
+      surface_refs:
+      - MtsSignalCard
+      status: covered
+    - buc_id: BUC-05
+      priority: P0
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-05.md
+      html_entry: visual-interaction/prototype/index.html#buc-005
+      surface_refs:
+      - AlertRulePanel
+      status: covered
+    - buc_id: BUC-06
+      priority: P0
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-06.md
+      html_entry: visual-interaction/prototype/index.html#buc-006
+      surface_refs:
+      - SourceHealthPanel
+      - ChartSurface
+      - MtsSignalCard
+      - AlertRulePanel
+      status: covered
+    - buc_id: BUC-07
+      priority: P0
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-07.md
+      html_entry: visual-interaction/prototype/index.html#buc-007
+      surface_refs:
+      - RestoreStatus
+      - WatchlistPanel
+      - AlertRulePanel
+      status: covered
+    - buc_id: BUC-08
+      priority: P1
+      prototype_required: true
+      spec_ref: interaction-spec/BUC-08.md
+      html_entry: visual-interaction/prototype/index.html#buc-008
+      surface_refs:
+      - LayoutController
+      - WorkbenchShell
+      - mobile_tab
+      status: covered
+    - buc_id: BUC-09
+      priority: P0
+      prototype_required: false
+      spec_ref: interaction-spec/BUC-09.md
+      html_entry: visual-interaction/prototype/index.html#buc-001
+      surface_refs:
+      - FixtureValidation
+      - WatchlistPanel
+      - SourceHealthPanel
+      - MtsSignalCard
+      - AlertRulePanel
+      - RestoreStatus
+      status: covered_as_validation_mapping
+    gaps: []
+  shared_surface_registry:
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+    surfaces:
+    - id: SURF-WATCHLIST
+      name: 自选工作台
+      carried_bucs:
+      - BUC-01
+      - BUC-07
+    - id: SURF-WORKBENCH
+      name: 看盘工作台
+      carried_bucs:
+      - BUC-02
+      - BUC-03
+      - BUC-04
+      - BUC-08
+    - id: SURF-MTS
+      name: MTS 解释卡
+      carried_bucs:
+      - BUC-04
+      - BUC-06
+    - id: SURF-ALERTS
+      name: 提醒管理面板
+      carried_bucs:
+      - BUC-05
+      - BUC-06
+      - BUC-07
+    - id: SURF-SOURCE
+      name: 来源状态条
+      carried_bucs:
+      - BUC-06
+    - id: SURF-LAYOUT
+      name: 布局控制器
+      carried_bucs:
+      - BUC-08
+    - id: SURF-RESTORE
+      name: 本地恢复横幅
+      carried_bucs:
+      - BUC-01
+      - BUC-07
+  prototype_expression:
+    prototype_entry: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+    buc_deep_links:
+    - buc_id: BUC-01
+      html_entry: visual-interaction/prototype/index.html#buc-001
+    - buc_id: BUC-02
+      html_entry: visual-interaction/prototype/index.html#buc-002
+    - buc_id: BUC-03
+      html_entry: visual-interaction/prototype/index.html#buc-003
+    - buc_id: BUC-04
+      html_entry: visual-interaction/prototype/index.html#buc-004
+    - buc_id: BUC-05
+      html_entry: visual-interaction/prototype/index.html#buc-005
+    - buc_id: BUC-06
+      html_entry: visual-interaction/prototype/index.html#buc-006
+    - buc_id: BUC-07
+      html_entry: visual-interaction/prototype/index.html#buc-007
+    - buc_id: BUC-08
+      html_entry: visual-interaction/prototype/index.html#buc-008
+    - buc_id: BUC-09
+      html_entry: visual-interaction/prototype/index.html#buc-001
+    product_surface_clean: true
+  prototype_interfaces:
+  - id: SCREEN-WORKBENCH
+    title: 多市场看盘工作台
+    buc_refs:
+    - BUC-01
+    - BUC-02
+    - BUC-03
+    - BUC-04
+    - BUC-05
+    - BUC-06
+    - BUC-07
+    - BUC-08
+    surface_id: SURF-WORKBENCH
+    domain_refs:
+    - WatchSymbol
+    - IndicatorSet
+    - MtsSignal
+    - AlertRule
+    - MarketDataSource
+    default_mode: 日常看盘（focus）
+    diagnostic_mode: 诊断 / 验收（dense）
+  domain_model_coverage:
+  - ref: WatchSymbol
+    kind: entity
+    prototype_refs:
+    - SCREEN-WORKBENCH
+    flow_refs:
+    - FLOW-WATCHLIST-MANAGE
+    state_refs:
+    - STATE-WATCH-ACTIVE
+    - STATE-WATCH-ARCHIVED
+  - ref: MtsSignal
+    kind: entity
+    prototype_refs:
+    - SCREEN-WORKBENCH
+    flow_refs:
+    - FLOW-READ-MTS
+    state_refs:
+    - STATE-MTS-STRONG
+    - STATE-MTS-DATA-INSUFFICIENT
+  - ref: AlertRule
+    kind: entity
+    prototype_refs:
+    - SCREEN-WORKBENCH
+    flow_refs:
+    - FLOW-MANAGE-ALERT
+    state_refs:
+    - STATE-ALERT-TRIGGERED
+  information_architecture:
+    entry_points:
+    - 自选工作台
+    - 标的看盘详情
+    navigation_nodes:
+    - id: NAV-WATCHLIST
+      title: 自选
+      screens:
+      - SCREEN-WORKBENCH
+    - id: NAV-DETAIL
+      title: 看盘
+      screens:
+      - SCREEN-WORKBENCH
+    - id: NAV-ALERTS
+      title: 提醒
+      screens:
+      - SCREEN-WORKBENCH
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/surface-registry.md
+  prd_feedback:
+    status: synced_user_feedback
+    findings:
+    - id: density-default-layout-sync
+      summary: 用户走查反馈页面信息密度过高；已将产品 BUC、interaction spec、design brief、prototype 和 contract
+        同步为默认日常看盘 focus、诊断 / 验收 dense。
+      source_ref: user_feedback:页面上东西好多
+    required_action: none
+  feedback_sync:
+    user_feedback_refs: []
+    synced_to_interaction_spec: true
+    synced_to_prd_or_decision_gate: not_applicable
+    unsynced_feedback_count: 0
+  knowledge_promotion_candidates:
+  - id: KPC-INTERACTION-001
+    kind: prototype_pattern
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction.md#沉淀候选
+    suggested_target: project-knowledge
+    reason: 多市场自选、来源降级、MTS 解释卡和归档提醒暂停是后续任务应复用的稳定交互模式
+  flows:
+  - id: FLOW-WATCHLIST-MANAGE
+    title: 管理多市场自选
+    traces_to:
+    - AC-01
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-OPEN-DETAIL
+    title: 打开标的进入默认看盘布局
+    traces_to:
+    - AC-02
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-SWITCH-INDICATOR
+    title: 切换副图指标
+    traces_to:
+    - AC-02
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-READ-MTS
+    title: 解读 MTS 多周期趋势信号
+    traces_to:
+    - AC-03
+    - AC-04
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-MANAGE-ALERT
+    title: 配置并接收四级提醒
+    traces_to:
+    - AC-04
+    - AC-05
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-RESTORE-WORKSPACE
+    title: 重开浏览器恢复本地看盘现场
+    traces_to:
+    - AC-05
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-SOURCE-DEGRADED
+    title: 行情来源降级下继续看盘
+    traces_to:
+    - AC-02
+    - AC-03
+    - AC-04
+    visual_refs:
+    - VIZ-001
+  - id: FLOW-SWITCH-LAYOUT
+    title: 切换看盘布局
+    traces_to:
+    - AC-02
+    - AC-05
+    visual_refs:
+    - VIZ-001
+  states:
+  - id: STATE-LOADING
+    title: 加载中
+    visual_refs:
+    - VIZ-001
+  - id: STATE-EMPTY
+    title: 空状态
+    visual_refs:
+    - VIZ-001
+  - id: STATE-SUCCESS
+    title: 操作成功
+    visual_refs:
+    - VIZ-001
+  - id: STATE-ERROR
+    title: 错误或不可解释
+    visual_refs:
+    - VIZ-001
+  - id: STATE-PERMISSION
+    title: 权限或本地能力受限
+    visual_refs:
+    - VIZ-001
+  - id: STATE-DISABLED
+    title: 禁用或暂停
+    visual_refs:
+    - VIZ-001
+  - id: STATE-WATCH-ACTIVE
+    title: 自选标的已启用
+    visual_refs:
+    - VIZ-001
+  - id: STATE-WATCH-ARCHIVED
+    title: 自选标的已归档
+    visual_refs:
+    - VIZ-001
+  - id: STATE-INDICATOR-READY
+    title: 指标可解释
+    visual_refs:
+    - VIZ-001
+  - id: STATE-INDICATOR-PARTIAL
+    title: 指标部分可解释
+    visual_refs:
+    - VIZ-001
+  - id: STATE-LAYOUT-CUSTOMIZED
+    title: 副图布局已切换
+    visual_refs:
+    - VIZ-001
+  - id: STATE-MTS-STRONG
+    title: MTS 强信号
+    visual_refs:
+    - VIZ-001
+  - id: STATE-MTS-DATA-INSUFFICIENT
+    title: MTS 数据不足不可解释
+    visual_refs:
+    - VIZ-001
+  - id: STATE-SOURCE-DEMO
+    title: 来源演示降级
+    visual_refs:
+    - VIZ-001
+  - id: STATE-ALERT-TRIGGERED
+    title: 提醒已触发
+    visual_refs:
+    - VIZ-001
+  - id: STATE-ALERT-DISABLED
+    title: 提醒已停用
+    visual_refs:
+    - VIZ-001
+  - id: STATE-LOCAL-RESTORED
+    title: 本地现场已恢复
+    visual_refs:
+    - VIZ-001
+  scenarios:
+  - id: BUC-01-S01
+    title: 新增多市场标的并打开默认看盘
+    traces_to:
+    - AC-01
+    - AC-02
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-01.md
+  - id: BUC-06-S01
+    title: 来源降级时 MTS 与提醒不可解释
+    traces_to:
+    - AC-02
+    - AC-03
+    - AC-04
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-06.md
+  - id: BUC-07-S01
+    title: 重开浏览器恢复本地工作台
+    traces_to:
+    - AC-05
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-07.md
+  - id: BUC-08-S01
+    title: 桌面 dense 与 focus 切换并保持入口可达
+    traces_to:
+    - AC-02
+    - AC-05
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-08.md
+  validation_rules:
+  - id: VAL-001
+    title: 自选新增必须保留市场、原始代码和归一代码
+    traces_to:
+    - AC-01
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-01
+  - id: VAL-002
+    title: MTS 不得退化为单一买卖箭头或收益承诺
+    traces_to:
+    - AC-03
+    - AC-04
+    source_ref: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/BUC-04
+  consistency_report:
+    path: harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+    spec_vs_prd_drift: none
+    prototype_vs_spec_drift: none
+    feedback_not_synced: none
+    shared_surface_consistency: pass
+    e2e_seed_readiness: pass
+    copy_language: pass
+    copy_language_note: 状态类用户可见文案采用中文（English），内部 data-* 状态值不作为用户文案。
+    unresolved_blockers: 0
+    unresolved_decisions: 3
+    density_feedback_synced: pass
+    density_feedback_note: 用户反馈“页面上东西好多”已同步为日常看盘 focus 默认模式与诊断 / 验收 dense 展开模式。
+  copy_language:
+    default: zh-CN
+    visible_copy_must_be_chinese: true
+    applies_to:
+    - interaction_spec
+    - html_svg_variants
+    - preview
+    - empty_error_permission_confirmation_feedback
+    allowed_exceptions:
+    - brand_name
+    - product_name
+    - code_identifier
+    - common_industry_acronym
+    - upstream_specified_copy
+    exception_refs:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/consistency-report.md
+  visual_artifacts:
+    manifest: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/visual-interaction-manifest.json
+    prototype_entry: harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/prototype/index.html
+    evidence:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/visual-interaction/evidence/seed-state.md
+    artifact_count: 1
+    prototype_is_human_entry: true
+    required: true
+  effectiveness_review:
+    rounds_used: 2
+    last_verdict: HOLD

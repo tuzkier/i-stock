@@ -1,0 +1,18 @@
+.data-notice {
+  display: inline-flex;
+  max-width: min(680px, 100%);
+  margin-top: 4px;
+  color: #f0c75e;
+  background: rgba(240, 199, 94, 0.1);
+  border: 1px solid rgba(240, 199, 94, 0.2);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+.up {
+  color: #33c481;
+}
+
+.down {
+  color: #f15f5f;
+}

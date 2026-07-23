@@ -27,7 +27,11 @@ import {
   withSymbolLayout
 } from "./domain/workspace";
 import { AlertRulePanel } from "./features/alerts/AlertRulePanel";
+import { HoldingsPanel } from "./features/holdings/HoldingsPanel";
 import { LayoutController } from "./features/layout/LayoutController";
+import { humanizeReason, humanizeTradeStatus, humanizeTrendState } from "./features/presentation/humanize";
+import { ScoreBar } from "./features/presentation/ScoreBar";
+import { resolveScoreTone, resolveSourceTone } from "./features/presentation/tone";
 import { RestoreStatus } from "./features/restore/RestoreStatus";
 import { SourceHealthPanel } from "./features/source/SourceHealthPanel";
 import { buildObservation } from "./domain/observation";
@@ -60,7 +64,7 @@ type WatchlistQuoteSummary = {
   changePercent?: number;
 };
 
-type DetailTab = "explain" | "alerts" | "source";
+type DetailTab = "explain" | "alerts" | "source" | "holdings";
 
 function formatNumber(value?: number, digits = 2) {
   if (!Number.isFinite(value)) return "--";
@@ -91,10 +95,11 @@ function sourceStatusLabel(status: SourceStatus) {
   return "未加载";
 }
 
-function mtsTone(mts: MtsExplanation) {
-  if (mts.trendState === "source_degraded" || mts.trendState === "data_insufficient") return "neutral";
-  if (mts.scoreBand === "strong_positive" || mts.scoreBand === "positive") return "positive";
-  if (mts.scoreBand === "strong_negative" || mts.scoreBand === "negative") return "risk";
+function mtsCardToneClass(mts: MtsExplanation) {
+  const tone = resolveScoreTone(mts);
+  // signal-card 既有极性类：caution（市场看空）映射到既有 .risk 边框，与 .notice--warning 物理分离（INV-03）
+  if (tone === "caution") return "risk";
+  if (tone === "positive") return "positive";
   return "neutral";
 }
 
@@ -143,6 +148,14 @@ export function App() {
   const [refreshTick, setRefreshTick] = useState(0);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [detailTab, setDetailTab] = useState<DetailTab>("explain");
+  const [mtsDetailsOpen, setMtsDetailsOpen] = useState(false);
+
+  // 选中标的行情每 60 秒自动刷新（日线口径），无需手动点刷新。
+  useEffect(() => {
+    const id = setInterval(() => setRefreshTick((current) => current + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  const [mtsReasonDetailsOpen, setMtsReasonDetailsOpen] = useState(false);
   const selectedFetchesRef = useRef(new Map<string, Promise<ChartPayload>>());
   const selectedRequestTokenRef = useRef(0);
   const summaryRequestKeysRef = useRef(new Set<string>());
@@ -285,6 +298,14 @@ export function App() {
     () => (tradeSignal.status === "ready" ? buildFanTState(tradeSignal.symbol, bars) : undefined),
     [tradeSignal.status, tradeSignal.symbol, bars]
   );
+  const workspaceSourceStatus = getSourceStatus(activePayload, Boolean(error));
+  const workspaceSourceTone = resolveSourceTone(workspaceSourceStatus);
+  const sourceAuthorityClass =
+    workspaceSourceTone === "warning"
+      ? "notice--warning"
+      : workspaceSourceTone === "info"
+        ? "notice--info"
+        : "source-authority--normal";
 
   useEffect(() => {
     if (!latest) return;
@@ -345,6 +366,9 @@ export function App() {
   function refreshSelected() {
     setRefreshTick((current) => current + 1);
   }
+
+  const signalSourceStatus = activePayload?.sourceHealth?.status;
+  const signalSourceTone = signalSourceStatus ? resolveSourceTone(signalSourceStatus) : "normal";
 
   return (
     <main className="terminal-shell">
@@ -426,16 +450,32 @@ export function App() {
               sourceStatus: item.symbol === selected.symbol ? getSourceStatus(activePayload, Boolean(error)) : "not_loaded"
             };
             return (
-            <div className={`watch-item ${selected.symbol === item.symbol ? "selected" : ""}`} key={item.id}>
-              <button className="watch-item-main" onClick={() => setSelected(item)} type="button">
-                <span>
+            <div
+              className={`watch-item ${selected.symbol === item.symbol ? "selected" : ""}`}
+              data-testid={`watch-item-${item.symbol}`}
+              key={item.id}
+            >
+              <button
+                className="watch-item-main"
+                data-testid="watch-item-main"
+                onClick={() => setSelected(item)}
+                type="button"
+              >
+                <span className="watch-item-identity" data-testid="watch-item-identity">
                   <strong>{item.name}</strong>
                   <small>{item.symbol} · {marketLabels[item.market]}</small>
-                  <small>
-                    {sourceStatusLabel(summary.sourceStatus)} · {formatNumber(summary.latestPrice)} ·{" "}
+                </span>
+                <span className="watch-item-quote" data-testid="watch-item-quote">
+                  <strong>{formatNumber(summary.latestPrice)}</strong>
+                  <small className={Number(summary.changePercent ?? 0) >= 0 ? "up" : "down"}>
                     {formatNumber(summary.changePercent)}%
                   </small>
                 </span>
+                <span
+                  className={`watch-item-source-dot tone-${resolveSourceTone(summary.sourceStatus)}`}
+                  data-testid="watch-item-source-dot"
+                  aria-label={`来源：${sourceStatusLabel(summary.sourceStatus)}`}
+                />
               </button>
               <button
                 className="row-icon-button"
@@ -452,9 +492,18 @@ export function App() {
             <div className="archive-block">
               <h3>已归档</h3>
               {archivedWatchlist.map((item) => (
-                <div className="watch-item archived" key={item.id}>
-                  <button className="watch-item-main" onClick={() => restoreSymbol(item.symbol)} type="button">
-                    <span>
+                <div
+                  className="watch-item archived"
+                  data-testid={`watch-item-${item.symbol}`}
+                  key={item.id}
+                >
+                  <button
+                    className="watch-item-main"
+                    data-testid="watch-item-main"
+                    onClick={() => restoreSymbol(item.symbol)}
+                    type="button"
+                  >
+                    <span className="watch-item-identity" data-testid="watch-item-identity">
                       <strong>{item.name}</strong>
                       <small>{item.symbol} · {marketLabels[item.market]} · 提醒已暂停</small>
                     </span>
@@ -468,7 +517,15 @@ export function App() {
       </aside>
 
       <section className="market-workspace" style={{ display: "block" }}>
-        <RestoreStatus metadata={restoreMetadata} />
+        <div className="status-strip">
+          <div className={`source-authority ${sourceAuthorityClass}`} data-testid="source-authority">
+            来源 {sourceStatusLabel(workspaceSourceStatus)}
+            {activePayload?.sourceHealth?.degradationReason
+              ? ` · ${activePayload.sourceHealth.degradationReason}`
+              : ""}
+          </div>
+          <RestoreStatus metadata={restoreMetadata} />
+        </div>
         <LayoutController
           selected={selected}
           payload={activePayload}
@@ -521,6 +578,16 @@ export function App() {
           >
             来源
           </button>
+          <button
+            className={detailTab === "holdings" ? "active" : ""}
+            data-testid="detail-tab-holdings"
+            type="button"
+            role="tab"
+            aria-selected={detailTab === "holdings"}
+            onClick={() => setDetailTab("holdings")}
+          >
+            持仓
+          </button>
         </div>
 
         {detailTab === "explain" && (
@@ -529,101 +596,111 @@ export function App() {
               <section className={`signal-card alibaba-card ${tradeSignalTone(tradeSignal)}`} data-testid="trade-signal-card">
                 <div className="signal-topline">
                   <span>{tradeSignal.strategyLabel} · {tradeSignal.styleTag}</span>
-                  <strong>{tradeSignal.status === "ready" ? (tradeSignal.holding ? "持仓中" : "空仓") : tradeSignal.status}</strong>
+                  <strong data-testid="trade-signal-status">
+                    {tradeSignal.status === "ready"
+                      ? tradeSignal.holding
+                        ? "持仓中"
+                        : "空仓"
+                      : humanizeTradeStatus(tradeSignal.status, tradeSignal.stanceLabel)}
+                  </strong>
                 </div>
                 <strong data-testid="trade-signal-stance">{tradeSignal.stanceLabel}</strong>
-                <div data-testid="trade-signal-levels">
-                  {tradeSignal.status === "ready" && (
-                    <>
-                      <p className="plan-group-title">卖出侧</p>
-                      <div className="level-grid">
-                        {tradeSignal.holding ? (
-                          <>
-                            {tradeSignal.levels.takeProfit !== undefined ? (
-                              <div><span>止盈位（跌破即卖）</span><strong>{formatNumber(tradeSignal.levels.takeProfit)}</strong></div>
+                {tradeSignal.status === "ready" && tradeBacktest && (
+                  <p className="trade-signal-kpi" data-testid="trade-backtest-summary">
+                    胜率 {tradeBacktest.winRate === null ? "--" : `${formatNumber(tradeBacktest.winRate, 0)}%`} · 策略累计{" "}
+                    {tradeBacktest.strategyReturnPct === null ? "--" : `${formatNumber(tradeBacktest.strategyReturnPct, 1)}%`}
+                  </p>
+                )}
+                {tradeSignal.status === "ready" && (
+                  <div className="trade-signal-details" data-testid="trade-signal-details">
+                        <div data-testid="trade-signal-levels">
+                          <p className="plan-group-title">卖出侧</p>
+                          <div className="level-grid">
+                            {tradeSignal.holding ? (
+                              <>
+                                {tradeSignal.levels.takeProfit !== undefined ? (
+                                  <div><span>止盈位（跌破即卖）</span><strong>{formatNumber(tradeSignal.levels.takeProfit)}</strong></div>
+                                ) : (
+                                  <div><span>止损位（跌破即卖）</span><strong>{formatNumber(tradeSignal.levels.stopLoss)}</strong></div>
+                                )}
+                                {tradeSignal.levels.sellTargetSma !== undefined && (
+                                  <div><span>目标位（站上即卖）</span><strong>{formatNumber(tradeSignal.levels.sellTargetSma)}</strong></div>
+                                )}
+                                {tradeSignal.holdBarsMax !== undefined && (
+                                  <div><span>剩余持有</span><strong>{Math.max(0, tradeSignal.holdBarsMax - (tradeSignal.holdBarsUsed ?? 0))} 根K线</strong></div>
+                                )}
+                                {tradeSignal.levels.sellWatchOne !== undefined && (
+                                  <div className="level-secondary"><span>阶段减仓观察一*</span><strong>{formatNumber(tradeSignal.levels.sellWatchOne)}</strong></div>
+                                )}
+                                {tradeSignal.levels.sellWatchTwo !== undefined && (
+                                  <div className="level-secondary"><span>阶段减仓观察二*</span><strong>{formatNumber(tradeSignal.levels.sellWatchTwo)}</strong></div>
+                                )}
+                              </>
                             ) : (
-                              <div><span>止损位（跌破即卖）</span><strong>{formatNumber(tradeSignal.levels.stopLoss)}</strong></div>
+                              <div><span>离场线</span><strong>空仓，无</strong></div>
                             )}
-                            {tradeSignal.levels.sellTargetSma !== undefined && (
-                              <div><span>目标位（站上即卖）</span><strong>{formatNumber(tradeSignal.levels.sellTargetSma)}</strong></div>
-                            )}
-                            {tradeSignal.holdBarsMax !== undefined && (
-                              <div><span>剩余持有</span><strong>{Math.max(0, tradeSignal.holdBarsMax - (tradeSignal.holdBarsUsed ?? 0))} 根K线</strong></div>
-                            )}
-                            {tradeSignal.levels.sellWatchOne !== undefined && (
-                              <div><span>阶段减仓观察一*</span><strong>{formatNumber(tradeSignal.levels.sellWatchOne)}</strong></div>
-                            )}
-                            {tradeSignal.levels.sellWatchTwo !== undefined && (
-                              <div><span>阶段减仓观察二*</span><strong>{formatNumber(tradeSignal.levels.sellWatchTwo)}</strong></div>
-                            )}
-                          </>
-                        ) : (
-                          <div><span>离场线</span><strong>空仓，无</strong></div>
-                        )}
-                      </div>
-                      <p className="plan-group-title">买入侧</p>
-                      <div className="level-grid">
-                        {tradeSignal.holding ? (
-                          <>
-                            {tradeSignal.levels.addPositionTrigger !== undefined && (
-                              <div><span>加仓触发位（突破）</span><strong>{formatNumber(tradeSignal.levels.addPositionTrigger)}</strong></div>
-                            )}
-                            {tradeSignal.levels.pullbackZoneLow !== undefined && (
+                          </div>
+                          <p className="plan-group-title">买入侧</p>
+                          <div className="level-grid">
+                            {tradeSignal.holding ? (
+                              <>
+                                {tradeSignal.levels.addPositionTrigger !== undefined && (
+                                  <div><span>加仓触发位（突破）</span><strong>{formatNumber(tradeSignal.levels.addPositionTrigger)}</strong></div>
+                                )}
+                                {tradeSignal.levels.pullbackZoneLow !== undefined && (
+                                  <div className="level-secondary">
+                                    <span>回调加仓观察区*</span>
+                                    <strong>{formatNumber(tradeSignal.levels.pullbackZoneLow)} ~ {formatNumber(tradeSignal.levels.pullbackZoneHigh)}</strong>
+                                  </div>
+                                )}
+                                <div><span>信号成本参考</span><strong>{formatNumber(tradeSignal.levels.entryPrice)}</strong></div>
+                              </>
+                            ) : (
                               <div>
-                                <span>回调加仓观察区*</span>
-                                <strong>{formatNumber(tradeSignal.levels.pullbackZoneLow)} ~ {formatNumber(tradeSignal.levels.pullbackZoneHigh)}</strong>
+                                <span>{tradeSignal.buyTriggerDirection === "dip" ? "买入触发位（跌破即买）" : "突破买入触发位"}</span>
+                                <strong>{formatNumber(tradeSignal.levels.nextBuyTrigger)}</strong>
                               </div>
                             )}
-                            <div><span>信号成本参考</span><strong>{formatNumber(tradeSignal.levels.entryPrice)}</strong></div>
-                          </>
-                        ) : (
-                          <div>
-                            <span>{tradeSignal.buyTriggerDirection === "dip" ? "买入触发位（跌破即买）" : "突破买入触发位"}</span>
-                            <strong>{formatNumber(tradeSignal.levels.nextBuyTrigger)}</strong>
-                          </div>
-                        )}
-                        {tradeSignal.levels.gateLevel !== undefined && (
-                          <div><span>趋势门控 SMA60</span><strong>{formatNumber(tradeSignal.levels.gateLevel)}</strong></div>
-                        )}
-                        <div><span>ATR20</span><strong>{formatNumber(tradeSignal.levels.latestAtr)}</strong></div>
-                      </div>
-                      {fanT?.enabled && (
-                        <>
-                          <p className="plan-group-title">反T 波段（持仓高卖低买降成本）</p>
-                          <div className="level-grid" data-testid="fant-levels">
-                            <div>
-                              <span>当前阶段</span>
-                              <strong>{fanT.phase === "full" ? "满仓，等高卖" : "已卖出，等买回"}</strong>
-                            </div>
-                            {fanT.phase === "full" ? (
-                              <div><span>高卖触发位（站上即卖）</span><strong>{formatNumber(fanT.sellTrigger)}</strong></div>
-                            ) : (
-                              <>
-                                <div><span>买回触发位（跌破即买）</span><strong>{formatNumber(fanT.buyBackTrigger)}</strong></div>
-                                <div><span>追高认错位（涨过即买回）</span><strong>{formatNumber(fanT.chaseStop)}</strong></div>
-                                <div><span>卖出参考价</span><strong>{formatNumber(fanT.soldRefPrice)}</strong></div>
-                              </>
+                            {tradeSignal.levels.gateLevel !== undefined && (
+                              <div><span>趋势门控 SMA60</span><strong>{formatNumber(tradeSignal.levels.gateLevel)}</strong></div>
                             )}
+                            <div className="level-secondary"><span>ATR20</span><strong>{formatNumber(tradeSignal.levels.latestAtr)}</strong></div>
                           </div>
-                          <p className="backtest-line" data-testid="fant-backtest-summary">
-                            反T 回测：{fanT.completedRounds} 回合 · 胜 {fanT.winRounds} · 累计价差 {formatNumber(fanT.totalSpreadPct, 1)}% · 最差单回合{" "}
-                            {fanT.worstSpreadPct === null ? "--" : `${formatNumber(fanT.worstSpreadPct, 1)}%`}（正价差 = 摊薄成本）
+                          {fanT?.enabled && (
+                            <>
+                              <p className="plan-group-title">反T 波段（持仓高卖低买降成本）</p>
+                              <div className="level-grid" data-testid="fant-levels">
+                                <div>
+                                  <span>当前阶段</span>
+                                  <strong>{fanT.phase === "full" ? "满仓，等高卖" : "已卖出，等买回"}</strong>
+                                </div>
+                                {fanT.phase === "full" ? (
+                                  <div><span>高卖触发位（站上即卖）</span><strong>{formatNumber(fanT.sellTrigger)}</strong></div>
+                                ) : (
+                                  <>
+                                    <div><span>买回触发位（跌破即买）</span><strong>{formatNumber(fanT.buyBackTrigger)}</strong></div>
+                                    <div><span>追高认错位（涨过即买回）</span><strong>{formatNumber(fanT.chaseStop)}</strong></div>
+                                    <div><span>卖出参考价</span><strong>{formatNumber(fanT.soldRefPrice)}</strong></div>
+                                  </>
+                                )}
+                              </div>
+                              <p className="backtest-line" data-testid="fant-backtest-summary">
+                                反T 回测：{fanT.completedRounds} 回合 · 胜 {fanT.winRounds} · 累计价差 {formatNumber(fanT.totalSpreadPct, 1)}% · 最差单回合{" "}
+                                {fanT.worstSpreadPct === null ? "--" : `${formatNumber(fanT.worstSpreadPct, 1)}%`}（正价差 = 摊薄成本）
+                              </p>
+                            </>
+                          )}
+                          <p className="backtest-line">
+                            * 号为 ATR 投影的阶段观察位（未经回测）；正式买卖以触发位与止损/止盈/目标线为准。
                           </p>
-                        </>
-                      )}
-                      <p className="backtest-line">
-                        * 号为 ATR 投影的阶段观察位（未经回测）；正式买卖以触发位与止损/止盈/目标线为准。
-                      </p>
-                    </>
-                  )}
-                </div>
-                {tradeBacktest && (
-                  <p className="backtest-line" data-testid="trade-backtest-summary">
-                    近 {tradeBacktest.barsUsed} 根日K回测：信号 买{tradeBacktest.buySignals}/卖{tradeBacktest.sellSignals} · 完成 {tradeBacktest.closedTrades} 笔 · 胜率{" "}
-                    {tradeBacktest.winRate === null ? "--" : `${formatNumber(tradeBacktest.winRate, 0)}%`} · 策略累计{" "}
-                    {tradeBacktest.strategyReturnPct === null ? "--" : `${formatNumber(tradeBacktest.strategyReturnPct, 1)}%`} vs 买入持有{" "}
-                    {tradeBacktest.buyHoldReturnPct === null ? "--" : `${formatNumber(tradeBacktest.buyHoldReturnPct, 1)}%`}
-                  </p>
+                        </div>
+                        {tradeBacktest && (
+                          <p className="backtest-line secondary" data-testid="trade-backtest-detail">
+                            近 {tradeBacktest.barsUsed} 根日K：信号 买{tradeBacktest.buySignals}/卖{tradeBacktest.sellSignals} · 完成 {tradeBacktest.closedTrades} 笔 · vs 买入持有{" "}
+                            {tradeBacktest.buyHoldReturnPct === null ? "--" : `${formatNumber(tradeBacktest.buyHoldReturnPct, 1)}%`}
+                          </p>
+                        )}
+                  </div>
                 )}
                 <p className="technical-reminder" data-testid="trade-signal-non-advice">
                   {tradeSignal.nonAdvice}
@@ -631,32 +708,55 @@ export function App() {
               </section>
             )}
 
-            <section className={`signal-card ${mtsTone(mts)}`} data-testid="mts-card">
+            <section className={`signal-card ${mtsCardToneClass(mts)}`} data-testid="mts-card">
               <div className="signal-topline">
                 <span>MTS 解释卡</span>
                 <AreaChart size={18} />
               </div>
-              {activePayload?.sourceHealth?.status && activePayload.sourceHealth.status !== "formal" && (
-                <div className="data-notice" data-testid="signal-degradation-note">
-                  来源状态：{activePayload.sourceHealth.status} · {activePayload.notice || activePayload.sourceHealth.degradationReason}
+              {signalSourceStatus && signalSourceTone !== "normal" && (
+                <div className={signalSourceTone === "warning" ? "notice--warning" : "notice--info"} data-testid="signal-degradation-note">
+                  来源状态：{signalSourceStatus} · {activePayload?.notice || activePayload?.sourceHealth?.degradationReason}
                 </div>
               )}
               {error && !activePayload && (
-                <div className="data-notice" data-testid="signal-error-note">
+                <div className="notice--warning" data-testid="signal-error-note">
                   来源重试失败：{error}
                 </div>
               )}
               <strong data-testid="mts-display-label">{mts.displayLabel}</strong>
-              <div className="score-grid" data-testid="mts-state-grid">
-                <span>trend_state {mts.trendState}</span>
-                <span>mts_score {mts.mtsScore ?? "--"}</span>
-                <span>score_band {mts.scoreBand}</span>
-                <span>signal_type {mts.signalType}</span>
-                <span>alert_level {mts.alertLevel}</span>
-              </div>
+              <p className="mts-trend-summary">{humanizeTrendState(mts.trendState)}</p>
+              <ScoreBar score={mts.mtsScore} notApplicable={mts.scoreBand === "not_applicable"} />
               <p className="technical-reminder" data-testid="mts-non-advice">
                 {mts.technicalReminder}
               </p>
+              <button
+                type="button"
+                className="linkish"
+                data-testid="mts-details-toggle"
+                aria-expanded={mtsDetailsOpen}
+                onClick={() => setMtsDetailsOpen((open) => !open)}
+              >
+                {mtsDetailsOpen ? "收起技术详情" : "展开技术详情"}
+              </button>
+              {mtsDetailsOpen && (
+                <div className="mts-details" data-testid="mts-details">
+                  <div className="score-grid" data-testid="mts-state-grid">
+                    <span>trend_state {mts.trendState}</span>
+                    <span>mts_score {mts.mtsScore ?? "--"}</span>
+                    <span>score_band {mts.scoreBand}</span>
+                    <span>signal_type {mts.signalType}</span>
+                    <span>alert_level {mts.alertLevel}</span>
+                  </div>
+                  {activePayload?.sourceHealth?.retryState && activePayload.sourceHealth.status !== "formal" && (
+                    <p className="mts-retry-meta" data-testid="mts-retry-meta">
+                      重试：第 {activePayload.sourceHealth.retryState.attempt} 次
+                      {activePayload.sourceHealth.retryState.reason
+                        ? ` · ${activePayload.sourceHealth.retryState.reason}`
+                        : ""}
+                    </p>
+                  )}
+                </div>
+              )}
             </section>
 
             <section className="side-section reason-card">
@@ -664,17 +764,35 @@ export function App() {
               <ul className="reason-list" data-testid="mts-reason-list">
                 {mts.reasons.map((item) => (
                   <li key={`${item.code}-${item.detail}`}>
-                    <code>{item.code}</code>
+                    <strong>{item.label || humanizeReason(item.code)}</strong>
                     <span>{item.detail}</span>
                   </li>
                 ))}
                 {mts.invalidators.map((item) => (
                   <li className="warning" key={`${item.code}-${item.detail}`}>
-                    <code>{item.code}</code>
+                    <strong>{item.label || humanizeReason(item.code)}</strong>
                     <span>{item.detail}</span>
                   </li>
                 ))}
               </ul>
+              <button
+                type="button"
+                className="linkish"
+                data-testid="mts-reason-details-toggle"
+                aria-expanded={mtsReasonDetailsOpen}
+                onClick={() => setMtsReasonDetailsOpen((open) => !open)}
+              >
+                {mtsReasonDetailsOpen ? "收起原始理由码" : "展开原始理由码"}
+              </button>
+              {mtsReasonDetailsOpen && (
+                <ul className="reason-code-list" data-testid="mts-reason-codes">
+                  {[...mts.reasons, ...mts.invalidators].map((item) => (
+                    <li key={`code-${item.code}-${item.detail}`}>
+                      <code>{item.code}</code>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           </div>
         )}
@@ -709,6 +827,8 @@ export function App() {
             onRetry={refreshSelected}
           />
         )}
+
+        {detailTab === "holdings" && <HoldingsPanel />}
       </section>
     </main>
   );

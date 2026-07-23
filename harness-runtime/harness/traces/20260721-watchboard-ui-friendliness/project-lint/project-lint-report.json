@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "control": "project_lint",
+  "status": "FAIL",
+  "mode": "blocking",
+  "gate_effect": "block",
+  "generated_at": "2026-07-22T14:34:44.290404+00:00",
+  "config": "/Users/hanbin/Workspace/AI/MyInvestment/project-knowledge/engineering/policies/project-lint.yaml",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "changed_files": [
+    ".claude/launch.json",
+    ".harness/common/skills/stage-gate/scripts/check_contracts.py",
+    "README.md",
+    "harness-runtime/harness/mission-status.yaml",
+    "harness-runtime/harness/state/approvals.json",
+    "harness-runtime/harness/work-graph/_index.yaml",
+    "harness-runtime/harness/work-graph/boards/main.yaml",
+    "harness-runtime/harness/work-graph/indexes/by-kind.yaml",
+    "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+    "harness-runtime/harness/work-graph/indexes/by-relation.yaml",
+    "harness-runtime/harness/work-graph/indexes/by-status.yaml",
+    "harness-runtime/harness/work-graph/operations.log.jsonl",
+    "server/index.js",
+    "src/App.tsx",
+    "src/features/chart/ChartSurface.tsx",
+    "src/features/restore/RestoreStatus.tsx",
+    "src/styles.css",
+    "src/types.ts",
+    "tests/e2e/gate/acceptance-matrix.spec.ts",
+    "tests/e2e/mts/card.spec.ts",
+    "tests/e2e/restore-layout/resume.spec.ts",
+    "tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts",
+    "tests/e2e/workbench/default.spec.ts"
+  ],
+  "command_evidence_count": 2,
+  "command_evidence_refs": [
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/cmd/CMD-001.json",
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/cmd/CMD-002.json"
+  ],
+  "prototype_manifest": null,
+  "prototype_manifest_mtime": null,
+  "findings": [
+    {
+      "level": "FAIL",
+      "rule_id": "P001",
+      "category": "changed_files",
+      "message": "Changed files include protected Harness framework assets.",
+      "remediation": "Do not edit installed .harness framework assets inside a target project. Use the Harness install/update workflow or move the change into project runtime config.",
+      "paths": [
+        ".harness/common/skills/stage-gate/scripts/check_contracts.py"
+      ]
+    },
+    {
+      "level": "WARN",
+      "rule_id": "P003",
+      "category": "agent_instructions",
+      "message": "Agent instruction file lacks project guidance keywords for: test, delivery.",
+      "remediation": "Update AGENTS.md so future agents can find setup commands, test commands, code style, and delivery checks without rediscovery.",
+      "paths": [
+        "AGENTS.md"
+      ]
+    }
+  ]
+}

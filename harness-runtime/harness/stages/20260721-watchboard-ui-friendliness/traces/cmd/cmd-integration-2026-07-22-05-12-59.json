@@ -1,0 +1,14 @@
+{
+  "id": "cmd-integration-2026-07-22-05-12-59",
+  "kind": "command",
+  "layer": "integration",
+  "command": "npm run build && git diff --unified=0 src/styles.css | grep -nE '^[-+].*(\\.data-notice|\\.up|\\.down)' || echo NO_SHARED_CHANGE",
+  "cwd": "/Users/hanbin/Workspace/AI/MyInvestment",
+  "exit_code": 0,
+  "started_at": "2026-07-22T05:12:59.039006+00:00",
+  "ended_at": "2026-07-22T05:13:01.163913+00:00",
+  "result": "pass",
+  "stdout": "\n> my-investment-terminal@0.1.0 build\n> tsc --noEmit && vite build\n\nvite v7.3.3 building client environment for production...\ntransforming...\n\u2713 1726 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.41 kB \u2502 gzip:   0.30 kB\ndist/assets/index-Bffa81bW.css   12.89 kB \u2502 gzip:   3.15 kB\ndist/assets/index-COf5zPpu.js   451.68 kB \u2502 gzip: 145.04 kB\n\u2713 built in 801ms\nNO_SHARED_CHANGE\n",
+  "stderr": "",
+  "artifact": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-12-59.json"
+}

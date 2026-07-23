@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "stage": "prd",
+  "operation": "advance_stage",
+  "from_stage": "prd",
+  "to_stage": "prd",
+  "decision": "continue",
+  "gate_effect": "allow",
+  "contract_check": {
+    "status": "PASS",
+    "artifact": "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/prd.contract.yaml",
+    "contract_type": "behaviour_contract",
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "contract_valid",
+        "message": "Control Contract integrity checks passed"
+      }
+    ]
+  },
+  "artifacts": {
+    "stage_artifact": "harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md",
+    "contract_artifact": "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/prd.contract.yaml"
+  },
+  "control_reports": {
+    "status": "PASS",
+    "controls": [],
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "control_reports_valid",
+        "message": "Control-plane reports allow Stage Gate to continue",
+        "path": ""
+      }
+    ]
+  },
+  "required_checkpoints": [],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [],
+    "approved_checkpoints": [],
+    "missing_checkpoints": [],
+    "approval_ids": {},
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260721-watchboard-ui-friendliness.yaml",
+    "primary_nodes": [
+      "REQ-WATCHBOARD-UI-FRIENDLINESS"
+    ],
+    "related_nodes": [],
+    "lane": "product-definition-lane",
+    "stage": "prd",
+    "operation": "advance_stage"
+  },
+  "ai_interpretation": "prd gate: 8-doc package complete, B/C hinge + full review PASS (2 rounds), anti-pattern/domain-model/delta-lint PASS, contract check PASS"
+}

@@ -50,6 +50,36 @@
       "status": "approved",
       "decided_at": "2026-06-07T14:30:15.578831+08:00",
       "comment": "用户确认接受交付"
+    },
+    {
+      "approval_id": "APR-20260721-006",
+      "mission_id": "20260721-watchboard-ui-friendliness",
+      "type": "tradeoff",
+      "stage": "execute",
+      "checkpoint": "execute",
+      "status": "approved",
+      "decided_at": "2026-07-21T20:05:28.897837+08:00",
+      "comment": "用户明确授权：不用提交、不建 mission/stage worktree，本 mission execute 采用 git.strategy=downgraded，在根工作区直接实现。"
+    },
+    {
+      "approval_id": "APR-20260722-007",
+      "mission_id": "20260721-watchboard-ui-friendliness",
+      "type": "risk",
+      "stage": "verify",
+      "checkpoint": "verify_residual_risk",
+      "status": "approved",
+      "decided_at": "2026-07-22T17:41:37.843654+08:00",
+      "comment": "用户在 verify 阶段 Decision Gate 明确确认：接受 2 项已知非阻断残留风险（NEG-04 未注册理由码兜底缺浏览器层 DOM/截图证据，仅有单元测试证据；axe 可访问性扫描未覆盖本次新增的大量颜色语义状态，仅测了首页正常态和 alerts 面板），放行进入交付阶段。0 个阻断缺口，全部 49 个验收锚点（22 条验收条件 + 7 条负向场景）均有真实命令证据+结果证据支撑，独立复核确认（单测 35/35、E2E 全量 50/50、build 通过、SR-01 范围外零改动独立重跑确认）。"
+    },
+    {
+      "approval_id": "APR-20260722-008",
+      "mission_id": "20260721-watchboard-ui-friendliness",
+      "type": "checkpoint",
+      "stage": "acceptance-result",
+      "checkpoint": "acceptance-result",
+      "status": "approved",
+      "decided_at": "2026-07-22T22:34:06.177849+08:00",
+      "comment": "用户确认接受交付：29/29 验收条件通过（0 失败、0 阻塞）。用户在验收前额外要求将本地开发服务器默认端口从 5173 改为 4271（避开常用端口），已实施并独立验证（server/index.js/README/Browser 预览配置三处同步更新，实际启动监听 HTTP 200 确认，playwright.config.ts 的 E2E 专用端口 5174 未受影响）。残留风险（E2E-FND-001 axe 覆盖面不足、E2E-FND-002 NEG-04 缺浏览器层证据）均为 Med 级，已在 verify 阶段经 APR-20260722-007 记录接受。"
     }
   ]
 }

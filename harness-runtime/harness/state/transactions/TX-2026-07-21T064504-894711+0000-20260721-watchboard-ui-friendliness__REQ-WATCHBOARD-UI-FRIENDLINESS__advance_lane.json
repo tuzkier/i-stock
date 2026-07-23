@@ -1,0 +1,122 @@
+{
+  "transaction_id": "TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane",
+  "status": "committed",
+  "started_at": "2026-07-21T06:45:04.894848+00:00",
+  "ended_at": "2026-07-21T06:45:05.160890+00:00",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "operation_id": "20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmp5jc04x0_.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-status.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane.yaml",
+        "harness-runtime/harness/work-graph/trees/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "stage_files",
+      "changed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-status.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane.yaml",
+        "harness-runtime/harness/work-graph/trees/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml"
+      ]
+    },
+    {
+      "id": "commit",
+      "committed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-status.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane.yaml",
+        "harness-runtime/harness/work-graph/trees/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml"
+      ]
+    },
+    {
+      "id": "post_commit_check",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "cleanup_staging",
+      "staging_root": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/staging",
+      "status": "removed"
+    }
+  ],
+  "rollback": {
+    "snapshots": [
+      {
+        "original": "harness-runtime/harness/mission-status.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/mission-status.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/_index.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/_index.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/boards/main.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/boards/main.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/indexes/by-lane.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/indexes/by-status.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/indexes/by-status.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/requirements/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/nodes/requirements/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/operations.log.jsonl"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane.yaml",
+        "existed": false
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/trees/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-21T064504-894711+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/before/harness-runtime/harness/work-graph/trees/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml"
+      }
+    ]
+  }
+}

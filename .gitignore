@@ -10,3 +10,7 @@ test-results/
 .env
 .env.*
 !.env.example
+
+# Python 编译缓存
+__pycache__/
+*.pyc

@@ -88,6 +88,10 @@ export type TradeBacktestReport = {
   averageReturnPct: number | null;
   strategyReturnPct: number | null;
   buyHoldReturnPct: number | null;
+  /** 策略每日盯市权益曲线的最大回撤（%，≤0）。用于强单边票「回撤比持有低」验收口径。 */
+  maxDrawdownPct: number | null;
+  /** 同期买入持有权益曲线的最大回撤（%，≤0），作为回撤对比基准。 */
+  buyHoldMaxDrawdownPct: number | null;
   note: string;
 };
 
@@ -185,6 +189,21 @@ function lowestClose(bars: PriceBar[], endExclusive: number, lookback: number) {
     if (bars[i].close < min) min = bars[i].close;
   }
   return min;
+}
+
+/** 权益曲线最大回撤（%，返回 ≤0 的数）；空序列返回 null。 */
+function maxDrawdownPct(series: number[]): number | null {
+  if (series.length === 0) return null;
+  let peak = series[0];
+  let worst = 0;
+  for (const value of series) {
+    if (value > peak) peak = value;
+    if (peak > 0) {
+      const drawdown = ((value - peak) / peak) * 100;
+      if (drawdown < worst) worst = drawdown;
+    }
+  }
+  return worst;
 }
 
 type EngineResult = {
@@ -546,6 +565,50 @@ export const STRATEGIES: TradeStrategyDefinition[] = [
   }
 ];
 
+STRATEGIES.push(
+  {
+    key: "smic",
+    strategyId: "smic-0981-breakout-trail-v1",
+    label: "0981.HK 买卖信号",
+    styleTag: "趋势跟随",
+    displaySymbol: "HK.00981",
+    matches: (symbol) => matchHkSymbol(symbol, ["HK.00981", "HK.0981", "00981.HK", "0981.HK", "981.HK"]),
+    // 实证：近1年买入持有 +79%、创新高后10日 +1.9%/创新低后10日 +4.0% 均正期望，属强单边上涨。
+    // 参数由自身数据扫参：lookback=20 / 3×ATR20 跟踪，回测约 +78% 收益、-26% 最大回撤（持有 -44%），
+    // 以更小回撤跟住主升段。均值回归会过早离场封住上行，故改趋势跟随。
+    config: { kind: "breakout_trail", lookback: 20, trailAtrMultiple: 3 },
+    nonAdvice: "信号由「20 日收盘新高突破买入 + 3×ATR20 跟踪离场」的固定规则计算，仅作技术分析提醒，不构成投资建议或收益承诺。",
+    dataWarning: "该标的日波动约 5.2%（强单边高波动），趋势跟随以更小回撤跟住主升段；信号触发价与执行价可能偏差较大，未纳入财报、消息面与持仓约束。"
+  },
+  {
+    key: "xiaomi",
+    strategyId: "xiaomi-1810-defensive-v1",
+    label: "1810.HK 买卖信号",
+    styleTag: "防守门控",
+    displaySymbol: "HK.01810",
+    matches: (symbol) => matchHkSymbol(symbol, ["HK.01810", "HK.1810", "01810.HK", "1810.HK"]),
+    config: { kind: "breakout_trail", lookback: 20, trailAtrMultiple: 3, smaGatePeriod: 60 },
+    fanT: { sellLookback: 15, smaPeriod: 20, buyLookback: 15, chaseAtrMultiple: 1.0 },
+    nonAdvice:
+      "该标的过去一年抄底与追涨均为负期望；本策略为防守型（站上 SMA60 且 20 日新高才试仓，3×ATR20 跟踪离场），大部分时间输出空仓观望。仅作技术分析提醒，不构成投资建议。",
+    dataWarning: "实证提示：该标的 15 日新低后 10 日均值 -2.57%（胜率 29%）、20 日新高后 10 日均值 -4.03%（胜率 25%），系统靠少交易避险，非盈利引擎。"
+  },
+  {
+    key: "kingboard",
+    strategyId: "kingboard-1888-breakout-trail-v1",
+    label: "1888.HK 买卖信号",
+    styleTag: "趋势跟随",
+    displaySymbol: "HK.01888",
+    matches: (symbol) => matchHkSymbol(symbol, ["HK.01888", "HK.1888", "01888.HK", "1888.HK"]),
+    // 实证：近1年买入持有 +489%、创新高后10日均值 +11.6%（胜率67%）超强动量、66% 时间站上 SMA60。
+    // 参数由自身数据扫参：lookback=15 / 3×ATR20 跟踪，回测约 +447% 收益、-33% 最大回撤（持有 -61%），
+    // 以显著更小回撤跟住主升段。日振幅极高故用较宽跟踪，避免正常波动误触离场。
+    config: { kind: "breakout_trail", lookback: 15, trailAtrMultiple: 3 },
+    nonAdvice: "信号由「15 日收盘新高突破买入 + 3×ATR20 跟踪离场」的固定规则计算，仅作技术分析提醒，不构成投资建议或收益承诺。",
+    dataWarning: "该标的日波动约 6.8%（87% 交易日振幅超 3%，自选中最高波动），触发价与执行价可能大幅偏差；趋势跟随目标是以显著更小回撤跟住主升段，未纳入财报、消息面与持仓约束。"
+  }
+);
+
 export function resolveTradeStrategy(symbol = "") {
   return STRATEGIES.find((strategy) => strategy.matches(symbol));
 }
@@ -585,7 +648,7 @@ export function buildTradeSignalState(observation: MarketObservation): TradeSign
       status: "not_target_symbol",
       stance: "watch",
       stanceLabel: "该标的暂无定制算法",
-      reasons: ["当前只为 HK.09988 / HK.00700 / HK.03690 提供定制信号算法。"]
+      reasons: ["当前只为 HK.09988 / HK.00700 / HK.03690 / HK.00981 / HK.01810 / HK.01888 提供定制信号算法。"]
     };
   }
 
@@ -713,6 +776,37 @@ export function runTradeBacktest(symbol: string, bars: PriceBar[]): TradeBacktes
   const buyHoldReturnPct =
     firstBar && lastBar && firstBar.open > 0 ? ((lastBar.close - firstBar.open) / firstBar.open) * 100 : null;
 
+  // 每日盯市权益曲线：买入信号次日开盘进场、卖出信号次日开盘离场，持仓期间按当日收盘估值。
+  // 与上面 trades 的成交口径一致，用于计算策略最大回撤（不引入前视偏差）。
+  const execs: { index: number; side: TradeSignalSide }[] = [];
+  for (const event of events) {
+    const execIndex = event.index + 1;
+    if (bars[execIndex]) execs.push({ index: execIndex, side: event.side });
+  }
+  const strategyCurve: number[] = [];
+  let equity = 1;
+  let inPosition = false;
+  let heldShares = 0;
+  let execCursor = 0;
+  for (let i = 0; i < bars.length; i += 1) {
+    while (execCursor < execs.length && execs[execCursor].index === i) {
+      const exec = execs[execCursor];
+      if (exec.side === "buy" && !inPosition && bars[i].open > 0) {
+        heldShares = equity / bars[i].open;
+        inPosition = true;
+      } else if (exec.side === "sell" && inPosition) {
+        equity = heldShares * bars[i].open;
+        inPosition = false;
+        heldShares = 0;
+      }
+      execCursor += 1;
+    }
+    strategyCurve.push(inPosition ? heldShares * bars[i].close : equity);
+  }
+  const maxDrawdown = maxDrawdownPct(strategyCurve);
+  const buyHoldCurve = firstBar ? [firstBar.open, ...bars.map((bar) => bar.close)] : [];
+  const buyHoldMaxDrawdown = maxDrawdownPct(buyHoldCurve);
+
   return {
     strategyId: def?.strategyId ?? "none",
     symbol: normalizeSymbol(symbol),
@@ -728,6 +822,8 @@ export function runTradeBacktest(symbol: string, bars: PriceBar[]): TradeBacktes
       closedTrades.length > 0 ? closedTrades.reduce((sum, trade) => sum + trade.returnPct, 0) / closedTrades.length : null,
     strategyReturnPct,
     buyHoldReturnPct,
+    maxDrawdownPct: maxDrawdown,
+    buyHoldMaxDrawdownPct: buyHoldMaxDrawdown,
     note: "长仓规则回测：信号次日开盘成交，未平仓头寸按期末收盘估值；结果仅用于检验规则历史表现，不构成收益承诺。"
   };
 }

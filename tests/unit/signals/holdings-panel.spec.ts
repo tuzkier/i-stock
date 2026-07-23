@@ -55,3 +55,38 @@ test("持仓面板：缺 K 线的已注册标的降级为 uncovered，不抛错"
   assert.equal(panel.uncovered.length, 1);
   assert.equal(panel.uncovered[0].code, "HK.00981");
 });
+
+// 震荡序列，供反T 启用的腾讯（0700）判定阶段。
+function oscillatingBars(): PriceBar[] {
+  const closes: number[] = [];
+  for (let i = 0; i < 220; i += 1) closes.push(400 + Math.sin(i / 9) * 30 + Math.sin(i / 3.1) * 6);
+  return closes.map((close, index) => bar(index, close));
+}
+
+test("持仓面板：反T 阶段由真实成交判定——最近卖出=已减档等买回", () => {
+  const bars = oscillatingBars();
+  const positions = [{ code: "HK.00700", stock_name: "腾讯控股", qty: 100, cost_price: 500, nominal_price: bars.at(-1)!.close, pl_ratio: -5 }];
+  const deals = {
+    "HK.00700": [
+      { code: "HK.00700", trd_side: "BUY", qty: 100, price: 480, create_time: "2026-01-02 10:00:00" },
+      { code: "HK.00700", trd_side: "SELL", qty: 50, price: 520, create_time: "2026-07-23 13:00:00" } // 最近一笔=卖
+    ]
+  };
+  const panel = buildHoldingsPanel(positions, { "HK.00700": bars }, deals);
+  const tx = panel.holdings.find((h) => h.code === "HK.00700");
+  assert.ok(tx, "腾讯应进 holdings");
+  assert.equal(tx!.fanT.enabled, true, "腾讯反T 启用");
+  assert.equal(tx!.lastDeal?.side, "SELL", "最近一笔应识别为卖出（时间倒序取最新）");
+  assert.equal(tx!.fanTRealPhase, "reduced", "最近卖出 → 已减档等买回");
+  assert.equal(typeof tx!.fanTBuyBackTrigger, "number", "应给出买回触发位");
+  assert.equal(typeof tx!.fanTSellTrigger, "number", "应始终给出高卖触发位");
+});
+
+test("持仓面板：无卖出记录时反T 判定为满仓可高卖", () => {
+  const bars = oscillatingBars();
+  const positions = [{ code: "HK.00700", stock_name: "腾讯控股", qty: 100, cost_price: 500, nominal_price: bars.at(-1)!.close, pl_ratio: -5 }];
+  const deals = { "HK.00700": [{ code: "HK.00700", trd_side: "BUY", qty: 100, price: 480, create_time: "2026-01-02 10:00:00" }] };
+  const panel = buildHoldingsPanel(positions, { "HK.00700": bars }, deals);
+  const tx = panel.holdings.find((h) => h.code === "HK.00700")!;
+  assert.equal(tx.fanTRealPhase, "full", "最近为买入 → 满仓可高卖");
+});

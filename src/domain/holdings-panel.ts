@@ -20,6 +20,23 @@ export type RawPosition = {
   market_val?: number;
 };
 
+/** FutuOpenD 历史成交查询返回的单条成交（字段与 server/futud-deals.py 输出一致）。 */
+export type RawDeal = {
+  code: string;
+  stock_name?: string;
+  trd_side?: string; // BUY | SELL
+  qty?: number;
+  price?: number;
+  create_time?: string;
+};
+
+export type DealRecord = {
+  side: "BUY" | "SELL" | string;
+  qty: number;
+  price: number;
+  time: string;
+};
+
 export type HoldingBase = {
   code: string;
   name: string;
@@ -39,8 +56,21 @@ export type CoveredHolding = HoldingBase & {
   chandelierStop?: number;
   /** 吊灯止损是否已被现价跌破（趋势止损意义上应已离场）。 */
   chandelierBreached?: boolean;
-  /** 反T 降成本状态（仅震荡回归型标的启用）。 */
+  /** 反T 降成本状态（仅震荡回归型标的启用；基于模拟）。 */
   fanT: FanTState;
+  /** 该标的近期真实成交（按时间倒序，最多若干条）。 */
+  recentDeals: DealRecord[];
+  /** 最近一笔真实成交（用于判断真实反T 进度）。 */
+  lastDeal?: DealRecord;
+  /**
+   * 基于真实成交判断的反T 阶段（仅 fanT 启用时有意义）：
+   * 最近一笔为 SELL → "reduced"（已减档，等买回）；否则 "full"（满仓，可高卖）。
+   */
+  fanTRealPhase?: "full" | "reduced";
+  /** 反T 高卖触发位（近 sellLookback 日最高收盘）；始终计算，供满仓阶段用。 */
+  fanTSellTrigger?: number;
+  /** 反T 买回触发位（近 buyLookback 日最低收盘）；始终计算，供已减档阶段用。 */
+  fanTBuyBackTrigger?: number;
 };
 
 export type HoldingsPanel = {
@@ -70,6 +100,14 @@ function highestClose(bars: PriceBar[], lookback: number): number {
   return max;
 }
 
+function lowestClose(bars: PriceBar[], lookback: number): number {
+  let min = Number.POSITIVE_INFINITY;
+  for (let i = Math.max(0, bars.length - lookback); i < bars.length; i += 1) {
+    if (bars[i].close < min) min = bars[i].close;
+  }
+  return min;
+}
+
 /** 吊灯止损：近 lookback 日最高收盘 − trailK×ATR20。对任何持仓者有效，与策略是否模拟在场无关。 */
 export function chandelierStop(bars: PriceBar[], lookback: number, trailK: number): number | undefined {
   const atr = latestAtr(bars);
@@ -93,7 +131,28 @@ function toBase(position: RawPosition): HoldingBase {
  * @param positions 持仓列表（来自 futud-positions.py）
  * @param barsBySymbol 每个已注册标的的日线 K 线（键为 position.code 的原始写法）
  */
-export function buildHoldingsPanel(positions: RawPosition[], barsBySymbol: Record<string, PriceBar[]>): HoldingsPanel {
+function toDealRecords(deals: RawDeal[]): DealRecord[] {
+  return deals
+    .map((deal) => ({
+      side: String(deal.trd_side ?? ""),
+      qty: Number(deal.qty ?? 0),
+      price: Number(deal.price ?? 0),
+      time: String(deal.create_time ?? "")
+    }))
+    .sort((a, b) => (a.time < b.time ? 1 : a.time > b.time ? -1 : 0)); // 时间倒序，最新在前
+}
+
+/**
+ * 把 FutuOpenD 真实持仓与各标的定制策略组装成持仓操作面板。纯函数：不做 I/O。
+ * @param positions 持仓列表（来自 futud-positions.py）
+ * @param barsBySymbol 每个已注册标的的日线 K 线（键为 position.code 的原始写法）
+ * @param dealsBySymbol 每个标的的真实历史成交（来自 futud-deals.py），用于判断反T 真实进度
+ */
+export function buildHoldingsPanel(
+  positions: RawPosition[],
+  barsBySymbol: Record<string, PriceBar[]>,
+  dealsBySymbol: Record<string, RawDeal[]> = {}
+): HoldingsPanel {
   const holdings: CoveredHolding[] = [];
   const uncovered: HoldingBase[] = [];
 
@@ -116,6 +175,16 @@ export function buildHoldingsPanel(positions: RawPosition[], barsBySymbol: Recor
       if (stop !== undefined) breached = base.price < stop;
     }
 
+    const recentDeals = toDealRecords(dealsBySymbol[base.code] ?? dealsBySymbol[position.code] ?? []);
+    const lastDeal = recentDeals[0];
+    const fanTRealPhase = fanT.enabled ? (lastDeal?.side === "SELL" ? "reduced" : "full") : undefined;
+    let fanTSellTrigger: number | undefined;
+    let fanTBuyBackTrigger: number | undefined;
+    if (fanT.enabled && strategy.fanT) {
+      fanTSellTrigger = highestClose(bars, strategy.fanT.sellLookback);
+      fanTBuyBackTrigger = lowestClose(bars, strategy.fanT.buyLookback);
+    }
+
     holdings.push({
       ...base,
       strategyLabel: strategy.label,
@@ -123,7 +192,12 @@ export function buildHoldingsPanel(positions: RawPosition[], barsBySymbol: Recor
       signal,
       chandelierStop: stop,
       chandelierBreached: breached,
-      fanT
+      fanT,
+      recentDeals: recentDeals.slice(0, 6),
+      lastDeal,
+      fanTRealPhase,
+      fanTSellTrigger,
+      fanTBuyBackTrigger
     });
   }
 

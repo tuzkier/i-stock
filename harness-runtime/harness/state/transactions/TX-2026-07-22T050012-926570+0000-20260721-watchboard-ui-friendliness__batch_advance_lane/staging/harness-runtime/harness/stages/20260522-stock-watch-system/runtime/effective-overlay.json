@@ -1,0 +1,150 @@
+{
+  "mission": "20260522-stock-watch-system",
+  "task_id": "T001",
+  "authorized_paths": [
+    "fixtures/watchlist/**",
+    "src/data/markets.ts",
+    "src/domain/market-normalization.ts",
+    "src/features/watchlist/**",
+    "src/lib/storage.ts",
+    "src/types.ts",
+    "tests/e2e/watchlist/**",
+    "tests/unit/watchlist/**"
+  ],
+  "prohibited_paths": [
+    "harness-runtime/harness/stages/**/contracts/**",
+    "harness-runtime/harness/stages/**/product/**",
+    "harness-runtime/harness/stages/**/solution.md",
+    "harness-runtime/harness/stages/**/tech-design.md",
+    "server/index.js",
+    "src/lib/signals.ts"
+  ],
+  "stop_if": [
+    "archive_as_physical_delete",
+    "automatic_market_guessing",
+    "changes_outside_authorized_paths",
+    "design_constraint_conflict",
+    "new_external_dependency",
+    "new_public_behavior_without_delta_spec"
+  ],
+  "overlay": {
+    "permissions": {
+      "allow": [
+        "Edit(src/data/markets.ts)",
+        "Write(src/data/markets.ts)",
+        "Edit(src/domain/market-normalization.ts)",
+        "Write(src/domain/market-normalization.ts)",
+        "Edit(src/lib/storage.ts)",
+        "Write(src/lib/storage.ts)",
+        "Edit(src/types.ts)",
+        "Write(src/types.ts)"
+      ],
+      "deny": [
+        "Edit(server/index.js)",
+        "Write(server/index.js)",
+        "Edit(src/lib/signals.ts)",
+        "Write(src/lib/signals.ts)"
+      ],
+      "ask": [
+        "Edit(src/features/watchlist/**)",
+        "Write(src/features/watchlist/**)",
+        "Edit(tests/unit/watchlist/**)",
+        "Write(tests/unit/watchlist/**)",
+        "Edit(tests/e2e/watchlist/**)",
+        "Write(tests/e2e/watchlist/**)",
+        "Edit(fixtures/watchlist/**)",
+        "Write(fixtures/watchlist/**)",
+        "Edit(harness-runtime/harness/stages/**/contracts/**)",
+        "Write(harness-runtime/harness/stages/**/contracts/**)",
+        "Edit(harness-runtime/harness/stages/**/product/**)",
+        "Write(harness-runtime/harness/stages/**/product/**)",
+        "Edit(harness-runtime/harness/stages/**/solution.md)",
+        "Write(harness-runtime/harness/stages/**/solution.md)",
+        "Edit(harness-runtime/harness/stages/**/tech-design.md)",
+        "Write(harness-runtime/harness/stages/**/tech-design.md)"
+      ]
+    },
+    "stop_if_hooks": [
+      {
+        "task_id": "T001",
+        "flag": "changes_outside_authorized_paths",
+        "fallback": "execute_postuse_hook_pending_m5"
+      },
+      {
+        "task_id": "T001",
+        "flag": "new_public_behavior_without_delta_spec",
+        "fallback": "execute_postuse_hook_pending_m5"
+      },
+      {
+        "task_id": "T001",
+        "flag": "design_constraint_conflict",
+        "fallback": "execute_postuse_hook_pending_m5"
+      },
+      {
+        "task_id": "T001",
+        "flag": "new_external_dependency",
+        "fallback": "execute_postuse_hook_pending_m5"
+      },
+      {
+        "task_id": "T001",
+        "flag": "automatic_market_guessing",
+        "fallback": "execute_postuse_hook_pending_m5"
+      },
+      {
+        "task_id": "T001",
+        "flag": "archive_as_physical_delete",
+        "fallback": "execute_postuse_hook_pending_m5"
+      }
+    ],
+    "fallback_log": [
+      {
+        "task_id": "T001",
+        "field": "authorized_paths",
+        "pattern": "src/features/watchlist/**",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "authorized_paths",
+        "pattern": "tests/unit/watchlist/**",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "authorized_paths",
+        "pattern": "tests/e2e/watchlist/**",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "authorized_paths",
+        "pattern": "fixtures/watchlist/**",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "prohibited_paths",
+        "pattern": "harness-runtime/harness/stages/**/contracts/**",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "prohibited_paths",
+        "pattern": "harness-runtime/harness/stages/**/product/**",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "prohibited_paths",
+        "pattern": "harness-runtime/harness/stages/**/solution.md",
+        "reason": "complex_glob"
+      },
+      {
+        "task_id": "T001",
+        "field": "prohibited_paths",
+        "pattern": "harness-runtime/harness/stages/**/tech-design.md",
+        "reason": "complex_glob"
+      }
+    ]
+  }
+}

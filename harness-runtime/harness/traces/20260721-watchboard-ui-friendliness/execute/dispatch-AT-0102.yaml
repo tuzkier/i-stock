@@ -1,0 +1,31 @@
+execution_unit_id: AT-0102
+parent_task_id: PT-01
+task_node_id: TASK-WATCHBOARD-UI-T001
+execution_context:
+  skill: execute
+  role_package_refs:
+    frontend-engineer: .harness/common/agents/frontend-engineer.md
+    test-engineer: .harness/common/agents/test-engineer.md
+    spec-reviewer: .harness/common/agents/spec-reviewer.md
+surfaces:
+  - frontend_ui
+primary_executors:
+  - frontend-engineer
+supporting_executors:
+  - test-engineer
+reviewers:
+  - spec-reviewer
+depends_on: [AT-0101]
+write_scope:
+  - src/types.ts
+  - src/features/presentation/tone.ts
+  - tests/unit/presentation/tone.spec.ts
+parallel_group: serial-pt01
+conflict_risk: low
+blocked: false
+system_ops: [SUC-01-OP-01, SUC-02-OP-01]
+required_evidence: [red_report, green_report, regression_report]
+notes:
+  - surface_mapping: presentation_mapping_layer -> frontend_ui
+  - TDD mandatory: write failing tone.spec.ts BEFORE tone.ts implementation
+  - do not delete App.tsx mtsTone yet

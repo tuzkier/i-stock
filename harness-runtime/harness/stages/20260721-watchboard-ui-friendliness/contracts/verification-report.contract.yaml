@@ -1,0 +1,1586 @@
+control_contract:
+  type: evidence_contract
+  subtype: verification_evidence
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: verify
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+    sections:
+    - Acceptance Scenarios
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    sections:
+    - Control Contract
+    - Tasks
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+    sections:
+    - SCN
+    - NEG
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/code-review/code-review.md
+    sections:
+    - Control Contract
+  consumers:
+  - delivery
+  - retrospective
+  - stage-gate
+  execution_result:
+    id: EXE-VERIFY-001
+    role: verification-engineer
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/verify/verification-report.md
+    fulfilled_obligations:
+    - OBL-VERIFY-001
+    decision_log:
+    - e2e-status.json 顶层 status=FAIL 独立复核确认为控制面探测口径缺口（T007 accessibility_smoke 未识别内嵌于
+      Playwright spec 的 axe 断言），e2e_plan_status/e2e_run_status 均为 PASS，本轮已亲自读代码确认
+      scope-guard.spec.ts:216 与 t001-watchlist-archive-restore.spec.ts:152 两处 axe
+      断言真实存在且通过，采用 code-review.md 已记录结论并独立验证，不视为验证阻断
+    - project-lint 初次以单一 command-evidence 文件调用返回 P002 FAIL（kind=command 与规则期望的 kind=test
+      不匹配），改用 --mission 默认目录（含 execute 阶段遗留的 kind=test 证据 CMD-002.json）重跑后转为 WARN（仅
+      P003 AGENTS.md 关键词提示，非阻断），已记录为已知探测口径问题，不视为验证阻断
+    - SCN-01-COND-05 的 restoreMetadata.status=failed 具体值、NEG-04 未注册理由码浏览器层注入两项，execute/code-review
+      阶段已记录为结构性不可达或已接受的 Med/Low 风险（DEV-01/TDD-FND-004/E2E-FND-002），本轮独立复核维持同一结论，不重新展开调查，如实沿用
+    traceability_matrix: []
+    evidence_refs:
+    - CMD-UNIT-01
+    - CMD-BUILD-BASE
+    - CMD-E2E-FULL
+    - CMD-INT-T001
+    - CMD-E2E-T002
+    - CMD-E2E-T003
+    - CMD-INT-T002
+    - CMD-INT-T003
+    - CMD-E2E-T004
+    - CMD-INT-T004
+    - CMD-E2E-T005A
+    - CMD-E2E-T005B
+    - CMD-INT-T005
+    - CMD-E2E-T006
+    - CMD-INT-T006
+    - CMD-E2E-T007A
+    - CMD-E2E-T007B
+    - CMD-INT-T007
+    - CMD-CTX-001
+    - CMD-CTX-002
+    - CMD-LINT-01
+    - CMD-E2E-STATUS-01
+    - EV-RESULT-01
+    - EV-RESULT-02
+    - EV-RESULT-03
+    - EV-RESULT-04
+    - EV-RESULT-05
+    - EV-RESULT-06
+    - EV-RESULT-07
+    - EV-RESULT-08
+    - EV-RESULT-09
+    - EV-RESULT-10
+    - EV-RESULT-11
+    - EV-RESULT-12
+    - EV-RESULT-13
+    - EV-RESULT-14
+    - EV-RESULT-15
+    - EV-RESULT-16
+    - EV-RESULT-17
+    - EV-RESULT-18
+    - EV-RESULT-19
+    - EV-RESULT-20
+    - EV-RESULT-21
+    - EV-RESULT-22
+    - EV-RESULT-23
+    - EV-RESULT-24
+    - EV-RESULT-25
+    - EV-RESULT-26
+    - EV-RESULT-27
+    - EV-RESULT-28
+    - EV-RESULT-29
+    open_questions: []
+    concerns:
+    - E2E-FND-001（Med，已接受）：axe 扫描未覆盖 notice--info/warning/tone-* 等新颜色语义承载态
+    - E2E-FND-002（Med，已接受）：NEG-04 未注册理由码回落只有单测证据，缺浏览器层 DOM 注入证明
+    - TDD-FND-002~005（Low，已接受）：交易信号卡非 ready 子态覆盖、toolchain 探测口径误报、AT-0601 failed 态无生产可达路径、全项目缺
+      mutation testing
+    - RISK-DOC-01 / RISK-CSS-01（Low，已接受）：tech-design 文档同步缺口、SR-01 措辞与 CSS-only 重排授权字面张力
+    - e2e-status.json 顶层 FAIL 为控制面探测口径缺口，非真实能力缺失（本轮已独立复核确认）
+  obligations:
+  - id: OBL-VERIFY-001
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: verification
+    risk: medium
+    traces_to:
+      acceptance:
+      - DEC-S01
+      - DEC-S02
+      - DEC-S03
+      - SUC-01-OP-01
+      - SUC-02-OP-01
+      - SCN-01
+      - SCN-02
+      - watchboard-presentation/spec.md#负向评分与来源故障色物理区分
+      - watchboard-presentation/spec.md#未注册理由码兜底不直呈
+      - SUC-02-OP-02
+      - DEC-S04
+      - watchboard-presentation/spec.md#主视图不暴露原始枚举/理由代码
+      - watchboard-presentation/spec.md#评分以进度条式可读呈现
+      - watchboard-presentation/spec.md#原始枚举/理由代码仅在展开详情可见
+      - watchboard-presentation/spec.md#非 ready 技术/交易状态人话化
+      - SUC-03-OP-01
+      - SUC-03-OP-02
+      - DEC-S08
+      - SCN-05
+      - SCN-07
+      - watchboard-presentation/spec.md#主卡突出、次级降灰形成层级差
+      - watchboard-presentation/spec.md#免责声明保持可见
+      - watchboard-presentation/spec.md#默认呈现关键数字
+      - watchboard-presentation/spec.md#三段回测明细默认折叠、展开后呈现
+      - watchboard-presentation/spec.md#仅 ready 呈现回测块、价位分层级
+      - watchboard-presentation/spec.md#来源降级时信号卡同步降级
+      - SUC-04-OP-01
+      - DEC-S05
+      - SCN-06
+      - SCN-03
+      - watchboard-presentation/spec.md#侧栏条目主看信息突出
+      - watchboard-presentation/spec.md#侧栏来源弱化为小圆点非主源
+      - watchboard-presentation/spec.md#归档标的弱化区分
+      - SUC-05-OP-01
+      - SUC-01-OP-02
+      - DEC-S09
+      - SCN-04
+      - watchboard-presentation/spec.md#来源正常态不出现警告色
+      - watchboard-presentation/spec.md#来源真异常态出现警告色并标注受影响范围
+      - watchboard-presentation/spec.md#demo_fallback 呈信息级不用高危警告色（DEC-01 默认档，待用户确认）
+      - watchboard-presentation/spec.md#来源状态收敛到唯一权威主源
+      - watchboard-presentation/spec.md#价格/涨跌收敛唯一主源且涨跌色与警告色分离
+      - watchboard-presentation/spec.md#标题为顶部视觉主位、控件降级
+      - watchboard-presentation/spec.md#切换周期/布局后标题仍主位、切换语义不变
+      - SUC-06-OP-01
+      - DEC-S06
+      - watchboard-presentation/spec.md#工作台正常恢复态不出现警告色黄条
+      - watchboard-presentation/spec.md#工作台恢复失败态出现需关注提示
+      - watchboard-presentation/spec.md#恢复态与来源态各自独立承载
+      task:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+    required_evidence:
+    - command_result
+    - result_evidence
+    required_roles:
+    - verification-effectiveness-reviewer
+    blocking: true
+    source: inferred
+  command_evidence:
+  - id: CMD-UNIT-01
+    command: node --test tests/unit/presentation/tone.spec.ts tests/unit/presentation/humanize.spec.ts
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:06:26.383919+00:00'
+    ended_at: '2026-07-22T05:06:26.537787+00:00'
+    result: pass
+    summary: exit_code=0, result=pass; also satisfies re-T001-2
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-unit-2026-07-22-05-06-26.json
+    required_evidence_id: re-T001-1
+  - id: CMD-BUILD-BASE
+    command: npm run build
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:06:35.301136+00:00'
+    ended_at: '2026-07-22T05:06:37.441456+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-06-35.json
+  - id: CMD-E2E-FULL
+    command: npx playwright test
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:06:41.246240+00:00'
+    ended_at: '2026-07-22T05:07:01.723260+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-06-41.json
+  - id: CMD-INT-T001
+    command: npm run build && git diff --unified=0 src/styles.css | grep -nE '^[-+].*(\.data-notice|\.up|\.down)'
+      || echo NO_SHARED_CHANGE
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:12:59.039006+00:00'
+    ended_at: '2026-07-22T05:13:01.163913+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-12-59.json
+    required_evidence_id: re-T001-3
+  - id: CMD-E2E-T002
+    command: npm run test:e2e -- mts
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:13:04.639503+00:00'
+    ended_at: '2026-07-22T05:13:08.832197+00:00'
+    result: pass
+    summary: exit_code=0, result=pass; also satisfies re-T002-2
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-13-04.json
+    required_evidence_id: re-T002-1
+  - id: CMD-E2E-T003
+    command: npm run test:e2e -- gate
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:13:09.020346+00:00'
+    ended_at: '2026-07-22T05:13:15.371496+00:00'
+    result: pass
+    summary: exit_code=0, result=pass; also satisfies re-T003-2
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-13-09.json
+    required_evidence_id: re-T003-1
+  - id: CMD-INT-T002
+    command: npm run build && npm run test:e2e -- mts
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:13:18.858778+00:00'
+    ended_at: '2026-07-22T05:13:24.638994+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-13-18.json
+    required_evidence_id: re-T002-3
+  - id: CMD-INT-T003
+    command: npm run build && npm run test:e2e
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:13:24.803431+00:00'
+    ended_at: '2026-07-22T05:13:46.108510+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-13-24.json
+    required_evidence_id: re-T003-3
+  - id: CMD-E2E-T004
+    command: npm run test:e2e -- watchlist
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:13:49.788640+00:00'
+    ended_at: '2026-07-22T05:13:54.012884+00:00'
+    result: pass
+    summary: exit_code=0, result=pass; also satisfies re-T004-2
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-13-49.json
+    required_evidence_id: re-T004-1
+  - id: CMD-INT-T004
+    command: npm run build && npm run test:e2e -- watchlist
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:13:54.199739+00:00'
+    ended_at: '2026-07-22T05:13:59.924919+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-13-54.json
+    required_evidence_id: re-T004-3
+  - id: CMD-E2E-T005A
+    command: npm run test:e2e -- workbench
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:14:04.190564+00:00'
+    ended_at: '2026-07-22T05:14:09.357158+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-14-04.json
+    required_evidence_id: re-T005-1
+  - id: CMD-E2E-T005B
+    command: npm run test:e2e -- workbench && npm run test:e2e -- restore-layout
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:14:09.525418+00:00'
+    ended_at: '2026-07-22T05:14:19.838558+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-14-09.json
+    required_evidence_id: re-T005-2
+  - id: CMD-INT-T005
+    command: npm run build && npm run test:e2e && git diff --exit-code src/features/layout/LayoutController.tsx
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:14:23.589740+00:00'
+    ended_at: '2026-07-22T05:14:46.001242+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-14-23.json
+    required_evidence_id: re-T005-3
+  - id: CMD-E2E-T006
+    command: npm run test:e2e -- restore-layout
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:14:46.177217+00:00'
+    ended_at: '2026-07-22T05:14:51.840822+00:00'
+    result: pass
+    summary: exit_code=0, result=pass; also satisfies re-T006-2
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-14-46.json
+    required_evidence_id: re-T006-1
+  - id: CMD-INT-T006
+    command: npm run build && npm run test:e2e && grep -rn 'data-notice' src/App.tsx
+      src/features/restore src/features/chart | grep -v 'notice--' || echo RANGE_INTERNAL_MIGRATED
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:14:56.706285+00:00'
+    ended_at: '2026-07-22T05:15:19.769997+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-14-56.json
+    required_evidence_id: re-T006-3
+  - id: CMD-E2E-T007A
+    command: npm run test:e2e -- gate/consistency
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:15:19.970643+00:00'
+    ended_at: '2026-07-22T05:15:22.733941+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-15-19.json
+    required_evidence_id: re-T007-1
+  - id: CMD-E2E-T007B
+    command: npm run test:e2e -- gate/consistency && npm run test:e2e -- gate/scope-guard
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:15:38.047755+00:00'
+    ended_at: '2026-07-22T05:15:43.880405+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-15-38.json
+    required_evidence_id: re-T007-2
+  - id: CMD-INT-T007
+    command: git diff --exit-code src/features/alerts/AlertRulePanel.tsx src/features/layout/LayoutController.tsx
+      src/features/workbench/WorkbenchShell.tsx && grep -nE '\.data-notice\s*\{' src/styles.css
+      && npm run build && npm run test:e2e
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:15:44.071269+00:00'
+    ended_at: '2026-07-22T05:16:07.291643+00:00'
+    result: pass
+    summary: exit_code=0, result=pass
+    artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-integration-2026-07-22-05-15-44.json
+    required_evidence_id: re-T007-3
+  - id: CMD-CTX-001
+    command: npm run build
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T04:58:30.177515+00:00'
+    ended_at: '2026-07-22T04:58:32.544509+00:00'
+    result: pass
+    summary: 'cross_check: pre-existing evidence store build pass (harness-runtime/harness/traces/{mission}/cmd/CMD-001.json),
+      consistent with fresh reruns above'
+    artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/cmd/CMD-001.json
+  - id: CMD-CTX-002
+    command: node --test tests/unit/presentation/tone.spec.ts tests/unit/presentation/humanize.spec.ts
+      && npx playwright test
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T04:59:02+00:00'
+    ended_at: '2026-07-22T04:59:25+00:00'
+    result: pass
+    summary: 'cross_check: pre-existing combined unit+e2e evidence (unit 35/35, e2e
+      50/50), satisfies project-lint P002 ''test'' kind requirement'
+    artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/cmd/CMD-002.json
+  - id: CMD-LINT-01
+    command: harness lint project --mission 20260721-watchboard-ui-friendliness
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:10:27.237415+00:00'
+    ended_at: '2026-07-22T05:10:27.237415+00:00'
+    result: warn
+    summary: status=WARN gate_effect=warn; only P003 WARN (AGENTS.md missing keywords,
+      project-wide advisory unrelated to this mission's acceptance surface); no FAIL
+      findings
+    artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/project-lint/project-lint-report.json
+  - id: CMD-E2E-STATUS-01
+    command: harness verify e2e-status --mission 20260721-watchboard-ui-friendliness
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-07-22T05:09:00+00:00'
+    ended_at: '2026-07-22T05:09:00+00:00'
+    result: warn
+    summary: 'e2e_plan_status=PASS, e2e_run_status=PASS; top-level status=FAIL is
+      a control-plane probe-scope gap: T007 accessibility_smoke not recognized because
+      axe assertions are embedded inside Playwright specs (scope-guard.spec.ts:216,
+      t001-watchlist-archive-restore.spec.ts:152) rather than a standalone axe CLI
+      artifact; independently confirmed both embedded axe assertions exist and passed
+      in this run'
+    artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+  result_evidence:
+  - id: EV-RESULT-01
+    kind: dom
+    evidence_role: primary
+    expected: formal/not_loaded 态时 source-authority/signal-degradation-note 不出现 notice--warning
+      或 data-notice 类；无“需关注”视觉信号
+    actual: tests/e2e/mts/card.spec.ts 与 tests/e2e/workbench/default.spec.ts 的 formal
+      路径下无警告承载渲染；tests/unit/presentation/tone.spec.ts 断言 resolveSourceTone(formal)=normal、resolveSourceTone(not_loaded)=normal（真实重跑，全绿）
+    reproduce: npm run test:e2e -- mts; npm run test:e2e -- workbench; node --test
+      tests/unit/presentation/tone.spec.ts
+    artifact: see command_evidence[CMD-E2E-T002]
+    result: pass
+    required_evidence_id: re-T002-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-02
+    kind: dom
+    evidence_role: primary
+    expected: demo_fallback 态呈 notice--info 信息级提示，不使用与 stale/unavailable 相同的 notice--warning
+      高危色
+    actual: tests/e2e/gate/acceptance-matrix.spec.ts "AC-02 and AC-03..." 断言 chart-degradation-note
+      含 class notice--info 且不含 notice--warning；tests/e2e/workbench/default.spec.ts:193-194
+      断言 signal-degradation-note 同样为 notice--info（真实重跑，全绿）
+    reproduce: npm run test:e2e -- gate; npm run test:e2e -- workbench
+    artifact: see command_evidence[CMD-E2E-T003]
+    result: pass
+    required_evidence_id: re-T003-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-03
+    kind: dom
+    evidence_role: primary
+    expected: stale/unavailable 态出现 notice--warning 且呈现降级原因与受影响范围
+    actual: tests/e2e/gate/consistency.spec.ts "NEG-01..." 断言 source-authority 含人话“过期”文案（非原始
+      stale 枚举）且 class 含 notice--warning；tests/e2e/workbench/default.spec.ts stale/unavailable
+      路径断言穿透到图表/信号/提醒区域（真实重跑，全绿）
+    reproduce: npm run test:e2e -- gate/consistency; npm run test:e2e -- workbench
+    artifact: see command_evidence[CMD-E2E-T007A]
+    result: pass
+    required_evidence_id: re-T007-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-04
+    kind: dom
+    evidence_role: primary
+    expected: restored/partial/default_fallback（含首次 snapshot_missing）不渲染 notice--warning
+      黄条：restored 中性、partial/default_fallback 信息级
+    actual: tests/e2e/restore-layout/tone.spec.ts 三个子测试分别经真实 restoreSnapshot/migrateLegacy
+      恢复路径驱动，断言 restored→class=restore-status--normal（无 notice--*）、default_fallback（无
+      discardedLayoutKeys）→notice--info、partial（旧存储迁移）→notice--info（真实重跑，全绿）
+    reproduce: npm run test:e2e -- restore-layout
+    artifact: see command_evidence[CMD-E2E-T006]
+    result: pass
+    required_evidence_id: re-T006-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-05
+    kind: dom
+    evidence_role: primary
+    expected: restoreMetadata.status=failed 或 discardedLayoutKeys 非空时出现 notice--warning
+      需关注提示
+    actual: discardedLayoutKeys 非空分支：tests/e2e/restore-layout/tone.spec.ts "discardedLayoutKeys
+      非空..." 经真实归一化丢弃坏布局路径驱动，断言 notice--warning（优先于 info）且详情含“已丢弃坏布局”与具体 symbol（真实重跑，全绿）。status=failed
+      分支：真实恢复流程（restoreSnapshot/migrateLegacy/fallbackSnapshot）无任何代码路径产出该值，无法通过用户可达
+      E2E 路径触发（execution-result.md DEV-01、code-review.md TDD-FND-004 已记录此结构性限制），改由等价纯函数单测
+      tests/unit/presentation/tone.spec.ts:140-142 覆盖并通过
+    reproduce: npm run test:e2e -- restore-layout; node --test tests/unit/presentation/tone.spec.ts
+    artifact: see command_evidence[CMD-E2E-T006]
+    result: pass
+    required_evidence_id: re-T006-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-06
+    kind: dom
+    evidence_role: primary
+    expected: negative/strong_negative scoreBand 或 alertLevel=风控 呈谨慎/风险色，且与来源 stale/unavailable
+      的 notice--warning 物理区分（承载类名不复用）
+    actual: tests/e2e/mts/friendliness.spec.ts "GAP-02..." 用真实持续下跌走势驱动出 negative/strong_negative
+      scoreBand，断言卡片 class 含 risk、不含 notice--warning/data-notice；同一标的切换来源为 stale 后
+      signal-degradation-note 呈 notice--warning、mts-card 本身不含 notice--warning，形成并置物理区分证据；截图
+      pt02-mts-negative-score-tone.png 落盘（真实重跑，全绿）
+    reproduce: npm run test:e2e -- mts
+    artifact: see command_evidence[CMD-E2E-T002]
+    result: pass
+    required_evidence_id: re-T002-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-07
+    kind: dom
+    evidence_role: primary
+    expected: 主视图技术提醒区（未展开）不出现 trend_state/mts_score/score_band/signal_type/alert_level
+      裸枚举前缀
+    actual: 'tests/e2e/mts/friendliness.spec.ts "AT-0201: MTS 主视图无人话前枚举 token，且有 ScoreBar"
+      逐一断言 mts-card 不含 5 个枚举 token 字符串，且默认折叠态 mts-state-grid 不可见（真实重跑，全绿）'
+    reproduce: npm run test:e2e -- mts
+    artifact: see command_evidence[CMD-E2E-T002]
+    result: pass
+    required_evidence_id: re-T002-2
+    acceptance_id: SCN-02
+  - id: EV-RESULT-08
+    kind: dom
+    evidence_role: primary
+    expected: mtsScore 以进度条式可视化条呈现，不以裸数字替代
+    actual: 同上测试断言 mts-score-bar（ScoreBar 组件）可见（真实重跑，全绿）
+    reproduce: npm run test:e2e -- mts
+    artifact: see command_evidence[CMD-E2E-T002]
+    result: pass
+    required_evidence_id: re-T002-2
+    acceptance_id: SCN-02
+  - id: EV-RESULT-09
+    kind: dom
+    evidence_role: primary
+    expected: 原始枚举/理由代码默认隐藏，仅展开详情/调试区后可见
+    actual: tests/e2e/mts/friendliness.spec.ts AT-0201 断言展开 mts-details-toggle 前 mts-state-grid
+      不可见、展开后可见且含 trend_state；AT-0202 断言 mts-reason-list 默认不含裸 code（如 TREND_ABOVE_EMA），展开
+      mts-reason-details-toggle 后 mts-reason-codes 才含原始 code（真实重跑，全绿）
+    reproduce: npm run test:e2e -- mts
+    artifact: see command_evidence[CMD-E2E-T002]
+    result: pass
+    required_evidence_id: re-T002-2
+    acceptance_id: SCN-02
+  - id: EV-RESULT-10
+    kind: dom
+    evidence_role: primary
+    expected: 非 ready 技术/交易状态呈人话说明，0 处裸枚举串；来源降级态不呈现回测块
+    actual: 'tests/e2e/trade-signal/friendliness.spec.ts "AT-0302: 来源降级非 ready 人话化且无回测块"
+      断言 signal-topline 不含 source_degraded/not_target_symbol/data_insufficient 裸串、trade-signal-status
+      精确文案“来源不可用”、trade-backtest-summary 不存在；tests/e2e/gate/consistency.spec.ts NEG-01
+      用真实 domain 门控（未 mock）复证同一结论（真实重跑，全绿）'
+    reproduce: npx playwright test（全量含 trade-signal 目录）; npm run test:e2e -- gate/consistency
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SCN-02
+  - id: EV-RESULT-11
+    kind: dom
+    evidence_role: primary
+    expected: 来源状态仅 1 处权威呈现点（source-authority 计数=1）
+    actual: tests/e2e/workbench/friendliness.spec.ts "AT-0501..." 与 tests/e2e/gate/consistency.spec.ts
+      "唯一主源计数=1 聚合" 均断言 source-authority toHaveCount(1) 且可见，并验证派生一致性指示（workbench-selection-summary）不冒充该
+      testid（真实重跑，全绿）
+    reproduce: npm run test:e2e -- workbench; npm run test:e2e -- gate/consistency
+    artifact: see command_evidence[CMD-E2E-T005A]
+    result: pass
+    required_evidence_id: re-T005-1
+    acceptance_id: SCN-03
+  - id: EV-RESULT-12
+    kind: dom
+    evidence_role: primary
+    expected: 价格/涨跌仅 1 处权威主源（price-authority 计数=1）；涨跌红绿色与来源/布局警告色物理分离
+    actual: AT-0501 断言 price-authority toHaveCount(1)；AT-0502 断言 price-authority 内
+      .up/.down 元素颜色与 source-authority 警告色不同（真实重跑，全绿）
+    reproduce: npm run test:e2e -- workbench
+    artifact: see command_evidence[CMD-E2E-T005A]
+    result: pass
+    required_evidence_id: re-T005-1
+    acceptance_id: SCN-03
+  - id: EV-RESULT-13
+    kind: dom
+    evidence_role: primary
+    expected: 标的标题字号/权重最高，为视觉主位，高于周期/视图控件
+    actual: AT-0502 断言 .workspace-header h2 的 computed fontSize/fontWeight 大于 .range-controls
+      button；截图 pt05-top-hierarchy-colors.png 落盘（真实重跑，全绿）
+    reproduce: npm run test:e2e -- workbench
+    artifact: see command_evidence[CMD-E2E-T005A]
+    result: pass
+    required_evidence_id: re-T005-1
+    acceptance_id: SCN-04
+  - id: EV-RESULT-14
+    kind: dom
+    evidence_role: primary
+    expected: 切换周期/布局模式后标题仍主位，切换功能与语义不减；非法布局值由既有归一化回退 focus
+    actual: AT-0502 断言点击 layout-mode-dense 后其 class 含 active 且标题字号仍大于控件；tests/e2e/restore-layout/resume.spec.ts
+      "坏 layout snapshot 只回退默认 focus，页面仍可用" 与 acceptance-matrix.spec.ts "AC-05 fixture
+      gate covers corrupt layout fallback" 断言非法值归一化回退 focus（真实重跑，全绿）；git diff --exit-code
+      src/features/layout/LayoutController.tsx 确认该文件全程零改动（切换语义结构上不可能被本次呈现层改动波及）
+    reproduce: npm run test:e2e -- workbench; npm run test:e2e -- restore-layout;
+      npm run test:e2e -- gate; git diff --exit-code src/features/layout/LayoutController.tsx
+    artifact: see command_evidence[CMD-INT-T005]
+    result: pass
+    required_evidence_id: re-T005-3
+    acceptance_id: SCN-04
+  - id: EV-RESULT-15
+    kind: dom
+    evidence_role: primary
+    expected: 主卡（stanceLabel+关键数字）视觉突出，回测/理由/原始字段为次级灰字，主/次层级差明确可辨
+    actual: tests/e2e/trade-signal/friendliness.spec.ts "AT-0301..." 用真实 computed
+      fontSize/fontWeight 比较证明 trade-backtest-summary（KPI）严格大于展开后 trade-signal-details（次级明细）；details
+      元素带 secondary class；截图 pt03-trade-signal-hierarchy.png 落盘（真实重跑，全绿）
+    reproduce: npx playwright test（全量含 trade-signal 目录）
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SCN-05
+  - id: EV-RESULT-16
+    kind: dom
+    evidence_role: primary
+    expected: nonAdvice 免责声明在默认态与折叠展开态均常驻可见，不被隐藏
+    actual: AT-0301 分别在明细收起前、收起态、展开态三次断言 trade-signal-non-advice 可见（真实重跑，全绿）
+    reproduce: npx playwright test（全量含 trade-signal 目录）
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SCN-05
+  - id: EV-RESULT-17
+    kind: dom
+    evidence_role: primary
+    expected: 侧栏每条呈现名称+代码一行（flex 布局）、价格+涨跌右对齐为主看信息
+    actual: tests/e2e/watchlist/friendliness.spec.ts "AT-0401..." 用 computed display/textAlign
+      断言 watch-item-identity 为 flex 行内布局、watch-item-quote 为 text-align:right（真实重跑，全绿）
+    reproduce: npm run test:e2e -- watchlist
+    artifact: see command_evidence[CMD-E2E-T004]
+    result: pass
+    required_evidence_id: re-T004-1
+    acceptance_id: SCN-06
+  - id: EV-RESULT-18
+    kind: dom
+    evidence_role: primary
+    expected: 侧栏来源弱化为小圆点（<=14px），非文本横幅，不作来源权威主源
+    actual: AT-0401 断言 watch-item-source-dot 尺寸<=14px、watch-item-main 不含“正式”“不可用”等文本横幅、条目内无
+      .data-notice；非 formal 来源（0700→改为示例 9988.HK unavailable）圆点 class 含 tone-warning/source-dot--warning（真实重跑，全绿）
+    reproduce: npm run test:e2e -- watchlist
+    artifact: see command_evidence[CMD-E2E-T004]
+    result: pass
+    required_evidence_id: re-T004-1
+    acceptance_id: SCN-06
+  - id: EV-RESULT-19
+    kind: dom
+    evidence_role: primary
+    expected: archived 条目弱化呈现，与 active 明确区分（透明度更低、颜色不同）
+    actual: tests/e2e/watchlist/friendliness.spec.ts "AT-0402..." 断言 archived 条目 class
+      含 archived、computed opacity 严格小于 active 条目、颜色值不同；截图 pt04-watchlist-archived.png
+      落盘（真实重跑，全绿）
+    reproduce: npm run test:e2e -- watchlist
+    artifact: see command_evidence[CMD-E2E-T004]
+    result: pass
+    required_evidence_id: re-T004-1
+    acceptance_id: SCN-06
+  - id: EV-RESULT-20
+    kind: dom
+    evidence_role: primary
+    expected: ready 态信号卡默认呈现关键数字（stanceLabel/持仓/胜率/累计收益），无三段回测流水铺开
+    actual: AT-0301 断言 trade-backtest-summary 默认可见且含“胜率”“策略累计”，class 含 trade-signal-kpi；默认态卡片不含“卖出侧”“买入侧”字样、trade-signal-details
+      计数=0（真实重跑，全绿）
+    reproduce: npx playwright test（全量含 trade-signal 目录）
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SCN-07
+  - id: EV-RESULT-21
+    kind: dom
+    evidence_role: primary
+    expected: 三段回测明细默认折叠，点击展开后才呈现，且不与关键数字同权重平铺
+    actual: AT-0301 断言点击 trade-signal-details-toggle 前 trade-signal-details 计数=0，点击后可见且含“卖出侧”，KPI
+      字号/字重严格大于明细（真实重跑，全绿）
+    reproduce: npx playwright test（全量含 trade-signal 目录）
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SCN-07
+  - id: EV-RESULT-22
+    kind: dom
+    evidence_role: primary
+    expected: 仅 ready 呈现回测块，正式信号位与 ATR 观察位分层级；非 ready 不呈回测块
+    actual: AT-0301 断言 trade-signal-levels 内 ATR20 行带 level-secondary class、正式信号位不带；AT-0302（非
+      ready/来源降级）断言 trade-backtest-summary 计数=0、trade-signal-details-toggle 计数=0（不呈现空回测容器，衔接
+      NEG-02）（真实重跑，全绿）
+    reproduce: npx playwright test（全量含 trade-signal 目录）
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SCN-07
+  - id: EV-RESULT-23
+    kind: dom
+    evidence_role: primary
+    expected: 来源 stale/unavailable（非 formal）时交易信号卡同步降级为 source_degraded 人话说明，不显 ready、不给买卖价位；三处（source-authority/MTS
+      卡降级子集/交易信号卡）读同一 domain 门控结果，不出现矛盾呈现
+    actual: 'tests/e2e/gate/consistency.spec.ts "NEG-01: source-authority / MTS 降级子集
+      / 交易信号卡三处读同一 domain 门控结果一致降级" 用真实 sourceHealth.status=stale 驱动真实 buildSignal/buildTradeSignalState/getSourceStatus（未
+      mock 门控结果），三处一致断言：source-authority 过期+notice--warning、mts-state-grid 含 trend_state
+      source_degraded、trade-signal-status 精确文案“来源不可用”且不给回测/价位（真实重跑，全绿）'
+    reproduce: npm run test:e2e -- gate/consistency
+    artifact: see command_evidence[CMD-E2E-T007A]
+    result: pass
+    required_evidence_id: re-T007-1
+    acceptance_id: watchboard-presentation/spec.md#来源降级时信号卡同步降级
+  - id: EV-RESULT-24
+    kind: dom
+    evidence_role: primary
+    expected: 恢复态（RestoreStatus）与来源态（source-authority）各自独立承载，不共用同一警告条
+    actual: tests/e2e/gate/consistency.spec.ts "NEG-03..." 与 tests/e2e/restore-layout/tone.spec.ts
+      "restore-status 与 source-authority 是两个独立的 DOM 元素（NEG-03）" 均断言两者互不嵌套、boundingBox
+      不同（真实重跑，全绿）
+    reproduce: npm run test:e2e -- gate/consistency; npm run test:e2e -- restore-layout
+    artifact: see command_evidence[CMD-E2E-T007A]
+    result: pass
+    required_evidence_id: re-T007-1
+    acceptance_id: watchboard-presentation/spec.md#恢复态与来源态各自独立承载
+  - id: EV-RESULT-25
+    kind: internal_state
+    evidence_role: cross_check
+    expected: 未在版本化注册表注册的理由 code 不作为有效解释直呈主视图，按 UNKNOWN_CODE 兜底处理
+    actual: tests/unit/presentation/humanize.spec.ts "NEG-04 故障注入：未注册理由码必须走 UNKNOWN_CODE
+      回落，绝不能把原始 code 字符串直呈" 单测通过（真实重跑，全绿）。已知缺口（Med，已接受）：现有 E2E 只驱动已注册 code（TREND_ABOVE_EMA/SOURCE_DEGRADED），未在浏览器层注入未注册
+      code 验证 App.tsx 真实渲染路径确实调用了安全回落函数——code-review.md 记录为 E2E-FND-002，已经 Decision
+      Gate 接受为非阻断残留风险，本轮如实沿用该结论、不重新展开调查
+    reproduce: node --test tests/unit/presentation/humanize.spec.ts
+    artifact: see command_evidence[CMD-UNIT-01]
+    result: pass
+    required_evidence_id: re-T001-2
+    acceptance_id: watchboard-presentation/spec.md#未注册理由码兜底不直呈
+  - id: EV-RESULT-26
+    kind: dom
+    evidence_role: primary
+    expected: 非 ready 态不呈现空回测容器/空图表占位误导
+    actual: AT-0302 断言 trade-backtest-summary 计数=0（不渲染任何回测容器，而非渲染空容器）（真实重跑，全绿）
+    reproduce: npx playwright test（全量含 trade-signal 目录）
+    artifact: see command_evidence[CMD-E2E-FULL]
+    result: pass
+    acceptance_id: SUC-03-OP-02
+  - id: EV-RESULT-27
+    kind: dom
+    evidence_role: primary
+    expected: 布局模式非法值由既有归一化回退默认 focus，呈现不新增失败分支，标题主位不变
+    actual: tests/e2e/restore-layout/resume.spec.ts "坏 layout snapshot 只回退默认 focus，页面仍可用"
+      与 tests/e2e/gate/acceptance-matrix.spec.ts "AC-05 fixture gate covers corrupt
+      layout fallback" 均用真实损坏快照驱动，断言 restore-status 含“已回退默认布局”、layout-mode-focus 处于
+      active（真实重跑，全绿）
+    reproduce: npm run test:e2e -- restore-layout; npm run test:e2e -- gate
+    artifact: see command_evidence[CMD-E2E-T006]
+    result: pass
+    required_evidence_id: re-T006-1
+    acceptance_id: SCN-01
+  - id: EV-RESULT-28
+    kind: accessibility_snapshot
+    evidence_role: primary
+    expected: 改造不引入 axe 可访问性回归；既有 E2E 用户路径不回归
+    actual: 'tests/e2e/gate/scope-guard.spec.ts "axe 扫描: 主要视图（看盘主流程+提醒面板）无新增可访问性 critical/serious
+      违规" 与 tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts "看盘主流程没有自动化可访问性严重违规"
+      均通过 @axe-core/playwright 真实扫描且零 critical/serious 违规；全量 npx playwright test 50/50
+      通过、0 skip、0 flaky，证既有路径无回归。已知缺口（Med，已接受）：axe 扫描目前只覆盖 formal 首页与 alerts 面板，未覆盖本次新增的
+      notice--info/warning/tone-* 等大量新颜色语义承载态——code-review.md 记录为 E2E-FND-001，已经 Decision
+      Gate 接受为非阻断残留风险'
+    reproduce: npm run test:e2e -- gate/scope-guard; npx playwright test
+    artifact: see command_evidence[CMD-E2E-T007B]
+    result: pass
+    required_evidence_id: re-T007-2
+    acceptance_id: SCN-01
+  - id: EV-RESULT-29
+    kind: dom
+    evidence_role: primary
+    expected: SR-01：范围外 5 处 .data-notice（AlertRulePanel:136、LayoutController:75/121、WorkbenchShell:78/135）零改动；styles.css:379
+      共享定义、:403-409 .up/.down 未改
+    actual: tests/e2e/gate/scope-guard.spec.ts 用文件内容级 grep 断言 + 3 处真实渲染 DOM 断言（workbench-selection-summary/AlertRulePanel
+      空态/workbench-error 三处可达分支）+ 3 张改造前后并置截图，证明范围外用法仍为 data-notice class、未迁移到 notice--*；本轮独立执行
+      git diff --stat 三个禁改文件为空 diff、git diff --unified=0 styles.css 未命中 .data-notice/.up/.down
+      任何增删行，sed 核对定义内容字符级一致（真实重跑，全绿）
+    reproduce: npm run test:e2e -- gate/scope-guard; git diff --stat -- src/features/layout/LayoutController.tsx
+      src/features/alerts/AlertRulePanel.tsx src/features/workbench/WorkbenchShell.tsx;
+      git diff --unified=0 src/styles.css
+    artifact: see command_evidence[CMD-INT-T007]
+    result: pass
+    required_evidence_id: re-T007-3
+    acceptance_id: SCN-01
+  e2e_status:
+    status_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+    status: WARN
+    html_report: playwright-report/index.html
+    traces: []
+    videos: []
+    screenshots:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt02-mts-negative-score-tone.png
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt03-trade-signal-hierarchy.png
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt04-watchlist-archived.png
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt05-top-hierarchy-colors.png
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt07-scope-guard-alert-empty-notice.png
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt07-scope-guard-workbench-error.png
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt07-scope-guard-workbench-selection-summary.png
+    decision_gate_reasons: []
+  role_verdicts:
+  - id: RV-verification-effectiveness-reviewer-1
+    role: verification-effectiveness-reviewer
+    verdict: PASS_WITH_RISK
+    reviewed_obligations:
+    - OBL-VERIFY-001
+    review_basis:
+      work_graph_artifact:
+        node_id: TASK-WATCHBOARD-UI-T001
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+      - harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/code-review/code-review.md
+      - harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/code-review.contract.yaml
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/verify/verification-report.md
+      - harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/verification-report.contract.yaml
+    summary: 独立复核（重跑关键命令 + 抽查测试源码 + 核对 required_evidence_id 权威来源 + 自行清点验收条件数量）：单测
+      35/35、E2E 全量 50/0/0、build exit 0 均独立重跑确认；SR-01 三个禁改文件 diff 为空、共享 CSS 定义未改独立复核确认；22
+      条 COND + 7 条 NEG 全部覆盖，49 个 compute-scope 锚点 acceptance_trace 全部 conclusion=pass
+      且双证据齐全；required_evidence_id 全部可追溯到 execution-brief.contract.yaml 权威来源，非验证阶段自创。未发现伪造或夸大证据。0
+      blocking gap。2 项已披露非阻断风险（NEG-04 缺浏览器层主证据、axe 覆盖面窄），均已在 code-review.contract.yaml
+      的 gate_decisions[DEC-CR-01] 记录风险接受；但该记录 accepted_by 为流水线自身非具名用户批准，是否构成有效用户风险接受超出本角色职责边界，建议主流程在
+      compute-conclusion 前另行执行 harness approval append --type risk --stage verify
+      补齐 verify 阶段专属风险接受记录。
+    matrix:
+    - target: 验证依据目录完整性（8 个上游产物消费）
+      conclusion: pass
+    - target: 22 条 SCN-xx-COND-xx + 7 条 NEG-01~07 覆盖完整性
+      conclusion: pass
+    - target: 49 个 compute-scope 锚点 acceptance_trace 双证据齐全性
+      conclusion: pass
+    - target: SR-01 硬约束独立复核（三文件 diff 空 + 共享定义未改）
+      conclusion: pass
+    - target: required_evidence_id 权威来源合法性抽查
+      conclusion: pass
+    - target: NEG-04 界面层证据深度（acceptance-scenarios.md 要求 DOM+截图，实际仅单测）
+      conclusion: risk
+    - target: NEG-07 axe 覆盖面（未覆盖新增颜色语义态）
+      conclusion: risk
+    - target: verify 阶段专属风险接受记录（approvals.json）
+      conclusion: gap_out_of_role_scope
+    findings: []
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: RISK-V-01
+      severity: medium
+      category: verify
+      detail: NEG-04 未注册理由码兜底不直呈：acceptance-scenarios.md 明确要求 DOM 断言+截图，实际交付仅有单元测试（cross_check），无真实浏览器路径主证据。已被
+        code-review 阶段 E2E-FND-002 命中并记录进 gate_decisions[DEC-CR-01]，验证报告本身全程如实披露未包装成已解决。
+    - id: RISK-V-02
+      severity: medium
+      category: verify
+      detail: NEG-07 axe 覆盖面窄于全部新增颜色语义承载态（仅覆盖 formal 首页+alerts 面板）。已被 code-review
+        阶段 E2E-FND-001 命中并记录进 gate_decisions[DEC-CR-01]。
+    - id: RISK-V-03
+      severity: low
+      category: verify
+      detail: DEC-CR-01 的 accepted_by 字段为 autonomous_pipeline_under_standing_user_directive，非具名用户批准记录；approvals.json
+        中该 mission 唯一记录与 E2E-FND-001/002 无关。是否构成有效用户风险接受超出本角色职责边界，建议主流程在 compute-conclusion
+        前另行执行 harness approval append --type risk --stage verify。
+    - id: RISK-V-04
+      severity: low
+      category: verify
+      detail: e2e-status.json 顶层 status=FAIL 系探测脚本对内嵌 axe 断言识别口径缺口，非真实能力缺失，已独立核实底层事实（axe
+        断言真实存在且通过）。
+    dispatch:
+      subagent_id: a2fc5245ad02ceac5
+      model: claude-sonnet-5
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T05:35:50+00:00'
+      completed_at: '2026-07-22T05:49:10+00:00'
+  acceptance_trace:
+  - id: AT-SCN-01
+    acceptance_id: SCN-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-01
+    - EV-RESULT-02
+    - EV-RESULT-03
+    - EV-RESULT-04
+    - EV-RESULT-05
+    - EV-RESULT-06
+    command_evidence_ids:
+    - CMD-E2E-T002
+    - CMD-E2E-T003
+    - CMD-E2E-T005A
+    - CMD-E2E-T006
+    - CMD-E2E-T007A
+    - CMD-UNIT-01
+    evidence:
+    - CMD-E2E-T002
+    - CMD-E2E-T003
+    - CMD-E2E-T005A
+    - CMD-E2E-T006
+    - CMD-E2E-T007A
+    - CMD-UNIT-01
+    - EV-RESULT-01
+    - EV-RESULT-02
+    - EV-RESULT-03
+    - EV-RESULT-04
+    - EV-RESULT-05
+    - EV-RESULT-06
+    gaps:
+    - SCN-01-COND-05 的 status=failed 具体分支无生产可达路径，仅单测覆盖（DEV-01/TDD-FND-004，已接受非阻断）
+  - id: AT-SCN-02
+    acceptance_id: SCN-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-07
+    - EV-RESULT-08
+    - EV-RESULT-09
+    - EV-RESULT-10
+    command_evidence_ids:
+    - CMD-E2E-T002
+    - CMD-E2E-FULL
+    - CMD-E2E-T007A
+    evidence:
+    - CMD-E2E-T002
+    - CMD-E2E-FULL
+    - CMD-E2E-T007A
+    - EV-RESULT-07
+    - EV-RESULT-08
+    - EV-RESULT-09
+    - EV-RESULT-10
+    gaps:
+    - NEG-04 未注册理由码回落只有单测证据，缺浏览器层 DOM 注入证明（E2E-FND-002，Med，已接受非阻断）
+  - id: AT-SCN-03
+    acceptance_id: SCN-03
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-11
+    - EV-RESULT-12
+    command_evidence_ids:
+    - CMD-E2E-T005A
+    - CMD-E2E-T007A
+    evidence:
+    - CMD-E2E-T005A
+    - CMD-E2E-T007A
+    - EV-RESULT-11
+    - EV-RESULT-12
+  - id: AT-SCN-04
+    acceptance_id: SCN-04
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-13
+    - EV-RESULT-14
+    command_evidence_ids:
+    - CMD-E2E-T005A
+    - CMD-INT-T005
+    evidence:
+    - CMD-E2E-T005A
+    - CMD-INT-T005
+    - EV-RESULT-13
+    - EV-RESULT-14
+  - id: AT-SCN-05
+    acceptance_id: SCN-05
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-15
+    - EV-RESULT-16
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-15
+    - EV-RESULT-16
+  - id: AT-SCN-06
+    acceptance_id: SCN-06
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-17
+    - EV-RESULT-18
+    - EV-RESULT-19
+    command_evidence_ids:
+    - CMD-E2E-T004
+    evidence:
+    - CMD-E2E-T004
+    - EV-RESULT-17
+    - EV-RESULT-18
+    - EV-RESULT-19
+  - id: AT-SCN-07
+    acceptance_id: SCN-07
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-20
+    - EV-RESULT-21
+    - EV-RESULT-22
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-20
+    - EV-RESULT-21
+    - EV-RESULT-22
+  - id: AT-SPEC-01
+    acceptance_id: SCN-01-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-01
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-01
+    spec_scenario_ref: watchboard-presentation/spec.md#来源正常态不出现警告色
+  - id: AT-SPEC-02
+    acceptance_id: SCN-01-COND-03
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-03
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-03
+    spec_scenario_ref: watchboard-presentation/spec.md#来源真异常态出现警告色并标注受影响范围
+  - id: AT-SPEC-03
+    acceptance_id: SCN-01-COND-04
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-04
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-04
+    spec_scenario_ref: watchboard-presentation/spec.md#工作台正常恢复态不出现警告色黄条
+  - id: AT-SPEC-04
+    acceptance_id: SCN-01-COND-05
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-05
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-05
+    gaps:
+    - status=failed 分支无生产可达路径，见 RE-05 说明
+    spec_scenario_ref: watchboard-presentation/spec.md#工作台恢复失败态出现需关注提示
+  - id: AT-SPEC-05
+    acceptance_id: SCN-01-COND-06
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-06
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-06
+    spec_scenario_ref: watchboard-presentation/spec.md#负向评分与来源故障色物理区分
+  - id: AT-SPEC-06
+    acceptance_id: SCN-01-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-02
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-02
+    spec_scenario_ref: watchboard-presentation/spec.md#demo_fallback 呈信息级不用高危警告色（DEC-01
+      默认档，待用户确认）
+  - id: AT-SPEC-07
+    acceptance_id: SCN-02-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-07
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-07
+    spec_scenario_ref: watchboard-presentation/spec.md#主视图不暴露原始枚举/理由代码
+  - id: AT-SPEC-08
+    acceptance_id: SCN-02-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-08
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-08
+    spec_scenario_ref: watchboard-presentation/spec.md#评分以进度条式可读呈现
+  - id: AT-SPEC-09
+    acceptance_id: SCN-02-COND-03
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-09
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-09
+    spec_scenario_ref: watchboard-presentation/spec.md#原始枚举/理由代码仅在展开详情可见
+  - id: AT-SPEC-10
+    acceptance_id: SCN-02-COND-04
+    surface_type: logic
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-25
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-25
+    gaps:
+    - E2E-FND-002 已接受非阻断风险，见 RE-25 说明
+    spec_scenario_ref: watchboard-presentation/spec.md#未注册理由码兜底不直呈
+  - id: AT-SPEC-11
+    acceptance_id: SCN-07-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-10
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-10
+    spec_scenario_ref: watchboard-presentation/spec.md#非 ready 技术/交易状态人话化
+  - id: AT-SPEC-12
+    acceptance_id: SCN-03-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-11
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-11
+    spec_scenario_ref: watchboard-presentation/spec.md#来源状态收敛到唯一权威主源
+  - id: AT-SPEC-13
+    acceptance_id: SCN-03-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-12
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-12
+    spec_scenario_ref: watchboard-presentation/spec.md#价格/涨跌收敛唯一主源且涨跌色与警告色分离
+  - id: AT-SPEC-14
+    acceptance_id: SCN-04-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-13
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-13
+    spec_scenario_ref: watchboard-presentation/spec.md#标题为顶部视觉主位、控件降级
+  - id: AT-SPEC-15
+    acceptance_id: SCN-04-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-14
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-14
+    spec_scenario_ref: watchboard-presentation/spec.md#切换周期/布局后标题仍主位、切换语义不变
+  - id: AT-SPEC-16
+    acceptance_id: SCN-05-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-15
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-15
+    spec_scenario_ref: watchboard-presentation/spec.md#主卡突出、次级降灰形成层级差
+  - id: AT-SPEC-17
+    acceptance_id: SCN-05-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-16
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-16
+    spec_scenario_ref: watchboard-presentation/spec.md#免责声明保持可见
+  - id: AT-SPEC-18
+    acceptance_id: SCN-06-COND-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-17
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-17
+    spec_scenario_ref: watchboard-presentation/spec.md#侧栏条目主看信息突出
+  - id: AT-SPEC-19
+    acceptance_id: SCN-06-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-18
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-18
+    spec_scenario_ref: watchboard-presentation/spec.md#侧栏来源弱化为小圆点非主源
+  - id: AT-SPEC-20
+    acceptance_id: SCN-06-COND-03
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-19
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-19
+    spec_scenario_ref: watchboard-presentation/spec.md#归档标的弱化区分
+  - id: AT-SPEC-21
+    acceptance_id: SCN-07-COND-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-20
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-20
+    spec_scenario_ref: watchboard-presentation/spec.md#默认呈现关键数字
+  - id: AT-SPEC-22
+    acceptance_id: SCN-07-COND-03
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-21
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-21
+    spec_scenario_ref: watchboard-presentation/spec.md#三段回测明细默认折叠、展开后呈现
+  - id: AT-SPEC-23
+    acceptance_id: SCN-07-COND-03
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-22
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-22
+    spec_scenario_ref: watchboard-presentation/spec.md#仅 ready 呈现回测块、价位分层级
+  - id: AT-SPEC-24
+    acceptance_id: SCN-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-23
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-23
+    spec_scenario_ref: watchboard-presentation/spec.md#来源降级时信号卡同步降级
+  - id: AT-SPEC-25
+    acceptance_id: SCN-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-24
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-24
+    spec_scenario_ref: watchboard-presentation/spec.md#恢复态与来源态各自独立承载
+  - id: AT-SUC-01-OP-01
+    acceptance_id: SUC-01-OP-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-01
+    - EV-RESULT-02
+    - EV-RESULT-03
+    command_evidence_ids:
+    - CMD-E2E-T002
+    - CMD-E2E-T003
+    - CMD-E2E-T005A
+    evidence:
+    - CMD-E2E-T002
+    - CMD-E2E-T003
+    - CMD-E2E-T005A
+    - EV-RESULT-01
+    - EV-RESULT-02
+    - EV-RESULT-03
+  - id: AT-SUC-01-OP-02
+    acceptance_id: SUC-01-OP-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-12
+    command_evidence_ids:
+    - CMD-E2E-T005A
+    evidence:
+    - CMD-E2E-T005A
+    - EV-RESULT-12
+  - id: AT-SUC-02-OP-01
+    acceptance_id: SUC-02-OP-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-06
+    - EV-RESULT-07
+    - EV-RESULT-08
+    command_evidence_ids:
+    - CMD-E2E-T002
+    evidence:
+    - CMD-E2E-T002
+    - EV-RESULT-06
+    - EV-RESULT-07
+    - EV-RESULT-08
+  - id: AT-SUC-02-OP-02
+    acceptance_id: SUC-02-OP-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-09
+    - EV-RESULT-10
+    - EV-RESULT-25
+    command_evidence_ids:
+    - CMD-E2E-T002
+    - CMD-UNIT-01
+    evidence:
+    - CMD-E2E-T002
+    - CMD-UNIT-01
+    - EV-RESULT-09
+    - EV-RESULT-10
+    - EV-RESULT-25
+  - id: AT-SUC-03-OP-01
+    acceptance_id: SUC-03-OP-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-15
+    - EV-RESULT-16
+    - EV-RESULT-20
+    - EV-RESULT-21
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-15
+    - EV-RESULT-16
+    - EV-RESULT-20
+    - EV-RESULT-21
+  - id: AT-SUC-03-OP-02
+    acceptance_id: SUC-03-OP-02
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-10
+    - EV-RESULT-26
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-10
+    - EV-RESULT-26
+  - id: AT-SUC-04-OP-01
+    acceptance_id: SUC-04-OP-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-17
+    - EV-RESULT-18
+    - EV-RESULT-19
+    command_evidence_ids:
+    - CMD-E2E-T004
+    evidence:
+    - CMD-E2E-T004
+    - EV-RESULT-17
+    - EV-RESULT-18
+    - EV-RESULT-19
+  - id: AT-SUC-05-OP-01
+    acceptance_id: SUC-05-OP-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-13
+    - EV-RESULT-14
+    command_evidence_ids:
+    - CMD-E2E-T005A
+    - CMD-INT-T005
+    evidence:
+    - CMD-E2E-T005A
+    - CMD-INT-T005
+    - EV-RESULT-13
+    - EV-RESULT-14
+  - id: AT-SUC-06-OP-01
+    acceptance_id: SUC-06-OP-01
+    surface_type: ui
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-04
+    - EV-RESULT-05
+    - EV-RESULT-24
+    command_evidence_ids:
+    - CMD-E2E-T006
+    - CMD-E2E-T007A
+    evidence:
+    - CMD-E2E-T006
+    - CMD-E2E-T007A
+    - EV-RESULT-04
+    - EV-RESULT-05
+    - EV-RESULT-24
+  - id: AT-DEC-S01
+    acceptance_id: DEC-S01
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-23
+    command_evidence_ids:
+    - CMD-E2E-T007A
+    evidence:
+    - CMD-E2E-T007A
+    - EV-RESULT-23
+    note: 只读边界：呈现层只消费 domain 门控结果，不重实现（NEG-01 三处一致读取同一门控结果结构性证明不可能出现矛盾呈现）
+  - id: AT-DEC-S02
+    acceptance_id: DEC-S02
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-06
+    command_evidence_ids:
+    - CMD-E2E-T002
+    evidence:
+    - CMD-E2E-T002
+    - EV-RESULT-06
+    note: 四档语义色 token：caution（市场看空）类名不复用 warning（来源/恢复故障）类名，INV-03 物理区分
+  - id: AT-DEC-S03
+    acceptance_id: DEC-S03
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-25
+    command_evidence_ids:
+    - CMD-UNIT-01
+    evidence:
+    - CMD-UNIT-01
+    - EV-RESULT-25
+    note: 复用既有人话源 + UNKNOWN_CODE 回落，未新建映射表（grep 确认 humanize.ts 直接调用 resolveMtsReason）
+  - id: AT-DEC-S04
+    acceptance_id: DEC-S04
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-09
+    - EV-RESULT-21
+    command_evidence_ids:
+    - CMD-E2E-T002
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-T002
+    - CMD-E2E-FULL
+    - EV-RESULT-09
+    - EV-RESULT-21
+    note: 折叠为组件本地 useState，不持久化（architecture-reviewer 已 grep 确认无 localStorage/workspace
+      快照写入）
+  - id: AT-DEC-S05
+    acceptance_id: DEC-S05
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-11
+    - EV-RESULT-12
+    - EV-RESULT-17
+    - EV-RESULT-18
+    command_evidence_ids:
+    - CMD-E2E-T005A
+    - CMD-E2E-T004
+    evidence:
+    - CMD-E2E-T005A
+    - CMD-E2E-T004
+    - EV-RESULT-11
+    - EV-RESULT-12
+    - EV-RESULT-17
+    - EV-RESULT-18
+    note: 唯一主源承载选点：source-authority/price-authority 计数=1，侧栏来源降级为非主源
+  - id: AT-DEC-S06
+    acceptance_id: DEC-S06
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-23
+    - EV-RESULT-24
+    command_evidence_ids:
+    - CMD-E2E-T007A
+    - CMD-E2E-T006
+    evidence:
+    - CMD-E2E-T007A
+    - CMD-E2E-T006
+    - EV-RESULT-23
+    - EV-RESULT-24
+    note: 跨呈现一致性只读绑定：三处同源 + 恢复态/来源态独立承载
+  - id: AT-DEC-S08
+    acceptance_id: DEC-S08
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-16
+    command_evidence_ids:
+    - CMD-E2E-FULL
+    evidence:
+    - CMD-E2E-FULL
+    - EV-RESULT-16
+    note: nonAdvice 免责常驻不进折叠区，默认态与展开态均可见
+  - id: AT-DEC-S09
+    acceptance_id: DEC-S09
+    surface_type: design_decision
+    conclusion: pass
+    result_evidence_ids:
+    - EV-RESULT-14
+    command_evidence_ids:
+    - CMD-INT-T005
+    evidence:
+    - CMD-INT-T005
+    - EV-RESULT-14
+    note: 不改 STM-06 布局切换语义：LayoutController.tsx 全程零改动（git diff --exit-code 确认），切换功能与语义不减
+  quality_trace:
+  - quality_id: QRC-SR-01
+    conclusion: pass
+    evidence:
+    - EV-RESULT-29
+    - CMD-INT-T005
+    - CMD-INT-T006
+    - CMD-INT-T007
+    rationale: SR-01 共享类爆炸半径隔离：范围外 5 处 .data-notice 用法与共享定义本体（:379 颜色/背景/边框、:403-409
+      .up/.down）全程零改动，本轮独立 git diff/grep 复核确认，且 scope-guard.spec.ts 提供文件级+DOM 级+截图三重证据
+  - quality_id: QRC-AXE-COVERAGE
+    conclusion: accepted_risk
+    evidence:
+    - EV-RESULT-28
+    rationale: NEG-07 可访问性无回归：已覆盖 formal 首页与 alerts 面板，未覆盖新增语义色承载态（E2E-FND-001，Med，code-review.md
+      已经 Decision Gate 接受，本轮如实沿用不重新调查）
+  - quality_id: QRC-NEG-04-BROWSER
+    conclusion: accepted_risk
+    evidence:
+    - EV-RESULT-25
+    rationale: NEG-04 未注册理由码回落只有单测证据，缺浏览器层 DOM 注入证明（E2E-FND-002，Med，code-review.md
+      已经 Decision Gate 接受，本轮如实沿用不重新调查）
+  - quality_id: QRC-RESTORE-FAILED-PATH
+    conclusion: accepted_risk
+    evidence:
+    - EV-RESULT-05
+    rationale: restoreMetadata.status=failed 具体值在真实恢复流程中结构性不可达，只能单测覆盖（DEV-01/TDD-FND-004，execute/code-review
+      已记录，本轮独立复核维持同一结论）
+  - quality_id: QRC-BUILD
+    conclusion: pass
+    evidence:
+    - CMD-BUILD-BASE
+    rationale: EVD-01：npm run build（tsc --noEmit && vite build）exit 0，作为改造已编译进产物的前提证据
+  work_graph_artifact:
+    node_id: TASK-WATCHBOARD-UI-T001
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    source_stage_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/verification-report.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-WATCHBOARD-UI-T001/verification-report.md
+  gate_decisions:
+  - id: DEC-VERIFY-01
+    decision: accept_risk
+    scope:
+    - RISK-V-01
+    - RISK-V-02
+    - RISK-V-03
+    - RISK-V-04
+    rationale: verify 阶段验证有效性审查员 PASS_WITH_RISK，0 blocking gap，全部 49 个验收锚点均有双重证据独立复核通过。用户在
+      verify 阶段 Decision Gate（AskUserQuestion）明确确认接受 2 项已知非阻断残留风险（NEG-04 缺浏览器层证据、axe
+      覆盖面窄于新增颜色语义态），放行进入交付。
+    accepted_by: user
+    approval_id: APR-20260722-007
+    stage: verify

@@ -1,0 +1,37 @@
+execution_unit_id: AT-0101
+parent_task_id: PT-01
+task_node_id: TASK-WATCHBOARD-UI-T001
+execution_context:
+  skill: execute
+  role_package_refs:
+    frontend-engineer: .harness/common/agents/frontend-engineer.md
+    test-engineer: .harness/common/agents/test-engineer.md
+    spec-reviewer: .harness/common/agents/spec-reviewer.md
+surfaces:
+  # brief 自定义 presentation_mapping_layer/css_token_layer 映射到受支持 surface
+  - frontend_ui
+primary_executors:
+  - frontend-engineer
+supporting_executors:
+  - test-engineer
+reviewers:
+  - spec-reviewer
+depends_on: []
+write_scope:
+  - src/styles.css
+read_scope:
+  - src/styles.css
+  - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+parallel_group: serial-pt01
+conflict_risk: low
+blocked: false
+blockers: []
+system_ops:
+  - SUC-01-OP-01
+required_evidence:
+  - green_report
+  - regression_report
+notes:
+  - interaction-engineer 对本原子任务 N/A（禁止接入组件 JSX；无键盘/焦点面）
+  - accepted_alternative: CSS 无独立 red 单测
+  - surface_mapping: css_token_layer -> frontend_ui

@@ -1,6 +1,6 @@
 schema_version: 1
 generated: true
-generated_at: '2026-07-20T13:14:38.148355+00:00'
+generated_at: '2026-07-23T01:30:16.265662+00:00'
 nodes:
   REQ-ALIBABA-TRADE-SIGNALS:
     kind: requirement
@@ -10,6 +10,16 @@ nodes:
     status: active
     priority: null
     updated_at: '2026-07-20T13:14:38.068427+00:00'
+    inputs: []
+    outputs: []
+  REQ-BESPOKE-SIGNAL-STRATEGIES:
+    kind: requirement
+    title: 逐股实证量身定制买卖信号策略（6只全部重做+新增建滔积层板1888）
+    lane: requirement-lane
+    stage: intake
+    status: active
+    priority: null
+    updated_at: '2026-07-23T01:30:15.979495+00:00'
     inputs: []
     outputs: []
   REQ-STOCK-WATCH-SYSTEM:
@@ -28,6 +38,23 @@ nodes:
     - TASK-STOCK-WATCH-T004
     - TASK-STOCK-WATCH-T005
     - TASK-STOCK-WATCH-T006
+  REQ-WATCHBOARD-UI-FRIENDLINESS:
+    kind: requirement
+    title: 看盘界面友好化改造（状态色语义/术语人话化/信息层级）
+    lane: breakdown-lane
+    stage: breakdown
+    status: ready
+    priority: null
+    updated_at: '2026-07-21T10:50:20.462922+00:00'
+    inputs: []
+    outputs:
+    - TASK-WATCHBOARD-UI-T001
+    - TASK-WATCHBOARD-UI-T002
+    - TASK-WATCHBOARD-UI-T003
+    - TASK-WATCHBOARD-UI-T004
+    - TASK-WATCHBOARD-UI-T005
+    - TASK-WATCHBOARD-UI-T006
+    - TASK-WATCHBOARD-UI-T007
   TASK-STOCK-WATCH-T001:
     kind: task
     title: 多市场自选归一、列表摘要与归档暂停
@@ -93,4 +120,81 @@ nodes:
     updated_at: '2026-06-07T06:56:42.369230+00:00'
     inputs:
     - REQ-STOCK-WATCH-SYSTEM
+    outputs: []
+  TASK-WATCHBOARD-UI-T001:
+    kind: task
+    title: 四档语义色 token + 只读呈现映射层地基（隔离 SR-01 爆炸半径）
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:12.950375+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    outputs: []
+  TASK-WATCHBOARD-UI-T002:
+    kind: task
+    title: MTS 卡人话化 + 进度条 + 折叠详情（GAP-D1 裸枚举穷举）
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:13.325494+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    outputs: []
+  TASK-WATCHBOARD-UI-T003:
+    kind: task
+    title: 交易信号卡密度 + 层级 + nonAdvice 常驻 + 折叠
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:13.465648+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    outputs: []
+  TASK-WATCHBOARD-UI-T004:
+    kind: task
+    title: 侧栏条目结构 + 来源小圆点 + archived 弱化
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:13.575437+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    outputs: []
+  TASK-WATCHBOARD-UI-T005:
+    kind: task
+    title: 顶部层级重排 + 唯一主源承载计数=1（GAP-D3）
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:13.682371+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    outputs: []
+  TASK-WATCHBOARD-UI-T006:
+    kind: task
+    title: 恢复态四档归位 + 范围内 data-notice 收尾迁移
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:13.796111+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    outputs: []
+  TASK-WATCHBOARD-UI-T007:
+    kind: task
+    title: 跨呈现一致性 + 范围外零改动回归验证
+    lane: delivery-lane
+    stage: retrospective
+    status: ready
+    priority: null
+    updated_at: '2026-07-22T14:51:14.536091+00:00'
+    inputs:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
     outputs: []

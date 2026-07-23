@@ -1,0 +1,52 @@
+id: TASK-STOCK-WATCH-T002
+kind: task
+title: 默认工作台、来源健康、指标切换与可见降级
+lane: delivery-lane
+stage: finishing-branch
+status: ready
+parent_task_id: T002
+execution_brief_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- T002-A1
+- T002-A2
+dependencies:
+- TASK-STOCK-WATCH-T001
+inputs:
+- REQ-STOCK-WATCH-SYSTEM
+outputs: []
+relations:
+  split_from: REQ-STOCK-WATCH-SYSTEM
+specs:
+  consumes:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    requirement: 默认看盘工作台与指标切换
+    scenario: 打开默认工作台 / 切换副图指标 / 数据不足时指标局部降级 / 来源健康与降级穿透
+    evidence:
+      implementation_refs:
+      - src/domain/market-data-source.ts
+      - src/features/chart/ChartSurface.tsx
+      - src/features/source/SourceHealthPanel.tsx
+      - src/features/workbench/WorkbenchShell.tsx
+      test_refs:
+      - tests/unit/source/market-data-source.spec.ts
+      - tests/e2e/workbench/default.spec.ts
+updated_at: '2026-06-07T06:56:41.849813+00:00'
+trace:
+  updated_by_mission: 20260522-stock-watch-system
+  last_graph_operation: 20260522-stock-watch-system__batch_advance_stage__1
+  reset_by_mission: 20260522-stock-watch-system
+  reset_to_stage: execute
+  reset_reason: 用户确认其他任务仍在执行；T001 仅完成节点级验证，不进入整套任务最终交付，切回 development-lane/execute
+    继续 T002。
+artifact:
+  node_id: TASK-STOCK-WATCH-T002
+  artifact_set_id: AS-20260522-stock-watch-system-execute-v1
+  artifact_version: v1
+  promoted_by_mission: 20260522-stock-watch-system
+  artifact_refs:
+  - artifact_id: 20260522-stock-watch-system:execution-result
+    role: execution-result
+    path: harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+    kind: text
+  history: []

@@ -1,0 +1,121 @@
+operation_id: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__split_breakdown_tasks
+type: split_node
+node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+mission_id: 20260721-watchboard-ui-friendliness
+children:
+- id: TASK-WATCHBOARD-UI-T001
+  kind: task
+  title: 四档语义色 token + 只读呈现映射层地基（隔离 SR-01 爆炸半径）
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T001
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0101
+  - AT-0102
+  - AT-0103
+  dependencies: []
+- id: TASK-WATCHBOARD-UI-T002
+  kind: task
+  title: MTS 卡人话化 + 进度条 + 折叠详情（GAP-D1 裸枚举穷举）
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T002
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0201
+  - AT-0202
+  dependencies:
+  - TASK-WATCHBOARD-UI-T001
+- id: TASK-WATCHBOARD-UI-T003
+  kind: task
+  title: 交易信号卡密度 + 层级 + nonAdvice 常驻 + 折叠
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T003
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0301
+  - AT-0302
+  dependencies:
+  - TASK-WATCHBOARD-UI-T002
+- id: TASK-WATCHBOARD-UI-T004
+  kind: task
+  title: 侧栏条目结构 + 来源小圆点 + archived 弱化
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T004
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0401
+  - AT-0402
+  dependencies:
+  - TASK-WATCHBOARD-UI-T001
+  - TASK-WATCHBOARD-UI-T002
+  - TASK-WATCHBOARD-UI-T003
+- id: TASK-WATCHBOARD-UI-T005
+  kind: task
+  title: 顶部层级重排 + 唯一主源承载计数=1（GAP-D3）
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T005
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0501
+  - AT-0502
+  dependencies:
+  - TASK-WATCHBOARD-UI-T001
+  - TASK-WATCHBOARD-UI-T002
+  - TASK-WATCHBOARD-UI-T003
+  - TASK-WATCHBOARD-UI-T004
+- id: TASK-WATCHBOARD-UI-T006
+  kind: task
+  title: 恢复态四档归位 + 范围内 data-notice 收尾迁移
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T006
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0601
+  - AT-0602
+  dependencies:
+  - TASK-WATCHBOARD-UI-T005
+- id: TASK-WATCHBOARD-UI-T007
+  kind: task
+  title: 跨呈现一致性 + 范围外零改动回归验证
+  lane: development-lane
+  stage: execute
+  status: ready
+  parent_task_id: T007
+  execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+  execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+  atomic_task_ids:
+  - AT-0701
+  - AT-0702
+  dependencies:
+  - TASK-WATCHBOARD-UI-T002
+  - TASK-WATCHBOARD-UI-T003
+  - TASK-WATCHBOARD-UI-T004
+  - TASK-WATCHBOARD-UI-T005
+  - TASK-WATCHBOARD-UI-T006
+work_graph_artifact:
+  node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+  artifact_set_id: AS--breakdown-v1
+  artifact_version: v1
+  promoted_by_mission: 20260721-watchboard-ui-friendliness
+  artifact_refs:
+  - artifact_id: 20260721-watchboard-ui-friendliness:execution-brief
+    role: execution-brief
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md

@@ -1,0 +1,46 @@
+schema_version: 1
+generated: true
+root: REQ-STOCK-WATCH-SYSTEM
+tree:
+- id: REQ-STOCK-WATCH-SYSTEM
+  kind: requirement
+  title: 多市场股票看盘系统
+  lane: breakdown-lane
+  status: ready
+  children:
+  - id: TASK-STOCK-WATCH-T001
+    kind: task
+    title: 多市场自选归一、列表摘要与归档暂停
+    lane: delivery-lane
+    status: ready
+    children: []
+  - id: TASK-STOCK-WATCH-T002
+    kind: task
+    title: 默认工作台、来源健康、指标切换与可见降级
+    lane: delivery-lane
+    status: ready
+    children: []
+  - id: TASK-STOCK-WATCH-T003
+    kind: task
+    title: MTS 解释卡、ReasonRegistry 与非投资建议边界
+    lane: delivery-lane
+    status: ready
+    children: []
+  - id: TASK-STOCK-WATCH-T004
+    kind: task
+    title: 分类提醒、触发确认、scheduled 与归档暂停
+    lane: delivery-lane
+    status: ready
+    children: []
+  - id: TASK-STOCK-WATCH-T005
+    kind: task
+    title: WorkspaceSnapshotV2、per-symbol layout 与浏览器重开恢复
+    lane: delivery-lane
+    status: ready
+    children: []
+  - id: TASK-STOCK-WATCH-T006
+    kind: task
+    title: 冻结样本、回放、unit/e2e 门禁与 AC 验收矩阵
+    lane: delivery-lane
+    status: ready
+    children: []

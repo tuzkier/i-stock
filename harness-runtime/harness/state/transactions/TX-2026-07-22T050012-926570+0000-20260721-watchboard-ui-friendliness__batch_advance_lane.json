@@ -1,0 +1,26 @@
+{
+  "transaction_id": "TX-2026-07-22T050012-926570+0000-20260721-watchboard-ui-friendliness__batch_advance_lane",
+  "status": "failed",
+  "started_at": "2026-07-22T05:00:12.926808+00:00",
+  "ended_at": "2026-07-22T05:00:13.163105+00:00",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "operation_id": "20260721-watchboard-ui-friendliness__batch_advance_lane",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-07-22T050012-926570+0000-20260721-watchboard-ui-friendliness__batch_advance_lane/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmpchvqjng1.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T001.yaml"
+      ]
+    }
+  ],
+  "rollback": {
+    "snapshots": []
+  }
+}

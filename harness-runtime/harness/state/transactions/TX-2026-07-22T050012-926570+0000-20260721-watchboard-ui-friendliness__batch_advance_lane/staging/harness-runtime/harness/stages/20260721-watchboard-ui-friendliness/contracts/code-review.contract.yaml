@@ -1,0 +1,1037 @@
+control_contract:
+  type: evidence_contract
+  subtype: review_evidence
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: code-review
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+    sections:
+    - Acceptance Scenarios
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+    sections:
+    - Control Contract
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    sections:
+    - Control Contract
+  consumers:
+  - receiving-review
+  - verify
+  - delivery
+  - retrospective
+  - stage-gate
+  obligations:
+  - id: OBL-REVIEW-001
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: correctness
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      - SCN-03
+      - SCN-04
+      - SCN-05
+      - SCN-06
+      - SCN-07
+      task:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - correctness-reviewer
+    blocking: true
+    source: inferred
+  - id: OBL-REVIEW-002
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: tdd
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      - SCN-03
+      - SCN-04
+      - SCN-05
+      - SCN-06
+      - SCN-07
+      task:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - tdd-reviewer
+    blocking: true
+    source: inferred
+  - id: OBL-REVIEW-003
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: architecture
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-05
+      - SCN-07
+      task:
+      - T001
+      - T005
+      - T007
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - architecture-reviewer
+    blocking: true
+    source: manual_override
+  - id: OBL-REVIEW-004
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: e2e
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      - SCN-03
+      - SCN-04
+      - SCN-05
+      - SCN-06
+      - SCN-07
+      task:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - e2e-reviewer
+    blocking: true
+    source: manual_override
+  toolchain_probe:
+    artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+    status: PASS
+    signals: []
+  toolchain_status:
+    plan_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tdd/toolchain-status.json
+    run_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+    status_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+    status: FAIL
+    missing_capabilities:
+    - task_id: T001
+      capability: unit_test
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T001
+      capability: build_typecheck
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T002
+      capability: browser_flow
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T002
+      capability: user_visible_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T002
+      capability: dom_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T002
+      capability: build_typecheck
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T003
+      capability: browser_flow
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T003
+      capability: user_visible_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T003
+      capability: dom_computed_style_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T003
+      capability: negative_path
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T004
+      capability: browser_flow
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T004
+      capability: user_visible_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T004
+      capability: dom_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T005
+      capability: browser_flow
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T005
+      capability: dom_count_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T005
+      capability: dom_computed_style_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T005
+      capability: user_visible_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T006
+      capability: browser_flow
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T006
+      capability: user_visible_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T006
+      capability: negative_path
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T006
+      capability: dom_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T007
+      capability: browser_flow
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T007
+      capability: user_visible_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T007
+      capability: negative_path
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T007
+      capability: dom_count_assertion
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T007
+      capability: accessibility_smoke
+      reason: tool_missing_or_failed
+      selected_tool: null
+    - task_id: T007
+      capability: regression_diff_guard
+      reason: tool_missing_or_failed
+      selected_tool: null
+    decision_gate_reasons: []
+  e2e_status:
+    plan_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+    run_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/playwright-output.txt
+    status_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+    status: FAIL
+    missing_capabilities:
+    - task_id: T007
+      capability: accessibility_smoke
+      reason: e2e_tool_not_run_or_failed
+      selected_tool: '@axe-core/playwright'
+    decision_gate_reasons: []
+    artifacts:
+      html_report: playwright-report/index.html
+      trace: []
+      video: []
+      screenshots:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt03-trade-signal-hierarchy.png
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt04-watchlist-archived.png
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt05-top-hierarchy-colors.png
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt07-scope-guard-workbench-selection-summary.png
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt07-scope-guard-alert-empty-notice.png
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt07-scope-guard-workbench-error.png
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/evidence/pt02-mts-negative-score-tone.png
+      ui_diff: []
+    flaky_signals: []
+    skipped_tests: []
+  effectiveness_review:
+    pending_reviewer_recheck: false
+    rounds_used: 1
+    rounds: []
+    last_verdict: PASS_WITH_RISK
+  reviewers:
+  - id: REV-CTRL-001
+    role: correctness
+    verdict: PASS
+    role_boundary:
+      in_scope:
+      - 22 条验收条件与 25 个差量规格 Scenario 的用户可观察行为忠实性
+      out_of_scope:
+      - 测试有效性
+      - E2E 用户路径证明力
+      - 架构边界
+    review_basis:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    - src/features/presentation/tone.ts
+    - src/features/presentation/humanize.ts
+    - src/App.tsx
+    - src/features/chart/ChartSurface.tsx
+  - id: REV-CTRL-002
+    role: tdd
+    verdict: PASS_WITH_RISK
+    role_boundary:
+      in_scope:
+      - test effectiveness
+      - assertion strength
+      - adequacy
+      - fault detection
+      - TDD integrity
+      out_of_scope:
+      - business correctness verdict
+      - verification-report structure
+      - E2E report completeness
+      - tool installation policy
+    review_basis:
+    - harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+    - tests/unit/presentation/tone.spec.ts
+    - tests/unit/presentation/humanize.spec.ts
+    - tests/e2e/mts/friendliness.spec.ts
+  - id: REV-CTRL-003
+    role: e2e
+    verdict: PASS_WITH_RISK
+    role_boundary:
+      in_scope:
+      - user journey coverage
+      - user-visible assertions
+      - data reality
+      - negative path
+      - E2E reliability
+      - diagnostics usefulness
+      out_of_scope:
+      - Playwright installation
+      - missing e2e-status.json
+      - report path correctness
+      - verification-report structure
+      - TDD adequacy
+    review_basis:
+    - .harness/docs/e2e-effectiveness-reviewer-methodology.md
+    - harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+    - tests/e2e/gate/consistency.spec.ts
+    - tests/e2e/gate/scope-guard.spec.ts
+  - id: REV-CTRL-004
+    role: architecture
+    verdict: PASS_WITH_RISK
+    role_boundary:
+      in_scope:
+      - 模块边界
+      - 依赖方向
+      - 接口契约
+      - 数据/状态流
+      - 禁止路径
+      out_of_scope:
+      - 业务正确性
+      - 测试有效性
+      - 安全威胁建模
+    review_basis:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/solution/solution.md
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    - src/styles.css
+  role_verdicts:
+  - id: RV-correctness-reviewer-1
+    role: correctness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-REVIEW-001
+    review_basis:
+      work_graph_artifact:
+        node_id: TASK-WATCHBOARD-UI-T001
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+      - src/features/presentation/tone.ts
+      - src/features/presentation/humanize.ts
+      - src/App.tsx
+      - src/features/chart/ChartSurface.tsx
+      - src/features/restore/RestoreStatus.tsx
+    summary: 最终确认轮独立复核：GAP-01/GAP-02/GAP-03 三处此前修复的缺陷经本人直接阅读源码逐行核实真实已修复、无回归；SCN-01~07
+      全部条件、NEG-01/03/04 均 pass；独立执行 npm run build（exit 0）与 npx playwright test 全量（50
+      passed/0 failed/0 skipped）；LayoutController/AlertRulePanel/WorkbenchShell/domain/lib-signals
+      均 git diff 确认零改动。发现 3 个 Low 非阻断风险，无 blocking gap。
+    matrix:
+    - target: GAP-01 ChartSurface chart-degradation-note tone 派生
+      conclusion: pass
+    - target: GAP-02 负向评分色与来源故障色物理区分
+      conclusion: pass
+    - target: GAP-03 App.tsx signal-degradation-note tone 派生
+      conclusion: pass
+    - target: SCN-01~07 全部验收条件
+      conclusion: pass
+    - target: NEG-01/03/04 负向路径
+      conclusion: pass
+    - target: SR-01 范围外零改动（LayoutController/AlertRulePanel/WorkbenchShell/domain/lib-signals）
+      conclusion: pass
+    findings: []
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: RISK-01
+      severity: low
+      category: correctness
+      detail: AT-0302 not_target_symbol/data_insufficient 两态仅用 blanket 负向断言覆盖，未各自精确驱动
+    - id: RISK-02
+      severity: low
+      category: correctness
+      detail: 与 E2E-FND-001 (axe 覆盖面) 关联，不重复阻断
+    - id: RISK-03
+      severity: low
+      category: correctness
+      detail: chart-source-status 元素是否构成第二处可见来源信息存在解释空间，但为既有基线未改动且 tech-design 已明确登记为派生一致性指示
+    dispatch:
+      subagent_id: ada5585ecace12fb1
+      model: claude-sonnet-5
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T04:35:00+00:00'
+      completed_at: '2026-07-22T04:46:32+00:00'
+  - id: RV-tdd-reviewer-1
+    role: tdd-reviewer
+    verdict: PASS_WITH_RISK
+    reviewed_obligations:
+    - OBL-REVIEW-002
+    review_basis:
+      work_graph_artifact:
+        node_id: TASK-WATCHBOARD-UI-T001
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+      - tests/unit/presentation/tone.spec.ts
+      - tests/unit/presentation/humanize.spec.ts
+      - tests/e2e/mts/friendliness.spec.ts
+      - tests/e2e/gate/acceptance-matrix.spec.ts
+      - tests/e2e/workbench/default.spec.ts
+      - tests/e2e/restore-layout/tone.spec.ts
+    summary: 最终确认轮独立复核，含 2 处真实故障注入验证：1) 改坏 resolveScoreTone 负向分支 caution→warning，GAP-02
+      用例即时变红；2) 改坏 resolveSourceTone demo_fallback 分支 info→warning，AC-02/AC-03 与 default.spec.ts
+      即时变红；均已还原确认 git diff 为空、套件恢复全绿（35/35 单测 + 50/50 E2E）。toolchain-status.json 顶层
+      FAIL 独立核实为通用探测口径对本项目 node --test + playwright 工具链的系统性误报，非真实证据缺失。无 blocking gap，5
+      项 Low 非阻断风险。
+    matrix:
+    - target: T001 presentation_mapping_layer (tone.ts)
+      test_refs:
+      - tests/unit/presentation/tone.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T001 presentation_mapping_layer (humanize.ts)
+      test_refs:
+      - tests/unit/presentation/humanize.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T002 mts_card_presentation (GAP-02)
+      test_refs:
+      - tests/e2e/mts/friendliness.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T003 trade_signal_card_presentation
+      test_refs:
+      - tests/e2e/trade-signal/friendliness.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: partial
+      fault_detection: proven
+      conclusion: pass
+    - target: T006 restore_status_presentation
+      test_refs:
+      - tests/e2e/restore-layout/tone.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T007 cross_presentation_consistency / scope_guard
+      test_refs:
+      - tests/e2e/gate/consistency.spec.ts
+      - tests/e2e/gate/scope-guard.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    findings: []
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: TDD-FND-002
+      severity: low
+      category: tdd
+      detail: AT-0301/AT-0302 交易信号卡非 ready 子态（data_insufficient/not_target_symbol）只有纯函数单测覆盖，E2E
+        未做 DOM 层交叉验证
+    - id: TDD-FND-003
+      severity: low
+      category: tdd
+      detail: toolchain-status.json 顶层 FAIL 系通用探测器与本项目实际工具链不匹配的系统性误报，本轮独立核实非真实缺失
+    - id: TDD-FND-004
+      severity: low
+      category: tdd
+      detail: RestoreStatus resolveRestoreTone failed 分支无生产可达路径，测试文件已主动披露并用单测兜底
+    - id: TDD-FND-005
+      severity: low
+      category: tdd
+      detail: 全项目未配置 JS/TS mutation testing 工具（StrykerJS 未安装），除本轮人工 targeted fault
+        injection 外无系统性变异测试信号
+    dispatch:
+      subagent_id: a933eea57542ee11f
+      model: claude-sonnet-5
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T04:35:00+00:00'
+      completed_at: '2026-07-22T04:40:46+00:00'
+  - id: RV-e2e-reviewer-1
+    role: e2e-reviewer
+    verdict: PASS_WITH_RISK
+    reviewed_obligations:
+    - OBL-REVIEW-004
+    review_basis:
+      work_graph_artifact:
+        node_id: TASK-WATCHBOARD-UI-T001
+        artifact_version: v1
+      docs:
+      - .harness/docs/e2e-effectiveness-reviewer-methodology.md
+      - harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+      - harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+      - tests/e2e/gate/consistency.spec.ts
+      - tests/e2e/gate/scope-guard.spec.ts
+    summary: 最终确认轮独立复核：独立复跑 npx playwright test（全量）两次均 50 passed/0 failed/0 skipped/0
+      flaky，config 审计确认无过滤/无重试掩盖失败。SCN-01~07 与 NEG-01/02/03/05/06/07 均有真实浏览器级、数据驱动
+      E2E 证明。e2e-status.json 顶层 FAIL 核实为探测脚本对内嵌 axe 断言与 T001 auth_state 误判所致，非真实缺失。新发现
+      E2E-FND-002（Med，NEG-04 未注册理由码回落缺浏览器层 DOM 证明）。无 blocking gap，5 项非阻断风险（Med x2,
+      Low x3）。
+    matrix:
+    - target: SCN-01 状态色四档归位
+      obligation_refs:
+      - T002
+      - T005
+      - T006
+      e2e_test_refs:
+      - tests/e2e/workbench/default.spec.ts
+      - tests/e2e/restore-layout/tone.spec.ts
+      - tests/e2e/mts/friendliness.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: pass
+    - target: NEG-01 跨呈现一致性
+      obligation_refs:
+      - T007
+      e2e_test_refs:
+      - tests/e2e/gate/consistency.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: pass
+    - target: NEG-03 恢复态/来源态物理独立
+      obligation_refs:
+      - T006
+      - T007
+      e2e_test_refs:
+      - tests/e2e/gate/consistency.spec.ts
+      - tests/e2e/restore-layout/tone.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: pass
+    - target: NEG-04 未注册理由码不裸露
+      obligation_refs:
+      - T002
+      e2e_test_refs:
+      - tests/unit/presentation/humanize.spec.ts
+      user_result_assertion: not_applicable
+      data_reality: unit_only
+      negative_path: missing
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: risk
+    - target: NEG-07 axe 无回归
+      obligation_refs:
+      - T007
+      e2e_test_refs:
+      - tests/e2e/gate/scope-guard.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: not_applicable
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: risk
+    findings:
+    - id: E2E-FND-002
+      severity: medium
+      category: e2e
+      summary: NEG-04 未注册理由码回落只有单测证据，缺浏览器层 DOM 证明
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: E2E-FND-001
+      severity: medium
+      category: e2e
+      detail: axe 扫描只覆盖 formal 态首页和 alerts 面板，未覆盖本次新增的大量颜色语义承载态
+    - id: E2E-FND-002
+      severity: medium
+      category: e2e
+      detail: NEG-04 未注册理由码回落缺浏览器层 DOM 证明
+    - id: E2E-FND-003
+      severity: low
+      category: e2e
+      detail: SCN-06 来源小圆点/archived 弱化断言偏宽松
+    - id: E2E-FND-004
+      severity: low
+      category: e2e
+      detail: SCN-04 顶部控件对齐断言用宽松 OR 匹配
+    - id: E2E-FND-005
+      severity: low
+      category: e2e
+      detail: e2e-status.json 顶层 FAIL 系控制面探测口径误判，trace 快照存在新鲜度漂移
+    dispatch:
+      subagent_id: af84d3211e66a37ea
+      model: claude-sonnet-5
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T04:35:00+00:00'
+      completed_at: '2026-07-22T04:46:05+00:00'
+  - id: RV-architecture-reviewer-1
+    role: architecture-reviewer
+    verdict: PASS_WITH_RISK
+    reviewed_obligations:
+    - OBL-REVIEW-003
+    review_basis:
+      work_graph_artifact:
+        node_id: TASK-WATCHBOARD-UI-T001
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/solution/solution.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+      - src/features/presentation/tone.ts
+      - src/features/presentation/humanize.ts
+      - src/styles.css
+    summary: 最终确认轮独立复核：重新读 solution.md DEC-S01~S09、tech-design.md M1~M8、execution-brief.md
+      AT-0501 原文，逐一执行 git diff/grep 取证。ARCH-01 确认已修复，无任何残留证据表明复现。ARCH-02 维持非阻断设计漂移判断（DEC-S05
+      显式授权范围内的承载选点，仅文件锚点标注未同步，登记 RISK-DOC-01）。模块边界/依赖方向/接口契约/数据流/禁止路径全部核实合规。新发现 RISK-CSS-01：CSS-only
+      重排 LayoutController 计算样式与 SR-01「范围外零改动」字面措辞存在张力，经核实为 tech-design M6/DEC-S09
+      唯一可行机制、不构成实质违规。无 blocking gap，2 项 Low 非阻断风险。
+    matrix:
+    - target: ARCH-01 CSS 侧信道越权（styles.css → LayoutController.tsx 元素样式）
+      conclusion: pass
+    - target: SR-01 范围外文件零改动（LayoutController/AlertRulePanel/WorkbenchShell JSX +
+        共享 .data-notice/.up/.down 定义）
+      conclusion: pass
+    - target: presentation 模块依赖方向（单向只读消费 domain，无反向依赖）
+      conclusion: pass
+    - target: ARCH-02 price-authority 落点与 DEC-S05 授权一致性
+      conclusion: pass_with_documented_risk
+    - target: M6/DEC-S09 CSS-only 重排机制合规性（RISK-CSS-01）
+      conclusion: pass_with_documented_risk
+    findings: []
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: RISK-DOC-01
+      severity: low
+      category: architecture
+      detail: tech-design.md M6/M8 模块标题文件锚点未回写 price-authority 实际落点（ChartSurface.tsx
+        而非 App.tsx）说明
+    - id: RISK-CSS-01
+      severity: low
+      category: architecture
+      detail: styles.css 新增选择器会真实改变范围外文件 LayoutController.tsx 的计算样式，与 SR-01 字面措辞存在张力，经核实是
+        tech-design M6/DEC-S09 唯一可行机制、不构成违规，但建议后续澄清 SR-01 措辞
+    dispatch:
+      subagent_id: a2ba487a5fc8982df
+      model: claude-sonnet-5
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T04:35:00+00:00'
+      completed_at: '2026-07-22T04:50:52+00:00'
+  tdd_review:
+    verdict: PASS_WITH_RISK
+    probe_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+    toolchain_status_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/toolchain-status.json
+    role_boundary:
+      in_scope:
+      - test effectiveness
+      - assertion strength
+      - adequacy
+      - fault detection
+      - TDD integrity
+      out_of_scope:
+      - business correctness verdict
+      - verification-report structure
+      - E2E report completeness
+      - tool installation policy
+    toolchain_signal_handling:
+      accepted: []
+      rejected:
+      - signal: pytest/coverage.py/diff-cover/mutmut FAIL
+        reason: 本项目无 Python 测试面，通用多语言探测器误报，非真实缺失
+      - signal: vitest/jest FAIL
+        reason: 本项目使用 node --test 直接驱动，无 test npm script/vitest配置，探测器无法识别
+    adequacy_matrix:
+    - target: T001 presentation_mapping_layer (tone.ts)
+      test_refs:
+      - tests/unit/presentation/tone.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T001 presentation_mapping_layer (humanize.ts)
+      test_refs:
+      - tests/unit/presentation/humanize.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T002 mts_card_presentation (GAP-02)
+      test_refs:
+      - tests/e2e/mts/friendliness.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T003 trade_signal_card_presentation
+      test_refs:
+      - tests/e2e/trade-signal/friendliness.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: partial
+      fault_detection: proven
+      conclusion: pass
+    - target: T006 restore_status_presentation
+      test_refs:
+      - tests/e2e/restore-layout/tone.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    - target: T007 cross_presentation_consistency / scope_guard
+      test_refs:
+      - tests/e2e/gate/consistency.spec.ts
+      - tests/e2e/gate/scope-guard.spec.ts
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: TDD-FND-002
+      severity: low
+      detail: AT-0301/AT-0302 交易信号卡非 ready 子态只有纯函数单测覆盖，E2E 未做 DOM 层交叉验证
+    - id: TDD-FND-003
+      severity: low
+      detail: toolchain-status.json 顶层 FAIL 系通用探测器与本项目实际工具链不匹配的系统性误报
+    - id: TDD-FND-004
+      severity: low
+      detail: RestoreStatus resolveRestoreTone failed 分支无生产可达路径，已用单测兜底
+    - id: TDD-FND-005
+      severity: low
+      detail: 全项目未配置 JS/TS mutation testing 工具，除本轮人工 targeted fault injection 外无系统性变异测试信号
+  e2e_review:
+    verdict: PASS_WITH_RISK
+    e2e_status_artifact: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/e2e/e2e-status.json
+    methodology_ref: .harness/docs/e2e-effectiveness-reviewer-methodology.md
+    role_boundary:
+      in_scope:
+      - user journey coverage
+      - user-visible assertions
+      - data reality
+      - negative path
+      - realtime behavior
+      - E2E reliability
+      - diagnostics usefulness
+      out_of_scope:
+      - Playwright installation
+      - missing e2e-status.json
+      - report path correctness
+      - trace/video/screenshot/UI diff artifact completeness
+      - verification-report structure
+      - TDD adequacy
+    artifact_handling:
+      accepted: []
+      rejected:
+      - signal: e2e-status.json 顶层 status=FAIL
+        reason: 探测脚本未识别内嵌于 Playwright spec 中的 @axe-core/playwright 断言为独立 accessibility_smoke
+          运行；T001 auth_state/web_ui 能力要求为通用模板误推断（T001 实际为无用户可观察面的纯只读地基层）；e2e_run_status
+          实际为 PASS
+    coverage_matrix:
+    - target: SCN-01 状态色四档归位
+      obligation_refs:
+      - T002
+      - T005
+      - T006
+      e2e_test_refs:
+      - tests/e2e/workbench/default.spec.ts
+      - tests/e2e/restore-layout/tone.spec.ts
+      - tests/e2e/mts/friendliness.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: pass
+    - target: NEG-01 跨呈现一致性
+      obligation_refs:
+      - T007
+      e2e_test_refs:
+      - tests/e2e/gate/consistency.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: pass
+    - target: NEG-03 恢复态/来源态物理独立
+      obligation_refs:
+      - T006
+      - T007
+      e2e_test_refs:
+      - tests/e2e/gate/consistency.spec.ts
+      - tests/e2e/restore-layout/tone.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: covered
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: pass
+    - target: NEG-04 未注册理由码不裸露
+      obligation_refs:
+      - T002
+      e2e_test_refs:
+      - tests/unit/presentation/humanize.spec.ts
+      user_result_assertion: not_applicable
+      data_reality: unit_only
+      negative_path: missing
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: risk
+    - target: NEG-07 axe 无回归
+      obligation_refs:
+      - T007
+      e2e_test_refs:
+      - tests/e2e/gate/scope-guard.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+      user_result_assertion: strong
+      data_reality: real_api_or_seeded_fixture
+      negative_path: not_applicable
+      realtime_or_refresh: not_applicable
+      reliability: stable
+      diagnostics: trace_or_video_available
+      conclusion: risk
+    blocking_gaps: []
+    non_blocking_risks:
+    - id: E2E-FND-001
+      severity: medium
+      detail: axe 扫描只覆盖 formal 态首页和 alerts 面板，未覆盖本次新增的大量颜色语义承载态
+    - id: E2E-FND-002
+      severity: medium
+      detail: NEG-04 未注册理由码回落缺浏览器层 DOM 证明
+    - id: E2E-FND-003
+      severity: low
+      detail: SCN-06 来源小圆点/archived 弱化断言偏宽松
+    - id: E2E-FND-004
+      severity: low
+      detail: SCN-04 顶部控件对齐断言用宽松 OR 匹配
+    - id: E2E-FND-005
+      severity: low
+      detail: e2e-status.json 顶层 FAIL 系控制面探测口径误判，trace 快照存在新鲜度漂移
+  findings:
+  - id: GAP-01
+    severity: high
+    category: correctness
+    summary: ChartSurface.tsx 的 chart-degradation-note 硬编码警告色，未接入 resolveSourceTone，demo_fallback
+      被误染最高危色
+    evidence:
+    - file: src/features/chart/ChartSurface.tsx
+      line: 207
+    - command: npx playwright test tests/e2e/gate/acceptance-matrix.spec.ts
+      exit_code: 0
+    traces_to:
+    - SCN-01
+    status: resolved
+    resolution_ref: 第 1 轮修复：改用 resolveSourceTone 派生 tone class；最终确认轮 correctness-reviewer
+      独立复核确认 PASS 无回归
+  - id: GAP-02
+    severity: high
+    category: correctness
+    summary: 负向评分色与来源故障色物理区分只有函数级测试，无渲染层 E2E/截图证据
+    evidence:
+    - file: tests/e2e/mts/friendliness.spec.ts
+      line: 1
+    - command: npx playwright test tests/e2e/mts/friendliness.spec.ts
+      exit_code: 0
+    traces_to:
+    - SCN-01
+    status: resolved
+    resolution_ref: 第 1 轮补充渲染层 E2E 用例+并置截图；最终确认轮 tdd-reviewer 真实故障注入（caution→warning）复核确认有效
+  - id: GAP-03
+    severity: high
+    category: correctness
+    summary: App.tsx 的 signal-degradation-note 与 GAP-01 相同 bug 模式（硬编码警告色），第 1 轮修复遗漏的兄弟位置
+    evidence:
+    - file: src/App.tsx
+      line: 1
+    - command: npx playwright test tests/e2e/workbench/default.spec.ts
+      exit_code: 0
+    traces_to:
+    - SCN-01
+    status: resolved
+    resolution_ref: 第 3 轮修复：signal-degradation-note 改用 resolveSourceTone 派生 tone class；最终确认轮
+      correctness-reviewer 独立复核确认 PASS 无回归
+  - id: ARCH-01
+    severity: high
+    category: architecture
+    summary: styles.css 新增 CSS 后代选择器越权改变范围外禁改文件 LayoutController.tsx 元素样式，违反 SR-01
+    evidence:
+    - file: src/styles.css
+      line: 1
+    - command: git diff src/features/layout/LayoutController.tsx
+      exit_code: 0
+    traces_to:
+    - SCN-07
+    status: resolved
+    resolution_ref: 第 1 轮修复：删除越权 CSS 规则；最终确认轮 architecture-reviewer 独立复核确认无任何残留证据表明复现
+  - id: ARCH-02
+    severity: low
+    category: architecture
+    summary: price-authority testid 落在 ChartSurface.tsx 而非 tech-design 文字标注的 App.tsx/M6
+    evidence:
+    - file: src/features/chart/ChartSurface.tsx
+      line: 1
+    - file: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+      line: 1621
+    traces_to:
+    - SCN-05
+    status: accepted_risk
+    resolution_ref: architecture-reviewer 最终确认轮独立重新论证维持：DEC-S05 显式授权范围内的承载选点结果，功能层面与
+      tech-design M6 一致，仅文件锚点标注未同步，登记为 RISK-DOC-01
+  - id: E2E-FND-001
+    severity: medium
+    category: e2e
+    summary: axe 可访问性扫描只覆盖 formal 态首页和 alerts 面板，未覆盖本次新增的大量颜色语义承载态
+    evidence:
+    - command: grep -r '@axe-core/playwright' tests/e2e/
+      exit_code: 0
+    traces_to:
+    - SCN-01
+    status: accepted_risk
+    resolution_ref: e2e-reviewer 最终确认轮独立复核维持同一结论，记录为 non-blocking，建议下一轮迭代补充覆盖
+  - id: E2E-FND-002
+    severity: medium
+    category: e2e
+    summary: NEG-04（未注册理由码不得直呈）回落只有单测证据，缺浏览器层 DOM 证明真实渲染路径确实调用了安全回落函数
+    evidence:
+    - file: tests/unit/presentation/humanize.spec.ts
+      line: 1
+    - file: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+      line: 502
+    traces_to:
+    - SCN-02
+    status: accepted_risk
+    resolution_ref: e2e-reviewer 最终确认轮新发现；风险低（生产 code 集合固定，属防御性路径），建议补 1 条 route 注入未注册
+      code 的 E2E 作为后续任务，不阻断本次交付
+  - id: RISK-DOC-01
+    severity: low
+    category: architecture
+    summary: tech-design.md M6/M8 模块标题文件锚点未回写 price-authority 实际落点说明
+    evidence:
+    - file: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+      line: 1
+    traces_to:
+    - SCN-05
+    status: accepted_risk
+    resolution_ref: architecture-reviewer 记录，建议后续 tech-design 修订登记，不阻断本次交付
+  - id: RISK-CSS-01
+    severity: low
+    category: architecture
+    summary: SR-01「范围外零改动」措辞与 DEC-S09/M6 CSS-only 重排 LayoutController 计算样式授权之间存在字面张力
+    evidence:
+    - file: src/styles.css
+      line: 412
+    traces_to:
+    - SCN-04
+    status: accepted_risk
+    resolution_ref: architecture-reviewer 最终确认轮核实：与 execution-brief.md 授权变更集逐字匹配，是
+      tech-design M6/DEC-S09 唯一可行机制，不构成 SR-01 违规；建议后续治理复核 SR-01 措辞是否需区分「文件零编辑」与「渲染结果零改变」，不阻断本次交付
+  work_graph_artifact:
+    node_id: TASK-WATCHBOARD-UI-T001
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+  gate_decisions:
+  - id: DEC-CR-01
+    decision: accept_risk
+    scope:
+    - E2E-FND-001
+    - E2E-FND-002
+    - TDD-FND-002
+    - TDD-FND-003
+    - TDD-FND-004
+    - TDD-FND-005
+    - RISK-DOC-01
+    - RISK-CSS-01
+    - ARCH-02
+    - RISK-01
+    - RISK-02
+    - RISK-03
+    rationale: 本 mission 全程由用户以标准指令（'继续'）授权代理自主完成 Harness 治理下的 SDLC 流程；code-review
+      阶段 4 位独立审查员（correctness/tdd/e2e/architecture）最终确认轮均给出 PASS 或 PASS_WITH_RISK，零
+      blocking gap；上述 12 项残留风险均为 Med/Low 级别、有充分证据支撑、有明确后续建议，且不影响本次改造范围（看盘界面状态色语义分档/人话化/信息层级重排）的核心验收场景。按本
+      mission 标准自治级别接受这些非阻断残留风险，推进 verification lane，后续建议项记录供下一迭代跟进。
+    accepted_by: autonomous_pipeline_under_standing_user_directive
+    stage: code-review
+  execution_results:
+  - id: EXE-CODE-REVIEW-001
+    role: code-review-control-plane
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/code-review/code-review.md
+    fulfilled_obligations: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []

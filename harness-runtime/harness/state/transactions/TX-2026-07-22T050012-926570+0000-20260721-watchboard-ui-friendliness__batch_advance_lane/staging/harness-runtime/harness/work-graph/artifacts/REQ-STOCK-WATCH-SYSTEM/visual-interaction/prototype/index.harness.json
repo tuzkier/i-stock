@@ -1,0 +1,58 @@
+{
+  "artifact_role": "primary_prototype",
+  "screen": "多市场看盘工作台",
+  "component": "watchlist-detail-alerts",
+  "style_source": "inline-css",
+  "notes": "主可操作原型，覆盖 BUC-01 到 BUC-09、六类通用状态和桌面/移动视口；BUC-09 作为冻结样本验证映射由既有 deep link 承载。",
+  "covers": {
+    "bucs": [
+      "BUC-01",
+      "BUC-02",
+      "BUC-03",
+      "BUC-04",
+      "BUC-05",
+      "BUC-06",
+      "BUC-07",
+      "BUC-08",
+      "BUC-09"
+    ],
+    "flows": [
+      "FLOW-WATCHLIST-MANAGE",
+      "FLOW-OPEN-DETAIL",
+      "FLOW-SWITCH-INDICATOR",
+      "FLOW-READ-MTS",
+      "FLOW-MANAGE-ALERT",
+      "FLOW-RESTORE-WORKSPACE",
+      "FLOW-SOURCE-DEGRADED",
+      "FLOW-SWITCH-LAYOUT",
+      "FLOW-FIXTURE-VALIDATION"
+    ],
+    "states": [
+      "STATE-LOADING",
+      "STATE-EMPTY",
+      "STATE-SUCCESS",
+      "STATE-ERROR",
+      "STATE-PERMISSION",
+      "STATE-DISABLED",
+      "STATE-WATCH-ACTIVE",
+      "STATE-WATCH-ARCHIVED",
+      "STATE-MTS-STRONG",
+      "STATE-MTS-DATA-INSUFFICIENT",
+      "STATE-SOURCE-DEMO",
+      "STATE-ALERT-TRIGGERED"
+    ],
+    "viewports": ["desktop", "tablet", "mobile"]
+  },
+  "ac": ["AC-01", "AC-02", "AC-03", "AC-04", "AC-05"],
+  "scenarios": [
+    "BUC-01",
+    "BUC-02",
+    "BUC-03",
+    "BUC-04",
+    "BUC-05",
+    "BUC-06",
+    "BUC-07",
+    "BUC-08",
+    "BUC-09"
+  ]
+}

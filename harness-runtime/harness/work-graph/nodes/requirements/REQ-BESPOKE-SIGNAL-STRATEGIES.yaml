@@ -1,0 +1,14 @@
+id: REQ-BESPOKE-SIGNAL-STRATEGIES
+kind: requirement
+title: 逐股实证量身定制买卖信号策略（6只全部重做+新增建滔积层板1888）
+lane: requirement-lane
+status: active
+stage: intake
+inputs: []
+outputs: []
+relations: {}
+updated_at: '2026-07-23T01:30:15.979495+00:00'
+trace:
+  created_by_mission: 20260723-bespoke-signal-strategies
+  updated_by_mission: 20260723-bespoke-signal-strategies
+  last_graph_operation: create-REQ-BESPOKE-SIGNAL-STRATEGIES

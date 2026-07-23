@@ -1,0 +1,171 @@
+20260522-stock-watch-system:
+  title: '推进 REQ-STOCK-WATCH-SYSTEM: 多市场股票看盘系统'
+  status: done
+  current_lane: delivery-lane
+  current_stage: finishing-branch
+  stages:
+    execute: done
+    code-review: done
+    verify: done
+    delivery: done
+    retrospective: done
+    finishing-branch: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260522-stock-watch-system.yaml
+    primary_nodes:
+    - TASK-STOCK-WATCH-T002
+    - TASK-STOCK-WATCH-T003
+    - TASK-STOCK-WATCH-T004
+    - TASK-STOCK-WATCH-T005
+    - TASK-STOCK-WATCH-T006
+    related_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    operation: advance_stage
+    lane: delivery-lane
+    stage: finishing-branch
+    lane_action:
+      lane: delivery-lane
+      stage: finishing-branch
+      graph_operation: advance_stage
+      operation_profiles: {}
+      allowed_graph_operations: []
+      output_artifact: null
+      required_execution_roles: []
+      required_review_roles: []
+    last_gate_report: ''
+    last_operation_manifest: ''
+    last_operation_status: ''
+    last_transaction_id: TX-2026-06-07T065641-603440+0000-20260522-stock-watch-system__batch_advance_stage
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-06-07T065641-603440+0000-20260522-stock-watch-system__batch_advance_stage.json
+    input_nodes: []
+    output_nodes: []
+    reset_stage: execute
+    reset_reason: 用户确认其他任务仍在执行；T001 仅完成节点级验证，不进入整套任务最终交付，切回 development-lane/execute
+      继续 T002。
+    reset_at: '2026-05-24T10:24:37.844002+08:00'
+    reset_output_node_policy: keep
+  autonomy_level: 受控推进
+  checkpoints_passed:
+  - discovery_confirmation
+  - prd
+  - acceptance-result
+  started_at: '2026-05-23'
+  completed_at: '2026-06-07'
+  close_strategy: kept
+  git:
+    branch_closed: false
+    close_strategy: kept
+    kept_reason: 项目目录不是 Git repo，mission_branch 未配置；交付已由用户确认并保留在当前工作区与 Harness artifacts，无法执行
+      merge/push/discard Git 收尾。
+20260720-alibaba-trade-signals:
+  title: 为阿里巴巴HK.09988基于历史K线构建多指标组合买卖点信号算法，回测验证后集成到看盘终端图表标注
+  status: active
+  started_at: '2026-07-20'
+  completed_at: ''
+  current_stage: discovery
+  current_lane: requirement-lane
+  stages:
+    intake: done
+    discovery: in-progress
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260720-alibaba-trade-signals.yaml
+    primary_nodes:
+    - REQ-ALIBABA-TRADE-SIGNALS
+    related_nodes: []
+    input_nodes: []
+    output_nodes: []
+    lane: requirement-lane
+    stage: discovery
+    operation: advance_lane
+    lane_action:
+      lane: requirement-lane
+      stage: discovery
+      graph_operation: advance_lane
+      operation_profiles:
+        advance_lane:
+          to_lane: product-definition-lane
+          to_stage: prd
+      allowed_graph_operations:
+      - advance_lane
+      output_artifact: harness-runtime/harness/artifacts/20260720-alibaba-trade-signals/discovery/discovery-brief.md
+      required_execution_roles:
+      - discovery-analyst
+      required_review_roles:
+      - discovery-effectiveness-reviewer
+      to_lane: product-definition-lane
+      to_stage: prd
+    last_gate_report: harness-runtime/harness/state/gate-reports/20260720-alibaba-trade-signals/intake__advance_stage.json
+    last_operation_manifest: harness-runtime/harness/work-graph/operations/20260720-alibaba-trade-signals__REQ-ALIBABA-TRADE-SIGNALS__advance_stage.yaml
+    last_operation_status: PASS
+    last_transaction_id: TX-2026-07-20T131437-923402+0000-20260720-alibaba-trade-signals__REQ-ALIBABA-TRADE-SIGNALS__advance_stage
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-07-20T131437-923402+0000-20260720-alibaba-trade-signals__REQ-ALIBABA-TRADE-SIGNALS__advance_stage.json
+  checkpoints_passed: []
+  autonomy_level: 专家确认
+20260721-watchboard-ui-friendliness:
+  title: '推进 REQ-WATCHBOARD-UI-FRIENDLINESS: 看盘界面友好化改造（状态色语义/术语人话化/信息层级）'
+  status: active
+  current_lane: development-lane
+  current_stage: execute
+  stages:
+    intake: done
+    discovery: done
+    prd: done
+    interaction: done
+    solution: done
+    technical_analysis: done
+    breakdown: done
+    execute: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260721-watchboard-ui-friendliness.yaml
+    primary_nodes:
+    - TASK-WATCHBOARD-UI-T001
+    - TASK-WATCHBOARD-UI-T002
+    - TASK-WATCHBOARD-UI-T003
+    - TASK-WATCHBOARD-UI-T004
+    - TASK-WATCHBOARD-UI-T005
+    - TASK-WATCHBOARD-UI-T006
+    - TASK-WATCHBOARD-UI-T007
+    related_nodes:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    operation: advance_stage
+    lane: development-lane
+    stage: execute
+    lane_action:
+      lane: development-lane
+      stage: execute
+      graph_operation: advance_stage
+      operation_profiles:
+        advance_stage:
+          to_stage: code-review
+      allowed_graph_operations:
+      - advance_stage
+      output_artifact: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+      required_execution_roles:
+      - execute-control-plane-executor
+      required_review_roles:
+      - spec-reviewer
+      to_stage: code-review
+      carrier: execute
+      skill: execute
+      role_carriers:
+        execute-control-plane-executor: skill
+    last_gate_report: harness-runtime/harness/state/gate-reports/20260721-watchboard-ui-friendliness/breakdown__split_node.json
+    last_operation_manifest: harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__split_breakdown_tasks.yaml
+    last_operation_status: PASS
+    last_transaction_id: TX-2026-07-21T105020-324841+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__split_breakdown_tasks
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-07-21T105020-324841+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__split_breakdown_tasks.json
+    input_nodes: []
+    output_nodes: []
+  autonomy_level: 专家确认
+  checkpoints_passed: []
+  started_at: '2026-07-21'
+  completed_at: ''
+  git:
+    strategy: downgraded
+    downgrade_reason: 用户 2026-07-21 明确授权：不用提交、直接在根工作区执行；跳过 prepare/start-stage worktree。
+    base_branch: main
+    mission_branch: null
+    current_branch: main
+    branch_closed: false
+    current_stage_branch: ''
+    current_stage_worktree: ''

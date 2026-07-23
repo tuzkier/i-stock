@@ -79,12 +79,16 @@ test("MTS card exposes structured fields and non-advice copy", async ({ page }) 
   await page.goto("/");
 
   await expect(page.getByTestId("mts-card")).toContainText("MTS 解释卡");
+  // AT-0201: score-grid 裸枚举默认收进折叠详情，需先展开再断言内容
+  await page.getByTestId("mts-details-toggle").click();
   await expect(page.getByTestId("mts-state-grid")).toContainText("trend_state");
   await expect(page.getByTestId("mts-state-grid")).toContainText("mts_score");
   await expect(page.getByTestId("mts-state-grid")).toContainText("score_band");
   await expect(page.getByTestId("mts-state-grid")).toContainText("signal_type");
   await expect(page.getByTestId("mts-state-grid")).toContainText("alert_level");
-  await expect(page.getByTestId("mts-reason-list")).toContainText("TREND_ABOVE_EMA");
+  await expect(page.getByTestId("mts-reason-list")).not.toContainText("TREND_ABOVE_EMA");
+  await page.getByTestId("mts-reason-details-toggle").click();
+  await expect(page.getByTestId("mts-reason-codes")).toContainText("TREND_ABOVE_EMA");
   await expect(page.getByTestId("mts-non-advice")).toContainText("不构成收益承诺");
   await expect(page.getByTestId("mts-card")).not.toContainText(/强买点|强卖点|胜率/);
 });
@@ -98,7 +102,11 @@ test("MTS card degrades when source is unavailable", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByTestId("signal-degradation-note")).toContainText("unavailable");
+  // AT-0201: score-grid 裸枚举默认收进折叠详情，需先展开再断言内容
+  await page.getByTestId("mts-details-toggle").click();
   await expect(page.getByTestId("mts-state-grid")).toContainText("trend_state source_degraded");
   await expect(page.getByTestId("mts-state-grid")).toContainText("alert_level none");
-  await expect(page.getByTestId("mts-reason-list")).toContainText("SOURCE_DEGRADED");
+  await expect(page.getByTestId("mts-reason-list")).not.toContainText("SOURCE_DEGRADED");
+  await page.getByTestId("mts-reason-details-toggle").click();
+  await expect(page.getByTestId("mts-reason-codes")).toContainText("SOURCE_DEGRADED");
 });

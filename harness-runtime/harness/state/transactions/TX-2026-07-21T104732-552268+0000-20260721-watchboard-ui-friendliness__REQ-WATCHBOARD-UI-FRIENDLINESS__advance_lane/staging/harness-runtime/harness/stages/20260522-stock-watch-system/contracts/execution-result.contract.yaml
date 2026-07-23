@@ -1,0 +1,1328 @@
+control_contract:
+  type: action_contract
+  version: 1
+  mission_id: 20260522-stock-watch-system
+  stage: execute
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/prd.contract.yaml
+    sections:
+    - work_graph_artifact
+    - acceptance_criteria
+    - capabilities
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-brief.contract.yaml
+    sections:
+    - tasks
+    - atomic_task_queue
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    sections:
+    - Parent Task Index
+    - Execution Units
+    - Definition of Done
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    sections:
+    - scenarios
+  consumers:
+  - code-review
+  - verify
+  - stage-gate
+  work_graph_artifact:
+    node_id: TASK-STOCK-WATCH-T002
+    artifact_set_id: AS-20260522-stock-watch-system-execute-v1
+    artifact_version: v1
+    promoted_by_mission: 20260522-stock-watch-system
+    source_stage_artifact: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-STOCK-WATCH-T002/execution-result.md
+    artifact_refs:
+    - artifact_id: 20260522-stock-watch-system:execution-result
+      role: execution-result
+      path: harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+  role_policy:
+    stage: execute
+    work_graph_lane: development-lane
+    required_execution_roles:
+    - execute-control-plane-executor
+    required_review_roles:
+    - spec-reviewer
+    role_carriers:
+      execute-control-plane-executor: skill
+  execute_session:
+    id: EXE-SESSION-T002-T006
+    skill: execute
+    carrier: execute
+    execute_mode: sdd
+    dispatch_plans:
+    - id: DISPATCH-T002-A1
+      task_id: TASK-STOCK-WATCH-T002
+      execution_unit_id: T002-A1
+      surfaces:
+      - SURF-WORKBENCH
+      - SURF-SOURCE
+      primary_executors:
+      - backend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      - fault_injection_report
+      execution_context:
+        skill: execute
+        role_package_refs:
+          backend-engineer: .harness/common/agents/backend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - server/index.js
+      - src/domain/market-data-source.ts
+      - src/types.ts
+      - tests/unit/source/market-data-source.spec.ts
+      read_scope: []
+      depends_on: []
+      parallel_group: serial
+      conflict_risk: medium
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T002-A2
+      task_id: TASK-STOCK-WATCH-T002
+      execution_unit_id: T002-A2
+      surfaces:
+      - SURF-WORKBENCH
+      - SURF-SOURCE
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - green_report
+      - regression_report
+      - e2e_run_report
+      - screenshot_or_trace
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/features/chart/ChartSurface.tsx
+      - src/features/source/SourceHealthPanel.tsx
+      - src/features/workbench/WorkbenchShell.tsx
+      - src/App.tsx
+      - tests/e2e/workbench/default.spec.ts
+      read_scope: []
+      depends_on:
+      - T002-A1
+      parallel_group: serial
+      conflict_risk: high
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T003-A1
+      task_id: TASK-STOCK-WATCH-T003
+      execution_unit_id: T003-A1
+      surfaces:
+      - SURF-MTS
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/lib/signals.ts
+      - src/types.ts
+      - tests/unit/signals/mts.spec.ts
+      read_scope: []
+      depends_on:
+      - T002-A1
+      parallel_group: serial
+      conflict_risk: medium
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T003-A2
+      task_id: TASK-STOCK-WATCH-T003
+      execution_unit_id: T003-A2
+      surfaces:
+      - SURF-MTS
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - green_report
+      - regression_report
+      - e2e_run_report
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/App.tsx
+      - src/styles.css
+      - tests/e2e/workbench/default.spec.ts
+      read_scope: []
+      depends_on:
+      - T003-A1
+      parallel_group: serial
+      conflict_risk: high
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T004-A1
+      task_id: TASK-STOCK-WATCH-T004
+      execution_unit_id: T004-A1
+      surfaces:
+      - SURF-ALERTS
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      - state_transition_report
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/domain/alert.ts
+      - src/lib/alerts.ts
+      - src/types.ts
+      - tests/unit/alerts/rule-model.spec.ts
+      - tests/replay/alerts/trigger-flow.spec.ts
+      read_scope: []
+      depends_on:
+      - T003-A1
+      parallel_group: serial
+      conflict_risk: medium
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T004-A2
+      task_id: TASK-STOCK-WATCH-T004
+      execution_unit_id: T004-A2
+      surfaces:
+      - SURF-ALERTS
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - green_report
+      - regression_report
+      - e2e_run_report
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/features/alerts/AlertRulePanel.tsx
+      - src/App.tsx
+      - src/styles.css
+      - tests/e2e/alerts/panel.spec.ts
+      read_scope: []
+      depends_on:
+      - T004-A1
+      parallel_group: serial
+      conflict_risk: high
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T005-A1
+      task_id: TASK-STOCK-WATCH-T005
+      execution_unit_id: T005-A1
+      surfaces:
+      - SURF-RESTORE
+      - SURF-LAYOUT
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      - migration_report
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/domain/workspace.ts
+      - src/lib/storage.ts
+      - src/types.ts
+      - tests/unit/workspace/snapshot-migration.spec.ts
+      read_scope: []
+      depends_on:
+      - T004-A1
+      parallel_group: serial
+      conflict_risk: medium
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T005-A2
+      task_id: TASK-STOCK-WATCH-T005
+      execution_unit_id: T005-A2
+      surfaces:
+      - SURF-RESTORE
+      - SURF-LAYOUT
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - green_report
+      - regression_report
+      - e2e_run_report
+      - screenshot_or_restore_trace
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - src/features/layout/LayoutController.tsx
+      - src/features/restore/RestoreStatus.tsx
+      - src/App.tsx
+      - tests/e2e/restore-layout/resume.spec.ts
+      read_scope: []
+      depends_on:
+      - T005-A1
+      parallel_group: serial
+      conflict_risk: high
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T006-A1
+      task_id: TASK-STOCK-WATCH-T006
+      execution_unit_id: T006-A1
+      surfaces:
+      - SURF-WATCHLIST
+      - SURF-WORKBENCH
+      - SURF-MTS
+      - SURF-ALERTS
+      - SURF-SOURCE
+      - SURF-LAYOUT
+      - SURF-RESTORE
+      primary_executors:
+      - test-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - fixture_checksum_or_replay_log
+      execution_context:
+        skill: execute
+        role_package_refs:
+          test-engineer: .harness/common/agents/test-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - fixtures/gate/stock-watch-core.json
+      - fixtures/gate/stock-watch-core.sha256.json
+      - tests/replay/gate/fixture-loader.ts
+      - tests/replay/gate/fixture-corpus.spec.ts
+      read_scope: []
+      depends_on:
+      - T005-A1
+      parallel_group: serial
+      conflict_risk: low
+      blocked: false
+      blockers: []
+    - id: DISPATCH-T006-A2
+      task_id: TASK-STOCK-WATCH-T006
+      execution_unit_id: T006-A2
+      surfaces:
+      - SURF-WATCHLIST
+      - SURF-WORKBENCH
+      - SURF-MTS
+      - SURF-ALERTS
+      - SURF-SOURCE
+      - SURF-LAYOUT
+      - SURF-RESTORE
+      primary_executors:
+      - test-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - green_report
+      - regression_report
+      - e2e_run_report
+      - trace_or_video
+      execution_context:
+        skill: execute
+        role_package_refs:
+          test-engineer: .harness/common/agents/test-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+      material_package_contract:
+        must_include_execution_context: true
+        must_include_role_package_ref: true
+        must_include_atomic_task_text: true
+        must_include_parent_task_boundary: true
+        must_include_write_scope: true
+      write_scope:
+      - tests/e2e/gate/acceptance-matrix.spec.ts
+      read_scope: []
+      depends_on:
+      - T006-A1
+      parallel_group: serial
+      conflict_risk: low
+      blocked: false
+      blockers: []
+  baseline_evidence:
+  - id: EV-FRAME-T002-001
+    type: frame_status
+    decision: frame_check
+    path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+    command: harness-runtime/bin/harness frame current --mission 20260522-stock-watch-system
+      --json
+    exit_code: 0
+    result: PASS
+    covers:
+      atomic_tasks:
+      - T002-A1
+      - T002-A2
+      tasks:
+      - TASK-STOCK-WATCH-T002
+  - id: EV-GRAPH-T002-001
+    type: graph_lint
+    decision: graph_lint
+    path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+    command: harness lint graph --json
+    exit_code: 0
+    result: PASS
+    covers:
+      atomic_tasks:
+      - T002-A1
+      - T002-A2
+      tasks:
+      - TASK-STOCK-WATCH-T002
+  execution_results:
+  - id: EXE-CONTROL-T002-T006
+    role: execute-control-plane-executor
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-result.md
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/execution-result.contract.yaml
+    fulfilled_obligations:
+    - execute session orchestration for TASK-STOCK-WATCH-T002 through TASK-STOCK-WATCH-T006
+    - TDD evidence collection
+    - fixture-first gate matrix
+    evidence_refs:
+    - EV-T002-UNIT-001
+    - EV-T003-UNIT-001
+    - EV-T004-UNIT-001
+    - EV-T005-UNIT-001
+    - EV-T006-UNIT-REPLAY-MATRIX-001
+    - EV-T006-E2E-REGRESSION-001
+    - EV-T006-BUILD-001
+    open_questions: []
+    concerns: []
+  - id: EXE-BACKEND-T002
+    role: backend-engineer
+    status: DONE
+    produced_artifacts:
+    - path: server/index.js
+    - path: src/domain/market-data-source.ts
+    - path: src/types.ts
+    - path: tests/unit/source/market-data-source.spec.ts
+    fulfilled_obligations:
+    - MarketDataEnvelope
+    - SourceHealth formal demo_fallback stale unavailable
+    - cache and retry semantics
+    evidence_refs:
+    - EV-T002-UNIT-001
+    - EV-T002-BUILD-001
+    - EV-T002-FAULT-001
+    open_questions: []
+    concerns:
+    - server/index.js imports a .ts domain module directly and depends on Node Type
+      Stripping in dev/runtime.
+  - id: EXE-FRONTEND-T002-T005
+    role: frontend-engineer
+    status: DONE
+    produced_artifacts:
+    - path: src/features/chart/ChartSurface.tsx
+    - path: src/features/source/SourceHealthPanel.tsx
+    - path: src/features/workbench/WorkbenchShell.tsx
+    - path: src/lib/signals.ts
+    - path: src/domain/alert.ts
+    - path: src/lib/alerts.ts
+    - path: src/domain/workspace.ts
+    - path: src/features/alerts/AlertRulePanel.tsx
+    - path: src/features/layout/LayoutController.tsx
+    - path: src/features/restore/RestoreStatus.tsx
+    - path: src/App.tsx
+    - path: src/styles.css
+    - path: src/types.ts
+    fulfilled_obligations:
+    - workbench and source health UI
+    - MTS explanation and non-advice language
+    - alert taxonomy, trigger, acknowledgement, archive suspension
+    - WorkspaceSnapshotV2 restore and layout UI
+    evidence_refs:
+    - EV-T002-E2E-001
+    - EV-T003-E2E-001
+    - EV-T004-E2E-001
+    - EV-T005-E2E-001
+    - EV-T006-E2E-REGRESSION-001
+    open_questions: []
+    concerns: []
+  - id: EXE-TEST-T006
+    role: test-engineer
+    status: DONE
+    produced_artifacts:
+    - path: fixtures/gate/stock-watch-core.json
+    - path: fixtures/gate/stock-watch-core.sha256.json
+    - path: tests/replay/gate/fixture-loader.ts
+    - path: tests/replay/gate/fixture-corpus.spec.ts
+    - path: tests/e2e/gate/acceptance-matrix.spec.ts
+    fulfilled_obligations:
+    - fixture-first AC-01 through AC-05 gate
+    - deterministic checksum
+    - full E2E trace generation
+    evidence_refs:
+    - EV-T006-RED-001
+    - EV-T006-REPLAY-001
+    - EV-T006-UNIT-REPLAY-MATRIX-001
+    - EV-T006-E2E-GATE-001
+    - EV-T006-E2E-REGRESSION-001
+    open_questions: []
+    concerns: []
+  role_verdicts:
+  - id: RV-SPEC-T002-RECHECK-PASS
+    role: spec-reviewer
+    reviewed_unit: TASK-STOCK-WATCH-T002
+    verdict: PASS
+    review_basis:
+    - execution-brief.md T002
+    - local-stock-watch-workbench spec
+    - EV-T002-RED-001
+    - EV-T002-UNIT-001
+    - EV-T002-E2E-001
+    - EV-T002-FAULT-001
+    - EV-T002-WALKTHROUGH-001
+    dispatch:
+      mode: readonly
+      role_package_ref: .harness/common/agents/spec-reviewer.md
+      subagent_id: legacy-t002-spec-reviewer
+      model: gpt-5.4
+      execution_mode: readonly
+      started_at: '2026-06-06T00:00:00Z'
+      completed_at: '2026-06-06T00:00:00Z'
+    reviewed_obligations:
+    - T002-A1
+    - T002-A2
+    blocking_gaps: []
+    evidence_refs:
+    - EV-T002-RED-001
+    - EV-T002-UNIT-001
+    - EV-T002-E2E-001
+    - EV-T002-BUILD-001
+    - EV-T002-FAULT-001
+    - EV-T002-WALKTHROUGH-001
+  - id: RV-SPEC-T003-T006-RECHECK-PASS
+    role: spec-reviewer
+    reviewed_unit: TASK-STOCK-WATCH-T003..TASK-STOCK-WATCH-T006
+    verdict: PASS
+    review_basis:
+    - execution-brief.md T003-T006
+    - local-stock-watch-workbench spec
+    - EV-T003-RED-001
+    - EV-T003-REGISTRY-001
+    - EV-T003-REPLAY-001
+    - EV-T003-MTS-E2E-001
+    - EV-T003-COPY-001
+    - EV-T005-REPLAY-001
+    - EV-T006-UNIT-REPLAY-MATRIX-001
+    - EV-T006-E2E-REGRESSION-001
+    dispatch:
+      mode: readonly
+      role_package_ref: .harness/common/agents/spec-reviewer.md
+      subagent_id: 019e9c37-e022-7042-8f3e-38460abf26e1
+      model: gpt-5.4
+      execution_mode: readonly
+      started_at: '2026-06-06T00:00:00Z'
+      completed_at: '2026-06-06T00:00:00Z'
+    reviewed_obligations:
+    - T003-A1
+    - T003-A2
+    - T004-A1
+    - T004-A2
+    - T005-A1
+    - T005-A2
+    - T006-A1
+    - T006-A2
+    blocking_gaps: []
+    evidence_refs:
+    - EV-T003-RED-001
+    - EV-T003-REGISTRY-001
+    - EV-T003-REPLAY-001
+    - EV-T003-MTS-E2E-001
+    - EV-T003-COPY-001
+    - EV-T005-REPLAY-001
+    - EV-T006-UNIT-REPLAY-MATRIX-001
+    - EV-T006-E2E-REGRESSION-001
+  - id: RV-CODE-REVIEW-T002-T006-CORRECTNESS-PASS
+    role: correctness-reviewer
+    verdict: PASS
+    reviewed_unit: TASK-STOCK-WATCH-T002..TASK-STOCK-WATCH-T006
+    reviewed_obligations:
+    - T002 SourceHealth / workbench user-observable behavior
+    - T003 MTS explanation and non-advice boundary
+    - T004 alert taxonomy, trigger, acknowledgement, scheduled missed, archive suspension
+    - T005 WorkspaceSnapshotV2 restore and per-symbol layout behavior
+    - T006 fixture-first acceptance matrix
+    review_basis:
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+    - src/App.tsx
+    - src/domain/alert.ts
+    - src/domain/market-data-source.ts
+    - src/domain/workspace.ts
+    - src/lib/signals.ts
+    role_boundary:
+      in_scope:
+      - user-observable correctness
+      - acceptance scenario behavior
+      - unauthorized behavior drift
+      out_of_scope:
+      - test effectiveness
+      - architecture boundary ownership
+      - Harness gate mechanics
+    behavior_matrix:
+    - target: T004 scheduled missed keeps enabled / idle and does not backfill trigger
+      conclusion: pass
+      evidence:
+      - tests/replay/alerts/trigger-flow.spec.ts
+      - tests/e2e/alerts/panel.spec.ts
+    - target: T005 selectedSymbol and per-symbol layout/tab persist after reload
+      conclusion: pass
+      evidence:
+      - tests/e2e/restore-layout/resume.spec.ts
+    - target: T002 SourceHealth is the user-visible status authority
+      conclusion: pass
+      evidence:
+      - src/App.tsx
+      - tests/e2e/workbench/default.spec.ts
+    - target: T003 MTS card keeps technical reminder and non-advice copy boundary
+      conclusion: pass
+      evidence:
+      - tests/e2e/mts/card.spec.ts
+      - harness-runtime/harness/traces/20260522-stock-watch-system/t003-copy-review.md
+    blocking_gaps: []
+    findings: []
+    non_blocking_risks: []
+    dispatch:
+      subagent_id: code-review-artifact-correctness-reviewer-20260606
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-06-06T00:00:00Z'
+      completed_at: '2026-06-06T00:00:00Z'
+  - id: RV-CODE-REVIEW-T002-T006-TDD-PASS
+    role: tdd-reviewer
+    verdict: PASS
+    reviewed_unit: TASK-STOCK-WATCH-T002..TASK-STOCK-WATCH-T006
+    reviewed_obligations:
+    - T002 SourceHealth and workbench test adequacy
+    - T003 MTS registry, replay, E2E, and copy boundary test adequacy
+    - T004 alert rule model, replay, and panel E2E test adequacy
+    - T005 workspace migration, replay, and restore-layout E2E test adequacy
+    - T006 fixture corpus, unit/replay matrix, and acceptance-matrix E2E test adequacy
+    review_basis:
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/execute/execution-result.md
+    - harness-runtime/harness/traces/20260522-stock-watch-system/t002-red-report.md
+    - harness-runtime/harness/traces/20260522-stock-watch-system/t003-red-report.md
+    - tests/unit/alerts/rule-model.spec.ts
+    - tests/replay/alerts/trigger-flow.spec.ts
+    - tests/unit/workspace/snapshot-migration.spec.ts
+    - tests/replay/workspace/migration-replay.spec.ts
+    - tests/replay/gate/fixture-corpus.spec.ts
+    - tests/e2e/gate/acceptance-matrix.spec.ts
+    role_boundary:
+      in_scope:
+      - test effectiveness
+      - assertion strength
+      - Red / Green / Regression evidence adequacy
+      - fault detection
+      out_of_scope:
+      - business correctness verdict
+      - architecture ownership
+      - Harness gate mechanics
+    test_adequacy_matrix:
+    - target: T004 scheduled / alert state
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+      evidence:
+      - tests/unit/alerts/rule-model.spec.ts
+      - tests/replay/alerts/trigger-flow.spec.ts
+      - tests/e2e/alerts/panel.spec.ts
+    - target: T005 restore and layout persistence
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+      evidence:
+      - tests/unit/workspace/snapshot-migration.spec.ts
+      - tests/replay/workspace/migration-replay.spec.ts
+      - tests/e2e/restore-layout/resume.spec.ts
+    - target: T006 fixture-first acceptance gate
+      red_validity: valid
+      assertion_strength: strong
+      adequacy: adequate
+      fault_detection: proven
+      conclusion: pass
+      evidence:
+      - tests/replay/gate/fixture-corpus.spec.ts
+      - tests/e2e/gate/acceptance-matrix.spec.ts
+    blocking_gaps: []
+    findings: []
+    non_blocking_risks:
+    - id: TDD-RISK-001
+      severity: Med
+      summary: Scheduled missed and restore roundtrip fixes do not have separate red
+        artifacts at the final review round.
+      follow_up: Add red/regression trace in verify or later audit hardening.
+    - id: TDD-RISK-002
+      severity: Low
+      summary: Toolchain and E2E control snapshots may lag behind the latest human-readable
+        24-test review evidence.
+      follow_up: Refresh control-plane status before final delivery.
+    dispatch:
+      subagent_id: code-review-artifact-tdd-reviewer-20260606
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-06-06T00:00:00Z'
+      completed_at: '2026-06-06T00:00:00Z'
+  - id: rv-delivery-acceptance-package-reviewer-pass-20260607
+    role: acceptance-package-reviewer
+    verdict: PASS
+    reviewed_unit: delivery acceptance package for T002..T006
+    reviewed_obligations:
+    - delivery acceptance-result is self-contained and user-checkpointed
+    - delivery-package discloses boundaries, evidence links, follow-ups, and closure
+      WARN
+    review_basis:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/acceptance-result.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/delivery-package.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/delivery.contract.yaml
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/acceptance-result.contract.yaml
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/delivery-package.contract.yaml
+    - harness-runtime/harness/traces/20260522-stock-watch-system/delivery-closure-check-20260607.json
+    - harness-runtime/harness/state/approvals.json
+    role_boundary:
+      in_scope:
+      - acceptance package self-containment
+      - user reproduction steps
+      - evidence link traceability
+      - residual risk disclosure
+      - checkpoint status consistency
+      out_of_scope:
+      - product implementation changes
+      - rerunning verification commands
+      - retrospective or finishing-branch actions
+    review_summary:
+      initial_verdict: HOLD
+      hold_fixes:
+      - T003/T004/T005 reproduction steps were expanded with concrete inputs, visible
+        checks, and failure criteria.
+      - stage_gate.check_closure WARN output was persisted at harness-runtime/harness/traces/20260522-stock-watch-system/delivery-closure-check-20260607.json
+        and linked from delivery artifacts.
+      final_verdict: PASS
+      user_checkpoint:
+        approval_id: APR-20260607-005
+        status: approved
+    blocking_gaps: []
+    findings: []
+    non_blocking_risks:
+    - SCN-01..SCN-05 closure WARN remains disclosed as advisory follow-up and does
+      not block current user acceptance.
+    dispatch:
+      subagent_id: acceptance-package-reviewer-20260607-delivery-rereview
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-06-07T06:20:00Z'
+      completed_at: '2026-06-07T06:20:00Z'
+  effectiveness_review:
+    rounds_used: 5
+    pending_reviewer_recheck: false
+    last_gate_run_status: PASS
+    last_verdict: PASS
+  bug_fix_session:
+    fix_attempt_count: 5
+    fixes:
+    - id: FIX-T002-E2E-WAIT
+      summary: Added stable waits before short-sample RSI assertion in workbench E2E.
+    - id: FIX-T002-LEGACY-PAYLOAD
+      summary: Made ChartSurface, WorkbenchShell, and App compatible with legacy ChartPayload
+        fixtures lacking priceSeries/sourceHealth.
+    - id: FIX-T002-SOURCE-STATUS-CONTRACT
+      summary: Split UI-only not_loaded from the four-state SourceHealthStatus contract.
+    - id: FIX-T002-UNAVAILABLE-EVIDENCE
+      summary: Added unit and E2E coverage for unavailable source health propagation.
+    - id: FIX-T002-EVIDENCE-CLOSURE
+      summary: Added T002-specific red, fault-injection, and browser walkthrough artifacts.
+  dangerous_command_decisions: []
+  tdd_evidence:
+  - id: EV-T002-RED-001
+    type: red_report
+    phase: red
+    path: harness-runtime/harness/traces/20260522-stock-watch-system/t002-red-report.md
+    command: spec-reviewer HOLD report for TASK-STOCK-WATCH-T002
+    exit_code: 1
+    failure_signal: Missing T002-specific evidence, unavailable coverage, and SourceHealthStatus
+      contract drift before corrective pass.
+    covers:
+      atomic_tasks:
+      - T002-A1
+      - T002-A2
+      tasks:
+      - TASK-STOCK-WATCH-T002
+  - id: EV-T003-REGISTRY-001
+    type: green_report
+    phase: green
+    path: tests/unit/mts/registry.spec.ts
+    command: esbuild bundle tests/unit/mts/registry.spec.ts then node --test
+    exit_code: 0
+    assertion_summary: 2 tests / 0 fail
+    covers:
+      atomic_tasks:
+      - T003-A1
+      tasks:
+      - TASK-STOCK-WATCH-T003
+  - id: EV-T003-REPLAY-001
+    type: green_report
+    phase: green
+    path: tests/replay/mts/replay.spec.ts
+    command: esbuild bundle tests/replay/mts/replay.spec.ts then node --test
+    exit_code: 0
+    assertion_summary: 2 tests / 0 fail
+    covers:
+      atomic_tasks:
+      - T003-A1
+      tasks:
+      - TASK-STOCK-WATCH-T003
+  - id: EV-T004-RED-001
+    type: red_report
+    phase: red
+    path: tests/unit/alerts/rule-model.spec.ts
+    command: esbuild bundle before src/domain/alert.ts existed
+    exit_code: 1
+    failure_signal: Could not resolve ../../../src/domain/alert.ts before alert domain
+      implementation.
+    covers:
+      atomic_tasks:
+      - T004-A1
+      tasks:
+      - TASK-STOCK-WATCH-T004
+  - id: EV-T005-RED-001
+    type: red_report
+    phase: red
+    path: tests/unit/workspace/snapshot-migration.spec.ts
+    command: esbuild bundle before src/domain/workspace.ts existed
+    exit_code: 1
+    failure_signal: Could not resolve ../../../src/domain/workspace before workspace
+      snapshot implementation.
+    covers:
+      atomic_tasks:
+      - T005-A1
+      tasks:
+      - TASK-STOCK-WATCH-T005
+  - id: EV-T005-REPLAY-001
+    type: green_report
+    phase: green
+    path: tests/replay/workspace/migration-replay.spec.ts
+    command: esbuild bundle tests/replay/workspace/migration-replay.spec.ts then node
+      --test
+    exit_code: 0
+    assertion_summary: 1 test / 0 fail
+    covers:
+      atomic_tasks:
+      - T005-A1
+      tasks:
+      - TASK-STOCK-WATCH-T005
+  - id: EV-T006-RED-001
+    type: red_report
+    phase: red
+    path: tests/replay/gate/fixture-corpus.spec.ts
+    command: esbuild bundle before fixtures/gate/stock-watch-core.json existed
+    exit_code: 1
+    failure_signal: Could not resolve fixtures/gate/stock-watch-core.json and checksum
+      sidecar before fixture corpus implementation.
+    covers:
+      atomic_tasks:
+      - T006-A1
+      tasks:
+      - TASK-STOCK-WATCH-T006
+  - id: EV-T006-UNIT-REPLAY-MATRIX-001
+    type: green_report
+    phase: green
+    path: harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests
+    command: bundle tests/unit/**/*.spec.ts and tests/replay/**/*.spec.ts with esbuild,
+      then node --test
+    exit_code: 0
+    assertion_summary: 43 tests / 0 fail
+    covers:
+      atomic_tasks:
+      - T002-A1
+      - T002-A2
+      - T003-A1
+      - T003-A2
+      - T004-A1
+      - T004-A2
+      - T005-A1
+      - T005-A2
+      - T006-A1
+      - T006-A2
+      tasks:
+      - TASK-STOCK-WATCH-T002
+      - TASK-STOCK-WATCH-T003
+      - TASK-STOCK-WATCH-T004
+      - TASK-STOCK-WATCH-T005
+      - TASK-STOCK-WATCH-T006
+  - id: EV-T006-E2E-REGRESSION-001
+    type: regression_report
+    phase: regression
+    path: test-results
+    command: npx playwright test --config harness-runtime/harness/traces/20260522-stock-watch-system/playwright-no-webserver.config.ts
+      --reporter=list --trace=on
+    exit_code: 0
+    assertion_summary: 22 passed
+    covers:
+      atomic_tasks:
+      - T002-A2
+      - T003-A2
+      - T004-A2
+      - T005-A2
+      - T006-A2
+      tasks:
+      - TASK-STOCK-WATCH-T002
+      - TASK-STOCK-WATCH-T003
+      - TASK-STOCK-WATCH-T004
+      - TASK-STOCK-WATCH-T005
+      - TASK-STOCK-WATCH-T006
+  - id: EV-T006-BUILD-001
+    type: toolchain_status
+    phase: toolchain
+    path: dist
+    command: npm run build
+    exit_code: 0
+    assertion_summary: tsc --noEmit and Vite production build passed
+    covers:
+      atomic_tasks:
+      - T002-A1
+      - T002-A2
+      - T003-A1
+      - T003-A2
+      - T004-A1
+      - T004-A2
+      - T005-A1
+      - T005-A2
+      - T006-A1
+      - T006-A2
+      tasks:
+      - TASK-STOCK-WATCH-T002
+      - TASK-STOCK-WATCH-T003
+      - TASK-STOCK-WATCH-T004
+      - TASK-STOCK-WATCH-T005
+      - TASK-STOCK-WATCH-T006
+  - id: EV-T003-RED-001
+    type: red_report
+    phase: red
+    path: harness-runtime/harness/traces/20260522-stock-watch-system/t003-red-report.md
+    command: esbuild bundle harness-runtime/harness/traces/20260522-stock-watch-system/t003-red/registry-red.spec.ts
+      then node --test
+    exit_code: 1
+    failure_signal: UNKNOWN_CODE did not pass through as REMOVED_REASON_ENTRY, proving
+      the registry fallback contract rejects free-text MTS reason drift.
+    covers:
+      atomic_tasks:
+      - T003-A1
+      tasks:
+      - TASK-STOCK-WATCH-T003
+  tasks:
+  - id: TASK-STOCK-WATCH-T002
+    traces_to:
+    - REQ-STOCK-WATCH-SYSTEM
+    required_evidence:
+    - id: re-T002-unit
+      type: green_report
+      command: bundle tests/unit/source/market-data-source.spec.ts then node --test
+    - id: re-T002-e2e
+      type: e2e_run_report
+      command: npx playwright test workbench/default.spec.ts
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - SURF-WORKBENCH
+      - SURF-SOURCE
+      - SURF-LAYOUT
+      required_capabilities:
+      - unit
+      - replay
+      - browser_flow
+      - cache_semantics
+      - user_visible_assertion
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - cache_trace
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - workbench_default_open
+      - indicator_switch
+      - source_degradation
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - realtime_or_refresh
+      - accessibility_smoke
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+    stop_if:
+    - changes_outside_authorized_paths
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    - provider_specific_fields_enter_domain
+    - cache_written_to_localStorage
+    - chart_gate_violation
+  - id: TASK-STOCK-WATCH-T003
+    traces_to:
+    - REQ-STOCK-WATCH-SYSTEM
+    required_evidence:
+    - id: re-T003-registry
+      type: registry_report
+      command: bundle tests/unit/mts/registry.spec.ts then node --test
+    - id: re-T003-replay
+      type: replay_report
+      command: bundle tests/replay/mts/replay.spec.ts then node --test
+    - id: re-T003-e2e
+      type: e2e_run_report
+      command: npx playwright test mts/card.spec.ts
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - SURF-MTS
+      - SURF-WORKBENCH
+      required_capabilities:
+      - unit
+      - replay
+      - mutation_or_registry_validation
+      - screenshot_or_copy_review
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - registry_report
+    e2e_obligation:
+      risk_level: medium
+      user_surfaces:
+      - mts_card_reading
+      - source_degraded_mts
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - accessibility_smoke
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - assertion_summary
+    stop_if:
+    - changes_outside_authorized_paths
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    - mts_expresses_investment_advice
+    - registry_not_additive
+    - provider_details_enter_mts_contract
+  - id: TASK-STOCK-WATCH-T004
+    traces_to:
+    - REQ-STOCK-WATCH-SYSTEM
+    required_evidence:
+    - id: re-T004-unit
+      type: green_report
+      command: bundle tests/unit/alerts/rule-model.spec.ts then node --test
+    - id: re-T004-replay
+      type: state_transition_report
+      command: bundle tests/replay/alerts/trigger-flow.spec.ts then node --test
+    - id: re-T004-e2e
+      type: e2e_run_report
+      command: npx playwright test alerts/panel.spec.ts
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - SURF-ALERTS
+      - SURF-MTS
+      required_capabilities:
+      - unit
+      - replay
+      - browser_flow
+      - clock_control
+      - mutation_or_fault_injection
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - replay_log
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - alert_create_flow
+      - alert_trigger_flow
+      - alert_ack_flow
+      - scheduled_alert_status
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - api_or_contract_evidence
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+    stop_if:
+    - changes_outside_authorized_paths
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    - external_notification_or_worker_required
+    - alert_state_is_ui_only
+    - archive_implemented_as_delete
+  - id: TASK-STOCK-WATCH-T005
+    traces_to:
+    - REQ-STOCK-WATCH-SYSTEM
+    required_evidence:
+    - id: re-T005-unit
+      type: green_report
+      command: bundle tests/unit/workspace/snapshot-migration.spec.ts then node --test
+    - id: re-T005-replay
+      type: migration_report
+      command: bundle tests/replay/workspace/migration-replay.spec.ts then node --test
+    - id: re-T005-e2e
+      type: e2e_run_report
+      command: npx playwright test restore-layout/resume.spec.ts
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - SURF-RESTORE
+      - SURF-LAYOUT
+      - SURF-WATCHLIST
+      required_capabilities:
+      - unit
+      - replay
+      - browser_flow
+      - storage_migration_assertion
+      - screenshot_or_restore_trace
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - migration_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - browser_reopen_restore
+      - layout_switch
+      - mobile_tab_restore
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - api_or_contract_evidence
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - assertion_summary
+    stop_if:
+    - changes_outside_authorized_paths
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    - storage_gate_threshold_exceeded
+    - layout_scope_not_symbol
+    - cloud_or_database_persistence_required
+  - id: TASK-STOCK-WATCH-T006
+    traces_to:
+    - REQ-STOCK-WATCH-SYSTEM
+    required_evidence:
+    - id: re-T006-replay
+      type: fixture_checksum_or_replay_log
+      command: bundle tests/replay/gate/fixture-corpus.spec.ts then node --test
+    - id: re-T006-e2e
+      type: e2e_run_report
+      command: npx playwright test gate/acceptance-matrix.spec.ts
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - SURF-WATCHLIST
+      - SURF-WORKBENCH
+      - SURF-MTS
+      - SURF-ALERTS
+      - SURF-SOURCE
+      - SURF-LAYOUT
+      - SURF-RESTORE
+      required_capabilities:
+      - unit
+      - replay
+      - browser_flow
+      - user_visible_assertion
+      - accessibility_smoke
+      - fixture_first
+      - mutation_or_fault_injection
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - e2e_run_report
+      - trace_or_video
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - watchlist_flow
+      - workbench_flow
+      - mts_flow
+      - alert_flow
+      - restore_flow
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - realtime_or_refresh
+      - accessibility_smoke
+      - api_or_contract_evidence
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+    stop_if:
+    - changes_outside_authorized_paths
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    - validation_depends_on_live_market
+    - locator_contract_is_brittle
+    - runtime_agent_required_for_tests
+  specs:
+    consumes:
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+      requirement: 默认看盘工作台
+      scenario: 主图、成交量、副图、OHLC 与来源健康可见
+      evidence:
+        implementation_refs:
+        - src/features/workbench/WorkbenchShell.tsx
+        - src/features/chart/ChartSurface.tsx
+        - src/features/source/SourceHealthPanel.tsx
+        test_refs:
+        - tests/e2e/workbench/default.spec.ts
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+      requirement: 副图指标切换
+      scenario: MACD RSI KDJ ATR 保持同一标的上下文
+      evidence:
+        implementation_refs:
+        - src/features/chart/ChartSurface.tsx
+        test_refs:
+        - tests/e2e/workbench/default.spec.ts
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+      requirement: 数据不足降级
+      scenario: 指标 partial/unavailable 不伪造读数
+      evidence:
+        implementation_refs:
+        - src/features/chart/ChartSurface.tsx
+        - src/lib/indicators.ts
+        test_refs:
+        - tests/e2e/workbench/default.spec.ts
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/specs/local-stock-watch-workbench/spec.md
+      requirement: 来源健康可见降级
+      scenario: formal/demo_fallback/stale/unavailable 穿透到 chart/MTS/alerts
+      evidence:
+        implementation_refs:
+        - src/domain/market-data-source.ts
+        - src/features/source/SourceHealthPanel.tsx
+        - src/App.tsx
+        test_refs:
+        - tests/unit/source/market-data-source.spec.ts
+        - tests/e2e/workbench/default.spec.ts

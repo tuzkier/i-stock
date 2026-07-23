@@ -1,0 +1,60 @@
+# execute-improvement-plan M5 + permission-overlay-translation.protocol.md
+# §dependency-files.yaml language-agnostic abstraction
+#
+# Declares which files in the target project signal a project-level
+# dependency change. stop_if `new_external_dependency` hook reads this file
+# instead of hard-coding package.json / requirements.txt etc. so the same
+# hook works across runtimes.
+#
+# Templates provided for common ecosystems; users may add or replace entries
+# during install. Patterns are matched against the file_path of any
+# Edit/Write/MultiEdit tool call.
+
+dependency_files:
+  # Node.js / npm / yarn / pnpm
+  - pattern: "package.json"
+    ecosystem: nodejs
+  - pattern: "package-lock.json"
+    ecosystem: nodejs
+  - pattern: "yarn.lock"
+    ecosystem: nodejs
+  - pattern: "pnpm-lock.yaml"
+    ecosystem: nodejs
+  # Python
+  - pattern: "requirements.txt"
+    ecosystem: python
+  - pattern: "pyproject.toml"
+    ecosystem: python
+  - pattern: "Pipfile"
+    ecosystem: python
+  - pattern: "Pipfile.lock"
+    ecosystem: python
+  - pattern: "poetry.lock"
+    ecosystem: python
+  # Go
+  - pattern: "go.mod"
+    ecosystem: go
+  - pattern: "go.sum"
+    ecosystem: go
+  # Rust
+  - pattern: "Cargo.toml"
+    ecosystem: rust
+  - pattern: "Cargo.lock"
+    ecosystem: rust
+  # Java / Kotlin (gradle / maven)
+  - pattern: "build.gradle"
+    ecosystem: jvm
+  - pattern: "build.gradle.kts"
+    ecosystem: jvm
+  - pattern: "pom.xml"
+    ecosystem: jvm
+  # Ruby
+  - pattern: "Gemfile"
+    ecosystem: ruby
+  - pattern: "Gemfile.lock"
+    ecosystem: ruby
+  # PHP / Composer
+  - pattern: "composer.json"
+    ecosystem: php
+  - pattern: "composer.lock"
+    ecosystem: php

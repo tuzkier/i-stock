@@ -1,0 +1,14 @@
+id: REQ-WATCHBOARD-UI-FRIENDLINESS
+kind: requirement
+title: 看盘界面友好化改造（状态色语义/术语人话化/信息层级）
+lane: requirement-lane
+status: active
+stage: discovery
+inputs: []
+outputs: []
+relations: {}
+updated_at: '2026-07-21T06:42:30.793825+00:00'
+trace:
+  created_by_mission: 20260721-watchboard-ui-friendliness
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_stage

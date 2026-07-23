@@ -1,0 +1,657 @@
+control_contract:
+  type: guide_contract
+  subtype: technical_guide
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: technical_analysis
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/solution/solution.md
+    sections:
+    - 所选路线与理由
+    - 关键决策
+    - 影响面
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+    sections:
+    - 用户场景
+    - 验收项
+    - 非功能约束
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/interaction/behavior-graph.yaml
+    optional: true
+    sections:
+    - surfaces
+    - page_states
+    - flows
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/interaction/surface-model.md
+    optional: true
+    sections:
+    - 界面边界 catalog
+  consumers:
+  - breakdown
+  - execute
+  - code-review
+  - architecture-reviewer
+  - stage-gate
+  role_policy:
+    stage: technical_analysis
+    work_graph_lane: technical-analysis-lane
+    required_execution_roles:
+    - tech-designer
+    required_review_roles:
+    - technical-design-effectiveness-reviewer
+    conditional_roles:
+    - role: agent-capability-designer
+      kind: execution
+      when:
+      - agent_engineering
+      - agent_capability
+    - role: agent-capability-reviewer
+      kind: review
+      when:
+      - agent_engineering
+      - agent_capability
+  work_graph_artifact:
+    node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+    artifact_set_id: AS-REQ-WATCHBOARD-UI-FRIENDLINESS-technical-analysis-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:tech-design
+      role: tech-design
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+  execution_result:
+    id: EXE-TECH-001
+    role: tech-designer
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+    fulfilled_obligations: []
+    decision_log:
+    - DEC-S01
+    - DEC-S02
+    - DEC-S03
+    - DEC-S04
+    - DEC-S05
+    - DEC-S06
+    - DEC-S07
+    - DEC-S08
+    - DEC-S09
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+  - id: OBL-TECH-001
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: architecture
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - technical-design-effectiveness-reviewer
+    blocking: true
+    source: inferred
+  role_verdicts:
+  - &id001
+    id: RV-technical-design-effectiveness-reviewer-1
+    role: technical-design-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-TECH-001
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/tech-design.contract.yaml
+    summary: 'PASS: 9/9 SUC-OP有落点, M1-M8真实file:line, INT-01~09契约完整, INV-01~07结构保证,
+      风险全落验证, 源码核对一致'
+    dispatch:
+      subagent_id: a79f0394587a7fc6f
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T17:18:36.246744+08:00'
+      completed_at: '2026-07-21T17:18:36.246744+08:00'
+  - &id002
+    id: RV-dependency-validity-reviewer-2
+    role: dependency-validity-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-TECH-001
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/discovery/dependency-impact.md
+    summary: 'PASS: tech-design 依赖引用守住 blast radius, 26 claims 全 supported, 范围外零改动,
+      破坏性无, GAP 下游闭合'
+    dispatch:
+      subagent_id: a4e3f2447b4465cb1
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T17:24:52.627994+08:00'
+      completed_at: '2026-07-21T17:24:52.627994+08:00'
+  upstream_obligations:
+  - id: UO-TECH-001
+    source: solution.md DEC-S02 / SCN-01
+    obligation: 状态色四档归位, 正常态无警告色, 真异常见警告, 负向评分色与来源故障色物理区分
+    engineering_meaning: styles.css 四档语义色 token + 只读映射 resolveSourceTone/resolveScoreTone/resolveRestoreTone,
+      承载类名互不复用
+    design_landing:
+      modules:
+      - MOD-01
+      - MOD-02
+      - MOD-07
+      interfaces:
+      - INT-01
+      - INT-02
+      - INT-03
+      data_or_state: []
+      verification:
+      - VS-01
+      - VS-10
+    status: addressed
+    return_needed: false
+  - id: UO-TECH-002
+    source: solution.md DEC-S03 / SCN-02
+    obligation: 术语人话化, 主视图 0 裸枚举/0 裸理由码, 复用既有人话源不新建映射表
+    engineering_meaning: humanizeTradeStatus/humanizeTrendState/humanizeReason 复用既有可读源,
+      UNKNOWN_CODE 回落
+    design_landing:
+      modules:
+      - MOD-02
+      - MOD-03
+      interfaces:
+      - INT-04
+      - INT-05
+      - INT-06
+      data_or_state: []
+      verification:
+      - VS-04
+      - VS-12
+    status: addressed
+    return_needed: false
+  - id: UO-TECH-003
+    source: solution.md DEC-S04 / SCN-02 / SCN-07
+    obligation: 信息层级与密度, 折叠交互义务不丢失, nonAdvice 常驻不进折叠区
+    engineering_meaning: 组件本地 useState 折叠态不持久化, nonAdvice 结构上常驻
+    design_landing:
+      modules:
+      - MOD-03
+      - MOD-04
+      interfaces:
+      - INT-09
+      data_or_state: []
+      verification:
+      - VS-03
+    status: addressed
+    return_needed: false
+  - id: UO-TECH-004
+    source: solution.md DEC-S05 DEC-S06 DEC-S09 / SCN-03 SCN-04 SCN-06
+    obligation: 去重复唯一主源计数=1, 顶部层级/侧栏结构, 跨呈现一致性只读
+    engineering_meaning: source-authority/price-authority 单点承载, 三处读同一门控结果, 恢复与来源独立承载
+    design_landing:
+      modules:
+      - MOD-05
+      - MOD-06
+      interfaces:
+      - INT-08
+      data_or_state: []
+      verification:
+      - VS-05
+      - VS-06
+      - VS-09
+      - VS-11
+    status: addressed
+    return_needed: false
+  modules:
+  - id: MOD-01
+    name: 四档语义色 token 层 (src/styles.css)
+    responsibility: 建立四档语义色 token(正常/信息/谨慎-风险/警告-异常)与 notice variant 类、评分极性 tone 类、进度条类；承载类名互不复用
+    forbidden_responsibilities:
+    - 改 styles.css:379 .data-notice 颜色/背景/边框定义
+    - 改 .up/.down 涨跌色定义
+    - 改范围外组件样式
+    affected_paths:
+    - src/styles.css
+    dependency_direction: 呈现层叶子, 无向 domain 依赖
+    traces_to:
+    - DEC-S02
+    - SCN-01
+  - id: MOD-02
+    name: 只读呈现映射层 (新增 src/features/presentation/)
+    responsibility: 纯只读函数 领域状态→语义档/人话文案; resolveSourceTone/resolveScoreTone/resolveRestoreTone/humanizeTradeStatus/humanizeTrendState/humanizeReason;
+      复用既有人话源
+    forbidden_responsibilities:
+    - 重实现 BR-03 来源降级门控
+    - 新建枚举到文案映射表
+    - 改 src/domain/* 或 src/lib/signals.ts 计算
+    affected_paths:
+    - src/features/presentation/tone.ts
+    - src/features/presentation/humanize.ts
+    dependency_direction: 只读消费 domain 输出, 单向
+    traces_to:
+    - DEC-S01
+    - DEC-S03
+    - SCN-02
+  - id: MOD-03
+    name: MTS 卡人话化+进度条+折叠详情 (src/App.tsx mts-card 634-678)
+    responsibility: 主视图 0 裸枚举/0 裸理由码; score-grid 裸枚举收折叠; reasons/invalidators item.code
+      人话化; mtsScore 进度条化; 折叠本地 useState; 迁移范围内 .data-notice(App.tsx:640/645)
+    forbidden_responsibilities:
+    - 折叠态写持久化
+    - 直呈裸枚举或裸理由码
+    affected_paths:
+    - src/App.tsx
+    dependency_direction: 消费 M2 映射, 单向
+    traces_to:
+    - DEC-S02
+    - DEC-S03
+    - DEC-S04
+    - SCN-02
+  - id: MOD-04
+    name: 交易信号卡密度+层级+nonAdvice常驻+折叠 (src/App.tsx 528-632)
+    responsibility: 主卡突出 stanceLabel+关键数字; 回测流水降次级默认折叠; signal-topline 非 ready 人话化;
+      nonAdvice 常驻不进折叠; levels 分正式信号位与 ATR 观察位
+    forbidden_responsibilities:
+    - status!=ready 呈回测块
+    - 折叠隐藏 nonAdvice
+    affected_paths:
+    - src/App.tsx
+    dependency_direction: 消费 M2 映射, 单向
+    traces_to:
+    - DEC-S04
+    - DEC-S08
+    - SCN-05
+  - id: MOD-05
+    name: 侧栏条目结构+来源小圆点+archived弱化 (src/App.tsx 428-466)
+    responsibility: 名称代码一行/价格涨跌右对齐主看; 来源文本降为小圆点弱化; archived 弱化; 侧栏来源非来源权威主源
+    forbidden_responsibilities:
+    - 侧栏来源作第二主源
+    affected_paths:
+    - src/App.tsx
+    dependency_direction: 消费 M2 映射, 单向
+    traces_to:
+    - DEC-S05
+    - DEC-S02
+    - SCN-06
+  - id: MOD-06
+    name: 顶部层级重排+唯一主源承载点 (src/App.tsx 顶部)
+    responsibility: 标题主位+控件降级右对齐; source-authority/price-authority 唯一主源计数=1; 派生一致性指示独立
+      testid 不计主源; 不改 STM-06 切换语义
+    forbidden_responsibilities:
+    - 改 STM-06 布局切换语义/白名单
+    - 多处同级重复来源或价格主源
+    affected_paths:
+    - src/App.tsx
+    dependency_direction: 消费 M2 映射, 单向
+    traces_to:
+    - DEC-S05
+    - DEC-S09
+    - SCN-04
+  - id: MOD-07
+    name: RestoreStatus 四档归位 (src/features/restore/RestoreStatus.tsx)
+    responsibility: 现状对全四态复用 .data-notice 改为 resolveRestoreTone 四档分色; 技术态收详情; 正常态不染警告色;
+      迁移 RestoreStatus.tsx:16
+    forbidden_responsibilities:
+    - 改快照读写或 STM-07 判定逻辑
+    affected_paths:
+    - src/features/restore/RestoreStatus.tsx
+    dependency_direction: 消费 M2 映射, 单一调用方 App.tsx:471
+    traces_to:
+    - DEC-S02
+    - DEC-S06
+    - SCN-01
+  - id: MOD-08
+    name: ChartSurface 范围内 data-notice 迁移 (src/features/chart/ChartSurface.tsx:207)
+    responsibility: chart-degradation-note .data-notice 迁到 .notice--warning; chart-source-status
+      作派生一致性指示非来源权威主源
+    forbidden_responsibilities:
+    - 改共享 .data-notice 定义
+    affected_paths:
+    - src/features/chart/ChartSurface.tsx
+    dependency_direction: 消费 M2 映射, 单向
+    traces_to:
+    - DEC-S02
+    - SCN-01
+  architecture_carrier:
+    selected_solution_ref: DEC-S02
+    reused_structures:
+    - 既有人话源 sourceStatusLabel/displayLabel/technicalReminder/stanceLabel/nonAdvice/MtsReason.label
+    - 既有 resolveMtsReason UNKNOWN_CODE 回落 (mts-registry.ts:161)
+    - 既有涨跌色 .up/.down (styles.css:403-409)
+    - 既有 domain 门控输出 (trade-signals.ts:619-627, 只读)
+    extended_structures:
+    - styles.css 新增四档语义色 token 与 notice variant/score tone 类
+    - App.tsx mts/signal/侧栏/顶部段内聚重排
+    replaced_structures:
+    - RestoreStatus.tsx 全态 .data-notice 承载改四档
+    isolated_risks:
+    - SR-01 共享 .data-notice 类跨范围内外, 仅迁移范围内 4 处不改共享类颜色定义
+  interface_changes:
+  - id: INT-01
+    kind: ADDED
+    module: MOD-02
+    caller: MOD-05 侧栏, MOD-06 顶部, MOD-08 图表
+    before: 无 (现 sourceStatusLabel 仅出文本 App.tsx:86-92)
+    after: resolveSourceTone(status:SourceStatus):Tone 映射 normal/info/warning
+    error_semantics: 未知 status 回落 normal 兜底
+    compatibility: 新增, 无破坏
+    migration_path: 新增函数, 调用点替换文本上色为 tone 类
+    traces_to:
+    - DEC-S02
+  - id: INT-02
+    kind: MODIFIED
+    module: MOD-02
+    caller: MOD-03 MTS 卡
+    before: mtsTone(App.tsx:94-99) 返回 positive/risk/neutral
+    after: resolveScoreTone(mts):Tone 语义档化 positive/caution/neutral, 迁入 M2
+    error_semantics: scoreBand 缺省回落 neutral
+    compatibility: 内聚重构行为等价, risk 红框改 caution 谨慎档类名不复用来源 warning
+    migration_path: 迁移 mtsTone 逻辑入 M2, 调用点改用语义档类
+    traces_to:
+    - DEC-S02
+  - id: INT-03
+    kind: ADDED
+    module: MOD-02
+    caller: MOD-07 RestoreStatus
+    before: 无 (RestoreStatus 无分档全 .data-notice)
+    after: resolveRestoreTone(metadata):Tone 映射 normal/info/warning
+    error_semantics: 未知 status 回落 warning 保守兜底
+    compatibility: 新增, 无破坏
+    migration_path: 新增函数, RestoreStatus 内部按档分色
+    traces_to:
+    - DEC-S02
+    - DEC-S06
+  - id: INT-04
+    kind: ADDED
+    module: MOD-02
+    caller: MOD-04 信号卡
+    before: 无 (App.tsx:532 直呈 tradeSignal.status)
+    after: humanizeTradeStatus(status):string 优先复用 stanceLabel
+    error_semantics: 缺省回落 stanceLabel
+    compatibility: 新增, 无破坏
+    migration_path: 替换 signal-topline 枚举串为人话
+    traces_to:
+    - DEC-S03
+  - id: INT-05
+    kind: ADDED
+    module: MOD-02
+    caller: MOD-03 MTS 卡
+    before: 无 (App.tsx:651 直呈 trend_state 枚举)
+    after: humanizeTrendState(trendState):string
+    error_semantics: 缺省回落 占位符
+    compatibility: 新增, 无破坏
+    migration_path: 折叠区/主视图枚举替换人话
+    traces_to:
+    - DEC-S03
+  - id: INT-06
+    kind: ADDED
+    module: MOD-02
+    caller: MOD-03 ReasonRegistry (reasons+invalidators 双处)
+    before: 无 (App.tsx:667/673 直呈 code)
+    after: humanizeReason(code,detail?):string = resolveMtsReason(code).label
+    error_semantics: 未注册码经 resolveMtsReason 回落 UNKNOWN_CODE (mts-registry.ts:161)
+      不直呈原码
+    compatibility: 新增复用既有回落, 无破坏
+    migration_path: reasons.map/invalidators.map 的 item.code 改人话
+    traces_to:
+    - DEC-S03
+  - id: INT-07
+    kind: ADDED
+    module: MOD-03
+    caller: MOD-03 MTS 卡
+    before: 无 (现裸数字 mts_score App.tsx:652)
+    after: ScoreBar(score:number|null) 进度条组件
+    error_semantics: null/not_applicable 中性不填充不误导
+    compatibility: 新增, 无破坏
+    migration_path: 裸数字改进度条承载
+    traces_to:
+    - DEC-S02
+  - id: INT-08
+    kind: MODIFIED
+    module: MOD-07
+    caller: App.tsx:471 (唯一调用方)
+    before: RestoreStatus({metadata}) 16 行全态 .data-notice
+    after: props 不变, 内部按 resolveRestoreTone 四档分色+技术态收详情
+    error_semantics: failed 兜底 warning
+    compatibility: props 签名不变纯呈现变更单一调用方无破坏
+    migration_path: 组件内部承载改四档
+    traces_to:
+    - DEC-S02
+    - DEC-S06
+  - id: INT-09
+    kind: ADDED
+    module: MOD-03
+    caller: MOD-03 MTS 详情, MOD-04 信号卡明细
+    before: 无折叠 (回测流水默认铺开/原始字段直呈)
+    after: useState(false) 折叠本地态 展开/收起
+    error_semantics: 默认收起不持久化
+    compatibility: 新增本地态无跨组件影响
+    migration_path: 明细区包 disclosure 折叠
+    traces_to:
+    - DEC-S04
+  data_changes: []
+  prototype_coverage_exemptions: []
+  verification_strategy:
+  - id: VS-01
+    layer: e2e
+    target_ids:
+    - MOD-01
+    - MOD-07
+    - MOD-08
+    proves: 范围内迁移未波及范围外 5 处 .data-notice, 共享类定义未改 (SR-01 阻断类硬约束)
+    scenario: 范围外组件 preview 截图并置+DOM 断言承载仍引用原 .data-notice 未重着色, grep 断言定义未改; 通过判据
+      范围外零可观察变化
+    evidence_required:
+    - screenshot
+    - dom_assertion
+  - id: VS-02
+    layer: e2e
+    target_ids:
+    - MOD-01
+    - MOD-02
+    proves: demo_fallback 默认信息级可辨识兜底数据非高危警告色
+    scenario: formal/demo_fallback/stale 三档并置 preview 截图可辨识; verify 前用户定档
+    evidence_required:
+    - screenshot
+  - id: VS-03
+    layer: e2e
+    target_ids:
+    - MOD-03
+    - MOD-04
+    proves: 折叠入口本地承载可操作, 义务未因 interaction 跳过丢失
+    scenario: Playwright 默认态断言明细不可见→展开→断言可见; 收起/展开两态截图
+    evidence_required:
+    - e2e_result
+    - screenshot
+  - id: VS-04
+    layer: e2e
+    target_ids:
+    - MOD-02
+    - MOD-03
+    proves: 主视图 0 裸枚举/0 裸理由码复用既有源无缺口 (GAP-D1 穷举)
+    scenario: DOM 断言主视图不含 trend_state/mts_score/score_band/signal_type/alert_level
+      前缀(App.tsx:651-655)与理由码 item.code(reasons 667+invalidators 673 双处); Playwright
+      文本断言
+    evidence_required:
+    - dom_assertion
+    - e2e_result
+  - id: VS-05
+    layer: e2e
+    target_ids:
+    - MOD-04
+    - MOD-06
+    - MOD-07
+    proves: 呈现层只读同一 domain 门控结果三处一致未重实现门控, 恢复态与来源态独立黄条
+    scenario: 构造 stale 来源态断言信号卡 source_degraded 不显 ready 不给价位(NEG-01)+DOM 断言恢复承载与来源承载独立元素(NEG-03)
+    evidence_required:
+    - e2e_result
+    - dom_assertion
+  - id: VS-06
+    layer: e2e
+    target_ids:
+    - MOD-04
+    - MOD-06
+    - MOD-05
+    proves: 主观层级/突出/弱化落成可观察判定
+    scenario: SCN-05-COND-01 层级差/SCN-04-COND-01 标题主位/SCN-06 侧栏 preview 截图+次级权重样式 DOM
+      断言双证据
+    evidence_required:
+    - screenshot
+    - dom_assertion
+  - id: VS-07
+    layer: e2e
+    target_ids:
+    - MOD-01
+    - MOD-02
+    proves: 未越界改算法/后端/数据 (升级关口未触发)
+    scenario: 若呈现目标无法在 domain/后端/共享类颜色不变前提下达成则停下升级决策关口; 当前判定未触发
+    evidence_required:
+    - manual_review
+  - id: VS-08
+    layer: e2e
+    target_ids:
+    - MOD-01
+    - MOD-03
+    - MOD-04
+    proves: 改造不引入 axe 回归, 既有用户路径不破坏
+    scenario: axe 扫描无新增违规+Playwright E2E 既有路径不回归(NEG-07); npm run build exit 0 前提
+    evidence_required:
+    - e2e_result
+    - build_log
+  - id: VS-09
+    layer: e2e
+    target_ids:
+    - MOD-06
+    - MOD-01
+    proves: 来源/价格各唯一权威主源计数=1, 涨跌红绿不等于警告色 (GAP-D3)
+    scenario: DOM 断言 source-authority 计数=1/price-authority 计数=1+被降级移除重复点核对+涨跌色 vs
+      警告色并置截图
+    evidence_required:
+    - dom_assertion
+    - screenshot
+  - id: VS-10
+    layer: e2e
+    target_ids:
+    - MOD-01
+    - MOD-02
+    - MOD-07
+    proves: 四档色分档正确正常态 0 警告看空不等于故障 (INV-01~03)
+    scenario: 来源五档/恢复四档/评分正负各态 preview 截图逐档并置; negative 评分与 stale 来源同批并置证物理区分
+    evidence_required:
+    - screenshot
+  - id: VS-11
+    layer: e2e
+    target_ids:
+    - MOD-03
+    - MOD-04
+    - MOD-06
+    proves: 折叠交互+顶部层级+STM-06 语义不变
+    scenario: Playwright 折叠展开+布局模式(dense/focus/mobile_tab)切换后断言标题仍主位且切换生效(SCN-04-COND-02/SCN-07-COND-02/NEG-06)
+    evidence_required:
+    - e2e_result
+    - screenshot
+  - id: VS-12
+    layer: unit
+    target_ids:
+    - MOD-02
+    proves: 呈现映射函数纯函数幂等, UNKNOWN_CODE 与缺失字段回落正确
+    scenario: 单测 resolve*Tone/humanize* 各枚举输入到 tone/人话映射; 未注册码回落 UNKNOWN_CODE; null
+      mtsScore 中性
+    evidence_required:
+    - test_result
+  risk_validation:
+  - risk_id: SR-01
+    handling: block
+    validation_method: 范围外组件 preview 截图并置+DOM 断言未重着色+grep 断言 .data-notice 定义未改 (VS-01)
+    expected_conclusion: 范围内迁移未波及范围外 5 处, 共享类颜色定义未动, 范围外零可观察变化
+    return_condition: 某态无法在不改共享类颜色前提下归位则回流方案
+  - risk_id: RISK-01
+    handling: accept
+    validation_method: 三档并置 preview 截图可辨识+verify 前用户定档 (VS-02)
+    expected_conclusion: demo_fallback 默认信息级可辨识兜底数据非高危警告色
+    return_condition: 用户改判需关注则按 DEC-S07 切换承载色档不回流路线
+  - risk_id: RISK-02
+    handling: validate
+    validation_method: E2E 默认态明细不可见→展开可见+两态截图 (VS-03)
+    expected_conclusion: 折叠入口本地承载可操作义务未丢失
+    return_condition: 折叠入口无法本地承载则回流方案
+  - risk_id: RISK-03
+    handling: validate
+    validation_method: DOM+Playwright 主视图 0 裸枚举/0 裸理由码断言+映射清单核对 (VS-04)
+    expected_conclusion: 复用既有人话源无缺口, 未注册码 UNKNOWN_CODE 回落
+    return_condition: 某枚举点无既有可读源且非注册码则回流产品定义
+  - risk_id: RISK-04
+    handling: block
+    validation_method: E2E 一致性 stale 断言+DOM 独立承载断言 NEG-01/03 (VS-05)
+    expected_conclusion: 只读同一门控结果三处一致未重实现门控, 恢复与来源独立黄条
+    return_condition: 呈现层出现重实现门控迹象则回流方案
+  - risk_id: RISK-05
+    handling: accept
+    validation_method: 主观项 preview 截图+样式 DOM 断言双证据 (VS-06)
+    expected_conclusion: 主观项落成可观察判定
+    return_condition: 双证据仍无法判定则回流产品定义细化可观察口径
+  - risk_id: RISK-06
+    handling: return
+    validation_method: 若呈现目标无法在 domain/后端不变前提下达成则停下升级 (VS-07)
+    expected_conclusion: 未越界改算法/后端/数据, 当前判定未触发
+    return_condition: 出现阻断性技术风险则触发 scope_change 升级不擅自扩范围
+  - risk_id: RISK-07
+    handling: validate
+    validation_method: axe 无新增违规+Playwright E2E 无回归+build exit 0 (VS-08)
+    expected_conclusion: 改造不引入 axe 回归既有路径不破坏
+    return_condition: E2E 基础设施缺失或构建链路失效则按环境前提失败处理
+  architectural_fitness_functions:
+  - id: AFF-01
+    protected_quality: 范围外组件零可观察变化 (SR-01 爆炸半径隔离)
+    measurement: 范围外 5 处 .data-notice 组件改造前后 preview 截图 diff + DOM 断言承载类未变
+    threshold: 零像素级差异+承载类未被重着色
+    verification_evidence:
+    - VS-01
+  - id: AFF-02
+    protected_quality: 状态色语义分离 (INV-03 负向评分色不等于来源故障色)
+    measurement: caution 承载类名与 warning 承载类名 DOM 断言互不复用+并置截图物理区分
+    threshold: 类名不相交且视觉可辨
+    verification_evidence:
+    - VS-10
+  production_readiness:
+    error_handling: 未注册理由码 resolveMtsReason 回落 UNKNOWN_CODE(mts-registry.ts:161) 不直呈原码(NEG-04);
+      缺失字段 mtsScore null 进度条中性/价格无值占位符/未知 status tone 保守兜底; 回落均呈现幂等无异常抛出
+    compatibility: 范围外 5 处 .data-notice 零改动(AlertRulePanel:136/LayoutController:75/121/WorkbenchShell:78/135);
+      不改 styles.css:379 颜色定义(SR-01); 新增均 additive(新CSS类/新函数/新组件); RestoreStatus props
+      签名不变; types.ts 加 Tone 类型为纯新增不改既有字段
+    observability: N/A 纯前端呈现层 CSS/JSX 变更无运行时副作用无网络/存储/后端调用无需新增日志埋点监控; 验证依赖既有 tests/e2e+axe+preview
+      截图+build
+    rollback: 纯前端呈现层回滚为 git revert additive commit 移除即恢复现状; 无数据/schema/迁移无持久化态无需数据回滚;
+      demo_fallback 色档可切换(DEC-S07 改一处映射不改结构)
+  agent_implementation: []
+  effectiveness_review:
+    rounds_used: 4
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+    rounds:
+    - round: 2
+      timestamp: '2026-07-21T17:18:36.246744+08:00'
+      verdicts:
+      - *id001
+    - round: 4
+      timestamp: '2026-07-21T17:24:52.627994+08:00'
+      verdicts:
+      - *id002
+  agent_capability_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+  dependency_validity_review:
+    rounds_used: 0
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false

@@ -1,0 +1,14 @@
+{
+  "id": "cmd-integration-2026-05-24-01-33-03",
+  "kind": "command",
+  "layer": "integration",
+  "command": "npm run build",
+  "cwd": "/Users/hanbin/Workspace/AI/MyInvestment",
+  "exit_code": 0,
+  "started_at": "2026-05-24T01:33:03.429444+00:00",
+  "ended_at": "2026-05-24T01:33:06.293723+00:00",
+  "result": "pass",
+  "stdout": "\n> my-investment-terminal@0.1.0 build\n> tsc --noEmit && vite build\n\nvite v7.3.3 building client environment for production...\ntransforming...\n\u2713 1713 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.41 kB \u2502 gzip:   0.30 kB\ndist/assets/index-CRTDqaGh.css    7.33 kB \u2502 gzip:   2.20 kB\ndist/assets/index-D99paN2B.js   389.90 kB \u2502 gzip: 125.55 kB\n\u2713 built in 1.23s\n",
+  "stderr": "",
+  "artifact": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-integration-2026-05-24-01-33-03.json"
+}

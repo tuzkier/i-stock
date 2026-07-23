@@ -1,0 +1,1191 @@
+control_contract:
+  type: action_contract
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: execute
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    sections:
+    - Parent Task Index
+    - Execution Units
+    - Definition of Done
+  consumers:
+  - code-review
+  - verify
+  - stage-gate
+  work_graph_artifact:
+    node_id: TASK-WATCHBOARD-UI-T001
+    artifact_set_id: AS--execute-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:execution-result
+      role: execution-result
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+  role_policy:
+    stage: execute
+    work_graph_lane: development-lane
+    required_execution_roles:
+    - execute-control-plane-executor
+    required_review_roles:
+    - spec-reviewer
+    role_carriers:
+      execute-control-plane-executor: skill
+  execute_session:
+    id: EXE-SESSION-001
+    skill: execute
+    carrier: execute
+    execute_mode: sdd
+    dispatch_plans:
+    - id: DISPATCH-0101
+      task_id: T001
+      execution_unit_id: AT-0101
+      surfaces:
+      - frontend_visual
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - green_report
+      - regression_report
+      write_scope:
+      - src/styles.css
+      conflict_risk: low
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0102
+      task_id: T001
+      execution_unit_id: AT-0102
+      surfaces:
+      - frontend_component
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/types.ts
+      - src/features/presentation/tone.ts
+      - tests/unit/presentation/tone.spec.ts
+      conflict_risk: low
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0103
+      task_id: T001
+      execution_unit_id: AT-0103
+      surfaces:
+      - frontend_component
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/features/presentation/humanize.ts
+      - tests/unit/presentation/humanize.spec.ts
+      conflict_risk: low
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0201
+      task_id: T002
+      execution_unit_id: AT-0201
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      - src/features/presentation/ScoreBar.tsx
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0202
+      task_id: T002
+      execution_unit_id: AT-0202
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0301
+      task_id: T003
+      execution_unit_id: AT-0301
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0302
+      task_id: T003
+      execution_unit_id: AT-0302
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0401
+      task_id: T004
+      execution_unit_id: AT-0401
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      - src/styles.css
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0402
+      task_id: T004
+      execution_unit_id: AT-0402
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      - src/styles.css
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0501
+      task_id: T005
+      execution_unit_id: AT-0501
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/App.tsx
+      - src/features/chart/ChartSurface.tsx
+      conflict_risk: high
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0502
+      task_id: T005
+      execution_unit_id: AT-0502
+      surfaces:
+      - frontend_visual
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/styles.css
+      conflict_risk: high
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0601
+      task_id: T006
+      execution_unit_id: AT-0601
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/features/restore/RestoreStatus.tsx
+      - tests/e2e/restore-layout/tone.spec.ts
+      conflict_risk: medium
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0602
+      task_id: T006
+      execution_unit_id: AT-0602
+      surfaces:
+      - frontend_ui
+      primary_executors:
+      - frontend-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - src/features/chart/ChartSurface.tsx
+      conflict_risk: low
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          frontend-engineer: .harness/common/agents/frontend-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0701
+      task_id: T007
+      execution_unit_id: AT-0701
+      surfaces:
+      - cross_presentation_consistency
+      primary_executors:
+      - test-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - tests/e2e/gate/consistency.spec.ts
+      conflict_risk: low
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          test-engineer: .harness/common/agents/test-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+    - id: DISPATCH-0702
+      task_id: T007
+      execution_unit_id: AT-0702
+      surfaces:
+      - out_of_scope_zero_change
+      primary_executors:
+      - test-engineer
+      supporting_executors: []
+      reviewers:
+      - spec-reviewer
+      required_evidence:
+      - red_report
+      - green_report
+      - regression_report
+      write_scope:
+      - tests/e2e/gate/scope-guard.spec.ts
+      conflict_risk: low
+      blocked: false
+      execution_context:
+        skill: execute
+        role_package_refs:
+          test-engineer: .harness/common/agents/test-engineer.md
+          spec-reviewer: .harness/common/agents/spec-reviewer.md
+  baseline_evidence:
+  - id: EV-BASELINE-ALL
+    type: baseline_report
+    decision: focused_baseline_run
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    command: npx playwright test（各 execution unit 落地前逐条聚焦跑对应 spec 确认 Red）
+    result: 各原子任务均先确认对应断言在实现前失败，再实现使其通过
+    reason: brownfield 呈现层改造，PT-01 为纯新建无需 baseline；PT-02~07 均以既有测试套件（mts/trade-signal/watchlist/workbench/restore-layout/gate）为
+      baseline 起点
+    covers:
+      atomic_tasks:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      - AT-0201
+      - AT-0202
+      - AT-0301
+      - AT-0302
+      - AT-0401
+      - AT-0402
+      - AT-0501
+      - AT-0502
+      - AT-0601
+      - AT-0602
+      - AT-0701
+      - AT-0702
+      tasks:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+  execution_results:
+  - id: EXE-CONTROL-001
+    role: execute-control-plane-executor
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    fulfilled_obligations: []
+    evidence_refs:
+    - EV-RED-ALL
+    - EV-GREEN-ALL
+    - EV-REGRESSION-ALL
+    open_questions: []
+    concerns: []
+  - id: EXE-PRIMARY-FRONTEND
+    role: frontend-engineer
+    status: DONE
+    produced_artifacts:
+    - path: src/features/presentation/tone.ts
+    - path: src/features/presentation/humanize.ts
+    - path: src/features/presentation/ScoreBar.tsx
+    - path: src/App.tsx
+    - path: src/styles.css
+    - path: src/types.ts
+    - path: src/features/chart/ChartSurface.tsx
+    - path: src/features/restore/RestoreStatus.tsx
+    fulfilled_obligations: []
+    evidence_refs:
+    - EV-GREEN-ALL
+    - EV-REGRESSION-ALL
+    open_questions: []
+    concerns:
+    - status="failed" 恢复态在 domain 层无生产可达路径（DEV-01，非阻断，已由单测覆盖）
+  - id: EXE-PRIMARY-TEST
+    role: test-engineer
+    status: DONE
+    produced_artifacts:
+    - path: tests/e2e/gate/consistency.spec.ts
+    - path: tests/e2e/gate/scope-guard.spec.ts
+    fulfilled_obligations: []
+    evidence_refs:
+    - EV-GREEN-ALL
+    - EV-REGRESSION-ALL
+    open_questions: []
+    concerns:
+    - WorkbenchShell.tsx 是死代码未被任何页面挂载，其 .data-notice 用法只有文件级证据（DEV-02，非阻断）
+  role_verdicts:
+  - &id001
+    id: RV-spec-reviewer-1
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0101
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: 四档 token/notice/tone/score-bar 新增，共享定义未改，build 0
+    dispatch:
+      subagent_id: spec-reviewer-AT-0101
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:11.201984+08:00'
+      completed_at: '2026-07-22T10:35:11.201984+08:00'
+  - &id002
+    id: RV-spec-reviewer-2
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0102
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: tone.ts三函数正确，含alertLevel=风控OR分支修复后24测试全绿
+    dispatch:
+      subagent_id: spec-reviewer-AT-0102
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:18.385241+08:00'
+      completed_at: '2026-07-22T10:35:18.385241+08:00'
+  - &id003
+    id: RV-spec-reviewer-3
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0103
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: humanize.ts三函数正确复用既有人话源，UNKNOWN_CODE不直呈
+    dispatch:
+      subagent_id: spec-reviewer-AT-0103
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:23.067003+08:00'
+      completed_at: '2026-07-22T10:35:23.067003+08:00'
+  - &id004
+    id: RV-spec-reviewer-4
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0201
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: ScoreBar+折叠+notice--warning迁移，浏览器独立实测确认
+    dispatch:
+      subagent_id: spec-reviewer-AT-0201
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:27.763036+08:00'
+      completed_at: '2026-07-22T10:35:27.763036+08:00'
+  - &id005
+    id: RV-spec-reviewer-5
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0202
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: reason-list双处人话化+折叠，NEG-04不直呈未注册码
+    dispatch:
+      subagent_id: spec-reviewer-AT-0202
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:34.140205+08:00'
+      completed_at: '2026-07-22T10:35:34.140205+08:00'
+  - &id006
+    id: RV-spec-reviewer-6
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0301
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: 主次层级+折叠+nonAdvice结构级常驻确认
+    dispatch:
+      subagent_id: spec-reviewer-AT-0301
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:42.497726+08:00'
+      completed_at: '2026-07-22T10:35:42.497726+08:00'
+  - &id007
+    id: RV-spec-reviewer-7
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0302
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: 非ready人话化，含stanceLabel漏传修复后精确文案验证
+    dispatch:
+      subagent_id: spec-reviewer-AT-0302
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:47.200893+08:00'
+      completed_at: '2026-07-22T10:35:47.200893+08:00'
+  - &id008
+    id: RV-spec-reviewer-8
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0401
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: 侧栏结构+来源小圆点，含布局溢出回归修复
+    dispatch:
+      subagent_id: spec-reviewer-AT-0401
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:35:52.867007+08:00'
+      completed_at: '2026-07-22T10:35:52.867007+08:00'
+  - &id009
+    id: RV-spec-reviewer-9
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0402
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: archived弱化，opacity/color区分双证据
+    dispatch:
+      subagent_id: spec-reviewer-AT-0402
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:00.771799+08:00'
+      completed_at: '2026-07-22T10:36:00.771799+08:00'
+  - &id010
+    id: RV-spec-reviewer-10
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0501
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: source-authority/price-authority计数=1，LayoutController零改动
+    dispatch:
+      subagent_id: spec-reviewer-AT-0501
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:06.096890+08:00'
+      completed_at: '2026-07-22T10:36:06.096890+08:00'
+  - &id011
+    id: RV-spec-reviewer-11
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0502
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: CSS-only顶部重排，含NEG-06组合路径覆盖修复
+    dispatch:
+      subagent_id: spec-reviewer-AT-0502
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:11.012497+08:00'
+      completed_at: '2026-07-22T10:36:11.012497+08:00'
+  - &id012
+    id: RV-spec-reviewer-12
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0601
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: 四档分色真实种子数据驱动，failed态处理合理披露
+    dispatch:
+      subagent_id: spec-reviewer-AT-0601
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:16.215806+08:00'
+      completed_at: '2026-07-22T10:36:16.215806+08:00'
+  - &id013
+    id: RV-spec-reviewer-13
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0602
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: ChartSurface迁移完成，范围内data-notice迁移4/4
+    dispatch:
+      subagent_id: spec-reviewer-AT-0602
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:22.242850+08:00'
+      completed_at: '2026-07-22T10:36:22.242850+08:00'
+  - &id014
+    id: RV-spec-reviewer-14
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0701
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: NEG-01/NEG-03/计数聚合，真实domain门控未mock
+    dispatch:
+      subagent_id: spec-reviewer-AT-0701
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:27.009142+08:00'
+      completed_at: '2026-07-22T10:36:27.009142+08:00'
+  - &id015
+    id: RV-spec-reviewer-15
+    role: spec-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - AT-0702
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+    summary: 范围外零改动，含3轮截图证据补齐后完整覆盖
+    dispatch:
+      subagent_id: spec-reviewer-AT-0702
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-22T10:36:32.963381+08:00'
+      completed_at: '2026-07-22T10:36:32.963381+08:00'
+  effectiveness_review:
+    rounds_used: 15
+    pending_reviewer_recheck: false
+    last_gate_run_status: PASS
+    rounds:
+    - round: 1
+      timestamp: '2026-07-22T10:35:11.201984+08:00'
+      verdicts:
+      - *id001
+    - round: 2
+      timestamp: '2026-07-22T10:35:18.385241+08:00'
+      verdicts:
+      - *id002
+    - round: 3
+      timestamp: '2026-07-22T10:35:23.067003+08:00'
+      verdicts:
+      - *id003
+    - round: 4
+      timestamp: '2026-07-22T10:35:27.763036+08:00'
+      verdicts:
+      - *id004
+    - round: 5
+      timestamp: '2026-07-22T10:35:34.140205+08:00'
+      verdicts:
+      - *id005
+    - round: 6
+      timestamp: '2026-07-22T10:35:42.497726+08:00'
+      verdicts:
+      - *id006
+    - round: 7
+      timestamp: '2026-07-22T10:35:47.200893+08:00'
+      verdicts:
+      - *id007
+    - round: 8
+      timestamp: '2026-07-22T10:35:52.867007+08:00'
+      verdicts:
+      - *id008
+    - round: 9
+      timestamp: '2026-07-22T10:36:00.771799+08:00'
+      verdicts:
+      - *id009
+    - round: 10
+      timestamp: '2026-07-22T10:36:06.096890+08:00'
+      verdicts:
+      - *id010
+    - round: 11
+      timestamp: '2026-07-22T10:36:11.012497+08:00'
+      verdicts:
+      - *id011
+    - round: 12
+      timestamp: '2026-07-22T10:36:16.215806+08:00'
+      verdicts:
+      - *id012
+    - round: 13
+      timestamp: '2026-07-22T10:36:22.242850+08:00'
+      verdicts:
+      - *id013
+    - round: 14
+      timestamp: '2026-07-22T10:36:27.009142+08:00'
+      verdicts:
+      - *id014
+    - round: 15
+      timestamp: '2026-07-22T10:36:32.963381+08:00'
+      verdicts:
+      - *id015
+  bug_fix_session:
+    fix_attempt_count: 0
+  dangerous_command_decisions: []
+  tdd_evidence:
+  - id: EV-RED-ALL
+    type: red_report
+    phase: red
+    path: 各 spec 文件内嵌断言（tests/unit/presentation/*.spec.ts, tests/e2e/**/*.spec.ts）
+    command: npx playwright test
+    exit_code: 1（各原子任务实现前，聚焦对应 spec 先跑出失败）
+    failure_signal: 各原子任务对应断言在实现前失败，证明测试真实依赖具体实现
+    covers:
+      atomic_tasks:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      - AT-0201
+      - AT-0202
+      - AT-0301
+      - AT-0302
+      - AT-0401
+      - AT-0402
+      - AT-0501
+      - AT-0502
+      - AT-0601
+      - AT-0602
+      - AT-0701
+      - AT-0702
+      tasks:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+  - id: EV-GREEN-ALL
+    type: green_report
+    phase: green
+    path: npx playwright test（全量）终端输出
+    command: npx playwright test
+    exit_code: 0
+    covers:
+      atomic_tasks:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      - AT-0201
+      - AT-0202
+      - AT-0301
+      - AT-0302
+      - AT-0401
+      - AT-0402
+      - AT-0501
+      - AT-0502
+      - AT-0601
+      - AT-0602
+      - AT-0701
+      - AT-0702
+      tasks:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+  - id: EV-REGRESSION-ALL
+    type: regression_report
+    phase: regression
+    path: npm run build + npx playwright test（全量，49 passed）终端输出
+    command: npm run build && npx playwright test
+    exit_code: 0
+    covers:
+      atomic_tasks:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      - AT-0201
+      - AT-0202
+      - AT-0301
+      - AT-0302
+      - AT-0401
+      - AT-0402
+      - AT-0501
+      - AT-0502
+      - AT-0601
+      - AT-0602
+      - AT-0701
+      - AT-0702
+      tasks:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+  - id: EV-TOOLCHAIN-001
+    type: toolchain_status
+    path: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tdd/toolchain-status.json
+    covers:
+      atomic_tasks:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      - AT-0201
+      - AT-0202
+      - AT-0301
+      - AT-0302
+      - AT-0401
+      - AT-0402
+      - AT-0501
+      - AT-0502
+      - AT-0601
+      - AT-0602
+      - AT-0701
+      - AT-0702
+      tasks:
+      - T001
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+      - T007
+    phase: toolchain
+  tasks:
+  - id: T001
+    traces_to:
+    - DEC-S01
+    - DEC-S02
+    - DEC-S03
+    - SUC-01-OP-01
+    - SUC-02-OP-01
+    - SCN-01
+    - SCN-02
+    required_evidence:
+    - id: re-T001-1
+      type: green_report
+      verification_type: unit
+      command: node --test tests/unit/presentation/tone.spec.ts tests/unit/presentation/humanize.spec.ts
+      description: PT-01 地基单测全绿
+    stop_if: &id016
+    - changes_outside_authorized_paths
+    - design_constraint_conflict
+    - new_external_dependency
+    - new_public_behavior_without_delta_spec
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+  - id: T002
+    traces_to:
+    - SUC-02-OP-01
+    - SUC-02-OP-02
+    - DEC-S03
+    - DEC-S04
+    - SCN-02
+    - SCN-01
+    required_evidence:
+    - id: re-T002-1
+      type: green_report
+      verification_type: e2e
+      command: npx playwright test tests/e2e/mts/
+      description: PT-02 MTS 卡人话化+折叠 E2E 全绿
+    stop_if: *id016
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+  - id: T003
+    traces_to:
+    - SUC-03-OP-01
+    - SUC-03-OP-02
+    - DEC-S04
+    - DEC-S08
+    - SCN-05
+    - SCN-07
+    - SCN-02
+    required_evidence:
+    - id: re-T003-1
+      type: green_report
+      verification_type: e2e
+      command: npx playwright test tests/e2e/trade-signal/
+      description: PT-03 交易信号卡 E2E 全绿
+    stop_if: *id016
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+  - id: T004
+    traces_to:
+    - SUC-04-OP-01
+    - DEC-S05
+    - DEC-S02
+    - SCN-06
+    - SCN-03
+    required_evidence:
+    - id: re-T004-1
+      type: green_report
+      verification_type: e2e
+      command: npx playwright test tests/e2e/watchlist/
+      description: PT-04 侧栏 E2E 全绿
+    stop_if: *id016
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+  - id: T005
+    traces_to:
+    - SUC-05-OP-01
+    - SUC-01-OP-02
+    - DEC-S05
+    - DEC-S09
+    - SCN-03
+    - SCN-04
+    required_evidence:
+    - id: re-T005-1
+      type: green_report
+      verification_type: e2e
+      command: npx playwright test tests/e2e/workbench/
+      description: PT-05 顶部层级+唯一主源 E2E 全绿
+    stop_if: *id016
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+  - id: T006
+    traces_to:
+    - SUC-06-OP-01
+    - DEC-S02
+    - DEC-S06
+    - SCN-01
+    required_evidence:
+    - id: re-T006-1
+      type: green_report
+      verification_type: e2e
+      command: npx playwright test tests/e2e/restore-layout/
+      description: PT-06 恢复态四档 E2E 全绿
+    stop_if: *id016
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+  - id: T007
+    traces_to:
+    - SUC-03-OP-02
+    - DEC-S01
+    - DEC-S06
+    - SCN-01
+    - SCN-02
+    required_evidence:
+    - id: re-T007-1
+      type: green_report
+      verification_type: e2e
+      command: npx playwright test tests/e2e/gate/
+      description: PT-07 终局一致性+范围外零改动 E2E 全绿
+    stop_if: *id016
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - frontend_ui
+      required_capabilities:
+      - test_result
+      - coverage
+      evidence_required:
+      - green_report
+      - regression_report
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+

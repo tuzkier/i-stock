@@ -1,4 +1,5 @@
 export type MarketCode = "US" | "HK" | "CN" | "KR";
+export type Tone = "normal" | "info" | "caution" | "warning" | "positive" | "neutral";
 export type SourceHealthStatus = "formal" | "demo_fallback" | "stale" | "unavailable";
 export type SourceStatus = SourceHealthStatus | "not_loaded";
 

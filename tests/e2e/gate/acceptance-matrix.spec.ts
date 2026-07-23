@@ -55,7 +55,12 @@ test("AC-02 and AC-03 fixture gate covers source degradation and non-advice MTS"
   await page.goto("/");
   await page.getByRole("button", { name: /腾讯控股 0700\.HK/ }).click();
 
-  await expect(page.getByTestId("chart-degradation-note")).toContainText("fixture demo fallback");
+  const degradationNote = page.getByTestId("chart-degradation-note");
+  await expect(degradationNote).toContainText("fixture demo fallback");
+  // GAP-01: demo_fallback 是信息级来源状态，不应染成最高危警告色
+  await expect(degradationNote).toHaveClass(/notice--info/);
+  await expect(degradationNote).not.toHaveClass(/notice--warning/);
+  await page.getByTestId("mts-details-toggle").click();
   await expect(page.getByTestId("mts-state-grid")).toContainText("trend_state");
   await expect(page.getByTestId("mts-non-advice")).toContainText("不构成收益承诺");
   await expect(page.getByTestId("mts-card")).not.toContainText(/强买点|强卖点|胜率/);

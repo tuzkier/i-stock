@@ -3005,6 +3005,121 @@ def check_work_graph_artifact(contract: dict[str, Any], findings: list[Finding],
                 add(findings, "FAIL", "role_verdict_artifact_version_mismatch", f"{verdict.get('id', '<role-verdict>')} review_basis.work_graph_artifact.{field} does not match work_graph_artifact")
 
 
+def check_delivery(contract: dict[str, Any], findings: list[Finding]) -> None:
+    """delivery_contract checker (delivery-improvement-plan M1.1 / M4.2).
+
+    Implements the informal rule spec in
+    schemas/control_contract.v1/delivery_contract.yaml (required_fields +
+    GR-DL-001..007) — that file is a design spec, not a jsonschema document,
+    so it is enforced here rather than through validate_schema().
+    """
+    for field in ("mission_id", "stage", "artifact"):
+        if not contract.get(field):
+            add(findings, "FAIL", "missing_field", f"delivery_contract missing required field: {field}")
+    if contract.get("stage") not in (None, "delivery"):
+        add(findings, "FAIL", "invalid_stage", "delivery_contract.stage must be 'delivery'")
+    if contract.get("artifact") not in (None, "delivery"):
+        add(findings, "FAIL", "invalid_artifact", "delivery_contract.artifact must be 'delivery'")
+
+    acceptance_result = contract.get("acceptance_result") if isinstance(contract.get("acceptance_result"), dict) else {}
+    if not acceptance_result:
+        add(findings, "FAIL", "missing_acceptance_result", "delivery_contract requires acceptance_result section")
+    else:
+        for field in ("mission_id", "stage", "artifact"):
+            if not acceptance_result.get(field):
+                add(findings, "FAIL", "missing_field", f"acceptance_result missing required field: {field}")
+
+        acceptance_trace = acceptance_result.get("acceptance_trace") or []
+        if not acceptance_trace:
+            add(findings, "FAIL", "missing_acceptance_trace", "acceptance_result requires non-empty acceptance_trace")
+        for row in acceptance_trace:
+            if not isinstance(row, dict):
+                add(findings, "FAIL", "invalid_acceptance_trace_item", "acceptance_trace entries must be objects")
+                continue
+            aid = row.get("acceptance_id", "<unknown>")
+            for field in ("acceptance_id", "expected", "actual", "reproduce_steps", "result_status"):
+                if not row.get(field):
+                    add(findings, "FAIL", "invalid_acceptance_trace_item", f"{aid} missing {field}")
+            status = row.get("result_status")
+            if status not in {"pass", "fail", "accepted_risk", "blocked"}:
+                add(findings, "FAIL", "invalid_result_status", f"{aid} has invalid result_status: {status}")
+            if status == "pass":
+                if not row.get("verify_command_evidence_id"):
+                    add(findings, "FAIL", "GR-DL-001", f"{aid} result_status=pass requires verify_command_evidence_id")
+                if not row.get("acceptance_result_evidence_path"):
+                    add(findings, "FAIL", "GR-DL-002", f"{aid} result_status=pass requires acceptance_result_evidence_path")
+
+        risk_acceptance = acceptance_result.get("risk_acceptance") or []
+        for item in risk_acceptance:
+            if not isinstance(item, dict):
+                add(findings, "FAIL", "invalid_risk_acceptance_item", "risk_acceptance entries must be objects")
+                continue
+            for field in ("risk_id", "approval_id", "approval_type", "source"):
+                if not item.get(field):
+                    add(findings, "FAIL", "invalid_risk_acceptance_item", f"risk_acceptance entry missing {field}")
+
+        user_checkpoint = acceptance_result.get("user_checkpoint") if isinstance(acceptance_result.get("user_checkpoint"), dict) else {}
+        uc_status = user_checkpoint.get("status")
+        if uc_status not in {"pending_user_acceptance", "approved", "accepted_risk", "continue_fix", "blocked"}:
+            add(findings, "FAIL", "invalid_user_checkpoint_status", f"user_checkpoint has invalid status: {uc_status}")
+        if uc_status in {"approved", "accepted_risk"}:
+            if not user_checkpoint.get("approval_id"):
+                add(findings, "FAIL", "missing_user_checkpoint_approval", "user_checkpoint requires approval_id when status is approved/accepted_risk")
+            if not user_checkpoint.get("original_user_text_ref"):
+                add(findings, "FAIL", "missing_user_checkpoint_text_ref", "user_checkpoint requires original_user_text_ref when status is approved/accepted_risk")
+        if uc_status == "accepted_risk" and not user_checkpoint.get("risk_summary"):
+            add(findings, "FAIL", "missing_risk_summary", "user_checkpoint requires risk_summary when status is accepted_risk")
+        if uc_status not in {"approved", "accepted_risk"}:
+            add(findings, "FAIL", "GR-DL-005", "acceptance_result.user_checkpoint.status must be approved or accepted_risk")
+
+    delivery_package = contract.get("delivery_package") if isinstance(contract.get("delivery_package"), dict) else {}
+    if not delivery_package:
+        add(findings, "FAIL", "missing_delivery_package", "delivery_contract requires delivery_package section")
+    else:
+        if not delivery_package.get("acceptance_state_ref"):
+            add(findings, "FAIL", "GR-DL-003", "delivery_package.acceptance_state_ref is required")
+        if not delivery_package.get("scope_summary"):
+            add(findings, "FAIL", "missing_scope_summary", "delivery_package requires scope_summary")
+        if not delivery_package.get("evidence_links"):
+            add(findings, "FAIL", "missing_evidence_links", "delivery_package requires non-empty evidence_links")
+
+        for fu in delivery_package.get("follow_ups") or []:
+            if not isinstance(fu, dict):
+                add(findings, "FAIL", "invalid_follow_up", "follow_ups entries must be objects")
+                continue
+            fid = fu.get("id", "<unknown>")
+            for field in ("id", "description", "severity", "graph_op"):
+                if not fu.get(field):
+                    add(findings, "FAIL", "invalid_follow_up", f"{fid} missing {field}")
+            severity = fu.get("severity")
+            if severity not in {"blocking", "advisory", "can_ignore"}:
+                add(findings, "FAIL", "invalid_follow_up_severity", f"{fid} has invalid severity: {severity}")
+            graph_op = fu.get("graph_op")
+            if graph_op not in {"split_node", "defer_node", "block_node", "none"}:
+                add(findings, "FAIL", "invalid_follow_up_graph_op", f"{fid} has invalid graph_op: {graph_op}")
+            if severity in {"blocking", "advisory"} and graph_op == "none":
+                add(findings, "FAIL", "GR-DL-006", f"{fid} severity={severity} cannot have graph_op=none")
+            if graph_op == "none" and severity == "can_ignore" and not fu.get("none_reason"):
+                add(findings, "FAIL", "missing_none_reason", f"{fid} graph_op=none requires none_reason")
+
+        handoff = delivery_package.get("handoff_evidence") if isinstance(delivery_package.get("handoff_evidence"), dict) else {}
+        if not handoff:
+            add(findings, "FAIL", "missing_handoff_evidence", "delivery_package requires handoff_evidence")
+        elif handoff.get("pause_required") is not True:
+            add(findings, "FAIL", "GR-DL-004", "delivery_package.handoff_evidence.pause_required must be true")
+
+    for dispatch in contract.get("dispatches") or []:
+        if not isinstance(dispatch, dict):
+            add(findings, "FAIL", "invalid_dispatch", "dispatches entries must be objects")
+            continue
+        role = dispatch.get("role", "<unknown>")
+        for field in ("role", "execution_mode", "model", "started_at", "completed_at", "verdict"):
+            if not dispatch.get(field):
+                add(findings, "FAIL", "invalid_dispatch", f"{role} dispatch missing {field}")
+        if dispatch.get("execution_mode") == "main_agent_fallback" and dispatch.get("verdict") == "PASS":
+            add(findings, "FAIL", "GR-DL-007", f"{role} dispatch cannot be main_agent_fallback with verdict=PASS")
+
+
 def run(args: argparse.Namespace) -> tuple[str, list[Finding], dict[str, Any] | None]:
     artifact = Path(args.artifact)
     root = Path(args.root)
@@ -3124,6 +3239,8 @@ def run(args: argparse.Namespace) -> tuple[str, list[Finding], dict[str, Any] | 
         add(findings, "WARN", "unsupported_evidence_subtype", f"Evidence subtype not checked in v1: {subtype}")
     elif ctype == "memory_update_contract":
         check_memory_update(contract, findings)
+    elif ctype == "delivery_contract":
+        check_delivery(contract, findings)
     elif ctype not in {"guide_contract", "memory_update_contract"}:
         add(findings, "FAIL", "unknown_contract_type", f"Unknown contract type: {ctype}")
 

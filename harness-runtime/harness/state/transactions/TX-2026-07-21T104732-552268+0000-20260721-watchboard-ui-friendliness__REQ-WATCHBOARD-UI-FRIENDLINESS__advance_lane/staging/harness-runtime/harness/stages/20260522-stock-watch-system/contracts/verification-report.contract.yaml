@@ -1,0 +1,394 @@
+control_contract:
+  type: evidence_contract
+  subtype: verification_evidence
+  version: 1
+  mission_id: 20260522-stock-watch-system
+  stage: verify
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260522-stock-watch-system/mission-contract.md
+    sections:
+    - Acceptance Criteria
+  - path: harness-runtime/harness/stages/20260522-stock-watch-system/execution-brief.md
+    sections:
+    - Tasks
+    - Required Evidence
+  - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/code-review/code-review.md
+    sections:
+    - Review Verdict
+    - Verification Handoff
+  consumers:
+  - delivery
+  - retrospective
+  - stage-gate
+  execution_result:
+    id: exe-verify-t002-t006
+    role: verification-engineer
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+    - path: harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+    fulfilled_obligations: []
+    upstream_trace_refs:
+    - T002
+    - T003
+    - T004
+    - T005
+    - T006
+    - SURF-WORKBENCH
+    - SURF-SOURCE
+    - SURF-MTS
+    - SURF-ALERTS
+    - SURF-RESTORE
+    - SURF-LAYOUT
+    - SURF-WATCHLIST
+    decision_log:
+    - id: verify-scope-current-batch
+      decision: verify_current_batch_slice
+      rationale: Current verification evidence covers T002 through T006 after code-review
+        gate advance.
+      traces_to:
+      - T002
+      - T003
+      - T004
+      - T005
+      - T006
+    - id: verify-e2e-rerun-with-server
+      decision: rerun_e2e_after_starting_dev_server
+      rationale: First no-webserver E2E attempt failed with ERR_CONNECTION_REFUSED
+        because port 5174 was not listening; the same command passed after starting
+        the dev server.
+      traces_to:
+      - T006
+    traceability_matrix:
+    - source: T002
+      upstream_refs:
+      - SURF-WORKBENCH
+      - SURF-SOURCE
+      - SURF-LAYOUT
+      target:
+      - EV-RESULT-T002-WORKBENCH
+      - CMD-VERIFY-E2E-RERUN
+    - source: T003
+      upstream_refs:
+      - SURF-MTS
+      - SURF-WORKBENCH
+      target:
+      - EV-RESULT-T003-MTS
+      - CMD-VERIFY-UNIT-REPLAY
+      - CMD-VERIFY-E2E-RERUN
+    - source: T004
+      upstream_refs:
+      - SURF-ALERTS
+      - SURF-MTS
+      target:
+      - EV-RESULT-T004-ALERTS
+      - CMD-VERIFY-UNIT-REPLAY
+      - CMD-VERIFY-E2E-RERUN
+    - source: T005
+      upstream_refs:
+      - SURF-RESTORE
+      - SURF-LAYOUT
+      - SURF-WATCHLIST
+      target:
+      - EV-RESULT-T005-RESTORE
+      - CMD-VERIFY-UNIT-REPLAY
+      - CMD-VERIFY-E2E-RERUN
+    - source: T006
+      upstream_refs:
+      - SURF-WORKBENCH
+      - SURF-MTS
+      - SURF-ALERTS
+      - SURF-RESTORE
+      target:
+      - EV-RESULT-T006-GATE
+      - CMD-VERIFY-BUILD
+      - CMD-VERIFY-UNIT-REPLAY
+      - CMD-VERIFY-E2E-RERUN
+    evidence_refs:
+    - CMD-VERIFY-BUILD
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    - EV-RESULT-T002-WORKBENCH
+    - EV-RESULT-T003-MTS
+    - EV-RESULT-T004-ALERTS
+    - EV-RESULT-T005-RESTORE
+    - EV-RESULT-T006-GATE
+    open_questions: []
+    concerns:
+    - Final-round red artifact granularity can be improved later; current regression
+      evidence is passing and no High blocker remains.
+  obligations:
+  - id: OBL-VERIFY-T002-T006
+    mission_id: 20260522-stock-watch-system
+    type: verification
+    risk: medium
+    traces_to:
+      ac:
+      - AC-02
+      - AC-03
+      - AC-04
+      - AC-05
+    required_evidence:
+    - command_result
+    - result_evidence
+    - e2e_result
+    required_roles:
+    - verification-effectiveness-reviewer
+    blocking: true
+    source: mission_slice
+  command_evidence:
+  - id: CMD-VERIFY-BUILD
+    alias_of: cmd-unit-2026-06-07-05-46-31
+    required_evidence_id: re-T006-1
+    command: npm run build
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-06-07T05:46:31Z'
+    ended_at: '2026-06-07T05:46:33Z'
+    result: pass
+    summary: TypeScript noEmit and Vite build passed.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-unit-2026-06-07-05-46-31.json
+  - id: CMD-VERIFY-UNIT-REPLAY
+    alias_of: cmd-unit-2026-06-07-05-46-38
+    required_evidence_id: re-T006-1
+    command: node --test harness-runtime/harness/traces/20260522-stock-watch-system/t006-all-tests/*.mjs
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-06-07T05:46:38Z'
+    ended_at: '2026-06-07T05:46:38Z'
+    result: pass
+    summary: T002-T006 unit and replay matrix passed.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-unit-2026-06-07-05-46-38.json
+  - id: CMD-VERIFY-E2E-RERUN
+    alias_of: cmd-e2e-2026-06-07-05-47-19
+    required_evidence_id: re-T006-3
+    command: ./node_modules/.bin/playwright test --config harness-runtime/harness/traces/20260522-stock-watch-system/playwright-no-webserver.config.ts
+      --reporter=list --trace=on
+    cwd: /Users/hanbin/Workspace/AI/MyInvestment
+    exit_code: 0
+    started_at: '2026-06-07T05:47:19Z'
+    ended_at: '2026-06-07T05:47:26Z'
+    result: pass
+    summary: Full Playwright E2E passed, 24 tests / 0 failed.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+  result_evidence:
+  - id: EV-RESULT-T002-WORKBENCH
+    alias_of: result-t002-workbench
+    acceptance_id: T002
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: Workbench shows chart, volume, secondary pane, OHLC, source health,
+      indicator switching, and visible degraded source states.
+    actual: Playwright output passed workbench default, indicator switch, insufficient
+      data, demo fallback, stale, and unavailable cases.
+    reproduce: Start PORT=5174 npm run dev, then run the no-webserver Playwright config.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: EV-RESULT-T003-MTS
+    alias_of: result-t003-mts
+    acceptance_id: T003
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: MTS card exposes structured fields and non-advice copy; unavailable
+      source degrades MTS.
+    actual: Playwright MTS card tests passed; unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: EV-RESULT-T004-ALERTS
+    alias_of: result-t004-alerts
+    acceptance_id: T004
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: Alert rules can be created, triggered, acknowledged, suspended by archive,
+      and scheduled missed is recorded without backfilling trigger.
+    actual: Alerts panel E2E paths passed; unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: EV-RESULT-T005-RESTORE
+    alias_of: result-t005-restore
+    acceptance_id: T005
+    kind: dom_snapshot
+    evidence_role: primary
+    expected: Browser reload restores selectedSymbol, alerts, per-symbol dense layout,
+      mobile tab, and corrupt layout fallback remains usable.
+    actual: Restore-layout E2E paths passed; unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  - id: EV-RESULT-T006-GATE
+    alias_of: result-t006-gate
+    acceptance_id: T006
+    kind: trace
+    evidence_role: primary
+    expected: Fixture-first AC matrix and replay corpus cover AC-01 through AC-05.
+    actual: Gate acceptance matrix E2E passed and unit/replay matrix passed.
+    reproduce: Run bundled unit/replay matrix and full E2E command.
+    artifact: harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    result: pass
+  e2e_status:
+    status_artifact: harness-runtime/harness/traces/20260522-stock-watch-system/e2e/e2e-status.json
+    status: PASS
+    html_report: playwright-report/index.html
+    traces:
+    - test-results/.playwright-artifacts-0
+    videos: []
+    screenshots: []
+    decision_gate_reasons: []
+  role_verdicts:
+  - id: rv-verify-t002-t006-effectiveness-pass
+    role: verification-effectiveness-reviewer
+    verdict: PASS
+    reviewed_unit: T002..T006 verification report and contract
+    reviewed_obligations:
+    - OBL-VERIFY-T002-T006
+    review_basis:
+    - harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md
+    - harness-runtime/harness/artifacts/20260522-stock-watch-system/verify/verification-report.md
+    - harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml
+    - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-unit-2026-06-07-05-46-31.json
+    - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-unit-2026-06-07-05-46-38.json
+    - harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-06-07-05-47-19.json
+    role_boundary:
+      in_scope:
+      - verification evidence sufficiency
+      - acceptance trace coverage
+      - command/result evidence consistency
+      - true E2E coverage boundary
+      out_of_scope:
+      - product implementation changes
+      - delivery packaging
+      - code-review correctness judgement already covered by code-review reviewers
+    adequacy_matrix:
+    - target: build gate
+      conclusion: pass
+      evidence:
+      - cmd-unit-2026-06-07-05-46-31
+    - target: unit and replay matrix
+      conclusion: pass
+      evidence:
+      - cmd-unit-2026-06-07-05-46-38
+    - target: full Playwright E2E after dev server availability
+      conclusion: pass
+      evidence:
+      - cmd-e2e-2026-06-07-05-47-19
+    - target: acceptance trace AC-02 through AC-05
+      conclusion: pass
+      evidence:
+      - result-t002-workbench
+      - result-t003-mts
+      - result-t004-alerts
+      - result-t005-restore
+      - result-t006-gate
+    blocking_gaps: []
+    findings: []
+    non_blocking_risks:
+    - The first E2E run failed before server startup; the rerun used the same no-webserver
+      config after starting port 5174 and passed 24/24.
+    dispatch:
+      subagent_id: verification-effectiveness-reviewer-local-20260607
+      model: gpt-5.4
+      execution_mode: spawn_agent
+      started_at: '2026-06-07T05:55:00Z'
+      completed_at: '2026-06-07T05:55:00Z'
+  ac_trace: []
+  nfr_trace: []
+  acceptance_trace:
+  - id: trace-t002-workbench
+    acceptance_id: T002
+    surface_type: ui
+    upstream_refs:
+    - SURF-WORKBENCH
+    - SURF-SOURCE
+    conclusion: pass
+    command_evidence_ids:
+    - CMD-VERIFY-E2E-RERUN
+    result_evidence_ids:
+    - EV-RESULT-T002-WORKBENCH
+    evidence:
+    - CMD-VERIFY-E2E-RERUN
+    - EV-RESULT-T002-WORKBENCH
+    gaps: []
+  - id: trace-t003-mts
+    acceptance_id: T003
+    surface_type: ui
+    upstream_refs:
+    - SURF-MTS
+    - SURF-WORKBENCH
+    conclusion: pass
+    command_evidence_ids:
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    result_evidence_ids:
+    - EV-RESULT-T003-MTS
+    evidence:
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    - EV-RESULT-T003-MTS
+    gaps: []
+  - id: trace-t004-alerts
+    acceptance_id: T004
+    surface_type: ui
+    upstream_refs:
+    - SURF-ALERTS
+    conclusion: pass
+    command_evidence_ids:
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    result_evidence_ids:
+    - EV-RESULT-T004-ALERTS
+    evidence:
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    - EV-RESULT-T004-ALERTS
+    gaps: []
+  - id: trace-t005-restore
+    acceptance_id: T005
+    surface_type: ui
+    upstream_refs:
+    - SURF-RESTORE
+    - SURF-LAYOUT
+    - SURF-WATCHLIST
+    conclusion: pass
+    command_evidence_ids:
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    result_evidence_ids:
+    - EV-RESULT-T005-RESTORE
+    evidence:
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    - EV-RESULT-T005-RESTORE
+    gaps: []
+  - id: trace-t006-gate
+    acceptance_id: T006
+    surface_type: trace
+    upstream_refs:
+    - SURF-WORKBENCH
+    - SURF-MTS
+    - SURF-ALERTS
+    - SURF-RESTORE
+    conclusion: pass
+    command_evidence_ids:
+    - CMD-VERIFY-BUILD
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    result_evidence_ids:
+    - EV-RESULT-T006-GATE
+    evidence:
+    - CMD-VERIFY-BUILD
+    - CMD-VERIFY-UNIT-REPLAY
+    - CMD-VERIFY-E2E-RERUN
+    - EV-RESULT-T006-GATE
+    gaps: []
+  quality_trace:
+  - quality_id: verify-regression
+    conclusion: pass
+    evidence:
+    - cmd-unit-2026-06-07-05-46-31
+    - cmd-unit-2026-06-07-05-46-38
+    - cmd-e2e-2026-06-07-05-47-19
+    rationale: Build, unit/replay matrix, and E2E all passed in current verify stage.

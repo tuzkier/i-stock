@@ -1,0 +1,784 @@
+{
+  "schema_version": 1,
+  "type": "toolchain_status",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "status": "FAIL",
+  "changed_files": {
+    "total": 344,
+    "scoped_total": 344,
+    "authorized_path_patterns": [],
+    "sources": [
+      "harness-runtime/harness/state/transactions/TX-2026-07-21T104732-552268+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/staging/harness-runtime/harness/stages/20260522-stock-watch-system/interaction-spec/_shared/view-models.ts",
+      "harness-runtime/harness/state/transactions/TX-2026-07-21T104732-552268+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/staging/harness-runtime/harness/work-graph/artifacts/REQ-STOCK-WATCH-SYSTEM/interaction-spec/_shared/view-models.ts",
+      "src/App.tsx",
+      "src/features/chart/ChartSurface.tsx",
+      "src/features/presentation/ScoreBar.tsx",
+      "src/features/presentation/humanize.ts",
+      "src/features/presentation/tone.ts",
+      "src/features/restore/RestoreStatus.tsx",
+      "src/types.ts"
+    ],
+    "tests": [
+      "tests/e2e/gate/acceptance-matrix.spec.ts",
+      "tests/e2e/gate/consistency.spec.ts",
+      "tests/e2e/gate/scope-guard.spec.ts",
+      "tests/e2e/mts/card.spec.ts",
+      "tests/e2e/mts/friendliness.spec.ts",
+      "tests/e2e/restore-layout/resume.spec.ts",
+      "tests/e2e/restore-layout/tone.spec.ts",
+      "tests/e2e/trade-signal/friendliness.spec.ts",
+      "tests/e2e/watchlist/friendliness.spec.ts",
+      "tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts",
+      "tests/e2e/workbench/default.spec.ts",
+      "tests/e2e/workbench/friendliness.spec.ts",
+      "tests/unit/presentation/humanize.spec.ts",
+      "tests/unit/presentation/tone.spec.ts"
+    ],
+    "frontend": []
+  },
+  "test_inventory": {
+    "total": 92,
+    "frontend_test_files": [],
+    "backend_test_files": [],
+    "frontend_has_test_script": false,
+    "frontend_scripts": {},
+    "root_has_test_script": false,
+    "root_scripts": {
+      "dev": "node server/index.js",
+      "build": "tsc --noEmit && vite build",
+      "test:e2e": "NO_PROXY=127.0.0.1,localhost playwright test",
+      "test:signals": "node --test tests/unit/signals/alibaba-trade-signals.spec.ts tests/unit/signals/trade-signals.spec.ts",
+      "backtest:9988": "node scripts/backtest.mjs HK.09988",
+      "backtest:700": "node scripts/backtest.mjs HK.00700",
+      "backtest:3690": "node scripts/backtest.mjs HK.03690",
+      "backtest:981": "node scripts/backtest.mjs HK.00981",
+      "backtest:1810": "node scripts/backtest.mjs HK.01810",
+      "preview": "NODE_ENV=production node server/index.js"
+    }
+  },
+  "obligations": [
+    {
+      "task_id": "T001",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "medium",
+      "surfaces": [
+        "presentation_mapping_layer",
+        "css_token_layer"
+      ],
+      "required_capabilities": [
+        "unit_test",
+        "build_typecheck"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "unit_test",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "build_typecheck",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report"
+      ]
+    },
+    {
+      "task_id": "T002",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "high",
+      "surfaces": [
+        "mts_card_presentation"
+      ],
+      "required_capabilities": [
+        "browser_flow",
+        "user_visible_assertion",
+        "dom_assertion",
+        "build_typecheck"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "browser_flow",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "user_visible_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "build_typecheck",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report"
+      ]
+    },
+    {
+      "task_id": "T003",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "high",
+      "surfaces": [
+        "trade_signal_card_presentation"
+      ],
+      "required_capabilities": [
+        "browser_flow",
+        "user_visible_assertion",
+        "dom_computed_style_assertion",
+        "negative_path"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "browser_flow",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "user_visible_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_computed_style_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "negative_path",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "hierarchy_report"
+      ]
+    },
+    {
+      "task_id": "T004",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "medium",
+      "surfaces": [
+        "watchlist_sidebar_presentation"
+      ],
+      "required_capabilities": [
+        "browser_flow",
+        "user_visible_assertion",
+        "dom_assertion"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "browser_flow",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "user_visible_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report"
+      ]
+    },
+    {
+      "task_id": "T005",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "high",
+      "surfaces": [
+        "top_region_hierarchy",
+        "source_authority_dedup",
+        "price_authority_dedup"
+      ],
+      "required_capabilities": [
+        "browser_flow",
+        "dom_count_assertion",
+        "dom_computed_style_assertion",
+        "user_visible_assertion"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "browser_flow",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_count_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_computed_style_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "user_visible_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "hierarchy_report"
+      ]
+    },
+    {
+      "task_id": "T006",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "high",
+      "surfaces": [
+        "restore_status_presentation",
+        "chart_degradation_notice"
+      ],
+      "required_capabilities": [
+        "browser_flow",
+        "user_visible_assertion",
+        "negative_path",
+        "dom_assertion"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "browser_flow",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "user_visible_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "negative_path",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "restore_states_report"
+      ]
+    },
+    {
+      "task_id": "T007",
+      "obligation_source": "explicit",
+      "inferred_fields": [],
+      "risk_level": "high",
+      "surfaces": [
+        "cross_presentation_consistency",
+        "out_of_scope_zero_change"
+      ],
+      "required_capabilities": [
+        "browser_flow",
+        "user_visible_assertion",
+        "negative_path",
+        "dom_count_assertion",
+        "accessibility_smoke",
+        "regression_diff_guard"
+      ],
+      "satisfied_capabilities": [],
+      "missing_capabilities": [
+        {
+          "capability": "browser_flow",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "user_visible_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "negative_path",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "dom_count_assertion",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "accessibility_smoke",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        },
+        {
+          "capability": "regression_diff_guard",
+          "reason": "tool_missing_or_failed",
+          "selected_tool": null
+        }
+      ],
+      "evidence_required": [
+        "red_report",
+        "green_report",
+        "regression_report",
+        "consistency_report",
+        "axe_report",
+        "scope_guard_report"
+      ]
+    }
+  ],
+  "reports": {
+    "test_result": [
+      {
+        "tool": "pytest",
+        "configured": false,
+        "available": false,
+        "report_paths": [
+          "playwright-report/index.html"
+        ],
+        "runs": [
+          {
+            "tool": "pytest",
+            "category": "test_result",
+            "configured": false,
+            "available": false,
+            "result": {
+              "command": "python3 -m pytest --junitxml=harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/pytest-junit.xml",
+              "status": "fail",
+              "exit_code": 5,
+              "started_at": "2026-07-22T03:35:31.233432+00:00",
+              "ended_at": "2026-07-22T03:35:32.412071+00:00",
+              "duration_seconds": 1.178,
+              "output_excerpt": "/Users/hanbin/Library/Python/3.13/lib/python/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n============================= test session starts ==============================\nplatform darwin -- Python 3.13.2, pytest-8.3.2, pluggy-1.6.0\nrootdir: /Users/hanbin/Workspace/AI/MyInvestment\nplugins: json-report-1.5.0, metadata-3.1.1, asyncio-1.3.0, typeguard-4.4.4, cov-7.0.0, anyio-4.13.0, langsmith-0.5.1\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n- generated xml file: /Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/pytest-junit.xml -\n============================ no tests ran in 0.20s =============================\n"
+            },
+            "report_paths": [
+              "playwright-report/index.html"
+            ]
+          },
+          {
+            "tool": "pytest",
+            "category": "test_result",
+            "configured": false,
+            "available": false,
+            "result": {
+              "command": "python3 -m pytest --json-report --json-report-file=harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/pytest-report.json",
+              "status": "fail",
+              "exit_code": 5,
+              "started_at": "2026-07-22T03:35:32.412115+00:00",
+              "ended_at": "2026-07-22T03:35:32.943049+00:00",
+              "duration_seconds": 0.531,
+              "output_excerpt": "/Users/hanbin/Library/Python/3.13/lib/python/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n============================= test session starts ==============================\nplatform darwin -- Python 3.13.2, pytest-8.3.2, pluggy-1.6.0\nrootdir: /Users/hanbin/Workspace/AI/MyInvestment\nplugins: json-report-1.5.0, metadata-3.1.1, asyncio-1.3.0, typeguard-4.4.4, cov-7.0.0, anyio-4.13.0, langsmith-0.5.1\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\n--------------------------------- JSON report ----------------------------------\nreport saved to: harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/pytest-report.json\n============================ no tests ran in 0.17s =============================\n"
+            },
+            "report_paths": [
+              "playwright-report/index.html"
+            ]
+          }
+        ]
+      }
+    ],
+    "coverage": [
+      {
+        "tool": "coverage.py/pytest-cov",
+        "configured": false,
+        "available": false,
+        "report_paths": [],
+        "runs": [
+          {
+            "tool": "coverage.py/pytest-cov",
+            "category": "coverage",
+            "configured": false,
+            "available": false,
+            "result": {
+              "command": "python3 -m pytest --cov --cov-report=xml:harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/coverage.xml --cov-report=json:harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/coverage.json",
+              "status": "fail",
+              "exit_code": 5,
+              "started_at": "2026-07-22T03:35:32.943089+00:00",
+              "ended_at": "2026-07-22T03:35:34.221823+00:00",
+              "duration_seconds": 1.279,
+              "output_excerpt": "/Users/hanbin/Library/Python/3.13/lib/python/site-packages/pytest_asyncio/plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n/Users/hanbin/Library/Python/3.13/lib/python/site-packages/coverage/control.py:958: CoverageWarning: No data was collected. (no-data-collected); see https://coverage.readthedocs.io/en/7.13.4/messages.html#warning-no-data-collected\n  self._warn(\"No data was collected.\", slug=\"no-data-collected\")\n/Users/hanbin/Library/Python/3.13/lib/python/site-packages/pytest_cov/plugin.py:363: CovReportWarning: Failed to generate report: No data to report.\n\n  warnings.warn(CovReportWarning(message), stacklevel=1)\n============================= test session starts ==============================\nplatform darwin -- Python 3.13.2, pytest-8.3.2, pluggy-1.6.0\nrootdir: /Users/hanbin/Workspace/AI/MyInvestment\nplugins: json-report-1.5.0, metadata-3.1.1, asyncio-1.3.0, typeguard-4.4.4, cov-7.0.0, anyio-4.13.0, langsmith-0.5.1\nasyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 0 items\n\nWARNING: Failed to generate report: No data to report.\n\n\n================================ tests coverage ================================\n_______________ coverage: platform darwin, python 3.13.2-final-0 _______________\n\n============================ no tests ran in 0.38s =============================\n"
+            },
+            "report_paths": []
+          }
+        ]
+      }
+    ],
+    "diff_coverage": [
+      {
+        "tool": "diff-cover",
+        "configured": true,
+        "available": false,
+        "report_paths": [],
+        "runs": [
+          {
+            "tool": "diff-cover",
+            "category": "diff_coverage",
+            "configured": true,
+            "available": false,
+            "result": {
+              "command": "diff-cover harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tools/coverage.xml --compare-branch=HEAD~1",
+              "status": "fail",
+              "exit_code": 127,
+              "started_at": "2026-07-22T03:35:34.221875+00:00",
+              "ended_at": "2026-07-22T03:35:34.229365+00:00",
+              "duration_seconds": 0.008,
+              "output_excerpt": "/bin/sh: diff-cover: command not found\n"
+            },
+            "report_paths": []
+          }
+        ]
+      }
+    ],
+    "mutation": [
+      {
+        "tool": "mutmut",
+        "configured": false,
+        "available": false,
+        "report_paths": [],
+        "runs": [
+          {
+            "tool": "mutmut",
+            "category": "mutation",
+            "configured": false,
+            "available": false,
+            "result": {
+              "command": "mutmut run --paths-to-mutate <changed-python-source>",
+              "status": "fail",
+              "exit_code": 2,
+              "started_at": "2026-07-22T03:35:34.229404+00:00",
+              "ended_at": "2026-07-22T03:35:34.232726+00:00",
+              "duration_seconds": 0.003,
+              "output_excerpt": "/bin/sh: -c: line 0: syntax error near unexpected token `newline'\n/bin/sh: -c: line 0: `mutmut run --paths-to-mutate <changed-python-source>'\n"
+            },
+            "report_paths": []
+          },
+          {
+            "tool": "mutmut",
+            "category": "mutation",
+            "configured": false,
+            "available": false,
+            "result": {
+              "command": "mutmut results",
+              "status": "fail",
+              "exit_code": 127,
+              "started_at": "2026-07-22T03:35:34.232784+00:00",
+              "ended_at": "2026-07-22T03:35:34.236463+00:00",
+              "duration_seconds": 0.004,
+              "output_excerpt": "/bin/sh: mutmut: command not found\n"
+            },
+            "report_paths": []
+          }
+        ]
+      },
+      {
+        "tool": "StrykerJS",
+        "configured": true,
+        "available": true,
+        "report_paths": [],
+        "runs": [
+          {
+            "tool": "StrykerJS",
+            "category": "mutation",
+            "configured": true,
+            "available": true,
+            "result": {
+              "command": "pnpm exec stryker run --incremental",
+              "status": "fail",
+              "exit_code": 254,
+              "started_at": "2026-07-22T03:35:54.680822+00:00",
+              "ended_at": "2026-07-22T03:35:54.828183+00:00",
+              "duration_seconds": 0.147,
+              "output_excerpt": "undefined\n ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command \"stryker\" not found\n\nDid you mean \"pnpm exec parser\"?\n"
+            },
+            "report_paths": []
+          }
+        ]
+      }
+    ],
+    "ui_e2e": [
+      {
+        "tool": "vitest/jest",
+        "configured": true,
+        "available": true,
+        "report_paths": [],
+        "runs": [
+          {
+            "tool": "vitest/jest",
+            "category": "frontend_unit_component",
+            "configured": true,
+            "available": true,
+            "result": {
+              "command": "pnpm --filter @theforce/frontend test -- --reporter=json --coverage",
+              "status": "pass",
+              "exit_code": 0,
+              "started_at": "2026-07-22T03:35:34.236523+00:00",
+              "ended_at": "2026-07-22T03:35:34.540974+00:00",
+              "duration_seconds": 0.304,
+              "output_excerpt": "No projects matched the filters in \"/Users/hanbin/Workspace/AI/MyInvestment\"\n"
+            },
+            "report_paths": []
+          },
+          {
+            "tool": "vitest/jest",
+            "category": "frontend_unit_component",
+            "configured": true,
+            "available": true,
+            "result": {
+              "command": "npm test -- --json --coverage",
+              "status": "fail",
+              "exit_code": 1,
+              "started_at": "2026-07-22T03:35:34.541022+00:00",
+              "ended_at": "2026-07-22T03:35:34.707732+00:00",
+              "duration_seconds": 0.167,
+              "output_excerpt": "npm error Missing script: \"test\"\nnpm error\nnpm error To see a list of scripts, run:\nnpm error   npm run\nnpm error A complete log of this run can be found in: /tmp/.npm/_logs/2026-07-22T03_35_34_659Z-debug-0.log\n"
+            },
+            "report_paths": []
+          }
+        ]
+      },
+      {
+        "tool": "playwright",
+        "configured": true,
+        "available": true,
+        "report_paths": [
+          "playwright-report/index.html"
+        ],
+        "runs": [
+          {
+            "tool": "playwright",
+            "category": "e2e_ui",
+            "configured": true,
+            "available": true,
+            "result": {
+              "command": "pnpm exec playwright test --reporter=json --reporter=junit",
+              "status": "pass",
+              "exit_code": 0,
+              "started_at": "2026-07-22T03:35:34.707793+00:00",
+              "ended_at": "2026-07-22T03:35:54.680754+00:00",
+              "duration_seconds": 19.973,
+              "output_excerpt": "<testsuites id=\"\" name=\"\" tests=\"49\" failures=\"0\" skipped=\"0\" errors=\"0\" time=\"19.544600000000003\">\n<testsuite name=\"alerts/panel.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"3\" failures=\"0\" skipped=\"0\" time=\"1.305\" errors=\"0\">\n<testcase name=\"创建分类提醒后命中可确认并保留历史\" classname=\"alerts/panel.spec.ts\" time=\"0.622\">\n</testcase>\n<testcase name=\"归档 active 标的会暂停绑定提醒并展示暂停说明\" classname=\"alerts/panel.spec.ts\" time=\"0.404\">\n</testcase>\n<testcase name=\"定时提醒在浏览器重开后记录 missed_while_closed 并展示触发历史\" classname=\"alerts/panel.spec.ts\" time=\"0.279\">\n</testcase>\n</testsuite>\n<testsuite name=\"gate/acceptance-matrix.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"5\" failures=\"0\" skipped=\"0\" time=\"1.674\" errors=\"0\">\n<testcase name=\"AC-01 fixture gate covers four-market watchlist and ambiguous input block\" classname=\"gate/acceptance-matrix.spec.ts\" time=\"0.333\">\n</testcase>\n<testcase name=\"AC-02 and AC-03 fixture gate covers source degradation and non-advice MTS\" classname=\"gate/acceptance-matrix.spec.ts\" time=\"0.403\">\n</testcase>\n<testcase name=\"AC-04 fixture gate covers local alert trigger and acknowledgement\" classname=\"gate/acceptance-matrix.spec.ts\" time=\"0.411\">\n</testcase>\n<testcase name=\"AC-05 fixture gate covers browser restore\" classname=\"gate/acceptance-matrix.spec.ts\" time=\"0.274\">\n</testcase>\n<testcase name=\"AC-05 fixture gate covers corrupt layout fallback\" classname=\"gate/acceptance-matrix.spec.ts\" time=\"0.253\">\n</testcase>\n</testsuite>\n<testsuite name=\"gate/consistency.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"3\" failures=\"0\" skipped=\"0\" time=\"0.843\" errors=\"0\">\n<testcase name=\"NEG-01: source-authority / MTS 降级子集 / 交易信号卡三处读同一 domain 门控结果一致降级\" classname=\"gate/consistency.spec.ts\" time=\"0.314\">\n</testcase>\n<testcase name=\"NEG-03: restore-status 与 source-authority 是物理独立的 DOM 元素\" classname=\"gate/consistency.spec.ts\" time=\"0.265\">\n</testcase>\n<testcase name=\"唯一主源计数=1 聚合: source-authority / price-authority 各 toHaveCount(1)\" classname=\"gate/consistency.spec.ts\" time=\"0.264\">\n</testcase>\n</testsuite>\n<testsuite name=\"gate/scope-guard.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"6\" failures=\"0\" skipped=\"0\" time=\"1.643\" errors=\"0\">\n<testcase name=\"AT-0702: 范围外 5 处 .data-notice 零改动守卫 › grep 证据: 三个范围外组件文件仍引用 data-notice 类名（未迁移到 notice--*）\" classname=\"gate/scope-guard.spec.ts\" time=\"0.002\">\n</testcase>\n<testcase name=\"AT-0702: 范围外 5 处 .data-notice 零改动守卫 › styles.css 的 .data-notice 共享定义本体未改（颜色/背景/边框值与 mission 开始前一致）\" classname=\"gate/scope-guard.spec.ts\" time=\"0\">\n</testcase>\n<testcase name=\"AT-0702: 范围外 5 处 .data-notice 零改动守卫 › DOM 验证: LayoutController 渲染的 workbench-selection-summary 仍是 data-notice class（非 notice--*）\" classname=\"gate/scope-guard.spec.ts\" time=\"0.278\">\n</testcase>\n<testcase name=\"AT-0702: 范围外 5 处 .data-notice 零改动守卫 › DOM 验证: AlertRulePanel 空态提示仍是 data-notice class（非 notice--*）\" classname=\"gate/scope-guard.spec.ts\" time=\"0.295\">\n</testcase>\n<testcase name=\"AT-0702: 范围外 5 处 .data-notice 零改动守卫 › DOM 验证: LayoutController 渲染的 workbench-error 分支仍是 data-notice class（非 notice--*）\" classname=\"gate/scope-guard.spec.ts\" time=\"0.241\">\n</testcase>\n<testcase name=\"AT-0702: 范围外 5 处 .data-notice 零改动守卫 › axe 扫描: 主要视图（看盘主流程 + 提醒面板）无新增可访问性 critical/serious 违规\" classname=\"gate/scope-guard.spec.ts\" time=\"0.827\">\n</testcase>\n</testsuite>\n<testsuite name=\"mts/card.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"2\" failures=\"0\" skipped=\"0\" time=\"0.67\" errors=\"0\">\n<testcase name=\"MTS card exposes structured fields and non-advice copy\" classname=\"mts/card.spec.ts\" time=\"0.349\">\n</testcase>\n<testcase name=\"MTS card degrades when source is unavailable\" classname=\"mts/card.spec.ts\" time=\"0.321\">\n</testcase>\n</testsuite>\n<testsuite name=\"mts/friendliness.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"4\" failures=\"0\" skipped=\"0\" time=\"1.083\" errors=\"0\">\n<testcase name=\"AT-0201: MTS 主视图无人话前枚举 token，且有 ScoreBar\" classname=\"mts/friendliness.spec.ts\" time=\"0.283\">\n</testcase>\n<testcase name=\"AT-0201: 来源降级 note 使用 notice--warning 而非 data-notice\" classname=\"mts/friendliness.spec.ts\" time=\"0.239\">\n</testcase>\n<testcase name=\"AT-0202: reason-list 主视图无裸理由码，展开后可见原始 code\" classname=\"mts/friendliness.spec.ts\" time=\"0.281\">\n</testcase>\n<testcase name=\"AT-0202: 来源降级时 invalidators 主视图不直呈 SOURCE_DEGRADED\" classname=\"mts/friendliness.spec.ts\" time=\"0.28\">\n</testcase>\n</testsuite>\n<testsuite name=\"restore-layout/resume.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"4\" failures=\"0\" skipped=\"0\" time=\"1.669\" errors=\"0\">\n<testcase name=\"浏览器重开后恢复 selected symbol、alerts 和 per-symbol dense layout\" classname=\"restore-layout/resume.spec.ts\" time=\"0.282\">\n</testcase>\n<testcase name=\"坏 layout snapshot 只回退默认 focus，页面仍可用\" classname=\"restore-layout/resume.spec.ts\" time=\"0.256\">\n</testcase>\n<testcase name=\"mobile_tab 与活动 tab 会按 symbol 恢复\" classname=\"restore-layout/resume.spec.ts\" time=\"0.267\">\n</testcase>\n<testcase name=\"用户切换布局与移动 tab 后 reload 会按真实写入恢复\" classname=\"restore-layout/resume.spec.ts\" time=\"0.864\">\n</testcase>\n</testsuite>\n<testsuite name=\"restore-layout/tone.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"6\" failures=\"0\" skipped=\"0\" time=\"1.65\" errors=\"0\">\n<testcase name=\"恢复状态四档分色（resolveRestoreTone，经真实 restoreSnapshot/migrateLegacy 恢复路径驱动） › restored 态：不含 notice--warning 也不含 notice--info，class 为 restore-status--normal\" classname=\"restore-layout/tone.spec.ts\" time=\"0.278\">\n</testcase>\n<testcase name=\"恢复状态四档分色（resolveRestoreTone，经真实 restoreSnapshot/migrateLegacy 恢复路径驱动） › default_fallback 态（无 discardedLayoutKeys）：notice--info，不含 notice--warning\" classname=\"restore-layout/tone.spec.ts\" time=\"0.27\">\n</testcase>\n<testcase name=\"恢复状态四档分色（resolveRestoreTone，经真实 restoreSnapshot/migrateLegacy 恢复路径驱动） › partial 态（旧存储迁移）：notice--info，不含 notice--warning\" classname=\"restore-layout/tone.spec.ts\" time=\"0.277\">\n</testcase>\n<testcase name=\"恢复状态四档分色（resolveRestoreTone，经真实 restoreSnapshot/migrateLegacy 恢复路径驱动） › discardedLayoutKeys 非空：即使整体 status 为 default_fallback，仍得到 notice--warning（优先于 info）\" classname=\"restore-layout/tone.spec.ts\" time=\"0.289\">\n</testcase>\n<testcase name=\"恢复状态四档分色（resolveRestoreTone，经真实 restoreSnapshot/migrateLegacy 恢复路径驱动） › restore-status 与 source-authority 是两个独立的 DOM 元素（NEG-03）\" classname=\"restore-layout/tone.spec.ts\" time=\"0.273\">\n</testcase>\n<testcase name=\"chart-degradation-note 迁移到 notice--warning › 行情降级提示使用 notice--warning，不再是 data-notice\" classname=\"restore-layout/tone.spec.ts\" time=\"0.263\">\n</testcase>\n</testsuite>\n<testsuite name=\"trade-signal/friendliness.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"2\" failures=\"0\" skipped=\"0\" time=\"0.673\" errors=\"0\">\n<testcase name=\"AT-0301: 默认关键数字、明细折叠、nonAdvice 常驻\" classname=\"trade-signal/friendliness.spec.ts\" time=\"0.404\">\n</testcase>\n<testcase name=\"AT-0302: 来源降级非 ready 人话化且无回测块\" classname=\"trade-signal/friendliness.spec.ts\" time=\"0.269\">\n</testcase>\n</testsuite>\n<testsuite name=\"watchlist/friendliness.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"2\" failures=\"0\" skipped=\"0\" time=\"0.554\" errors=\"0\">\n<testcase name=\"AT-0401: 侧栏名称+代码一行、价格右对齐、来源小圆点非横幅\" classname=\"watchlist/friendliness.spec.ts\" time=\"0.257\">\n</testcase>\n<testcase name=\"AT-0402: archived 弱化区分 active\" classname=\"watchlist/friendliness.spec.ts\" time=\"0.297\">\n</testcase>\n</testsuite>\n<testsuite name=\"watchlist/t001-watchlist-archive-restore.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"3\" failures=\"0\" skipped=\"0\" time=\"1.795\" errors=\"0\">\n<testcase name=\"归档后暂停提醒，重新加入已归档港股时恢复提醒\" classname=\"watchlist/t001-watchlist-archive-restore.spec.ts\" time=\"0.949\">\n</testcase>\n<testcase name=\"歧义数字输入不会写入 active 自选\" classname=\"watchlist/t001-watchlist-archive-restore.spec.ts\" time=\"0.331\">\n</testcase>\n<testcase name=\"看盘主流程没有自动化可访问性严重违规\" classname=\"watchlist/t001-watchlist-archive-restore.spec.ts\" time=\"0.515\">\n</testcase>\n</testsuite>\n<testsuite name=\"workbench/default.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"7\" failures=\"0\" skipped=\"0\" time=\"2.574\" errors=\"0\">\n<testcase name=\"默认工作台展示主图、成交量、副图、OHLC，并按需进入来源\" classname=\"workbench/default.spec.ts\" time=\"0.294\">\n</testcase>\n<testcase name=\"MTS 解释卡展示结构化字段且不表达投资建议\" classname=\"workbench/default.spec.ts\" time=\"0.35\">\n</testcase>\n<testcase name=\"副图指标切换保持同一标的上下文\" classname=\"workbench/default.spec.ts\" time=\"0.379\">\n</testcase>\n<testcase name=\"数据不足时副图局部降级，不展示伪造读数\" classname=\"workbench/default.spec.ts\" time=\"0.352\">\n</testcase>\n<testcase name=\"demo fallback 来源健康和降级语义穿透到图表、信号与提醒区域\" classname=\"workbench/default.spec.ts\" time=\"0.348\">\n</testcase>\n<testcase name=\"stale 不伪装实时成功，重试失败保留可解释状态\" classname=\"workbench/default.spec.ts\" time=\"0.374\">\n</testcase>\n<testcase name=\"unavailable 来源健康穿透到图表、信号与提醒区域\" classname=\"workbench/default.spec.ts\" time=\"0.477\">\n</testcase>\n</testsuite>\n<testsuite name=\"workbench/friendliness.spec.ts\" timestamp=\"2026-07-22T03:35:37.157Z\" hostname=\"chromium\" tests=\"2\" failures=\"0\" skipped=\"0\" time=\"0.591\" errors=\"0\">\n<testcase name=\"AT-0501: source-authority / price-authority 各计数=1\" classname=\"workbench/friendliness.spec.ts\" time=\"0.252\">\n</testcase>\n<testcase name=\"AT-0502: 标题主位大于控件，切换布局后仍主位；涨跌色≠警告色\" classname=\"workbench/friendliness.spec.ts\" time=\"0.339\">\n</testcase>\n</testsuite>\n</testsuites>\n"
+            },
+            "report_paths": [
+              "playwright-report/index.html"
+            ]
+          }
+        ]
+      }
+    ],
+    "a11y": [],
+    "api_contract": []
+  },
+  "required_evidence": {},
+  "trace_artifacts": [
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/execute/AT-0101-shared-css-baseline.txt",
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/execute/dispatch-AT-0101.yaml",
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/execute/dispatch-AT-0102.yaml",
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/steps.jsonl",
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/tdd/toolchain-status.json"
+  ],
+  "toolchain_signals": [],
+  "missing_capabilities": [
+    {
+      "task_id": "T001",
+      "capability": "unit_test",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T001",
+      "capability": "build_typecheck",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T002",
+      "capability": "browser_flow",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T002",
+      "capability": "user_visible_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T002",
+      "capability": "dom_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T002",
+      "capability": "build_typecheck",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T003",
+      "capability": "browser_flow",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T003",
+      "capability": "user_visible_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T003",
+      "capability": "dom_computed_style_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T003",
+      "capability": "negative_path",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T004",
+      "capability": "browser_flow",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T004",
+      "capability": "user_visible_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T004",
+      "capability": "dom_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T005",
+      "capability": "browser_flow",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T005",
+      "capability": "dom_count_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T005",
+      "capability": "dom_computed_style_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T005",
+      "capability": "user_visible_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T006",
+      "capability": "browser_flow",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T006",
+      "capability": "user_visible_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T006",
+      "capability": "negative_path",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T006",
+      "capability": "dom_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T007",
+      "capability": "browser_flow",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T007",
+      "capability": "user_visible_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T007",
+      "capability": "negative_path",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T007",
+      "capability": "dom_count_assertion",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T007",
+      "capability": "accessibility_smoke",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    },
+    {
+      "task_id": "T007",
+      "capability": "regression_diff_guard",
+      "reason": "tool_missing_or_failed",
+      "selected_tool": null
+    }
+  ],
+  "inferred_obligations": [],
+  "decision_gate_reasons": [],
+  "toolchain_plan_status": "PASS",
+  "toolchain_run_status": "FAIL"
+}

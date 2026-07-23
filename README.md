@@ -15,7 +15,7 @@ npm run dev
 lsof -nP -iTCP:11111 -sTCP:LISTEN
 ```
 
-打开 `http://localhost:5173`。
+打开 `http://localhost:4271`。
 
 ## 股票代码
 

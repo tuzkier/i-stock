@@ -1,0 +1,386 @@
+control_contract:
+  type: intent_contract
+  version: 2
+  mission_id: 20260720-alibaba-trade-signals
+  stage: intake
+  status: ready
+  upstream: []
+  consumers:
+  - discovery
+  - prd
+  - solution
+  - technical_analysis
+  - breakdown
+  - verify
+  - delivery
+  - stage-gate
+  objective:
+    id: OBJ-001
+    statement: 用户在看盘终端打开阿里巴巴港股 HK.09988 时，图表上直接可见由多技术指标组合算法计算的 历史与当前买入/卖出信号标注（买卖方向可区分、与
+      K 线时间对齐），并且该算法附有可复现的 历史回测证据（信号胜率、相对收益等），使规则有效性可被检验；全部信号展示保持「非投资建议」边界。
+  intake_decision:
+    confirmed: true
+    confirmation_source: 用户原话「接下来 我需要你仔细分析 阿里巴巴 的历史k线数据， 然后为阿里巴巴写一个算法 提示我未来适合买入和卖出的点位」+
+      AskUserQuestion 三项确认 （标的=港股 HK.09988；交付形态=集成到看盘终端图表标注；算法路线=多指标组合+历史回测验证）。
+    confirmed_at_or_turn: 本会话用户提出任务并完成三项 AskUserQuestion 确认的回合（2026-07-20）
+  intent_role_analysis:
+    actual_task_goal: 用户在 MyInvestment 看盘终端查看阿里巴巴港股 HK.09988 时，系统能基于历史 K 线数据、 用多技术指标组合算法计算历史与当前的买入/卖出信号，并在图表上直接标注这些点位；
+      算法附历史回测证据（如信号胜率、相对收益）证明规则有效性可被检验。
+    source_materials:
+    - path: src/
+      premise: React 19 + lightweight-charts 5 前端现状，是信号标注的承载界面（事实与约束来源）
+    - path: server/index.js
+      premise: Express 服务提供 /api/chart/:symbol?range=，是 K 线数据进入前端的接口事实
+    - path: server/futud-client.py
+      premise: FutuOpenD (127.0.0.1:11111) 数据链路；支持 range 1d/5d/1mo/3mo/6mo/1y （1y
+        约 260 根日 K，上限 520），构成回测窗口与数据深度的事实上限； 本会话已实测 HK.00700 6mo 返回 144 根日 K，链路健康
+        status=formal
+    - path: harness-runtime/harness/work-graph/nodes/requirements/REQ-STOCK-WATCH-SYSTEM
+        相关节点
+      premise: 多市场股票看盘系统既有需求脉络（已到 breakdown），本任务是其技术信号方向的延伸
+    - path: Work Graph 节点 TASK-STOCK-WATCH-T003（MTS 解释卡、ReasonRegistry 与非投资建议边界，related，未完成）
+      premise: 项目已有「非投资建议边界」既定产品立场，构成本任务 UI 文案与产品边界的验收口径来源
+    agent_instructions:
+    - 「仔细分析阿里巴巴的历史K线数据」——工作方式要求，不进目标、交付物或验收条件
+    process_constraints:
+    - Harness 全流程治理
+    - 默认治理级别「专家确认」
+    - 不用最小实现（MVP）
+    - 文档以中文为主
+    discussion_outputs: []
+    corrections: []
+    execution_confirmation: 用户原话「接下来 我需要你仔细分析 阿里巴巴 的历史k线数据， 然后为阿里巴巴写一个算法 提示我未来适合买入和卖出的点位」；随后经
+      AskUserQuestion 确认三项： 标的=港股 HK.09988；交付形态=集成到看盘终端（图表标注历史与当前买卖信号点）； 算法路线=多指标组合+历史回测验证。
+    excluded_from_objective:
+    - source: 「仔细分析阿里巴巴的历史K线数据」
+      reason: 这是智能体（Agent）工作方式指令；分析动作不构成交付物，其结果体现在算法与回测证据中
+    - source: Harness 全流程治理 / 不用最小实现 / 文档中文为主
+      reason: 流程与治理约束，不是用户要交付的外部结果
+    - source: 本会话环境排障（pyarrow/pycryptodome/protobuf 修复）
+      reason: 环境事实，非本任务目标或产物
+    open_intent_gaps:
+    - id: GAP-01
+      question: 现有前端图表（lightweight-charts 5 + src/ 结构）承载信号标注（markers/overlay）的扩展点与现状
+      source: 现有代码库
+      impact: 影响交互设计与技术设计的落点（信号标注以何种图元、何种数据流接入图表）
+      reason_for_discovery: 需读代码取证而非猜测；intake 阶段只确认任务成立
+      boundary: 只取证不定设计；不得在探索阶段替代完成交互方案或技术设计
+      statement: 因为现有代码库暴露了「图表信号标注扩展点现状未知」的问题，它可能影响交互与技术设计的落点； 任务接入阶段只确认任务成立，探索阶段需要查明
+        lightweight-charts 5 在本项目中的 markers/overlay 承载能力与 src/ 组件结构事实；停止边界是不得替代完成交互设计与技术设计。
+    - id: GAP-02
+      question: 现有系统中 MTS/alerts 概念（sourceHealth.affectedObjects 提及 chart/mts/alerts）与本次信号功能的关系与复用可能
+      source: server 返回结构与 REQ-STOCK-WATCH-SYSTEM 产物
+      impact: 影响方案是否复用既有信号/解释框架（MTS、ReasonRegistry）
+      reason_for_discovery: 既有实现事实未知，不能靠想象判断复用性
+      boundary: 不得直接决定复用与否；复用决策留给 solution 阶段
+      statement: 因为 server 返回结构与既有需求产物暴露了「MTS/alerts 与本次信号功能关系未知」的问题， 它可能影响方案路线是否复用既有信号/解释框架；任务接入阶段只确认任务成立，
+        探索阶段需要查明 MTS/alerts 的既有实现事实与边界；停止边界是不得替代 solution 阶段做出复用决策。
+    - id: GAP-03
+      question: FutuOpenD 可取的 HK.09988 历史深度与数据质量（复权、停牌日、最大回看窗口）
+      source: server/futud-client.py 与 FutuOpenD 实测
+      impact: 决定回测窗口与指标参数默认值的事实上限
+      reason_for_discovery: 数据事实只能实测确认，不能假设
+      boundary: 只确认数据事实；指标参数与回测窗口的取舍留给 prd/solution 阶段
+      statement: 因为数据链路暴露了「HK.09988 可取历史深度与数据质量未知」的问题， 它可能影响回测窗口与指标参数默认值的事实上限；任务接入阶段只确认任务成立，
+        探索阶段需要实测查明复权口径、停牌日处理与最大回看窗口；停止边界是不得替代 prd/solution 做参数取舍。
+    inputs_missing:
+    - graphify 已装未建图（WARN）；discovery 阶段需按 HARD-GATE 处理或记录降级，不影响 intake 确认
+  task_goal_fidelity:
+    objective_source: actual_task_goal
+    deliverables_source: actual_task_goal
+    acceptance_scenarios_source: actual_task_goal
+    work_graph_title_source: actual_task_goal
+    reviewer_notes: ''
+  success_definition:
+    desired_effect: 用户查看 HK.09988 图表即可获得系统化、可解释、可回溯的技术买卖信号参考： 历史信号点直接标注在 K 线上、当前信号状态可见，且信号规则的历史表现有回测证据支撑，
+      用户能据此检验规则是否值得参考，而不被误导为投资建议。
+    deliverables:
+    - id: DEL-01
+      name: HK.09988 多技术指标组合信号算法
+      format: 代码模块（指标计算 + 组合信号规则），指标选型、组合逻辑与参数可追溯、有说明
+      acceptance_link:
+        acceptance:
+        - SCN-02
+        - SCN-03
+    - id: DEL-02
+      name: 看盘终端图表信号标注功能
+      format: 前端功能：HK.09988 图表（lightweight-charts）上渲染历史买入/卖出信号点位与当前信号状态，含非投资建议边界文案
+      acceptance_link:
+        acceptance:
+        - SCN-01
+        - SCN-02
+        - SCN-05
+    - id: DEL-03
+      name: 历史回测证据
+      format: 可复现的回测产物（脚本/模块 + 统计输出）：信号胜率、平均收益、相对买入持有收益等口径明确的统计结果
+      acceptance_link:
+        acceptance:
+        - SCN-04
+    validation_evidence:
+    - id: EVD-01
+      type: command
+      method: 运行 npm run build（tsc --noEmit && vite build），确认 exit code 0
+      proves:
+        note: 辅助证据（必要非充分）：仅证明信号模块与前端集成通过项目既定构建检查；SCN-01/SCN-02 的用户可观察结果由 EVD-03/EVD-04
+          实质承载
+        acceptance:
+        - SCN-01
+        - SCN-02
+    - id: EVD-02
+      type: command
+      method: 运行回测（命令与参数留档），同数据同参数重复运行输出一致的胜率/相对收益统计
+      proves:
+        note: 证明回测证据真实、可复现，统计口径可检验
+        acceptance:
+        - SCN-03
+        - SCN-04
+    - id: EVD-03
+      type: manual_inspection
+      method: 浏览器打开 HK.09988 图表，截图确认历史信号标注、当前信号状态与非投资建议文案同时可见
+      proves:
+        note: 证明用户可观察结果真实存在，且产品边界文案到位
+        acceptance:
+        - SCN-01
+        - SCN-02
+        - SCN-05
+    - id: EVD-04
+      type: test
+      method: 为指标计算与信号规则提供可运行测试（具体测试形态由技术设计阶段确定），确认通过
+      proves:
+        note: 证明指标数值与信号触发逻辑正确，错误实现会被发现
+        acceptance:
+        - SCN-02
+        - SCN-03
+    non_goals:
+    - 个性化投资建议 / 荐股结论（信号仅为技术指标计算结果，保持与 TASK-STOCK-WATCH-T003 一致的非投资建议边界）
+    - 执行任何真实交易 / 下单 / 自动交易
+    - 美股 US.BABA 及其他标的的信号支持（用户已选定仅港股 HK.09988）
+    - 对既有 MTS / alerts 体系的全面改造（是否复用由 discovery / solution 判定）
+    - 分钟级实时推送型信号系统（本次为基于历史 K 线的图表标注形态）
+  user_stories:
+  - id: US-01
+    role: 使用 MyInvestment 看盘终端的个人投资者
+    goal: 在 HK.09988 图表上直接看到算法标注的历史与当前买入/卖出信号
+    value: 不用手工逐一分析指标即可获得系统化、可解释的买卖时机参考
+    story_context:
+      user: 用本地看盘终端跟踪阿里巴巴港股的个人投资者（项目用户本人）
+      problem: 看 K 线时只能靠肉眼和零散指标主观判断买卖时机，缺乏系统化、规则一致、可回溯的信号
+      scenario: 打开看盘终端，切换到 HK.09988，浏览历史 K 线上的信号标注并查看当前信号状态
+      value: 获得可解释、时间对齐、买卖方向清晰的技术信号参考，降低主观判断成本
+      success_metrics:
+      - id: SM-01
+        signal: HK.09988 图表加载后历史买卖信号标注与当前信号状态可见
+        target: 任一支持的 range 下信号点正确渲染，买入/卖出方向可区分，与对应 K 线时间对齐
+    traces_to:
+      ac:
+      - SCN-01
+      - SCN-02
+      - SCN-05
+  - id: US-02
+    role: 希望检验信号规则有效性的同一投资者
+    goal: 查看算法的历史回测证据（胜率、相对收益）
+    value: 判断这套信号规则是否值得作为参考，而不是盲信标注
+    story_context:
+      user: 对技术信号保持怀疑、需要证据才采信的个人投资者
+      problem: 没有回测证据时，图上的买卖标注无法与随机猜测区分，规则有效性不可检验
+      scenario: 在采信图表信号前，查看该算法在 HK.09988 可得历史窗口上的回测统计结果
+      value: 用可复现的历史表现数据决定对信号的信任程度
+      success_metrics:
+      - id: SM-02
+        signal: 回测产物输出信号胜率与相对买入持有收益，且统计口径明确
+        target: 同数据同参数重复运行结果一致（可复现），关键统计项齐全
+    traces_to:
+      ac:
+      - SCN-03
+      - SCN-04
+  scope:
+    in:
+    - id: SCOPE-IN-01
+      statement: 针对港股 HK.09988 的多技术指标组合信号算法（具体指标选型与参数由后续 prd/solution/技术设计阶段确定）
+    - id: SCOPE-IN-02
+      statement: 看盘终端图表上的历史买入/卖出信号标注与当前信号状态展示
+    - id: SCOPE-IN-03
+      statement: 基于 FutuOpenD 可得历史 K 线的回测与证据输出（窗口受数据事实上限约束，见 GAP-03）
+    - id: SCOPE-IN-04
+      statement: 信号展示的非投资建议边界文案（与项目既定立场一致）
+    out:
+    - id: SCOPE-OUT-01
+      statement: 美股 US.BABA 及其他标的的信号支持
+      reason: 用户已明确选定仅港股 HK.09988；多标的泛化另立任务
+    - id: SCOPE-OUT-02
+      statement: 真实交易执行 / 下单 / 自动交易
+      reason: 用户未要求，且属于本项目明确禁止的能力边界
+    - id: SCOPE-OUT-03
+      statement: 个性化投资建议或荐股结论
+      reason: 与 TASK-STOCK-WATCH-T003 既定的非投资建议产品立场冲突
+    - id: SCOPE-OUT-04
+      statement: 既有 MTS / alerts 体系的重构或全面改造
+      reason: 未被真实任务目标覆盖；是否复用由 discovery 取证后在 solution 阶段决策
+    - id: SCOPE-OUT-05
+      statement: 分钟级 / 实时推送型信号系统
+      reason: 用户确认的交付形态是图表标注；数据链路以日 K 为主，实时推送未被授权
+  acceptance_scenarios:
+  - id: SCN-01
+    statement: HK.09988 图表上可见历史买入/卖出信号标注
+    given: 看盘终端已加载 HK.09988 某一支持 range 的历史 K 线，且该窗口内算法产生过信号
+    when: 用户查看该图表
+    then: 历史买入/卖出信号点直接标注在 K 线图上，买卖方向可区分，标注位置与对应 K 线时间对齐
+    verification_required: true
+  - id: SCN-02
+    statement: 当前信号状态可见且随数据可复算
+    given: HK.09988 最新 K 线数据已加载
+    when: 算法对含最新 K 线的数据完成计算
+    then: 界面展示当前信号状态（如买入/卖出/观望），数据更新后重新计算得到一致口径的状态
+    verification_required: true
+  - id: SCN-03
+    statement: 信号由多技术指标组合规则产生，规则可追溯
+    verification_method: 审查算法实现与说明文档：确认信号由不少于两个技术指标的组合规则产生， 指标选型、组合逻辑与参数在代码或文档中可追溯，与回测所用规则一致。
+    verification_required: true
+  - id: SCN-04
+    statement: 算法附可复现的历史回测证据
+    given: FutuOpenD 可获取的 HK.09988 最大历史 K 线窗口（事实上限由 discovery 确认）
+    when: 对该窗口运行回测
+    then: 输出口径明确的统计结果（至少含信号胜率与相对买入持有收益）， 且同数据同参数重复运行结果一致
+    verification_required: true
+  - id: SCN-05
+    statement: 信号展示保持非投资建议边界
+    given: 信号标注与当前信号状态已在 UI 展示
+    when: 用户查看信号标注、状态或其说明文案
+    then: 存在明确的「技术分析提醒，非投资建议」类边界文案，且不出现荐股式 / 承诺收益式措辞
+    verification_required: true
+  autonomy:
+    level: 专家确认
+    governance_risk: medium
+    governance_assessment:
+      hard_triggers: []
+      dimensions:
+        decision_authority:
+          level: medium
+          rationale: 指标组合与回测口径存在取舍空间，需专家/审查员判定，非唯一正确路径
+        reversibility:
+          level: low
+          rationale: 纯代码变更，可回滚；无数据破坏或不可逆外部动作
+        blast_radius:
+          level: medium
+          rationale: 用户可见的新图表功能，触达核心看盘界面，但不影响数据写链路
+        verification_reliability:
+          level: medium
+          rationale: 回测与构建可程序化覆盖，但信号合理性与图表标注正确性需人工抽查
+        data_permission:
+          level: low
+          rationale: 只读既有 FutuOpenD 行情数据，无新增数据权限
+        external_dependency:
+          level: low
+          rationale: 不新增外部服务；FutuOpenD 链路已存在且实测健康
+        agent_authority:
+          level: low
+          rationale: 无 Agent 能力或行动权变化
+        uncertainty:
+          level: medium
+          rationale: 指标选型、回测窗口、图表扩展点均需 discovery/prd/solution 细化（GAP-01~03）
+      scale_signals:
+        change_surface:
+          level: medium
+          rationale: 预计涉及前端图表组件、信号算法模块、回测脚本与文案；规模信号不用于降低核心风险评级
+        user_roles:
+          level: low
+          rationale: 单一个人投资者角色
+        module_span:
+          level: medium
+          rationale: src/ 前端与算法/回测模块跨界协作，可能触及 server 数据口径
+      decision_rule: 无硬触发；核心维度中决策权、影响面、验证可靠性、不确定性均为 medium， 按 medium 核心风险 → governance_risk=medium
+        → autonomy_level=专家确认，与项目默认治理级别一致。
+      user_confirmation_required: true
+      downgrade_or_checkpoint_removal_requires_approval: true
+      checkpoint_adjustment_reason: 在默认 delivery 检查点之外增加 solution_direction：指标组合路线与回测口径需用户确认后再进技术设计；不移除任何默认检查点
+    skippable_stages: []
+    reviewer_pass_sufficient: []
+    human_checkpoints:
+    - solution_direction
+    - delivery
+    escalation_triggers:
+    - scope_change
+    - external_dependency
+    - verification_gap
+  work_graph:
+    primary_nodes:
+    - REQ-ALIBABA-TRADE-SIGNALS
+    related_nodes:
+    - REQ-STOCK-WATCH-SYSTEM
+    - TASK-STOCK-WATCH-T003
+    operation: advance_stage
+    from_lane: requirement-lane
+    to_lane: requirement-lane
+    board: harness-runtime/harness/work-graph/boards/main.yaml
+  role_policy:
+    stage: intake
+    required_execution_roles:
+    - mission-framing-expert
+    required_review_roles:
+    - mission-contract-effectiveness-reviewer
+    conditional_roles: []
+  execution_result:
+    id: EXE-INTAKE-001
+    role: mission-framing-expert
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/missions/20260720-alibaba-trade-signals/mission-contract.md
+      work_graph_node: ''
+    fulfilled_obligations: []
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+  - id: OBL-INTAKE-001
+    mission_id: 20260720-alibaba-trade-signals
+    type: correctness
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - mission-contract-effectiveness-reviewer
+    blocking: true
+    source: inferred
+  role_verdicts:
+  - &id001
+    id: RV-mission-contract-effectiveness-reviewer-1
+    role: mission-contract-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-INTAKE-001
+    review_basis:
+    - /Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/missions/20260720-alibaba-trade-signals/contracts/mission-contract.contract.yaml
+    summary: Round2 PASS：round1 四条blocking(切片related_nodes/可跳过阶段矛盾/prd空override/节点标题)与minor(EVD-01降辅助)均修复落地，三方一致无新断链；task_goal_fidelity确认『未来点位提示』落为『历史+当前信号标注+回测证据』系用户亲选形态的忠实承载非漂移
+    dispatch:
+      subagent_id: accfa1d6a296ff074
+      model: claude-fable-5
+      execution_mode: spawn_agent
+      started_at: '2026-07-20T21:11:50.458126+08:00'
+      completed_at: '2026-07-20T21:11:50.458126+08:00'
+  effectiveness_review:
+    rounds_used: 1
+    max_rounds: 3
+    last_verdict: ''
+    rounds:
+    - round: 1
+      timestamp: '2026-07-20T21:11:50.458126+08:00'
+      verdicts:
+      - *id001
+  role_policy_overrides: {}
+  work_graph_seed_candidates:
+  - node: REQ-ALIBABA-TRADE-SIGNALS
+    type: requirement
+    title: 阿里巴巴 HK.09988 图表买卖信号标注与回测验证
+    title_rationale: 标题来自真实任务目标（图表可见信号 + 回测证据），不使用「分析 / 接入 / 推进」等工作动作
+    association_clues:
+    - REQ-STOCK-WATCH-SYSTEM：本任务是既有看盘系统在技术信号方向的延伸，应建立 related 关联而非并入
+    - TASK-STOCK-WATCH-T003：非投资建议边界立场来源，related（未完成，不构成本任务前置阻塞，但 SCN-05 口径与其一致）
+    duplication_conflict_risk: 与 REQ-STOCK-WATCH-SYSTEM 中「综合买卖信号」能力存在概念重叠（ARCH-003
+      要求信号向 MTS 演进）； 需在 discovery/solution 阶段明确本任务与既有信号体系的边界，避免两套信号口径并行（见 GAP-02）。

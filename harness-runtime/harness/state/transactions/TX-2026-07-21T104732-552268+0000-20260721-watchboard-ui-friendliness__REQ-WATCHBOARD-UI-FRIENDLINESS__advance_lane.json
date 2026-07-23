@@ -1,0 +1,44 @@
+{
+  "transaction_id": "TX-2026-07-21T104732-552268+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane",
+  "status": "failed",
+  "started_at": "2026-07-21T10:47:32.552432+00:00",
+  "ended_at": "2026-07-21T10:47:32.748248+00:00",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "operation_id": "20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-07-21T104732-552268+0000-20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmpcr5i404y.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/indexes/by-lane.yaml",
+        "harness-runtime/harness/work-graph/nodes/requirements/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane.yaml",
+        "harness-runtime/harness/work-graph/trees/REQ-WATCHBOARD-UI-FRIENDLINESS.yaml"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "FAIL",
+      "findings": [
+        {
+          "level": "FAIL",
+          "code": "lane_kind_not_accepted",
+          "message": "REQ-WATCHBOARD-UI-FRIENDLINESS kind requirement is in lane development-lane, but lane accepts only: task, bug"
+        }
+      ]
+    }
+  ],
+  "rollback": {
+    "snapshots": []
+  }
+}

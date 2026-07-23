@@ -1,0 +1,99 @@
+id: REQ-WATCHBOARD-UI-FRIENDLINESS
+kind: requirement
+title: 看盘界面友好化改造（状态色语义/术语人话化/信息层级）
+lane: development-lane
+status: ready
+stage: execute
+inputs: []
+outputs: []
+relations: {}
+updated_at: '2026-07-21T10:47:32.635361+00:00'
+trace:
+  created_by_mission: 20260721-watchboard-ui-friendliness
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane
+artifact:
+  node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+  artifact_set_id: AS--breakdown-v1
+  artifact_version: v1
+  promoted_by_mission: 20260721-watchboard-ui-friendliness
+  artifact_refs:
+  - artifact_id: 20260721-watchboard-ui-friendliness:execution-brief
+    role: execution-brief
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    kind: text
+  history:
+  - node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+    artifact_set_id: AS--prd-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-definition
+      role: product-definition
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-evidence
+      role: product-evidence
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-evidence.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-domain-model
+      role: product-domain-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-domain-model.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:business-object-analysis
+      role: business-object-analysis
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/business-object-analysis.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:use-case-model
+      role: use-case-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:acceptance-scenarios
+      role: acceptance-scenarios
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:scope-strategy
+      role: scope-strategy
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/scope-strategy.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:delta-specs
+      role: delta-spec
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs
+      kind: text
+  - node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+    artifact_set_id: AS--prd-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-definition
+      role: product-definition
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-evidence
+      role: product-evidence
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-evidence.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-domain-model
+      role: product-domain-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-domain-model.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:business-object-analysis
+      role: business-object-analysis
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/business-object-analysis.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:use-case-model
+      role: use-case-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:acceptance-scenarios
+      role: acceptance-scenarios
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:scope-strategy
+      role: scope-strategy
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/scope-strategy.md
+      kind: text
+    - artifact_id: 20260721-watchboard-ui-friendliness:delta-specs
+      role: delta-spec
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs
+      kind: text

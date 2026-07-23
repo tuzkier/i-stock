@@ -1,0 +1,8 @@
+operation_id: 20260522-stock-watch-system__TASK-STOCK-WATCH-T001__advance_lane
+type: advance_lane
+node_id: TASK-STOCK-WATCH-T001
+mission_id: 20260522-stock-watch-system
+from_lane: verification-lane
+to_lane: delivery-lane
+to_stage: delivery
+status: ready

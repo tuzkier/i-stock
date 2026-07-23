@@ -1,0 +1,73 @@
+id: TASK-WATCHBOARD-UI-T001
+kind: task
+title: 四档语义色 token + 只读呈现映射层地基（隔离 SR-01 爆炸半径）
+lane: delivery-lane
+stage: delivery
+status: ready
+parent_task_id: T001
+execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- AT-0101
+- AT-0102
+- AT-0103
+dependencies: []
+inputs:
+- REQ-WATCHBOARD-UI-FRIENDLINESS
+outputs: []
+relations:
+  split_from: REQ-WATCHBOARD-UI-FRIENDLINESS
+updated_at: '2026-07-22T09:46:30.909312+00:00'
+trace:
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__batch_advance_lane__1
+specs:
+  consumes:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    requirement: 状态色语义分档忠实呈现
+    scenario: 负向评分与来源故障色物理区分
+    evidence:
+      implementation_refs:
+      - src/features/presentation/tone.ts
+      - src/styles.css
+      test_refs:
+      - tests/unit/presentation/tone.spec.ts
+artifact:
+  node_id: TASK-WATCHBOARD-UI-T001
+  artifact_version: v1
+  promoted_by_mission: 20260721-watchboard-ui-friendliness
+  source_stage_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/verification-report.md
+  canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-WATCHBOARD-UI-T001/verification-report.md
+  source_contract_artifact: ''
+  canonical_contract: ''
+  supplementary_artifacts: []
+  artifact_state:
+    status: accepted
+    accepted_by_mission: 20260721-watchboard-ui-friendliness
+    accepted_at: '2026-07-22T09:46:30.942213+00:00'
+    supersedes: []
+    superseded_by: null
+  history:
+  - node_id: TASK-WATCHBOARD-UI-T001
+    artifact_set_id: AS--execute-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:execution-result
+      role: execution-result
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/execute/execution-result.md
+      kind: text
+  - node_id: TASK-WATCHBOARD-UI-T001
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    source_stage_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/code-review.md
+    canonical_artifact: harness-runtime/harness/work-graph/artifacts/TASK-WATCHBOARD-UI-T001/code-review.md
+    source_contract_artifact: ''
+    canonical_contract: ''
+    supplementary_artifacts: []
+    artifact_state:
+      status: accepted
+      accepted_by_mission: 20260721-watchboard-ui-friendliness
+      accepted_at: '2026-07-22T05:01:54.853861+00:00'
+      supersedes: []
+      superseded_by: null

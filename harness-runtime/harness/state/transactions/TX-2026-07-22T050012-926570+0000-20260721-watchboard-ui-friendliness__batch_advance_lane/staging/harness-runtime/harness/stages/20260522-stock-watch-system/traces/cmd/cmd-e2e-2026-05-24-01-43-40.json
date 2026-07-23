@@ -1,0 +1,14 @@
+{
+  "id": "cmd-e2e-2026-05-24-01-43-40",
+  "kind": "command",
+  "layer": "e2e",
+  "command": "npx playwright test harness-runtime/harness/traces/20260522-stock-watch-system/verify-t001-ui-evidence.spec.ts --reporter=list",
+  "cwd": "/Users/hanbin/Workspace/AI/MyInvestment",
+  "exit_code": 1,
+  "started_at": "2026-05-24T01:43:40.536452+00:00",
+  "ended_at": "2026-05-24T01:44:41.519963+00:00",
+  "result": "fail",
+  "stdout": "Error: Timed out waiting 60000ms from config.webServer.\n\n",
+  "stderr": "\u001b[2m[WebServer] \u001b[22m(node:24649) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n\u001b[2m[WebServer] \u001b[22m(Use `node --trace-warnings ...` to show where the warning was created)\n\u001b[2m[WebServer] \u001b[22mWebSocket server error: Port 24678 is already in use\n",
+  "artifact": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260522-stock-watch-system/traces/cmd/cmd-e2e-2026-05-24-01-43-40.json"
+}

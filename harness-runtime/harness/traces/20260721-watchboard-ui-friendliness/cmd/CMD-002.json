@@ -1,0 +1,14 @@
+{
+  "id": "CMD-002",
+  "kind": "test",
+  "command": "node --test tests/unit/presentation/tone.spec.ts tests/unit/presentation/humanize.spec.ts && npx playwright test",
+  "cwd": "/Users/hanbin/Workspace/AI/MyInvestment",
+  "exit_code": 0,
+  "started_at": "2026-07-22T04:59:02+00:00",
+  "ended_at": "2026-07-22T04:59:25+00:00",
+  "result": "pass",
+  "summary": "unit 35/35 pass, e2e 50/50 pass, 0 failed, 0 skipped",
+  "artifact": "",
+  "schema_version": 1,
+  "stdout_excerpt_path": "/tmp/wb-e2e-test-output.log"
+}

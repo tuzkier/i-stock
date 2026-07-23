@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "stage": "intake",
+  "operation": "advance_stage",
+  "from_stage": "intake",
+  "to_stage": "intake",
+  "decision": "continue",
+  "gate_effect": "allow",
+  "contract_check": {
+    "status": "PASS",
+    "artifact": "harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/contracts/mission-contract.contract.yaml",
+    "contract_type": "intent_contract",
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "contract_valid",
+        "message": "Control Contract integrity checks passed"
+      }
+    ]
+  },
+  "artifacts": {
+    "stage_artifact": "harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md",
+    "contract_artifact": "harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/contracts/mission-contract.contract.yaml"
+  },
+  "control_reports": {
+    "status": "PASS",
+    "controls": [],
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "control_reports_valid",
+        "message": "Control-plane reports allow Stage Gate to continue",
+        "path": ""
+      }
+    ]
+  },
+  "required_checkpoints": [],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [],
+    "approved_checkpoints": [],
+    "missing_checkpoints": [],
+    "approval_ids": {},
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260721-watchboard-ui-friendliness.yaml",
+    "primary_nodes": [
+      "REQ-WATCHBOARD-UI-FRIENDLINESS"
+    ],
+    "related_nodes": [],
+    "lane": "requirement-lane",
+    "stage": "intake",
+    "operation": "advance_stage"
+  },
+  "ai_interpretation": "intake artifact gate self-check after reviewer PASS (round 2), role_verdict completed"
+}

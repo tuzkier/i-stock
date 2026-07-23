@@ -1,0 +1,71 @@
+{"event": "log-init", "mission_id": "20260721-watchboard-ui-friendliness", "stage": "intake", "timestamp": "2026-07-21T14:10:59.141080+08:00"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-1", "timestamp": "2026-07-21T14:10:59.236774+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-1", "timestamp": "2026-07-21T14:13:05.386211+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-2", "timestamp": "2026-07-21T14:13:05.470442+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-2", "timestamp": "2026-07-21T14:18:32.285070+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-3", "timestamp": "2026-07-21T14:18:32.380122+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-3", "timestamp": "2026-07-21T14:18:32.470718+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-4", "timestamp": "2026-07-21T14:18:32.569797+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-4", "timestamp": "2026-07-21T14:21:24.911935+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-5", "timestamp": "2026-07-21T14:21:24.993641+08:00"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-5-review", "timestamp": "2026-07-21T14:21:25.074313+08:00", "rounds": 1}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-5-review", "timestamp": "2026-07-21T14:32:58.695261+08:00", "rounds": 2, "status": "pass"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-5", "timestamp": "2026-07-21T14:32:58.797353+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-6", "timestamp": "2026-07-21T14:32:58.884173+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-6", "timestamp": "2026-07-21T14:42:17.632311+08:00", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "stage-exit", "timestamp": "2026-07-21T14:42:17.716355+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "discovery-skip", "timestamp": "2026-07-21T14:45:04.215256+08:00"}
+{"event": "stage-init", "mission_id": "20260721-watchboard-ui-friendliness", "stage": "prd", "timestamp": "2026-07-21T14:46:24.433239+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "phase-2", "timestamp": "2026-07-21T16:06:55.151717+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "interaction-skip", "timestamp": "2026-07-21T16:07:11.865353+08:00"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "interaction-skip", "timestamp": "2026-07-21T16:07:11.989118+08:00", "status": "pass"}
+{"event": "stage-init", "mission_id": "20260721-watchboard-ui-friendliness", "stage": "technical_analysis", "timestamp": "2026-07-21T16:43:31.185931+08:00"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0101", "timestamp": "2026-07-21T20:05:29.049181+08:00", "note": "styles.css 四档语义色 token + notice variant + score tone + score-bar"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0101", "timestamp": "2026-07-21T20:13:18.471421+08:00", "note": "CSS tokens + notice/score classes; build 0; NO_SHARED_CHANGE", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0102", "timestamp": "2026-07-21T20:13:30.719366+08:00", "note": "Tone + resolve*Tone + tone.spec TDD"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0102", "timestamp": "2026-07-21T20:16:30.289959+08:00", "note": "Tone + tone.ts + tone.spec TDD"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0101", "timestamp": "2026-07-21T20:20:29.055484+08:00", "note": "styles.css 四档语义色 token + notice/score 类"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0101", "timestamp": "2026-07-21T20:20:55.490306+08:00", "note": "CSS token/notice/tone/score-bar 已就位；NO_SHARED_CHANGE；build 待同批确认", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0102", "timestamp": "2026-07-21T20:20:55.574765+08:00", "note": "tone.ts 映射层（已有实现，验证收口）"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0102", "timestamp": "2026-07-21T20:20:55.659684+08:00", "note": "tone.spec 22/22 pass + Tone 类型就位", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0103", "timestamp": "2026-07-21T20:21:27.713265+08:00", "note": "humanize.ts 人话映射 + 单测 TDD"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0103", "timestamp": "2026-07-21T20:22:44.913387+08:00", "note": "humanize 12/12 + presentation 36/36 + build exit 0", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0201", "timestamp": "2026-07-21T20:28:36.227816+08:00", "note": "ScoreBar + mts-card 人话化折叠 + notice 迁移"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0201", "timestamp": "2026-07-21T20:47:34.195949+08:00", "note": "ScoreBar+折叠+notice--warning；mts E2E 4/4", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0202", "timestamp": "2026-07-21T20:47:34.572347+08:00", "note": "reasons+invalidators 双处人话化"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0202", "timestamp": "2026-07-21T20:49:59.320104+08:00", "note": "reason 双处人话化+折叠；mts E2E 6/6；build 0", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0301", "timestamp": "2026-07-21T21:17:54.624402+08:00", "note": "交易信号卡主次层级+回测折叠+nonAdvice常驻"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0301", "timestamp": "2026-07-21T21:19:43.277428+08:00", "note": "交易信号卡主次层级+回测折叠+nonAdvice常驻"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0301", "timestamp": "2026-07-21T21:33:29.877791+08:00", "note": "信号卡折叠+KPI+nonAdvice；trade-signal E2E 2/2", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0302", "timestamp": "2026-07-21T21:33:30.364747+08:00", "note": "非ready人话化"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0302", "timestamp": "2026-07-21T21:33:30.915240+08:00", "note": "humanizeTradeStatus+无回测块；E2E 绿", "status": "pass"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0301", "timestamp": "2026-07-21T21:37:47.030493+08:00", "note": "信号卡折叠+KPI+nonAdvice；trade-signal E2E 2/2", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0302", "timestamp": "2026-07-21T21:37:47.460095+08:00", "note": "非ready人话化"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0302", "timestamp": "2026-07-21T21:37:47.981453+08:00", "note": "humanizeTradeStatus+无回测块；E2E 绿", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0401", "timestamp": "2026-07-21T22:22:10.776340+08:00", "note": "侧栏结构+小圆点"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0401", "timestamp": "2026-07-21T22:22:10.989381+08:00", "note": "名称代码一行+价格右齐+来源小圆点；watchlist E2E 绿", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0402", "timestamp": "2026-07-21T22:22:11.243688+08:00", "note": "archived弱化"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0402", "timestamp": "2026-07-21T22:22:11.448015+08:00", "note": "archived opacity弱化+截图；E2E 绿", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0401", "timestamp": "2026-07-21T22:22:45.124393+08:00", "note": "侧栏结构+小圆点"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0401", "timestamp": "2026-07-21T22:22:45.295473+08:00", "note": "名称代码一行+价格右齐+来源小圆点；watchlist E2E 绿", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0402", "timestamp": "2026-07-21T22:22:45.471911+08:00", "note": "archived弱化"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0402", "timestamp": "2026-07-21T22:22:45.639513+08:00", "note": "archived opacity弱化+截图；E2E 绿", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:36:45.866953+08:00", "note": "source/price authority"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:36:46.044135+08:00", "note": "计数=1；workbench E2E", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:36:46.217962+08:00", "note": "顶部层级 CSS"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:36:46.412413+08:00", "note": "标题主位+控件降级；LayoutController 未改", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:37:30.076081+08:00", "note": "source/price authority"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:37:30.266302+08:00", "note": "source-authority+price-authority 计数=1；workbench E2E", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:37:30.441577+08:00", "note": "顶部层级 CSS"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:37:30.649300+08:00", "note": "h2主位+控件降级；LayoutController未改", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:38:04.828171+08:00", "note": "source/price authority"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:38:05.025670+08:00", "note": "source-authority+price-authority 计数=1；workbench E2E", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:38:05.217885+08:00", "note": "顶部层级 CSS"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:38:05.391518+08:00", "note": "h2主位+控件降级；LayoutController未改", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:38:52.570711+08:00", "note": "source/price authority"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0501", "timestamp": "2026-07-21T22:38:52.750988+08:00", "note": "source-authority+price-authority 计数=1；workbench E2E", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:38:52.917506+08:00", "note": "顶部层级 CSS"}
+{"event": "step-exit", "mission_id": "20260721-watchboard-ui-friendliness", "step": "AT-0502", "timestamp": "2026-07-21T22:38:53.068749+08:00", "note": "h2主位+控件降级；LayoutController未改", "status": "pass"}
+{"event": "stage-init", "mission_id": "20260721-watchboard-ui-friendliness", "stage": "code-review", "timestamp": "2026-07-22T11:34:56.881887+08:00"}
+{"event": "round-enter", "mission_id": "20260721-watchboard-ui-friendliness", "round": 1, "timestamp": "2026-07-22T11:35:01.748337+08:00"}
+{"event": "stage-init", "mission_id": "20260721-watchboard-ui-friendliness", "stage": "verify", "timestamp": "2026-07-22T13:03:54.414391+08:00"}

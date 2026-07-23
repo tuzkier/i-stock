@@ -1,0 +1,10 @@
+schema_version: 1
+generated: true
+root: REQ-ALIBABA-TRADE-SIGNALS
+tree:
+- id: REQ-ALIBABA-TRADE-SIGNALS
+  kind: requirement
+  title: 阿里巴巴 HK.09988 图表买卖信号标注与回测验证
+  lane: requirement-lane
+  status: active
+  children: []

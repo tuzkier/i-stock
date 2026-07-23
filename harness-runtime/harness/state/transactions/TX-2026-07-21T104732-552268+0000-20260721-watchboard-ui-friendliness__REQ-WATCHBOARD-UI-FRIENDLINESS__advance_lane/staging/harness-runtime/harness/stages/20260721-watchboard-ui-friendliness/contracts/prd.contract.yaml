@@ -1,0 +1,677 @@
+control_contract:
+  type: behaviour_contract
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: prd
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+    sections:
+    - User Stories
+    - Acceptance Scenarios
+    - Scope In
+    - Scope Out
+  consumers:
+  - design
+  - breakdown
+  - execute
+  - code-review
+  - verify
+  - stage-gate
+  work_graph_artifact:
+    node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+    artifact_set_id: AS--prd-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-definition
+      role: product-definition
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-evidence
+      role: product-evidence
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-evidence.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-domain-model
+      role: product-domain-model
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-domain-model.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:business-object-analysis
+      role: business-object-analysis
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/business-object-analysis.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:use-case-model
+      role: use-case-model
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:acceptance-scenarios
+      role: acceptance-scenarios
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:scope-strategy
+      role: scope-strategy
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/scope-strategy.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:delta-specs
+      role: delta-spec
+      required: true
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs
+      path_glob: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/*/spec.md
+  execution_result: null
+  execution_results:
+  - id: EXR-PRD-001
+    stage: prd
+    role: senior-product-expert
+    status: DONE
+    produced_artifacts:
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-definition
+      role: product-definition
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-evidence
+      role: product-evidence
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-evidence.md
+    - artifact_id: 20260721-watchboard-ui-friendliness:product-domain-model
+      role: product-domain-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-domain-model.md
+  product_definition_package:
+    main:
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+      role: senior-product-expert
+    artifacts:
+    - id: product-definition
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+      role: senior-product-expert
+      required: true
+    - id: product-evidence
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-evidence.md
+      role: senior-product-expert
+      required: true
+    - id: product-domain-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-domain-model.md
+      role: senior-product-expert
+      required: true
+    - id: business-object-analysis
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/business-object-analysis.md
+      role: business-domain-modeler
+      required: true
+    - id: use-case-model
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+      role: use-case-modeler
+      required: true
+    - id: acceptance-scenarios
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+      role: acceptance-scenario-designer
+      required: true
+    - id: scope-strategy
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/scope-strategy.md
+      role: product-scope-strategist
+      required: true
+  domain_model:
+    bounded_contexts: []
+    aggregates: []
+    commands: []
+    events: []
+    invariants: []
+    state_machines: []
+    permission_rules: []
+    modeling_risks: []
+  obligations:
+  - id: HINGE-business-object-analysis
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: hinge_review
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - product-definition-reviewer
+    blocking: true
+    source: hinge
+  - id: HINGE-use-case-model
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: hinge_review
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - product-definition-reviewer
+    blocking: true
+    source: hinge
+  - id: OBL-PRD-001
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: correctness
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      - SCN-03
+      - SCN-04
+      - SCN-05
+      - SCN-06
+      - SCN-07
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - product-definition-reviewer
+    blocking: true
+    source: inferred
+  role_verdicts:
+  - &id001
+    id: RV-product-definition-reviewer-1
+    role: product-definition-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - HINGE-business-object-analysis
+    review_basis:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/business-object-analysis.md
+    summary: B枢纽审查PASS：9对象/8状态机源码逐行核验，SourceStatus三档+negative评分vs真异常分色领域依据成立
+    dispatch:
+      subagent_id: a42628e122b1ca64c
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T16:04:38.859584+08:00'
+      completed_at: '2026-07-21T16:04:38.859584+08:00'
+  - &id002
+    id: RV-product-definition-reviewer-2
+    role: product-definition-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - HINGE-use-case-model
+    review_basis:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+    summary: C枢纽审查PASS：6SUC/7UIC覆盖SCN-01~07闭环，negative与来源故障分色/恢复态不显黄条已承载
+    dispatch:
+      subagent_id: a676e69458cac89cc
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T16:04:39.006355+08:00'
+      completed_at: '2026-07-21T16:04:39.006355+08:00'
+  - &id003
+    id: RV-product-definition-reviewer-3
+    role: product-definition-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-PRD-001
+    review_basis:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+    summary: 末尾全量审查2轮PASS：12不变量逐条确认，2处ID错标已inline修复复核，产品定义包完备自洽可被solution消费
+    dispatch:
+      subagent_id: a9cf587a0d1cbf967
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T16:04:53.598273+08:00'
+      completed_at: '2026-07-21T16:04:53.598273+08:00'
+  covers_intent:
+    user_stories:
+    - US-01
+    - US-02
+    - US-03
+    - US-04
+    - US-05
+    - US-06
+    - US-07
+    acceptance_scenarios:
+    - SCN-01
+    - SCN-02
+    - SCN-03
+    - SCN-04
+    - SCN-05
+    - SCN-06
+    - SCN-07
+  user_story_mapping:
+  - story_id: US-01
+    journeys:
+    - Journey-01
+    behavior_specs:
+    - CAP-01
+    acceptance_scenarios:
+    - SCN-01
+  - story_id: US-02
+    journeys:
+    - Journey-02
+    behavior_specs:
+    - CAP-02
+    acceptance_scenarios:
+    - SCN-02
+  requirement_trace: []
+  acceptance_trace: []
+  behavior_specs:
+  - id: CAP-01
+    capability: watchboard-presentation
+    traces_to:
+      acceptance:
+      - SCN-01
+      - SCN-02
+      - SCN-03
+      - SCN-04
+      - SCN-05
+      - SCN-06
+      - SCN-07
+  quality_runtime_constraints: []
+  business_rules: []
+  product_metrics: []
+  dependencies: []
+  risks: []
+  capabilities:
+  - id: watchboard-presentation
+    name: 看盘界面呈现忠实性
+    change_type: added
+    status: draft
+    confidence_from_discovery: UPSTREAM_SKIPPED
+    delta_spec: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    requirement_ids:
+    - CAP-01
+    scenario_ids:
+    - SCN-01
+    - SCN-02
+    - SCN-03
+    - SCN-04
+    - SCN-05
+    - SCN-06
+    - SCN-07
+  agent_capability_requirements: []
+  effectiveness_review:
+    rounds_used: 3
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+    rounds:
+    - round: 1
+      timestamp: '2026-07-21T16:04:38.859584+08:00'
+      verdicts:
+      - *id001
+    - round: 2
+      timestamp: '2026-07-21T16:04:39.006355+08:00'
+      verdicts:
+      - *id002
+    - round: 3
+      timestamp: '2026-07-21T16:04:53.598273+08:00'
+      verdicts:
+      - *id003
+  objective:
+    id: OBJ-001
+    statement: 看盘终端界面完成友好化改造：状态色语义归位、内部枚举人话化/折叠、重复信息收敛到唯一主源、 顶部信息重排、信息层级建立、侧栏扫读优化、交易信号卡密度优化，用户打开界面即可清晰扫读主看信息、
+      不再被误导性警告色和原始枚举干扰。
+  user_stories:
+  - id: US-01
+    role: 看盘用户
+    goal: 在界面上只看到真正异常时才出现的警告色
+    value: 不被『正常态被染成黄色警告』误导，快速判断哪里真的需要关注
+    story_context:
+      user: 日常盯多市场自选股的个人看盘用户
+      problem: 当前 formal/已恢复/snapshot_missing 等正常态被渲染成黄色警告横幅，警告色失去信号意义
+      scenario: 用户打开某标的，来源正常、布局正常，界面应保持中性；仅当来源 stale/不可用或布局回退时才出现警告色
+      value: 警告色恢复『真异常』语义，降低误判和焦虑
+      success_metrics:
+      - id: SM-01
+        signal: 正常态界面不出现黄色警告横幅；真实异常态出现警告色
+        target: 正常态 0 处警告色，异常态可见警告色
+    traces_to:
+      ac:
+      - SCN-01
+  - id: US-02
+    role: 看盘用户
+    goal: 看到的是人话描述与可读评分，而不是原始枚举和理由代码
+    value: 不需要懂内部技术命名就能理解信号含义
+    story_context:
+      user: 不熟悉系统内部枚举命名的看盘用户
+      problem: trend_state/mts_score/score_band/signal_type/alert_level 与 TREND_ABOVE_EMA
+        等代码直接暴露在主视图
+      scenario: 用户查看某标的信号，主视图呈现人话描述与进度条评分；需要细节时展开详情/调试区看原始字段
+      value: 降低理解门槛，同时保留可查证的技术细节
+      success_metrics:
+      - id: SM-02
+        signal: 主视图不出现原始枚举/理由代码；评分以进度条呈现；原始字段收进可折叠区
+        target: 主视图 0 处裸枚举；评分有进度条呈现
+    traces_to:
+      ac:
+      - SCN-02
+  - id: US-03
+    role: 看盘用户
+    goal: 同一条信息（来源状态、价格/涨跌）在界面只看到一次权威呈现
+    value: 减少重复噪音，扫读更快
+    story_context:
+      user: 需要快速扫读界面的看盘用户
+      problem: 来源状态与价格/涨跌当前在侧栏/标题黄条/图表角标/指标条等 3~5 处重复
+      scenario: 用户扫读某标的，来源状态与价格/涨跌各只在唯一主源呈现
+      value: 信息不冗余，注意力聚焦
+      success_metrics:
+      - id: SM-03
+        signal: 来源状态、价格/涨跌在界面各只保留 1 处权威呈现
+        target: 各信息类型重复呈现点收敛到 1
+    traces_to:
+      ac:
+      - SCN-03
+  - id: US-04
+    role: 看盘用户
+    goal: 打开标的时一眼看到标题主位，操作控件不抢视线
+    value: 先定位『看的是谁』，再做周期/视图操作
+    story_context:
+      user: 在多标的间切换查看的看盘用户
+      problem: 周期切换与视图切换与大标题抢视觉焦点，顶部信息层级不清
+      scenario: 用户打开某标的，标题独占顶部主位；周期/视图切换降级右对齐
+      value: 顶部视觉动线清晰，先识别标的再操作
+      success_metrics:
+      - id: SM-04
+        signal: 标题为顶部视觉主位；周期/视图切换降一级右对齐
+        target: 标题字号/权重高于操作控件，操作控件右对齐
+    traces_to:
+      ac:
+      - SCN-04
+  - id: US-05
+    role: 看盘用户
+    goal: 主卡（当前可操作信号/建议）视觉突出，次级信息不喧宾夺主
+    value: 第一眼抓到最该关注的可操作信号
+    story_context:
+      user: 关注『现在该不该动』的看盘用户
+      problem: 回测/理由/原始字段与主信号视觉权重接近，主次不分
+      scenario: 用户查看某标的，主卡突出呈现；回测/理由/原始字段降为次级灰字
+      value: 信息层级引导注意力落到可操作信号
+      success_metrics:
+      - id: SM-05
+        signal: 主卡视觉突出；回测/理由/原始字段为次级灰字
+        target: 主卡与次级内容存在明确视觉层级差
+    traces_to:
+      ac:
+      - SCN-05
+  - id: US-06
+    role: 看盘用户
+    goal: 侧栏条目一眼扫到名称、代码、价格、涨跌
+    value: 在自选列表里快速定位目标标的
+    story_context:
+      user: 维护多标的自选列表的看盘用户
+      problem: 侧栏条目主看信息与来源状态混排，扫读效率低
+      scenario: 用户扫侧栏，名称+代码一行、价格+涨跌右对齐为主看信息、来源状态弱化为小圆点
+      value: 侧栏可快速扫读，抓主看信息
+      success_metrics:
+      - id: SM-06
+        signal: 侧栏名称+代码一行、价格+涨跌右对齐、来源状态为小圆点
+        target: 主看信息突出，来源状态弱化
+    traces_to:
+      ac:
+      - SCN-06
+  - id: US-07
+    role: 看盘用户
+    goal: 交易信号卡默认只看关键数字，需要时再展开细节
+    value: 不被三段回测流水账淹没，先看结论
+    story_context:
+      user: 关注信号结论而非全部明细的看盘用户
+      problem: 卖出/买入/反T波段 + 三段回测以流水账铺开，信息密度过高
+      scenario: 用户查看交易信号卡，默认呈现关键数字（胜率/累计收益），点开才看细节
+      value: 先看关键结论，细节按需展开
+      success_metrics:
+      - id: SM-07
+        signal: 交易信号卡默认呈现关键数字 + 可展开细节，不默认铺开流水账
+        target: 默认视图仅关键数字，细节折叠
+    traces_to:
+      ac:
+      - SCN-07
+  scope:
+    in:
+    - id: SCOPE-IN-01
+      statement: src/styles.css 中状态色/层级相关样式
+    - id: SCOPE-IN-02
+      statement: src/App.tsx 及 src/features/* 中界面呈现层（顶部区、主卡、侧栏、交易信号卡、状态提示）的重排与文案映射
+    - id: SCOPE-IN-03
+      statement: 内部枚举 / 理由代码到用户语言的文案映射与可折叠详情区
+    - id: SCOPE-IN-04
+      statement: 评分的进度条式可读呈现
+    out:
+    - id: SCOPE-OUT-01
+      statement: 交易信号算法 / 回测计算逻辑
+      reason: 本次只改呈现，不改算法语义（用户明确非目标）
+    - id: SCOPE-OUT-02
+      statement: 数据源 / 后端接口 / server
+      reason: 非目标；改造限于前端呈现层
+    - id: SCOPE-OUT-03
+      statement: 新增业务功能
+      reason: 非目标；本次为友好化改造，不扩功能
+    - id: SCOPE-OUT-04
+      statement: alibaba mission（20260720-alibaba-trade-signals）在途策略代码语义
+      reason: 跨 mission 边界，不得触碰在途策略代码语义
+    - id: SCOPE-OUT-05
+      statement: 全量界面重构 / 顺手清理无关技术债
+      reason: 范围膨胀控制；仅覆盖 7 类锚定杂乱问题
+  acceptance_scenarios:
+  - id: SCN-01
+    statement: 正常态不出现警告色，真实异常态才出现警告色
+    given: 某标的来源为 formal/已恢复、布局未回退（正常态）
+    when: 用户打开该标的界面
+    then: 界面无黄色警告横幅；当来源变为 stale/unavailable 或布局回退（异常态）时，界面出现警告色
+    verification_required: true
+  - id: SCN-02
+    statement: 主视图不直接暴露原始枚举/理由代码，评分可读
+    given: 某标的有 trend_state/mts_score/score_band/signal_type/alert_level 及理由代码
+    when: 用户查看主视图
+    then: 主视图呈现人话描述与进度条式评分；trend_state/mts_score/score_band/signal_type/alert_level
+      与 TREND_ABOVE_EMA/MACD_MOMENTUM_DOWN 等原始代码不出现在主视图，仅在展开的详情/调试区可见
+    verification_required: true
+  - id: SCN-03
+    statement: 来源状态与价格/涨跌各收敛到唯一主源
+    given: 改造前来源状态与价格/涨跌在 3~5 处重复呈现
+    when: 用户扫读改造后界面
+    then: 来源状态、价格/涨跌在界面各仅保留 1 处权威呈现点
+    verification_required: true
+  - id: SCN-04
+    statement: 顶部标题主位、周期/视图切换降级右对齐
+    given: 用户打开某标的界面
+    when: 观察顶部区域
+    then: 标的标题为视觉主位（字号/权重最高）；周期切换与视图切换降一级并右对齐，不与大标题抢视线
+    verification_required: true
+  - id: SCN-05
+    statement: 主卡突出、次级信息降灰
+    given: 某标的同时有当前可操作信号/建议与回测/理由/原始字段
+    when: 用户查看界面
+    then: 主卡视觉突出；回测/理由/原始字段呈现为次级灰字，与主卡存在明确视觉层级差
+    verification_required: true
+  - id: SCN-06
+    statement: 侧栏条目主看信息突出、来源状态弱化
+    given: 侧栏含多条自选标的
+    when: 用户扫读侧栏
+    then: 每条名称+代码一行、价格+涨跌右对齐为主看信息、来源状态弱化为小圆点
+    verification_required: true
+  - id: SCN-07
+    statement: 交易信号卡默认关键数字、细节可展开
+    given: 某标的有卖出/买入/反T波段与三段回测
+    when: 用户查看交易信号卡
+    then: 默认呈现关键数字（胜率/累计收益）；三段回测明细默认折叠，用户展开后才呈现
+    verification_required: true
+  autonomy:
+    level: 专家确认
+    governance_risk: medium
+    governance_assessment:
+      hard_triggers: []
+      dimensions:
+        decision_authority:
+          level: low
+          rationale: 实现路径较明确（CSS + 文案映射 + 组件重排），无重大业务取舍。
+        reversibility:
+          level: low
+          rationale: CSS/JSX 呈现层变更，可回滚代码撤销。
+        blast_radius:
+          level: medium
+          rationale: 用户可见界面改动，覆盖顶部/主卡/侧栏/信号卡等多处呈现。
+        verification_reliability:
+          level: medium
+          rationale: 有 build + Playwright E2E + axe + preview 截图，但『友好』含主观判断，需逐条落到可观察信号。
+        data_permission:
+          level: low
+          rationale: 不涉及数据、权限变更。
+        external_dependency:
+          level: low
+          rationale: 不涉及数据源/后端/新外部依赖。
+        agent_authority:
+          level: low
+          rationale: 本任务不涉及 Agent 能力或行动权。
+        uncertainty:
+          level: medium
+          rationale: 『友好』验收口径需 prd 阶段细化成可判定信号（见 GAP-01）。
+      scale_signals:
+        change_surface:
+          level: medium
+          rationale: 预计涉及 src/App.tsx、src/styles.css 及若干 src/features/* 组件，约 4-10
+            文件。
+        user_roles:
+          level: low
+          rationale: 单一看盘用户角色。
+        module_span:
+          level: medium
+          rationale: 呈现层跨顶部/主卡/侧栏/交易信号卡多组件，但不跨后端/数据层。
+      decision_rule: 无 hard trigger；核心维度 blast_radius / verification_reliability /
+        uncertainty 为 medium， 规模信号（change_surface / module_span）为 medium。用户虽允许在低风险时降为快速执行，
+        但本任务并非低风险——用户可见改动跨多组件，且『友好』验收含主观不确定性、验收口径尚待 prd 细化， 这正是 discovery 之外仍需 prd/solution
+        把关的风险点。因此诚实建议 medium → 专家确认（与项目默认档一致）， 不建议降为快速执行；若主流程仍要降档，需按 downgrade 规则经人确认并记录理由。
+      user_confirmation_required: true
+      downgrade_or_checkpoint_removal_requires_approval: true
+    escalation_triggers:
+    - scope_change
+    - acceptance_criteria_conflict
+    human_checkpoints:
+    - delivery
+  work_graph:
+    primary_nodes:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    related_nodes: []
+    operation: advance_stage
+  intent_role_analysis:
+    actual_task_goal: 让多市场看盘终端界面更友好、显著降低视觉杂乱，完成后界面处于以下可观察状态： (1) 状态色语义归位——正常态用中性/成功色，警告黄仅保留给真实异常态（来源
+      stale/unavailable、 布局回退等），不再把 formal/已恢复/snapshot_missing 等正常态渲染成黄色警告横幅； (2)
+      内部字段人话化——trend_state/mts_score/score_band/signal_type/alert_level 等原始枚举、 ReasonRegistry
+      标题、TREND_ABOVE_EMA/MACD_MOMENTUM_DOWN 等理由代码翻译成用户语言或收进可折叠详情区， 评分以进度条等可读形式呈现；
+      (3) 消除重复信息——来源状态与价格/涨跌从当前 3~5 处重复收敛到唯一主源； (4) 顶部信息重排——标的标题独占视觉主位，周期/视图切换降级右对齐；
+      (5) 建立信息层级——主卡（当前可操作信号/建议）视觉突出，回测/理由/原始字段降为次级灰字； (6) 侧栏条目扫读优化——名称+代码一行、价格+涨跌右对齐为主看信息、来源状态弱化为小圆点；
+      (7) 交易信号卡密度优化——卖出/买入/反T波段 + 三段回测流水账压成“关键数字（胜率/累计收益）+ 可展开细节”。
+    source_materials: []
+    agent_instructions:
+    - 用户初始诉求：『你来分析下界面 怎么样让整个界面更加友好 现在还是太乱』（分析部分已完成）
+    process_constraints:
+    - 走完整 Harness 流程，但允许快速档：治理档由风险矩阵判定，评为低风险则走快速执行跳过可跳阶段
+    - 不使用最小实现（MVP）
+    discussion_outputs:
+    - 助手产出的诊断清单（7 类杂乱问题）+ before/after mockup 方向，用户已『认同』
+    - 会话内真实界面截图作为现状证据
+    corrections: []
+    execution_confirmation: 用户依次表达：『好』（同意分析）→ 选择『先出 mockup 对比图』→『认同』（mockup 方向） →
+      选择『直接进入实现』→ 选择『走流程但允许快速档』。执行意图明确且现时。
+    open_intent_gaps:
+    - id: GAP-01
+      question: 『友好』的可观察验收口径需细化成一组具体可验收信号（如警告色仅出现在真实异常态、内部枚举不再直接暴露于主视图、重复信息收敛到 1 处等）
+      source: actual_task_goal 已由 mockup + 7 点锚定方向，但每点的可判定阈值尚未逐条落地
+      impact: 影响 prd 阶段验收场景细化与 verify 阶段的判定基准，不影响 intake 确认任务成立
+      handoff_reason: 因为 actual_task_goal 暴露了『友好』这一主观效果尚未逐条转成可判定信号，它可能影响 prd 阶段的验收场景设计与
+        verify 阶段的判定基准；任务接入阶段只确认任务成立， prd 阶段需要查明每类杂乱问题对应的可观察达标条件；停止边界是 intake 不替 prd
+        写死最终验收场景，也不在 intake 产出组件级视觉方案或最终样式实现。
+      boundary: intake 只锚定方向与范围，不产出最终验收场景、不做组件级视觉/样式设计
+    excluded_from_objective:
+    - source: 走完整 Harness 流程 / 允许快速档
+      reason: 流程治理约束，不是用户要交付的外部结果
+    - source: 你来分析下界面（阅读/分析动作）
+      reason: Agent 工作指令，分析已完成，不作为交付物
+    - source: before/after mockup
+      reason: 会话讨论产物，是设计输入方向，不是最终交付形态；最终交付是真实界面改造
+  intake_decision:
+    confirmed: true
+    confirmation_source: 用户：『好』→『先出 mockup 对比图』→『认同』→『直接进入实现』→『走流程但允许快速档』
+    confirmed_at_or_turn: 会话内 intake 轮（用户对 mockup 方向明确认同并选择进入实现）
+  success_definition:
+    desired_effect: 用户在看盘界面能以更低认知成本扫读关键信息：主看信息（标的、价格、涨跌、当前可操作信号）视觉突出， 正常态不再触发警告色，内部技术枚举不再直接暴露在主视图，同一信息不再多处重复。
+    deliverables:
+    - id: DEL-01
+      name: 状态色语义归位（.data-notice 等状态提示）
+      format: src/styles.css + 相关组件 JSX 状态渲染逻辑变更
+      observable_done: formal/已恢复/snapshot_missing 等正常态不再渲染为黄色警告；黄色仅出现在真实异常态
+      acceptance_link:
+        acceptance:
+        - SCN-01
+    - id: DEL-02
+      name: 内部字段人话化 / 折叠 + 评分可读化
+      format: 文案映射 + 可折叠详情区 + 进度条式评分组件
+      observable_done: 主视图不直接暴露 trend_state/mts_score/score_band/signal_type/alert_level
+        原始枚举与理由代码；评分以进度条呈现
+      acceptance_link:
+        acceptance:
+        - SCN-02
+    - id: DEL-03
+      name: 重复信息收敛
+      format: 组件重构，来源状态与价格/涨跌各归唯一主源
+      observable_done: 来源状态、价格/涨跌在界面各只保留一个权威呈现点
+      acceptance_link:
+        acceptance:
+        - SCN-03
+    - id: DEL-04
+      name: 顶部信息重排
+      format: 顶部区域布局重排（标题主位 + 周期/视图切换降级右对齐）
+      observable_done: 标的标题为顶部视觉主位；周期切换与视图切换降一级右对齐，不与大标题抢视线
+      acceptance_link:
+        acceptance:
+        - SCN-04
+    - id: DEL-05
+      name: 信息层级建立（主卡突出，次级降灰）
+      format: 卡片视觉层级样式 + 结构调整
+      observable_done: 主卡（当前可操作信号/建议）视觉突出；回测/理由/原始字段为次级灰字
+      acceptance_link:
+        acceptance:
+        - SCN-05
+    - id: DEL-06
+      name: 侧栏条目扫读优化
+      format: 侧栏条目组件与样式重排
+      observable_done: 名称+代码一行、价格+涨跌右对齐为主看信息、来源状态弱化为小圆点
+      acceptance_link:
+        acceptance:
+        - SCN-06
+    - id: DEL-07
+      name: 交易信号卡密度优化
+      format: 交易信号卡组件重构（关键数字 + 可展开细节）
+      observable_done: 卖出/买入/反T波段与三段回测压成关键数字（胜率/累计收益）+ 可展开细节，默认不铺开流水账
+      acceptance_link:
+        acceptance:
+        - SCN-07
+    validation_evidence:
+    - id: EVD-01
+      type: command
+      method: 运行 npm run build（tsc --noEmit && vite build），确认 exit code 0
+      proves:
+        note: 证明改造后前端可编译、无类型/构建回归
+        acceptance:
+        - SCN-01
+        - SCN-02
+        - SCN-03
+        - SCN-04
+        - SCN-05
+        - SCN-06
+        - SCN-07
+    - id: EVD-02
+      type: screenshot
+      method: 在 preview 上对 7 类改造点分别截取正常态界面截图，逐条比对达标信号
+      proves:
+        note: 证明状态色/信息层级/重排/密度等可观察结果落地
+        acceptance:
+        - SCN-01
+        - SCN-04
+        - SCN-05
+        - SCN-06
+        - SCN-07
+    - id: EVD-03
+      type: test
+      method: 运行 Playwright E2E + axe 可访问性检查（e2e.enabled 时），确认关键路径与可访问性无回归
+      proves:
+        note: 证明改造不破坏既有交互路径与可访问性
+        acceptance:
+        - SCN-02
+        - SCN-03
+    non_goals:
+    - 不改交易信号算法 / 回测计算逻辑本身（只改其呈现）
+    - 不改数据源 / 后端接口 / server
+    - 不新增业务功能
+    - 不触碰 alibaba mission（20260720-alibaba-trade-signals）在途的策略代码语义

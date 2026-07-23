@@ -1,0 +1,146 @@
+{
+  "transaction_id": "TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage",
+  "status": "committed",
+  "started_at": "2026-07-22T02:40:54.680414+00:00",
+  "ended_at": "2026-07-22T02:40:55.284324+00:00",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "operation_id": "20260721-watchboard-ui-friendliness__batch_advance_stage",
+  "staging_root": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/staging",
+  "steps": [
+    {
+      "id": "preflight",
+      "inputs": [
+        "/var/folders/xd/t6x3lns911b99r0dz7kdv6dh0000gn/T/tmp2l94kb7q.yaml"
+      ]
+    },
+    {
+      "id": "plan_changes",
+      "change_set": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T001.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T002.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T003.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T004.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T005.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T006.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T007.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__batch_advance_stage.yaml"
+      ]
+    },
+    {
+      "id": "validate_staged_tree",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "stage_files",
+      "changed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T001.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T002.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T003.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T004.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T005.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T006.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T007.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__batch_advance_stage.yaml"
+      ]
+    },
+    {
+      "id": "commit",
+      "committed_files": [
+        "harness-runtime/harness/mission-status.yaml",
+        "harness-runtime/harness/work-graph/_index.yaml",
+        "harness-runtime/harness/work-graph/boards/main.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T001.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T002.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T003.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T004.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T005.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T006.yaml",
+        "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T007.yaml",
+        "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__batch_advance_stage.yaml"
+      ]
+    },
+    {
+      "id": "post_commit_check",
+      "status": "PASS",
+      "findings": []
+    },
+    {
+      "id": "cleanup_staging",
+      "staging_root": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/staging",
+      "status": "removed"
+    }
+  ],
+  "rollback": {
+    "snapshots": [
+      {
+        "original": "harness-runtime/harness/mission-status.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/mission-status.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/_index.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/_index.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/boards/main.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/boards/main.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T001.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T001.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T002.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T002.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T003.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T003.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T004.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T004.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T005.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T005.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T006.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T006.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T007.yaml",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/nodes/tasks/TASK-WATCHBOARD-UI-T007.yaml"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/operations.log.jsonl",
+        "existed": true,
+        "before": "harness-runtime/harness/state/transactions/TX-2026-07-22T024054-680257+0000-20260721-watchboard-ui-friendliness__batch_advance_stage/before/harness-runtime/harness/work-graph/operations.log.jsonl"
+      },
+      {
+        "original": "harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__batch_advance_stage.yaml",
+        "existed": false
+      }
+    ]
+  }
+}

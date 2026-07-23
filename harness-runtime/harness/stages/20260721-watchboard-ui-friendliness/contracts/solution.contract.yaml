@@ -1,0 +1,340 @@
+control_contract:
+  type: guide_contract
+  subtype: solution_guide
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: solution
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+    sections:
+    - Acceptance Scenarios
+    - Constraints
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+    sections:
+    - System Responsibilities
+    - Observable Behaviors
+    - Quality Runtime Constraints
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/interaction/contracts/interaction.contract.yaml
+    optional: true
+    sections:
+    - Surface Model
+    - Behavior Graph
+  consumers:
+  - tech-design
+  - breakdown
+  - code-review
+  - stage-gate
+  role_policy:
+    stage: solution
+    work_graph_lane: solution-lane
+    required_execution_roles:
+    - solution-architect
+    required_review_roles:
+    - solution-effectiveness-reviewer
+    conditional_roles:
+    - role: agent-capability-designer
+      kind: execution
+      when:
+      - agent_engineering
+      - agent_capability
+    - role: agent-capability-reviewer
+      kind: review
+      when:
+      - agent_engineering
+      - agent_capability
+  work_graph_artifact:
+    node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+    artifact_set_id: AS-REQ-WATCHBOARD-UI-FRIENDLINESS-solution-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:solution
+      role: solution
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/solution/solution.md
+  execution_result:
+    id: EXE-SOLUTION-001
+    role: solution-architect
+    status: DONE
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/solution/solution.md
+    fulfilled_obligations: []
+    decision_log:
+    - DEC-S01
+    - DEC-S02
+    - DEC-S03
+    - DEC-S04
+    - DEC-S05
+    - DEC-S06
+    - DEC-S07
+    - DEC-S08
+    - DEC-S09
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  obligations:
+  - id: OBL-DESIGN-001
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: architecture
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      task: []
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - solution-effectiveness-reviewer
+    blocking: true
+    source: inferred
+  role_verdicts:
+  - &id001
+    id: RV-solution-effectiveness-reviewer-1
+    role: solution-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-DESIGN-001
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      basis_notes:
+      - RUP细化阶段方案能力检查点(输入合格性/上游落地/9个系统操作覆盖/路线成立/风险处理/技术分析交接/契约一致性)
+      - 源码事实独立核对(styles.css:379共享类跨范围内外/既有人话源/门控trade-signals.ts:619-627)
+    summary: 'PASS：上游全承载，9个系统操作全覆盖，候选真实，风险可执行，契约一致，6条源码事实核对为真'
+    dispatch:
+      subagent_id: ad69f3e93e85214bf
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T16:27:47.657242+08:00'
+      completed_at: '2026-07-21T16:27:47.657242+08:00'
+  decisions:
+  - id: DEC-S01
+    title: 呈现层只读映射层，不重实现领域门控（防腐边界）
+    chosen: 呈现层只读取既有领域门控结果并翻译呈现
+    rejected:
+    - 呈现层重算/复制 BR-03 来源降级判断
+    rationale: BC-01↔BC-02 只读防腐(Conformist)，门控在 trade-signals.ts:619-627；双份门控会漂移并破坏
+      INV-07 一致性
+    traces_to:
+    - SCN-01
+    appetite: 呈现层薄映射，不扩到领域重实现
+    bet_boundary: 只读 domain 输出字段，不新增写入/门控
+    circuit_breaker: 出现重实现门控迹象即回流方案
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S02
+    title: 四档语义色 token 分层，承载类名互不复用
+    chosen: styles.css 建立四档语义色 token(正常/信息/谨慎-风险/警告-异常)，承载类名互不复用
+    rejected:
+    - Route B 保留 .data-notice 共享类逐组件内联着色
+    - 全局重着色共享 .data-notice 类
+    rationale: INV-03 要求评分负向与来源故障色物理区分；.data-notice 被 4+ 套语义重载且跨范围内外组件(DRV-01)，共享类内联无法稳健分离且波及范围外
+    traces_to:
+    - SCN-01
+    appetite: 建立四档语义 token 体系，系统性归位而非逐组件补丁
+    bet_boundary: 只迁移范围内 .data-notice 用法，不改共享类颜色定义
+    circuit_breaker: 某态无法在不改共享类颜色前提下归位即回流
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S03
+    title: 人话化复用既有可读源，不新建映射表
+    chosen: 复用 sourceStatusLabel/displayLabel/stanceLabel/nonAdvice 既有可读源
+    rejected:
+    - 新建枚举→文案映射表
+    rationale: RISK-03/DRV-04；新建映射表会造成双份翻译源与语义漂移；未注册理由码回落 UNKNOWN_CODE
+    traces_to:
+    - SCN-02
+    appetite: 复用既有源，收窄实现面
+    bet_boundary: 不引入重复映射表，不直呈裸枚举
+    circuit_breaker: 某枚举点无既有可读源且非注册码即回流产品定义
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S04
+    title: 折叠/展开交互状态由组件本地 UI 状态承载
+    chosen: 折叠态存组件本地 useState，不持久化
+    rejected:
+    - 折叠态持久化进 workspace 快照/URL/localStorage
+    rationale: interaction skippable 不补折叠归属；折叠为纯 UI 表现态(ST-02e/ST-03f)，持久化会触碰 OBJ-06
+      快照越界 SCOPE-12
+    traces_to:
+    - SCN-02
+    - SCN-07
+    appetite: 最小承载折叠交互，不引入持久化模型
+    bet_boundary: 折叠状态不写 localStorage/快照；折叠入口须可操作
+    circuit_breaker: 折叠入口无法本地承载即回流方案
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S05
+    title: 唯一主源承载点选点与侧栏来源弱化
+    chosen: 主区保留 1 处权威来源+1 处权威价格/涨跌承载，侧栏来源降为小圆点弱化次级
+    rejected:
+    - 侧栏/标题/图表角标/指标条多处同级重复来源或价格
+    rationale: UIC-03/DMF-02/DRV-06；现状 3~5 处重复噪音；涨跌红绿须与警告色分离
+    traces_to:
+    - SCN-03
+    appetite: 收敛唯一主源，去重复噪音
+    bet_boundary: 计数=1 硬约束，侧栏来源不作第二主源
+    circuit_breaker: 主源选点破坏既有可读性即回流方案
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S06
+    title: 跨呈现一致性只读约束，恢复态与来源态独立承载
+    chosen: 呈现层读同一 domain 门控结果保持三处一致；恢复态(STM-07)与来源态(STM-02)独立承载元素
+    rejected:
+    - 恢复态与来源态混用同一 .data-notice 承载
+    rationale: INV-07/NEG-01/NEG-03/操作间依赖；避免来源已 stale 而信号卡仍 ready 的矛盾呈现
+    traces_to:
+    - SCN-01
+    appetite: 一致性作为只读读取约束，不重实现门控
+    bet_boundary: 三处读同一门控结果；恢复/来源承载 DOM 独立
+    circuit_breaker: 呈现层需重实现门控才能一致即回流方案
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S07
+    title: demo_fallback 默认信息级档，色档可切换不改承载结构
+    chosen: demo_fallback 默认信息级/次级提示(非高危警告色)，承载结构设计为色档可切换
+    rejected:
+    - 把产品 DEC-01 当硬阻断
+    - formal/demo_fallback/stale 三档共用同一视觉
+    rationale: 产品 DEC-01/AUD-02/DRV-09；单一来源结局色档，不改上下文边界/状态机；verify 前经用户定档
+    traces_to:
+    - SCN-01
+    appetite: 默认软口径推进，档位可配置
+    bet_boundary: 色档可切换但不改承载元素结构
+    circuit_breaker: 用户改判需关注即切 DEC-S07 承载色档，不回流路线
+    driver: solution-architect
+    approver: 用户（demo_fallback 色档决策）
+    contributors:
+    - solution-architect
+    informed:
+    - verification-engineer
+  - id: DEC-S08
+    title: nonAdvice 免责常驻承载，不进可折叠区
+    chosen: nonAdvice 作为常驻承载，默认态与折叠态均可见
+    rejected:
+    - 层级降级/明细折叠时隐藏免责
+    - 免责放入可折叠明细区
+    rationale: INV-06/AUD-01/PIT-003/CODE-003 投资边界红线；折叠不得隐藏免责
+    traces_to:
+    - SCN-05
+    appetite: 合规红线，阻断类约束
+    bet_boundary: 免责在默认态与折叠态均常驻可见
+    circuit_breaker: 无（红线不可越）
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  - id: DEC-S09
+    title: 顶部视觉层级重排，不改布局切换语义
+    chosen: 以视觉权重+右对齐承载标题主位/控件降级；STM-06 切换语义不改
+    rejected:
+    - 改 STM-06 布局模式集合/切换逻辑
+    rationale: UIC-04/SCN-04/STM-06/SCOPE-05；非法值由既有归一化处理
+    traces_to:
+    - SCN-04
+    appetite: 顶部结构重排，纯视觉层级
+    bet_boundary: 不改 STM-06 白名单；控件不与标题抢焦点
+    circuit_breaker: 需改切换语义即停止（禁越界）
+    driver: solution-architect
+    approver: 用户（专家确认档）
+    contributors:
+    - solution-architect
+    informed:
+    - tech-designer
+  forbidden_paths:
+  - id: FB-01
+    statement: 保留 .data-notice 语义重载作为状态色归位手段
+    reason: 无法稳健实现 INV-03 评分与来源故障色物理区分，属局部小改留退化地雷
+  - id: FB-02
+    statement: 全局重着色共享 .data-notice 类的颜色定义
+    reason: 波及范围外组件(AlertRulePanel/WorkbenchShell/LayoutController)，SCOPE-15/16 越界
+  - id: FB-03
+    statement: 评分/极性承载复用来源警告类名
+    reason: 违反 INV-03 四套状态语义物理区分
+  - id: FB-04
+    statement: 新建枚举→文案映射表
+    reason: 造成双份翻译源与语义漂移，应复用既有可读源(DEC-S03)
+  - id: FB-05
+    statement: 呈现层重实现 BR-03 来源降级门控/MTS 计算/回测
+    reason: 违反 BC-01↔BC-02 只读防腐，双份门控漂移
+  - id: FB-06
+    statement: 改 STM-06 布局切换语义/白名单
+    reason: 超出呈现友好化范围，改变既有切换行为(SCOPE-05)
+  - id: FB-07
+    statement: 折叠态写 localStorage/workspace 快照/URL
+    reason: 触碰 OBJ-06 快照写入越界 SCOPE-12，引入范围外持久化模型
+  - id: FB-08
+    statement: nonAdvice 免责放入可折叠区或折叠态隐藏
+    reason: 触碰投资边界合规红线 PIT-003/CODE-003
+  - id: FB-09
+    statement: 改 src/domain/* 算法/状态机、后端、数据源、alibaba 在途代码
+    reason: 呈现层改造边界外，发现必须改则触发升级关口(RISK-06)
+  risks:
+  - id: SR-01
+    statement: 共享 .data-notice 类跨范围内外组件，改动易波及范围外(AlertRulePanel/WorkbenchShell/LayoutController)
+    mitigation: 阻断+隔离；技术分析产出范围内用法清单，执行仅迁移范围内用法不改共享类颜色；证据=范围外组件改造前后 preview 截图无变化+DOM
+      断言未被重着色；通过判据=范围外组件零可观察变化
+  - id: RISK-01
+    statement: demo_fallback 色档最终归类未定(产品 DEC-01)
+    mitigation: 接受默认信息级+用户决策；verify 前用户定档，证据=三档并置 preview 可辨识；用户改判则按 DEC-S07 切换色档不回流
+  - id: RISK-02
+    statement: interaction skippable，折叠交互义务可能丢失
+    mitigation: 验证(DEC-S04 已指派本地承载)；E2E 默认态断言不可见→展开断言可见(SCN-02-COND-03/SCN-07-COND-02)；通过判据=折叠/展开两态
+      E2E 全通过+两态截图
+  - id: RISK-03
+    statement: 人话源是否需新建映射表存在不确定
+    mitigation: 接受复用既有源(DEC-S03)；技术分析核对既有可读源覆盖全部枚举点，缺口标注 UNKNOWN_CODE 回落；无既有源且非注册码则回流产品定义
+  - id: RISK-04
+    statement: 一致性门控在 domain 层，呈现层可能误重实现
+    mitigation: 阻断(DEC-S01/S06 只读承载)；E2E 构造 stale 来源态断言 source_degraded 不显 ready(NEG-01)+DOM
+      断言恢复与来源独立承载(NEG-03)；通过判据=一致性 E2E+独立承载断言全通过
+  - id: RISK-05
+    statement: 友好/层级差/突出/弱化含主观判断
+    mitigation: 接受(双证据锚定)；主观项(SCN-05-COND-01 层级差)以 preview 截图+次级样式 DOM 断言双证据；仍无法判定则回流产品定义细化可观察口径
+  - id: RISK-06
+    statement: 改造发现必须改算法/后端/数据才能达成呈现目标
+    mitigation: 回流(升级决策关口)；发现呈现目标无法在 domain/后端不变前提下达成即停下升级，证据=具体阻断点+为何呈现层不可达成；当前判定未发生
+  - id: RISK-07
+    statement: axe/E2E 无回归为交付前提
+    mitigation: 接受(验证义务)；axe 无新增违规+Playwright E2E 既有路径不回归(NEG-07)+npm run build exit
+      0(EVD-01)；基础设施缺失则按环境前提失败处理并报告
+  prototype_coverage_exemptions: []
+  agent_architecture: []
+  effectiveness_review:
+    rounds_used: 2
+    max_rounds: 3
+    last_verdict: null
+    pending_reviewer_recheck: false
+    rounds:
+    - round: 2
+      timestamp: '2026-07-21T16:27:47.657242+08:00'
+      verdicts:
+      - *id001

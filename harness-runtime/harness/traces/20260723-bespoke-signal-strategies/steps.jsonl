@@ -1,0 +1,15 @@
+{"event": "log-init", "mission_id": "20260723-bespoke-signal-strategies", "stage": "intake", "timestamp": "2026-07-23T09:29:57.863032+08:00"}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-1", "timestamp": "2026-07-23T09:30:26.476053+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-2", "timestamp": "2026-07-23T09:30:51.131592+08:00"}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-2", "timestamp": "2026-07-23T09:34:08.746271+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-3", "timestamp": "2026-07-23T09:34:08.827727+08:00"}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-3", "timestamp": "2026-07-23T09:34:33.812207+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-4", "timestamp": "2026-07-23T09:34:33.960025+08:00"}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-4", "timestamp": "2026-07-23T09:36:20.095949+08:00", "status": "pass"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5", "timestamp": "2026-07-23T09:37:09.690785+08:00"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5-review", "timestamp": "2026-07-23T09:37:09.774042+08:00", "rounds": 1}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5-review", "timestamp": "2026-07-23T09:46:18.563289+08:00", "rounds": 1, "status": "fail"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5-review", "timestamp": "2026-07-23T09:46:18.671531+08:00", "rounds": 2}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5-review", "timestamp": "2026-07-23T09:49:59.428687+08:00", "rounds": 2, "status": "fail"}
+{"event": "step-enter", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5-review", "timestamp": "2026-07-23T09:49:59.506232+08:00", "rounds": 3}
+{"event": "step-exit", "mission_id": "20260723-bespoke-signal-strategies", "step": "phase-5-review", "timestamp": "2026-07-23T09:51:15.224182+08:00", "rounds": 3, "status": "pass"}

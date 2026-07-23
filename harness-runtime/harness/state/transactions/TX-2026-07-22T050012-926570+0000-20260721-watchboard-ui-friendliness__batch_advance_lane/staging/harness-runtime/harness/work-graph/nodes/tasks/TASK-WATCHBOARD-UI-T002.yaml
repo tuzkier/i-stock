@@ -1,0 +1,35 @@
+id: TASK-WATCHBOARD-UI-T002
+kind: task
+title: MTS 卡人话化 + 进度条 + 折叠详情（GAP-D1 裸枚举穷举）
+lane: development-lane
+stage: code-review
+status: ready
+parent_task_id: T002
+execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- AT-0201
+- AT-0202
+dependencies:
+- TASK-WATCHBOARD-UI-T001
+inputs:
+- REQ-WATCHBOARD-UI-FRIENDLINESS
+outputs: []
+relations:
+  split_from: REQ-WATCHBOARD-UI-FRIENDLINESS
+updated_at: '2026-07-22T02:40:54.843175+00:00'
+trace:
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__batch_advance_stage__2
+specs:
+  consumes:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    requirement: 内部枚举人话化与评分可读呈现
+    scenario: 主视图不暴露原始枚举/理由代码
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/features/presentation/ScoreBar.tsx
+      test_refs:
+      - tests/e2e/mts/friendliness.spec.ts
+      - tests/e2e/mts/card.spec.ts

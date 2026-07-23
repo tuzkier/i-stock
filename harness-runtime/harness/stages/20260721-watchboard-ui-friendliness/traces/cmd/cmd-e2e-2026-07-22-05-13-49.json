@@ -1,0 +1,14 @@
+{
+  "id": "cmd-e2e-2026-07-22-05-13-49",
+  "kind": "command",
+  "layer": "e2e",
+  "command": "npm run test:e2e -- watchlist",
+  "cwd": "/Users/hanbin/Workspace/AI/MyInvestment",
+  "exit_code": 0,
+  "started_at": "2026-07-22T05:13:49.788640+00:00",
+  "ended_at": "2026-07-22T05:13:54.012884+00:00",
+  "result": "pass",
+  "stdout": "\n> my-investment-terminal@0.1.0 test:e2e\n> NO_PROXY=127.0.0.1,localhost playwright test watchlist\n\n\nRunning 5 tests using 1 worker\n\n  \u2713  1 [chromium] \u203a tests/e2e/watchlist/friendliness.spec.ts:84:1 \u203a AT-0401: \u4fa7\u680f\u540d\u79f0+\u4ee3\u7801\u4e00\u884c\u3001\u4ef7\u683c\u53f3\u5bf9\u9f50\u3001\u6765\u6e90\u5c0f\u5706\u70b9\u975e\u6a2a\u5e45 (288ms)\n  \u2713  2 [chromium] \u203a tests/e2e/watchlist/friendliness.spec.ts:124:1 \u203a AT-0402: archived \u5f31\u5316\u533a\u5206 active (282ms)\n  \u2713  3 [chromium] \u203a tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:89:1 \u203a \u5f52\u6863\u540e\u6682\u505c\u63d0\u9192\uff0c\u91cd\u65b0\u52a0\u5165\u5df2\u5f52\u6863\u6e2f\u80a1\u65f6\u6062\u590d\u63d0\u9192 (952ms)\n  \u2713  4 [chromium] \u203a tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:138:1 \u203a \u6b67\u4e49\u6570\u5b57\u8f93\u5165\u4e0d\u4f1a\u5199\u5165 active \u81ea\u9009 (323ms)\n  \u2713  5 [chromium] \u203a tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts:152:1 \u203a \u770b\u76d8\u4e3b\u6d41\u7a0b\u6ca1\u6709\u81ea\u52a8\u5316\u53ef\u8bbf\u95ee\u6027\u4e25\u91cd\u8fdd\u89c4 (546ms)\n\n  5 passed (3.7s)\n",
+  "stderr": "[WebServer] (node:23771) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time\n[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)\n",
+  "artifact": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-13-49.json"
+}

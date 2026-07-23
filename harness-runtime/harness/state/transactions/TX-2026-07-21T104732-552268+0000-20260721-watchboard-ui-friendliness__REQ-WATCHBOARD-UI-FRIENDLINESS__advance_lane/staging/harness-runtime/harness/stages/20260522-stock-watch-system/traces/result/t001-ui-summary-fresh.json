@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-05-24T01:45:32.880Z",
+  "baseURL": "http://127.0.0.1:5174",
+  "command": "node harness-runtime/harness/traces/20260522-stock-watch-system/verify-t001-ui-evidence.mjs",
+  "rowSummary": "阿里巴巴\n9988.HK · 港股\n正式 · 190.00 · 5.56%",
+  "archivedLabel": "9988.HK · 港股 · 提醒已暂停",
+  "archivedState": {
+    "archived": "archived",
+    "activationState": "suspended_by_archive",
+    "enabled": false
+  },
+  "restorePreview": "港股 · 9988 → 9988.HK",
+  "restoredAlertChecked": true,
+  "ambiguityMessage": "纯数字代码可能属于多个市场，请先选择对应市场",
+  "confirmDisabled": true
+}

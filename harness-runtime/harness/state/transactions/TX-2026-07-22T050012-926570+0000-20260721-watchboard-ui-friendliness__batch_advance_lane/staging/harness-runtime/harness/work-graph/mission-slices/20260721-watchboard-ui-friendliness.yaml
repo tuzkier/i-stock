@@ -1,0 +1,50 @@
+mission_id: 20260721-watchboard-ui-friendliness
+objective: '推进 TASK-WATCHBOARD-UI-T001: 四档语义色 token + 只读呈现映射层地基（隔离 SR-01 爆炸半径）'
+control_plane:
+  lane: development-lane
+  stage: code-review
+lane_action:
+  lane: development-lane
+  stage: code-review
+  graph_operation: advance_lane
+  operation_profiles:
+    advance_lane:
+      to_lane: verification-lane
+      to_stage: verify
+  allowed_graph_operations:
+  - advance_lane
+  output_artifact: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/code-review/code-review.md
+  required_execution_roles:
+  - review-control-plane-executor
+  required_review_roles:
+  - correctness-reviewer
+  - tdd-reviewer
+  to_lane: verification-lane
+  to_stage: verify
+  carrier: code-review
+  skill: code-review
+  role_carriers:
+    review-control-plane-executor: skill
+work_graph:
+  primary_nodes:
+  - TASK-WATCHBOARD-UI-T001
+  - TASK-WATCHBOARD-UI-T002
+  - TASK-WATCHBOARD-UI-T003
+  - TASK-WATCHBOARD-UI-T004
+  - TASK-WATCHBOARD-UI-T005
+  - TASK-WATCHBOARD-UI-T006
+  - TASK-WATCHBOARD-UI-T007
+  related_nodes:
+  - REQ-WATCHBOARD-UI-FRIENDLINESS
+  selection:
+    relevance_score: 1000
+    reasons:
+    - primary_node
+related_candidates:
+  deferred: []
+  blocked: []
+operation: advance_lane
+acceptance_scenarios:
+- TASK-WATCHBOARD-UI-T001 advanced from development-lane/code-review
+- graph operation applied by work-graph script
+- board/index/tree regenerated from nodes

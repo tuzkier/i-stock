@@ -1,0 +1,1209 @@
+control_contract:
+  type: action_contract
+  version: 1
+  mission_id: 20260721-watchboard-ui-friendliness
+  stage: breakdown
+  status: ready
+  upstream:
+  - path: harness-runtime/harness/missions/20260721-watchboard-ui-friendliness/mission-contract.md
+    sections:
+    - Acceptance Scenarios
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/product-definition.md
+    sections:
+    - System Responsibilities
+    - Observable Behaviors
+    - Quality Runtime Constraints
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/use-case-model.md
+    sections:
+    - SUC
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/acceptance-scenarios.md
+    sections:
+    - SCN
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/solution/solution.md
+    sections:
+    - DEC
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/technical-analysis/tech-design.md
+    sections:
+    - 验证策略
+    - 模块级计划
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    sections:
+    - ADDED Requirements
+  consumers:
+  - execute
+  - code-review
+  - verify
+  - stage-gate
+  work_graph_artifact:
+    node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+    artifact_set_id: AS--breakdown-v1
+    artifact_version: v1
+    promoted_by_mission: 20260721-watchboard-ui-friendliness
+    artifact_refs:
+    - artifact_id: 20260721-watchboard-ui-friendliness:execution-brief
+      role: execution-brief
+      path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+  atomic_task_queue:
+    required: true
+    reason: Every Parent task is a delivery boundary container and must carry a parent-local
+      Atomic Task Queue before breakdown Stage Gate.
+    artifact: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    section: Execution Units
+    execution_unit_policy:
+      always: parent_task_with_parent_local_atomic_task_queue
+      parent_task_authority:
+      - order
+      - completion_boundary
+      - definition_of_done
+      - required_evidence
+      - stop_conditions
+      conflict_resolution: halt_and_return_to_breakdown_or_decision_gate
+    work_graph_binding:
+      always: bind_parent_task_and_parent_local_atomic_task_queue_to_task_nodes_on_gate_advance
+      task_node_fields:
+      - parent_task_id
+      - execution_brief_artifact
+      - execution_units_section
+      - parent_local_atomic_task_queue
+      - atomic_task_ids
+      - atomic_task_detail_refs
+      - execution_order
+      - reviewer_verdict
+    required_fields:
+    - single_action
+    - explicit_inputs_outputs
+    - parent_task_coverage
+    - acceptance_scenario_coverage
+    - code_pattern_references
+    - interface_or_data_contracts
+    - test_fixtures_and_seed_data
+    - validation_commands
+    - transaction_or_state_boundaries
+    - evidence_requirements
+    - stop_conditions
+    - migration_or_route_boundaries
+    forbidden_states:
+    - missing
+    - incomplete
+  execution_results:
+  - id: EXE-BREAKDOWN-001
+    role: delivery-slicer
+    status: DONE
+    barrier_group: breakdown-workers-parallel
+    produced_artifacts:
+    - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    fulfilled_obligations: []
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  - id: EXE-BREAKDOWN-002
+    role: test-planning-expert
+    status: DONE
+    barrier_group: breakdown-workers-parallel
+    produced_artifacts: []
+    fulfilled_obligations: []
+    decision_log: []
+    traceability_matrix: []
+    evidence_refs: []
+    open_questions: []
+    concerns: []
+  effectiveness_review:
+    rounds_used: 2
+    pending_reviewer_recheck: false
+    last_verdict: PASS
+    rounds:
+    - round: 1
+      timestamp: '2026-07-21T18:24:31.792195+08:00'
+      verdicts:
+      - id: RV-execution-plan-effectiveness-reviewer-1
+        role: execution-plan-effectiveness-reviewer
+        verdict: PASS
+        reviewed_obligations:
+        - HINGE-slice-candidate-map
+        review_basis:
+        - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+        summary: 切片枢纽审查PASS：父任务按呈现作用面纵切、9/9 系统操作SUC-xx-OP-xx+25/25 Scenario 追溯实指、授权/停止条件覆盖硬约束、PT-05
+          LayoutController CSS-only 判断经独立复核成立；BG-1 覆盖矩阵幽灵ID已就地修复关闭
+        dispatch:
+          subagent_id: a4e2d546bb5ec25e7
+          model: claude-opus-4-8
+          execution_mode: spawn_agent
+          started_at: '2026-07-21T18:24:31.792195+08:00'
+          completed_at: '2026-07-21T18:24:31.792195+08:00'
+    - round: 2
+      timestamp: '2026-07-21T18:39:07.009518+08:00'
+      verdicts:
+      - id: RV-execution-plan-effectiveness-reviewer-2
+        role: execution-plan-effectiveness-reviewer
+        verdict: PASS
+        reviewed_obligations:
+        - OBL-BREAKDOWN-001
+        review_basis:
+          work_graph_artifact:
+            node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+            artifact_version: v1
+          docs:
+          - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+        summary: 全量有效性审查PASS：父任务迭代授权/DoD/证据/停止齐全、7父任务atomic_task_queue ready且文件级可执行、测试义务覆盖NEG-01~07+RISK-05双证据+GAP-D1双处穷举、边界无越界(LayoutController禁改/范围外零改动git
+          diff守卫)、依赖无环且风险前置、9/9 系统操作SUC-xx-OP-xx+25/25 Scenario追溯实指、代码模式参考真实src file:line无冒充；执行者仅凭简报+契约即可可靠执行
+        dispatch:
+          subagent_id: a4e2d546bb5ec25e7
+          model: claude-opus-4-8
+          execution_mode: spawn_agent
+          started_at: '2026-07-21T18:39:07.009518+08:00'
+          completed_at: '2026-07-21T18:39:07.009518+08:00'
+    last_gate_run_status: PASS
+  obligations:
+  - id: OBL-BREAKDOWN-001
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: verification
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      task:
+      - T001
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - execution-plan-effectiveness-reviewer
+    blocking: true
+    source: inferred
+  - id: HINGE-slice-candidate-map
+    mission_id: 20260721-watchboard-ui-friendliness
+    type: verification
+    risk: medium
+    traces_to:
+      acceptance:
+      - SCN-01
+      task:
+      - T001
+    required_evidence:
+    - reviewer_verdict
+    required_roles:
+    - execution-plan-effectiveness-reviewer
+    blocking: false
+    source: inferred
+  role_verdicts:
+  - id: RV-execution-plan-effectiveness-reviewer-1
+    role: execution-plan-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - HINGE-slice-candidate-map
+    review_basis:
+    - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    summary: 切片枢纽审查PASS：父任务按呈现作用面纵切、9/9 系统操作SUC-xx-OP-xx+25/25 Scenario 追溯实指、授权/停止条件覆盖硬约束、PT-05
+      LayoutController CSS-only 判断经独立复核成立；BG-1 覆盖矩阵幽灵ID已就地修复关闭
+    dispatch:
+      subagent_id: a4e2d546bb5ec25e7
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T18:24:31.792195+08:00'
+      completed_at: '2026-07-21T18:24:31.792195+08:00'
+  - id: RV-execution-plan-effectiveness-reviewer-2
+    role: execution-plan-effectiveness-reviewer
+    verdict: PASS
+    reviewed_obligations:
+    - OBL-BREAKDOWN-001
+    review_basis:
+      work_graph_artifact:
+        node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+        artifact_version: v1
+      docs:
+      - harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md
+    summary: 全量有效性审查PASS：父任务迭代授权/DoD/证据/停止齐全、7父任务atomic_task_queue ready且文件级可执行、测试义务覆盖NEG-01~07+RISK-05双证据+GAP-D1双处穷举、边界无越界(LayoutController禁改/范围外零改动git
+      diff守卫)、依赖无环且风险前置、9/9 系统操作SUC-xx-OP-xx+25/25 Scenario追溯实指、代码模式参考真实src file:line无冒充；执行者仅凭简报+契约即可可靠执行
+    dispatch:
+      subagent_id: a4e2d546bb5ec25e7
+      model: claude-opus-4-8
+      execution_mode: spawn_agent
+      started_at: '2026-07-21T18:39:07.009518+08:00'
+      completed_at: '2026-07-21T18:39:07.009518+08:00'
+  tasks:
+  - id: T001
+    parent_task_id: PT-01
+    objective: 四档语义色 token 层 + 只读呈现映射层地基；隔离共享 .data-notice 爆炸半径（SR-01），确立 INV-03 类名分离与
+      DEC-S01 只读边界
+    traces_to:
+    - DEC-S01
+    - DEC-S02
+    - DEC-S03
+    - SUC-01-OP-01
+    - SUC-02-OP-01
+    - SCN-01
+    - SCN-02
+    - watchboard-presentation/spec.md#负向评分与来源故障色物理区分
+    - watchboard-presentation/spec.md#未注册理由码兜底不直呈
+    authorized_paths:
+    - src/styles.css
+    - src/types.ts
+    - src/features/presentation/tone.ts
+    - src/features/presentation/humanize.ts
+    - tests/unit/presentation/tone.spec.ts
+    - tests/unit/presentation/humanize.spec.ts
+    prohibited_paths:
+    - src/styles.css#L379
+    - src/styles.css#L403-409
+    - src/domain/
+    - src/lib/signals.ts
+    - src/App.tsx
+    required_evidence:
+    - id: re-T001-1
+      type: failing_test
+      verification_type: unit
+      command: node --test tests/unit/presentation/tone.spec.ts tests/unit/presentation/humanize.spec.ts
+      description: tone.spec/humanize.spec 在实现前失败（含 negative→caution、demo_fallback→info、UNKNOWN_CODE
+        不直呈 的必失断言）。
+    - id: re-T001-2
+      type: passing_test
+      verification_type: unit
+      command: node --test tests/unit/presentation/tone.spec.ts tests/unit/presentation/humanize.spec.ts
+      description: 实现后各态映射断言全绿（来源五态/恢复四态/评分极性/未注册码回落）。
+    - id: re-T001-3
+      type: regression
+      verification_type: integration
+      command: npm run build && git diff --unified=0 src/styles.css | grep -nE '^[-+].*(\.data-notice|\.up|\.down)'
+        || echo NO_SHARED_CHANGE
+      description: build exit 0；git diff 证 styles.css:379 定义与 :403-409 涨跌色未改（输出 NO_SHARED_CHANGE）。
+    - id: re-T001-4
+      type: test_effectiveness
+      verification_type: manual
+      description: 把 negative 误映射 warning 或 demo_fallback 误映射 warning 时，tone.spec
+        断言必失（故障注入证测试有效）。
+    tdd_scope:
+      behavior_under_test:
+      - 领域状态 → 语义档/人话文案的纯只读映射
+      red_scope:
+      - tone.spec.ts / humanize.spec.ts 先断言各态映射（未实现前失败）
+      green_scope:
+      - tone.ts + humanize.ts 实现使断言通过
+      refactor_scope:
+      - 从 App.tsx 迁出 mtsTone/tradeSignalTone/sourceStatusLabel 到 presentation（下游接入时完成迁移）
+      out_of_scope:
+      - 不接入渲染组件、不改 domain、不测 CSS 视觉
+      required_assertions:
+      - formal/not_loaded→normal、demo_fallback→info、stale/unavailable→warning
+      - negative/strong_negative 或 alertLevel=风控→caution（非 warning）
+      - restored→normal、partial/default_fallback→info、failed 或 discardedLayoutKeys
+        非空→warning
+      - 未注册理由码走 UNKNOWN_CODE 回落，不直呈原始 code
+      test_data_boundary:
+        fixtures:
+        - 纯枚举/对象字面量输入，不依赖网络/DOM
+        isolation:
+        - 纯函数无副作用
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - 无需（纯函数）
+        forbidden_test_doubles:
+        - 不得在测试里硬编码返回值绕过实现；不得复制 domain 计算
+      commands:
+        red: node --test tests/unit/presentation/*.spec.ts
+        green: node --test tests/unit/presentation/*.spec.ts
+        regression: npm run build
+      validity_probe:
+        method: 故障注入 negative→warning / demo_fallback→warning
+        expected_signal: tone.spec 断言失败
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - presentation_mapping_layer
+      - css_token_layer
+      required_capabilities:
+      - unit_test
+      - build_typecheck
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      accepted_alternatives:
+        unit_test:
+        - unit_test_for_pure_presentation_functions
+    stop_if:
+    - changes_outside_authorized_paths
+    - 在 presentation 层重建 code→label 映射表（DEC-S03 越界）
+    - 改 domain 计算或共享 .data-notice/.up/.down 定义
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      detail_refs:
+      - AT-0101
+      - AT-0102
+      - AT-0103
+      notes:
+        parent_task_coverage: PT-01 地基：token 层 + 只读映射层，被 PT-02~07 消费
+        acceptance_scenario_coverage: 支撑
+        code_pattern_references: 样板 tests/unit/signals/trade-signals.spec.ts（node:test）；styles.css:566-605
+          既有 tone 承载类
+        interface_or_data_contracts: Tone 类型 + resolve*Tone/humanize* 纯函数签名（tech-design
+          §4）
+        test_fixtures_and_seed_data: 纯枚举/对象字面量
+        validation_commands: node --test；npm run build
+        transaction_or_state_boundaries: 无（纯只读）
+        evidence_requirements: red/green/regression（含 git diff 守护共享定义）
+        stop_conditions: 越界改 domain/共享定义/重建映射表
+        migration_or_route_boundaries: 无迁移
+    dependencies: []
+  - id: T002
+    parent_task_id: PT-02
+    objective: MTS 卡人话化 + 进度条 + 折叠详情；消除主视图裸枚举·裸理由码泄漏（GAP-D1 穷举）
+    traces_to:
+    - SUC-02-OP-01
+    - SUC-02-OP-02
+    - DEC-S03
+    - DEC-S04
+    - SCN-02
+    - SCN-01
+    - watchboard-presentation/spec.md#主视图不暴露原始枚举/理由代码
+    - watchboard-presentation/spec.md#评分以进度条式可读呈现
+    - watchboard-presentation/spec.md#原始枚举/理由代码仅在展开详情可见
+    - watchboard-presentation/spec.md#未注册理由码兜底不直呈
+    - watchboard-presentation/spec.md#非 ready 技术/交易状态人话化
+    - watchboard-presentation/spec.md#负向评分与来源故障色物理区分
+    authorized_paths:
+    - src/App.tsx
+    - src/features/presentation/ScoreBar.tsx
+    - src/styles.css
+    - tests/e2e/mts/
+    prohibited_paths:
+    - src/App.tsx（trade-signal-card 段 528-632）
+    - src/domain/
+    - src/styles.css#L379
+    required_evidence:
+    - id: re-T002-1
+      type: failing_test
+      verification_type: e2e
+      command: npm run test:e2e -- mts
+      description: 改前失败——主视图含 5 裸枚举前缀 + reasons/invalidators 双处裸 code + 无 ScoreBar。
+    - id: re-T002-2
+      type: passing_test
+      verification_type: e2e
+      command: npm run test:e2e -- mts
+      description: 主视图 0 裸枚举/裸理由码、ScoreBar DOM 存在、640/645 用 .notice--warning、折叠默认收起→展开原始字段可见、UNKNOWN_CODE
+        不直呈。
+    - id: re-T002-3
+      type: regression
+      verification_type: integration
+      command: npm run build && npm run test:e2e -- mts
+      description: build exit 0 + mts E2E 全绿（既有 mts testid/断言不回归）。
+    - id: re-T002-4
+      type: test_effectiveness
+      verification_type: manual
+      description: 若 invalidators 一侧漏改仍直呈 code，DOM 文本断言必失（GAP-D1 双处穷举有效性）。
+    tdd_scope:
+      behavior_under_test:
+      - MTS 主视图人话化 + 进度条承载 + 折叠交互
+      red_scope:
+      - mts E2E 断言主视图无枚举/无裸 code + 进度条 DOM + 折叠默认收起
+      green_scope:
+      - score-grid 5 字段收折叠/人话化、ScoreBar、reasons+invalidators 双处人话化、640/645 迁移
+      refactor_scope:
+      - 复用 PT-01 humanizeReason/resolveScoreTone
+      out_of_scope:
+      - 不改 domain、不动 trade-card 段、不持久化折叠态
+      required_assertions:
+      - 主视图文本不含 trend_state/mts_score/score_band/signal_type/alert_level 前缀
+      - reasons(667)+invalidators(673) 双处无裸 code
+      - 折叠默认收起→点击展开→原始字段可见
+      test_data_boundary:
+        fixtures:
+        - 复用 tests/e2e/mts envelope；含未注册 reason code 态
+        isolation:
+        - Playwright route 注入
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - Playwright route mock envelope
+        forbidden_test_doubles:
+        - 不得 mock 掉 humanizeReason 绕过 UNKNOWN_CODE 回落
+      commands:
+        red: npm run test:e2e -- mts
+        green: npm run test:e2e -- mts
+        regression: npm run build && npm run test:e2e -- mts
+      validity_probe:
+        method: 保留 invalidators 一侧裸 code
+        expected_signal: 主视图无裸 code 断言失败
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - mts_card_presentation
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - dom_assertion
+      - build_typecheck
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      accepted_alternatives: {}
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - negative_path
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+      accepted_alternatives: {}
+    stop_if:
+    - changes_outside_authorized_paths
+    - 任一裸枚举/裸理由码残留主视图（含 aria/hidden 蒙混）
+    - 折叠交互无 E2E 断言（interaction 已跳过，折叠只能 E2E 承载）
+    - 折叠态持久化到 localStorage（DEC-S04 越界）
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0201
+      - AT-0202
+      detail_refs:
+      - AT-0201
+      - AT-0202
+      notes:
+        parent_task_coverage: PT-02 MTS 卡呈现面
+        acceptance_scenario_coverage: 覆盖
+        code_pattern_references: 样板 tests/e2e/mts/card.spec.ts；App.tsx:634-678 mts-card
+          段
+        interface_or_data_contracts: 消费 PT-01 ScoreBar/humanizeReason/resolveScoreTone
+        test_fixtures_and_seed_data: mts envelope（含未注册 code 态）
+        validation_commands: npm run test:e2e -- mts；npm run build
+        transaction_or_state_boundaries: 折叠为组件本地 useState，不持久化
+        evidence_requirements: red/green/regression + 折叠展开 E2E
+        stop_conditions: 裸枚举残留/折叠无E2E/持久化折叠态
+        migration_or_route_boundaries: App.tsx:640/645 .data-notice→.notice--warning（范围内
+          2/4）
+    dependencies:
+    - T001
+  - id: T003
+    parent_task_id: PT-03
+    objective: 交易信号卡密度 + 层级 + nonAdvice 常驻 + 折叠；主看信号突出与免责合规红线
+    traces_to:
+    - SUC-03-OP-01
+    - SUC-03-OP-02
+    - DEC-S04
+    - DEC-S08
+    - SCN-05
+    - SCN-07
+    - SCN-02
+    - watchboard-presentation/spec.md#主卡突出、次级降灰形成层级差
+    - watchboard-presentation/spec.md#免责声明保持可见
+    - watchboard-presentation/spec.md#默认呈现关键数字
+    - watchboard-presentation/spec.md#三段回测明细默认折叠、展开后呈现
+    - watchboard-presentation/spec.md#仅 ready 呈现回测块、价位分层级
+    - watchboard-presentation/spec.md#非 ready 技术/交易状态人话化
+    - watchboard-presentation/spec.md#来源降级时信号卡同步降级
+    authorized_paths:
+    - src/App.tsx
+    - tests/e2e/gate/
+    prohibited_paths:
+    - src/App.tsx（mts-card 段 634-678）
+    - src/domain/
+    - src/lib/signals.ts
+    - src/styles.css#L379
+    required_evidence:
+    - id: re-T003-1
+      type: failing_test
+      verification_type: e2e
+      command: npm run test:e2e -- gate
+      description: 改前失败——默认态三段回测铺开、无折叠、signal-topline 直呈枚举串、非 ready 呈空回测块、nonAdvice
+        位置未固定。
+    - id: re-T003-2
+      type: passing_test
+      verification_type: e2e
+      command: npm run test:e2e -- gate
+      description: 默认呈关键数字、三段回测折叠、nonAdvice 折叠外常驻、非 ready 人话化且无回测块、价位分层级。
+    - id: re-T003-3
+      type: regression
+      verification_type: integration
+      command: npm run build && npm run test:e2e
+      description: build exit 0 + 全量 E2E 全绿；主/次层级差【双证据】= 次级样式 computed-style DOM 断言
+        + preview 截图。
+    - id: re-T003-4
+      type: test_effectiveness
+      verification_type: manual
+      description: 把 nonAdvice 放进折叠区，折叠态 nonAdvice 可见断言必失（INV-06/NEG-05 合规红线）。
+    tdd_scope:
+      behavior_under_test:
+      - 交易信号卡主/次层级 + 折叠 + nonAdvice 常驻 + 非 ready 人话化
+      red_scope:
+      - gate E2E 断言默认无流水/折叠/nonAdvice 折叠态可见/非 ready 无回测块
+      green_scope:
+      - 主卡关键数字突出、明细折叠、nonAdvice 常驻、humanizeTradeStatus、BR-07 守卫
+      refactor_scope:
+      - 复用 PT-01 humanizeTradeStatus
+      out_of_scope:
+      - 不改 domain 门控/回测计算、不动 mts-card 段
+      required_assertions:
+      - 默认关键数字可见、三段回测默认折叠→展开可见
+      - nonAdvice 折叠态仍可见（结构上不进折叠容器）
+      - 非 ready 文本无枚举串、非 ready 无回测块
+      - 主/次层级差：样式 DOM 断言 + 截图双证据
+      test_data_boundary:
+        fixtures:
+        - ready 态 + 非 ready（not_target/data_insufficient/source_degraded）fixture
+        isolation:
+        - Playwright route
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - Playwright route mock
+        forbidden_test_doubles:
+        - 不得在呈现层重实现 source_degraded 门控（DEC-S01）
+      commands:
+        red: npm run test:e2e -- gate
+        green: npm run test:e2e -- gate
+        regression: npm run build && npm run test:e2e
+      validity_probe:
+        method: nonAdvice 放进折叠区
+        expected_signal: 折叠态 nonAdvice 可见断言失败
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - trade_signal_card_presentation
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - dom_computed_style_assertion
+      - negative_path
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - hierarchy_report
+      accepted_alternatives: {}
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - negative_path
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+      accepted_alternatives: {}
+    stop_if:
+    - changes_outside_authorized_paths
+    - nonAdvice 被放进折叠区或折叠态隐藏（INV-06/NEG-05）
+    - 呈现层重实现 source_degraded 门控（DEC-S01 越界）
+    - 主观层级差缺任一证据（样式断言或截图，RISK-05 双证据）
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0301
+      - AT-0302
+      detail_refs:
+      - AT-0301
+      - AT-0302
+      notes:
+        parent_task_coverage: PT-03 交易信号卡呈现面
+        acceptance_scenario_coverage: 覆盖
+        code_pattern_references: App.tsx:528-632 trade-signal-card 段；样板 tests/e2e/gate/acceptance-matrix.spec.ts
+        interface_or_data_contracts: 消费 PT-01 humanizeTradeStatus；只读 tradeSignal.status（domain
+          门控产出）
+        test_fixtures_and_seed_data: ready + 非 ready 三态 fixture
+        validation_commands: npm run test:e2e -- gate；npm run build
+        transaction_or_state_boundaries: 折叠本地 useState；无领域写
+        evidence_requirements: red/green/regression + 层级差双证据
+        stop_conditions: nonAdvice进折叠/重实现门控/层级差缺双证据
+        migration_or_route_boundaries: 无
+    dependencies:
+    - T002
+  - id: T004
+    parent_task_id: PT-04
+    objective: 侧栏条目结构 + 来源小圆点弱化 + archived 弱化；侧栏扫读优化、来源非第二主源
+    traces_to:
+    - SUC-04-OP-01
+    - DEC-S05
+    - DEC-S02
+    - SCN-06
+    - SCN-03
+    - watchboard-presentation/spec.md#侧栏条目主看信息突出
+    - watchboard-presentation/spec.md#侧栏来源弱化为小圆点非主源
+    - watchboard-presentation/spec.md#归档标的弱化区分
+    authorized_paths:
+    - src/App.tsx
+    - src/styles.css
+    - tests/e2e/watchlist/
+    prohibited_paths:
+    - src/App.tsx（archiveSymbol/restoreSymbol 逻辑与 STM-01 迁移）
+    - src/domain/
+    - src/styles.css#L379
+    - src/styles.css#L403-409
+    required_evidence:
+    - id: re-T004-1
+      type: failing_test
+      verification_type: e2e
+      command: npm run test:e2e -- watchlist
+      description: 改前失败——来源以文本/第二主源呈现、条目未分名称+代码一行/价格右对齐、archived 与 active 同权重。
+    - id: re-T004-2
+      type: passing_test
+      verification_type: e2e
+      command: npm run test:e2e -- watchlist
+      description: 名称+代码一行、价格右对齐、来源小圆点弱化非主源、archived 弱化区分 active。
+    - id: re-T004-3
+      type: regression
+      verification_type: integration
+      command: npm run build && npm run test:e2e -- watchlist
+      description: build exit 0 + watchlist E2E（含既有 archive-restore 回归）全绿。
+    - id: re-T004-4
+      type: test_effectiveness
+      verification_type: manual
+      description: archived 与 active 同权重时弱化区分断言必失（SCN-06-COND-03）。
+    tdd_scope:
+      behavior_under_test:
+      - 侧栏条目主看结构 + 来源小圆点弱化 + archived 弱化
+      red_scope:
+      - watchlist E2E 断言条目结构/小圆点非主源/archived 弱化
+      green_scope:
+      - 名称代码一行、价格右对齐、resolveSourceTone 小圆点、.watch-item.archived 弱化
+      refactor_scope:
+      - 复用 PT-01 resolveSourceTone
+      out_of_scope:
+      - 不改归档/恢复业务逻辑、不改 .up/.down
+      required_assertions:
+      - 条目名称+代码一行、价格+涨跌右对齐
+      - 来源小圆点（formal 中性/非 formal 需关注），非来源主源横幅
+      - archived 弱化、与 active 可断言样式差
+      test_data_boundary:
+        fixtures:
+        - watchlist fixture 含 active + archived 条目
+        isolation:
+        - Playwright route
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - Playwright route mock
+        forbidden_test_doubles:
+        - 不得改 archiveSymbol/restoreSymbol 逻辑
+      commands:
+        red: npm run test:e2e -- watchlist
+        green: npm run test:e2e -- watchlist
+        regression: npm run build && npm run test:e2e -- watchlist
+      validity_probe:
+        method: archived 与 active 同权重渲染
+        expected_signal: archived 弱化区分断言失败
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: medium
+      surfaces:
+      - watchlist_sidebar_presentation
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - dom_assertion
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      accepted_alternatives:
+        browser_flow:
+        - preview 截图 + DOM 断言（复用既有 watchlist E2E 回归基线）
+    e2e_obligation:
+      risk_level: medium
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+      - assertion_summary
+      accepted_alternatives: {}
+    stop_if:
+    - changes_outside_authorized_paths
+    - 弱化区分需改 STM-01 归档业务逻辑
+    - 来源仍以文本横幅/第二主源呈现（SCN-03-COND-01 前置未满足）
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0401
+      - AT-0402
+      detail_refs:
+      - AT-0401
+      - AT-0402
+      notes:
+        parent_task_coverage: PT-04 侧栏呈现面
+        acceptance_scenario_coverage: 覆盖
+        code_pattern_references: App.tsx:424-466 watchlist 段；样板 tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts
+        interface_or_data_contracts: 消费 PT-01 resolveSourceTone
+        test_fixtures_and_seed_data: watchlist fixture 含 archived
+        validation_commands: npm run test:e2e -- watchlist；npm run build
+        transaction_or_state_boundaries: 无领域写（仅呈现区分）
+        evidence_requirements: red/green/regression
+        stop_conditions: 改归档逻辑/来源仍为第二主源
+        migration_or_route_boundaries: 无
+    dependencies:
+    - T001
+    - T002
+    - T003
+  - id: T005
+    parent_task_id: PT-05
+    objective: 顶部层级重排 + 唯一主源承载计数=1（GAP-D3）；含 LayoutController 越界 stop_if
+    traces_to:
+    - SUC-05-OP-01
+    - SUC-01-OP-02
+    - DEC-S05
+    - DEC-S09
+    - SCN-03
+    - SCN-04
+    - watchboard-presentation/spec.md#来源正常态不出现警告色
+    - watchboard-presentation/spec.md#来源真异常态出现警告色并标注受影响范围
+    - watchboard-presentation/spec.md#demo_fallback 呈信息级不用高危警告色（DEC-01 默认档，待用户确认）
+    - watchboard-presentation/spec.md#来源状态收敛到唯一权威主源
+    - watchboard-presentation/spec.md#价格/涨跌收敛唯一主源且涨跌色与警告色分离
+    - watchboard-presentation/spec.md#标题为顶部视觉主位、控件降级
+    - watchboard-presentation/spec.md#切换周期/布局后标题仍主位、切换语义不变
+    authorized_paths:
+    - src/styles.css
+    - src/App.tsx
+    - src/features/chart/ChartSurface.tsx
+    - tests/e2e/workbench/
+    - tests/e2e/restore-layout/
+    prohibited_paths:
+    - src/features/layout/LayoutController.tsx
+    - src/styles.css#L379
+    - src/styles.css#L403-409
+    - src/features/chart/ChartSurface.tsx#L207
+    - STM-06 切换逻辑/白名单
+    required_evidence:
+    - id: re-T005-1
+      type: failing_test
+      verification_type: e2e
+      command: npm run test:e2e -- workbench
+      description: 改前失败——source-authority/price-authority testid 不存在或计数≠1；标题与控件抢焦点。
+    - id: re-T005-2
+      type: passing_test
+      verification_type: e2e
+      command: npm run test:e2e -- workbench && npm run test:e2e -- restore-layout
+      description: source-authority 计数=1、price-authority 计数=1、标题主位 computed-style
+        > 控件、切换布局后标题仍主位且 STM-06 生效。
+    - id: re-T005-3
+      type: regression
+      verification_type: integration
+      command: npm run build && npm run test:e2e && git diff --exit-code src/features/layout/LayoutController.tsx
+      description: build exit 0 + 全量 E2E + LayoutController.tsx 零改动；主观项标题主位【双证据】=
+        computed-style DOM 断言 + preview 截图。
+    - id: re-T005-4
+      type: test_effectiveness
+      verification_type: manual
+      description: 多元素挂同 source-authority testid 蒙混计数=1 时，真实唯一承载断言应能识破（计数=1 需真实单一元素）。
+    tdd_scope:
+      behavior_under_test:
+      - 顶部标题主位/控件降级 + 来源/价格唯一主源计数=1
+      red_scope:
+      - E2E 断言 source-authority/price-authority toHaveCount(1) + 标题主位
+      green_scope:
+      - App.tsx market-workspace 新增 source-authority、ChartSurface quote-line 挂 price-authority、styles.css
+        CSS-only 标题主位
+      refactor_scope:
+      - 侧栏来源降级（PT-04）配合源计数=1
+      out_of_scope:
+      - 不改 LayoutController JSX、不改 STM-06 逻辑、不改 :207(PT-06)
+      required_assertions:
+      - getByTestId('source-authority').toHaveCount(1)
+      - getByTestId('price-authority').toHaveCount(1)
+      - .workspace-header h2 font-size/weight > 控件；控件右对齐
+      - 切换 dense/focus/mobile_tab 后标题仍主位、切换生效、非法值归一化回 focus
+      test_data_boundary:
+        fixtures:
+        - 复用 workbench/restore-layout 快照 fixture
+        isolation:
+        - Playwright route
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - Playwright route mock
+        forbidden_test_doubles:
+        - 不得移除 LayoutController:75 来源文本或改其 JSX
+      commands:
+        red: npm run test:e2e -- workbench
+        green: npm run test:e2e -- workbench && npm run test:e2e -- restore-layout
+        regression: npm run build && npm run test:e2e && git diff --exit-code src/features/layout/LayoutController.tsx
+      validity_probe:
+        method: 多元素挂同 testid
+        expected_signal: 唯一承载断言应仍要求真实单一元素
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - top_region_hierarchy
+      - source_authority_dedup
+      - price_authority_dedup
+      required_capabilities:
+      - browser_flow
+      - dom_count_assertion
+      - dom_computed_style_assertion
+      - user_visible_assertion
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - hierarchy_report
+      accepted_alternatives: {}
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      - navigation
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+      accepted_alternatives: {}
+    stop_if:
+    - changes_outside_authorized_paths
+    - 源计数=1 或标题主位必须改 LayoutController.tsx JSX / 移除其 :75 来源文本才能达成（→ 停回 technical_analysis
+      / 决策门禁）
+    - 切换后标题丢主位或 STM-06 白名单/归一化被改（NEG-06/DEC-S09）
+    - 主观项缺任一证据（样式断言或截图，RISK-05 双证据）
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0501
+      - AT-0502
+      detail_refs:
+      - AT-0501
+      - AT-0502
+      notes:
+        parent_task_coverage: PT-05 顶部层级 + 唯一主源
+        acceptance_scenario_coverage: 覆盖
+        code_pattern_references: ChartSurface.tsx:344 quote-line；App.tsx market-workspace
+          段；LayoutController.tsx:71-124（只读参照，禁改）；样板 tests/e2e/workbench/default.spec.ts、restore-layout/resume.spec.ts
+        interface_or_data_contracts: source-authority/price-authority testid 唯一承载；消费
+          PT-01 resolveSourceTone
+        test_fixtures_and_seed_data: workbench/restore-layout 快照
+        validation_commands: npm run test:e2e -- workbench|restore-layout；git diff
+          --exit-code LayoutController.tsx
+        transaction_or_state_boundaries: 无领域写；CSS-only 重排
+        evidence_requirements: 计数=1 + 标题主位双证据 + LayoutController 零改动守护
+        stop_conditions: 必须改 LayoutController JSX → 停回上游；切换语义变化
+        migration_or_route_boundaries: 无
+    dependencies:
+    - T001
+    - T002
+    - T003
+    - T004
+  - id: T006
+    parent_task_id: PT-06
+    objective: 恢复态四档归位 + 范围内 data-notice 收尾迁移；恢复正常态不染警告色、爆炸半径隔离（SR-01）
+    traces_to:
+    - SUC-06-OP-01
+    - DEC-S02
+    - DEC-S06
+    - SCN-01
+    - watchboard-presentation/spec.md#工作台正常恢复态不出现警告色黄条
+    - watchboard-presentation/spec.md#工作台恢复失败态出现需关注提示
+    - watchboard-presentation/spec.md#恢复态与来源态各自独立承载
+    authorized_paths:
+    - src/features/restore/RestoreStatus.tsx
+    - src/features/chart/ChartSurface.tsx
+    - tests/e2e/restore-layout/
+    prohibited_paths:
+    - src/features/restore/RestoreStatus.tsx（快照读写/STM-07 判定逻辑）
+    - src/styles.css#L379
+    - src/features/alerts/AlertRulePanel.tsx
+    - src/features/layout/LayoutController.tsx
+    - src/features/workbench/WorkbenchShell.tsx
+    - src/features/chart/ChartSurface.tsx（quote-line/chart-source-status，PT-05）
+    required_evidence:
+    - id: re-T006-1
+      type: failing_test
+      verification_type: e2e
+      command: npm run test:e2e -- restore-layout
+      description: 改前失败——restored/partial/default_fallback 被染 .notice--warning（全态复用
+        .data-notice）；恢复承载与来源承载同元素。
+    - id: re-T006-2
+      type: passing_test
+      verification_type: e2e
+      command: npm run test:e2e -- restore-layout
+      description: 四档分色（restored=normal/partial+default_fallback=info/failed+坏布局=warning）、技术态收详情、恢复承载独立于来源承载（NEG-03）、ChartSurface:207
+        迁 .notice--warning。
+    - id: re-T006-3
+      type: regression
+      verification_type: integration
+      command: npm run build && npm run test:e2e && grep -rn 'data-notice' src/App.tsx
+        src/features/restore src/features/chart | grep -v 'notice--' || echo RANGE_INTERNAL_MIGRATED
+      description: build exit 0 + 全量 E2E + 范围内 .data-notice 迁移 4/4（输出 RANGE_INTERNAL_MIGRATED）。
+    - id: re-T006-4
+      type: test_effectiveness
+      verification_type: manual
+      description: 把 restored 态染警告色时，restored 无 .notice--warning 断言必失（SCN-01 直接根因）。
+    tdd_scope:
+      behavior_under_test:
+      - 恢复态四档分色 + 技术态收详情 + 恢复态与来源态独立承载 + ChartSurface 迁移
+      red_scope:
+      - restore-layout E2E 逐态断言无警告色/failed 需关注/独立承载
+      green_scope:
+      - resolveRestoreTone 四档、技术态收详情、props 签名不变、ChartSurface:207 迁移
+      refactor_scope:
+      - 复用 PT-01 resolveRestoreTone
+      out_of_scope:
+      - 不改快照读写/STM-07、不动 quote-line/chart-source-status
+      required_assertions:
+      - restored/partial/default_fallback 无 .notice--warning
+      - failed/坏布局(discardedLayoutKeys 非空)需关注承载
+      - restore-status 与 source-authority 为独立元素（NEG-03）
+      - ChartSurface chart-degradation-note 为 .notice--warning
+      test_data_boundary:
+        fixtures:
+        - restored/partial/default_fallback/failed 四态快照 fixture
+        isolation:
+        - Playwright route/快照注入
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - 四态快照 fixture
+        forbidden_test_doubles:
+        - 不得改 STM-07 判定绕过
+      commands:
+        red: npm run test:e2e -- restore-layout
+        green: npm run test:e2e -- restore-layout
+        regression: npm run build && npm run test:e2e
+      validity_probe:
+        method: restored 态染警告色
+        expected_signal: restored 无警告色断言失败
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - restore_status_presentation
+      - chart_degradation_notice
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - negative_path
+      - dom_assertion
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - restore_states_report
+      accepted_alternatives: {}
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - negative_path
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+      accepted_alternatives: {}
+    stop_if:
+    - changes_outside_authorized_paths
+    - restored/partial/default_fallback 任一态被染警告色（SCN-01 直接根因）
+    - 恢复态与来源态共用同一 banner（NEG-03）
+    - 四档分色需改快照读写/STM-07 判定
+    - 迁移波及 chart-source-status/quote-line 或 :379 定义（SR-01）
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0601
+      - AT-0602
+      detail_refs:
+      - AT-0601
+      - AT-0602
+      notes:
+        parent_task_coverage: PT-06 恢复态 + 范围内 data-notice 收尾
+        acceptance_scenario_coverage: 覆盖
+        code_pattern_references: RestoreStatus.tsx:16；ChartSurface.tsx:207；样板 tests/e2e/restore-layout/resume.spec.ts
+        interface_or_data_contracts: 消费 PT-01 resolveRestoreTone；RestoreStatus props
+          签名不变
+        test_fixtures_and_seed_data: 四态快照 fixture
+        validation_commands: npm run test:e2e -- restore-layout；范围内迁移 grep；npm run
+          build
+        transaction_or_state_boundaries: 无领域写（只读 STM-07 结果）
+        evidence_requirements: 四态逐态 DOM+截图 + 范围内迁移 4/4 grep
+        stop_conditions: 正常态染警告色/共 banner/改 STM-07/波及 PT-05 面
+        migration_or_route_boundaries: RestoreStatus:16 + ChartSurface:207 .data-notice→.notice--*（范围内
+          2/4，累计 4/4）
+    dependencies:
+    - T005
+  - id: T007
+    parent_task_id: PT-07
+    objective: 跨呈现一致性 + 范围外零改动回归验证（终局验证切片，纯 tests/e2e）
+    traces_to:
+    - SUC-03-OP-02
+    - DEC-S01
+    - DEC-S06
+    - SCN-01
+    - SCN-02
+    - watchboard-presentation/spec.md#来源降级时信号卡同步降级
+    - watchboard-presentation/spec.md#恢复态与来源态各自独立承载
+    authorized_paths:
+    - tests/e2e/gate/consistency.spec.ts
+    - tests/e2e/gate/scope-guard.spec.ts
+    prohibited_paths:
+    - src/
+    - src/features/alerts/AlertRulePanel.tsx
+    - src/features/layout/LayoutController.tsx
+    - src/features/workbench/WorkbenchShell.tsx
+    - src/styles.css#L379
+    required_evidence:
+    - id: re-T007-1
+      type: failing_test
+      verification_type: e2e
+      command: npm run test:e2e -- gate/consistency
+      description: 实现落地前失败——来源 stale 时信号卡仍 ready/给价位；恢复承载与来源承载同元素；source/price-authority
+        计数≠1。
+    - id: re-T007-2
+      type: passing_test
+      verification_type: e2e
+      command: npm run test:e2e -- gate/consistency && npm run test:e2e -- gate/scope-guard
+      description: 来源 stale→信号卡 source_degraded 不显 ready 不给价位(NEG-01)、恢复态vs来源态独立(NEG-03)、计数=1
+        聚合、范围外 5 处 .data-notice 零改动、axe 无新增违规。
+    - id: re-T007-3
+      type: regression
+      verification_type: integration
+      command: git diff --exit-code src/features/alerts/AlertRulePanel.tsx src/features/layout/LayoutController.tsx
+        src/features/workbench/WorkbenchShell.tsx && grep -nE '\.data-notice\s*\{'
+        src/styles.css && npm run build && npm run test:e2e
+      description: 范围外 3 文件零 diff + :379 定义存在未改 + build exit 0 + 全量 E2E 全绿（NEG-07
+        无回归基线）。
+    - id: re-T007-4
+      type: test_effectiveness
+      verification_type: manual
+      description: 在 spec 内 mock 掉 domain 门控绕过真实一致性时，视为无效证据（须走真实只读路径证 INV-07）。
+    tdd_scope:
+      behavior_under_test:
+      - 跨呈现只读一致性（三处读同一门控结果）+ 范围外零改动 + axe 无回归
+      red_scope:
+      - consistency.spec 断言 NEG-01/NEG-03/计数=1；scope-guard.spec 断言范围外零改动/axe
+      green_scope:
+      - 实现落地后一致性/零改动/axe 全绿
+      refactor_scope:
+      - 无（纯验证切片）
+      out_of_scope:
+      - 不改任何 src/ 产品代码（波及则回 PT-02/03/06 修）
+      required_assertions:
+      - 来源 stale→信号卡 source_degraded、不显 ready、不给价位（NEG-01）
+      - 恢复承载 ≠ 来源承载元素（NEG-03）
+      - source-authority/price-authority 各 toHaveCount(1) 聚合
+      - 范围外 5 处 .data-notice 零改动 + :379 定义未改 + axe 无新增违规
+      test_data_boundary:
+        fixtures:
+        - stale envelope + 恢复快照 fixture（复用 mts/card + restore-layout 模式）
+        isolation:
+        - Playwright route（不 mock domain 门控）
+      test_doubles_boundary:
+        allowed_test_doubles:
+        - Playwright route 注入 envelope
+        forbidden_test_doubles:
+        - 不得 mock 掉 domain 门控绕过真实一致性
+      commands:
+        red: npm run test:e2e -- gate/consistency
+        green: npm run test:e2e -- gate/consistency && npm run test:e2e -- gate/scope-guard
+        regression: npm run build && npm run test:e2e
+      validity_probe:
+        method: spec 内 mock domain 门控
+        expected_signal: 视为无效证据（须真实只读路径）
+      delegated_to_atomic_plan: 'true'
+    test_obligation:
+      risk_level: high
+      surfaces:
+      - cross_presentation_consistency
+      - out_of_scope_zero_change
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - negative_path
+      - dom_count_assertion
+      - accessibility_smoke
+      - regression_diff_guard
+      evidence_required:
+      - red_report
+      - green_report
+      - regression_report
+      - consistency_report
+      - axe_report
+      - scope_guard_report
+      accepted_alternatives: {}
+    e2e_obligation:
+      risk_level: high
+      user_surfaces:
+      - web_ui
+      - accessibility
+      required_capabilities:
+      - browser_flow
+      - user_visible_assertion
+      - negative_path
+      - accessibility_smoke
+      evidence_required:
+      - e2e_run_report
+      - trace_or_video
+      - screenshot_on_failure
+      - assertion_summary
+      accepted_alternatives: {}
+    stop_if:
+    - changes_outside_authorized_paths
+    - 范围外组件被波及（回 PT-02/03/06 修，不在范围外文件掩盖）
+    - 一致性需呈现层重实现门控才通过（回 tech-design §5.4，DEC-S01 越界）
+    - new_public_behavior_without_delta_spec
+    - design_constraint_conflict
+    - new_external_dependency
+    atomic_task_queue:
+      status: ready
+      atomic_task_ids:
+      - AT-0701
+      - AT-0702
+      detail_refs:
+      - AT-0701
+      - AT-0702
+      notes:
+        parent_task_coverage: PT-07 终局一致性 + 范围外零改动回归
+        acceptance_scenario_coverage: 覆盖
+        code_pattern_references: 样板 tests/e2e/gate/acceptance-matrix.spec.ts、watchlist/t001（含
+          axe @axe-core/playwright）
+        interface_or_data_contracts: 只读 domain 门控结果（trade-signals.ts:619-627），不重实现
+        test_fixtures_and_seed_data: stale envelope + 恢复快照
+        validation_commands: npm run test:e2e -- gate/consistency|gate/scope-guard；git
+          diff --exit-code 范围外 3 文件；grep :379
+        transaction_or_state_boundaries: 纯验证切片，无 src 改动
+        evidence_requirements: NEG-01/NEG-03/计数=1 + 范围外零改动 + axe 无违规
+        stop_conditions: 范围外被波及/靠重实现门控通过
+        migration_or_route_boundaries: 无（纯 tests/e2e 新建）
+    dependencies:
+    - T002
+    - T003
+    - T004
+    - T005
+    - T006
+

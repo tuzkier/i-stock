@@ -143,6 +143,14 @@ test("坏 layout snapshot 只回退默认 focus，页面仍可用", async ({ pag
   await expect(page.getByTestId("restore-status")).toContainText("已回退默认布局");
   await expect(page.getByTestId("layout-mode-focus")).toHaveClass(/active/);
   await expect(page.getByTestId("chart-main-panel")).toContainText("AAPL");
+
+  // NEG-06：非法布局值归一化回退后，标题仍是顶部视觉主位
+  const title = page.locator(".workspace-header h2");
+  const rangeBtn = page.locator(".range-controls button").first();
+  await expect(title).toBeVisible();
+  const titleSize = Number.parseFloat(await title.evaluate((el) => getComputedStyle(el).fontSize));
+  const ctrlSize = Number.parseFloat(await rangeBtn.evaluate((el) => getComputedStyle(el).fontSize));
+  expect(titleSize).toBeGreaterThan(ctrlSize);
 });
 
 test("mobile_tab 与活动 tab 会按 symbol 恢复", async ({ page }) => {

@@ -1,0 +1,374 @@
+# HarnessV2 sub-agent model routing
+# Exact model names are adapter/runtime specific. Public workflows must not
+# hard-code model names; they resolve role -> candidates here.
+#
+# Fallback semantics (see rules/model-routing.md):
+#   - Only triggers when ALL candidate models for a successfully-dispatched sub-agent
+#     are unsupported by the runtime. It does NOT cover "named sub-agent cannot be
+#     dispatched" — that case BLOCKs the workflow.
+#   - Allowed values: null (no fallback — BLOCK), `default_model`, `main_agent`.
+#   - Reviewer-class roles must NOT use `main_agent` fallback. Default global review
+#     fallback is unset so review degradations always surface as BLOCKED.
+
+current_adapter: auto
+
+# Global fallback strategy. Set fallback: null on review to require BLOCK;
+# execution defaults to main_agent for low-stakes engineering roles.
+fallback:
+  record_evidence: true
+
+defaults:
+  execution:
+    fallback: main_agent
+  review:
+    fallback: null
+    prefer_high_capability: true
+
+adapters:
+  codex:
+    defaults:
+      execution:
+        candidates:
+          - gpt-5.4-mini
+          - gpt-5.3-codex
+        fallback: main_agent
+      review:
+        candidates:
+          - gpt-5.4
+    roles:
+      general-engineer:
+        inherit: execution
+      frontend-engineer:
+        inherit: execution
+      frontend-prototype-engineer:
+        inherit: execution
+      backend-engineer:
+        inherit: execution
+      client-engineer:
+        inherit: execution
+      security-engineer:
+        inherit: execution
+      test-engineer:
+        inherit: execution
+      debugging-expert:
+        inherit: execution
+      interaction-engineer:
+        inherit: execution
+      integration-engineer:
+        inherit: execution
+      data-engineer:
+        inherit: execution
+      refactoring-expert:
+        inherit: execution
+      business-domain-modeler:
+        inherit: review
+      acceptance-scenario-designer:
+        inherit: review
+      product-scope-strategist:
+        inherit: review
+      senior-product-expert:
+        inherit: review
+      discovery-effectiveness-reviewer:
+        inherit: review
+      spec-reviewer:
+        inherit: review
+      correctness-reviewer:
+        inherit: review
+      tdd-reviewer:
+        inherit: review
+      security-reviewer:
+        inherit: review
+      architecture-reviewer:
+        inherit: review
+      e2e-reviewer:
+        inherit: review
+      frontend-reviewer:
+        inherit: review
+      agent-behavior-reviewer:
+        inherit: review
+      planning-analyst:
+        inherit: review
+
+  claude:
+    defaults:
+      execution:
+        candidates: []
+      review:
+        candidates: []
+    roles: {}
+
+  cursor:
+    # Cursor Task model slugs must exactly match the Task tool's supported
+    # model parameter values. If Cursor exposes GPT-5.4 later, add its exact
+    # slug here before using it in candidates.
+    #
+    # Supported slugs at this template version:
+    # - claude-4.6-sonnet-medium-thinking
+    # - claude-opus-4-7-thinking-high
+    # - composer-2-fast
+    # - gemini-3.1-pro
+    # - gpt-5.3-codex-high
+    # - gpt-5.5-medium
+    defaults:
+      execution:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      review:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+    roles:
+      # tier-1: early analysis and architecture decisions. These roles work
+      # with the highest ambiguity and largest downstream impact.
+      mission-framing-expert:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      discovery-analyst:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      senior-product-expert:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      business-domain-modeler:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      acceptance-scenario-designer:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      product-scope-strategist:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      solution-architect:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      tech-designer:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      interaction-designer:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      frontend-prototype-engineer:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+      integration-impact-expert:
+        candidates:
+          - claude-opus-4-7-thinking-high
+          - gpt-5.5-medium
+          - gemini-3.1-pro
+        fallback: main_agent
+
+      # tier-2: planning-stage review. These roles need strong comprehension
+      # of broad artifacts but do not need the top planning model by default.
+      mission-contract-effectiveness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      product-definition-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      solution-effectiveness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      technical-design-effectiveness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      interaction-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      frontend-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      discovery-effectiveness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      dependency-validity-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+
+      # tier-3: breakdown, verification, delivery, and code review. The task
+      # scope is clearer, but these roles still judge correctness and evidence.
+      delivery-slicer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      test-planning-expert:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+        fallback: main_agent
+      execution-plan-effectiveness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      verification-engineer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      verification-effectiveness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      release-readiness-expert:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      acceptance-package-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      correctness-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      tdd-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      security-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      architecture-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      e2e-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      agent-behavior-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      spec-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      data-migration-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      agent-capability-designer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      agent-capability-reviewer:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+      planning-analyst:
+        candidates:
+          - claude-4.6-sonnet-medium-thinking
+          - gpt-5.5-medium
+
+      # tier-4: execute-stage engineering roles. A single task item should
+      # already have clear scope and context, so Cursor defaults to fast models.
+      general-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      frontend-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      backend-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      client-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      security-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      interaction-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      integration-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      data-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      test-engineer:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      debugging-expert:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+      refactoring-expert:
+        candidates:
+          - composer-2-fast
+        fallback: main_agent
+
+  opencode:
+    defaults:
+      execution:
+        candidates: []
+        fallback: main_agent
+      review:
+        candidates: []
+    roles: {}
+
+  windsurf:
+    defaults:
+      execution:
+        candidates: []
+        fallback: main_agent
+      review:
+        candidates: []
+    roles: {}
+
+evidence_shape:
+  model_resolution:
+    requested_role: "<role>"
+    adapter: "<adapter>"
+    candidates: []
+    selected: "<model-or-main_agent>"
+    fallback_used: false
+    reason: ""

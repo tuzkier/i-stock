@@ -90,9 +90,12 @@ test("归档后暂停提醒，重新加入已归档港股时恢复提醒", async
   await page.goto("/");
 
   await expect(page.getByText(/9988\.HK · 港股/)).toBeVisible();
-  await expect(page.getByText(/正式 · 190\.00 · 5\.56%/).first()).toBeVisible();
+  const aliWatchItem = page.getByTestId("watch-item-9988.HK");
+  await expect(aliWatchItem.getByTestId("watch-item-quote")).toContainText("190.00");
+  await expect(aliWatchItem.getByTestId("watch-item-quote")).toContainText("5.56%");
+  await expect(aliWatchItem.getByTestId("watch-item-source-dot")).not.toHaveClass(/tone-warning/);
 
-  await page.getByRole("button", { name: "阿里巴巴 9988.HK · 港股 正式 · 190.00 · 5.56%" }).click();
+  await aliWatchItem.getByTestId("watch-item-main").click();
   await page.getByTestId("detail-tab-alerts").click();
   await expect(page.getByLabel("9988.HK 触发 strong-sell")).toBeChecked();
 

@@ -1,0 +1,30 @@
+mission_id: 20260522-stock-watch-system
+objective: 推进 TASK-STOCK-WATCH-T002..T006：retrospective 已完成并通过 gate，进入 finishing-branch
+  做分支 / 关闭状态收尾。
+control_plane:
+  lane: delivery-lane
+  stage: finishing-branch
+lane_action:
+  lane: delivery-lane
+  stage: finishing-branch
+  graph_operation: advance_stage
+  operation_profiles: {}
+  allowed_graph_operations: []
+  output_artifact: null
+  required_execution_roles: []
+  required_review_roles: []
+work_graph:
+  primary_nodes:
+  - TASK-STOCK-WATCH-T002
+  - TASK-STOCK-WATCH-T003
+  - TASK-STOCK-WATCH-T004
+  - TASK-STOCK-WATCH-T005
+  - TASK-STOCK-WATCH-T006
+  related_nodes:
+  - REQ-STOCK-WATCH-SYSTEM
+  input_nodes: []
+  output_nodes: []
+operation: advance_stage
+acceptance_scenarios:
+- graph operation applied by work-graph script
+- board/index/tree regenerated from nodes

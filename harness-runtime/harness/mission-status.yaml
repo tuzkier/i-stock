@@ -101,3 +101,110 @@
     last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-07-20T131437-923402+0000-20260720-alibaba-trade-signals__REQ-ALIBABA-TRADE-SIGNALS__advance_stage.json
   checkpoints_passed: []
   autonomy_level: 专家确认
+20260721-watchboard-ui-friendliness:
+  title: '推进 REQ-WATCHBOARD-UI-FRIENDLINESS: 看盘界面友好化改造（状态色语义/术语人话化/信息层级）'
+  status: active
+  current_lane: delivery-lane
+  current_stage: delivery
+  stages:
+    intake: done
+    discovery: done
+    prd: done
+    interaction: done
+    solution: done
+    technical_analysis: done
+    breakdown: done
+    execute: done
+    code-review: done
+    verify: done
+    delivery: done
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260721-watchboard-ui-friendliness.yaml
+    primary_nodes:
+    - TASK-WATCHBOARD-UI-T001
+    - TASK-WATCHBOARD-UI-T002
+    - TASK-WATCHBOARD-UI-T003
+    - TASK-WATCHBOARD-UI-T004
+    - TASK-WATCHBOARD-UI-T005
+    - TASK-WATCHBOARD-UI-T006
+    - TASK-WATCHBOARD-UI-T007
+    related_nodes:
+    - REQ-WATCHBOARD-UI-FRIENDLINESS
+    operation: advance_stage
+    lane: delivery-lane
+    stage: delivery
+    lane_action:
+      lane: delivery-lane
+      stage: delivery
+      graph_operation: advance_stage
+      operation_profiles:
+        advance_stage:
+          to_stage: retrospective
+      allowed_graph_operations:
+      - advance_stage
+      output_artifact: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/delivery/delivery-package.md
+      required_execution_roles:
+      - release-readiness-expert
+      required_review_roles:
+      - acceptance-package-reviewer
+      to_stage: retrospective
+    last_gate_report: harness-runtime/harness/state/gate-reports/20260721-watchboard-ui-friendliness/delivery__advance_stage.json
+    last_operation_manifest: harness-runtime/harness/work-graph/operations/20260721-watchboard-ui-friendliness__batch_advance_stage.yaml
+    last_operation_status: PASS
+    last_transaction_id: TX-2026-07-22T145112-014294+0000-20260721-watchboard-ui-friendliness__batch_advance_stage
+    last_transaction_journal: harness-runtime/harness/state/transactions/TX-2026-07-22T145112-014294+0000-20260721-watchboard-ui-friendliness__batch_advance_stage.json
+    input_nodes: []
+    output_nodes: []
+  autonomy_level: 专家确认
+  checkpoints_passed:
+  - acceptance-result
+  started_at: '2026-07-21'
+  completed_at: ''
+  git:
+    strategy: downgraded
+    downgrade_reason: 用户 2026-07-21 明确授权：不用提交、直接在根工作区执行；跳过 prepare/start-stage worktree。
+    base_branch: main
+    mission_branch: null
+    current_branch: main
+    branch_closed: false
+    current_stage_branch: ''
+    current_stage_worktree: ''
+20260723-bespoke-signal-strategies:
+  title: 为6只自选股逐股实证量身定制买卖信号策略并新增建滔积层板1888，回测分档跑赢买入持有
+  status: active
+  started_at: '2026-07-23'
+  completed_at: ''
+  current_stage: intake
+  current_lane: requirement-lane
+  stages:
+    intake: in-progress
+  work_graph:
+    mission_slice: harness-runtime/harness/work-graph/mission-slices/20260723-bespoke-signal-strategies.yaml
+    primary_nodes:
+    - REQ-BESPOKE-SIGNAL-STRATEGIES
+    related_nodes: []
+    input_nodes: []
+    output_nodes: []
+    lane: requirement-lane
+    stage: intake
+    operation: advance_stage
+    lane_action:
+      lane: requirement-lane
+      stage: intake
+      graph_operation: advance_stage
+      operation_profiles:
+        advance_stage:
+          to_stage: discovery
+      allowed_graph_operations:
+      - advance_stage
+      output_artifact: harness-runtime/harness/missions/20260723-bespoke-signal-strategies/mission-contract.md
+      required_execution_roles:
+      - mission-framing-expert
+      required_review_roles:
+      - mission-contract-effectiveness-reviewer
+      to_stage: discovery
+    last_gate_report: ''
+    last_operation_manifest: ''
+    last_operation_status: ''
+  checkpoints_passed: []
+  autonomy_level: 专家确认

@@ -1,0 +1,10 @@
+schema_version: 1
+generated: true
+root: REQ-WATCHBOARD-UI-FRIENDLINESS
+tree:
+- id: REQ-WATCHBOARD-UI-FRIENDLINESS
+  kind: requirement
+  title: 看盘界面友好化改造（状态色语义/术语人话化/信息层级）
+  lane: product-definition-lane
+  status: ready
+  children: []

@@ -1,0 +1,8 @@
+operation_id: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane
+type: advance_lane
+node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+mission_id: 20260721-watchboard-ui-friendliness
+from_lane: solution-lane
+to_lane: technical-analysis-lane
+to_stage: technical_analysis
+status: ready

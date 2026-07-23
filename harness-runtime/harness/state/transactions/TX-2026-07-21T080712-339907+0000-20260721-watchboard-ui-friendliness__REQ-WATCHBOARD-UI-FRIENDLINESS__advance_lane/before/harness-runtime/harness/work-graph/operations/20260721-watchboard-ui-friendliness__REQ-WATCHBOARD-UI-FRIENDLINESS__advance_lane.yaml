@@ -1,0 +1,8 @@
+operation_id: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane
+type: advance_lane
+node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+mission_id: 20260721-watchboard-ui-friendliness
+from_lane: requirement-lane
+to_lane: product-definition-lane
+to_stage: prd
+status: ready

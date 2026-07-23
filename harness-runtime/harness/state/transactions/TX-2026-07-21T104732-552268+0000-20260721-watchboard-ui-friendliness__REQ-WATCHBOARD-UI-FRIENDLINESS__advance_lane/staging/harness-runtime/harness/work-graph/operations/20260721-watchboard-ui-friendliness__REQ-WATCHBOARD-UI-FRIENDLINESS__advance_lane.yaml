@@ -1,0 +1,17 @@
+operation_id: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_lane
+type: advance_lane
+node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+mission_id: 20260721-watchboard-ui-friendliness
+from_lane: breakdown-lane
+to_lane: development-lane
+to_stage: execute
+status: ready
+work_graph_artifact:
+  node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+  artifact_set_id: AS--breakdown-v1
+  artifact_version: v1
+  promoted_by_mission: 20260721-watchboard-ui-friendliness
+  artifact_refs:
+  - artifact_id: 20260721-watchboard-ui-friendliness:execution-brief
+    role: execution-brief
+    path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/breakdown/execution-brief.md

@@ -1,0 +1,14 @@
+{
+  "id": "cmd-e2e-2026-07-22-05-13-04",
+  "kind": "command",
+  "layer": "e2e",
+  "command": "npm run test:e2e -- mts",
+  "cwd": "/Users/hanbin/Workspace/AI/MyInvestment",
+  "exit_code": 0,
+  "started_at": "2026-07-22T05:13:04.639503+00:00",
+  "ended_at": "2026-07-22T05:13:08.832197+00:00",
+  "result": "pass",
+  "stdout": "\n> my-investment-terminal@0.1.0 test:e2e\n> NO_PROXY=127.0.0.1,localhost playwright test mts\n\n\nRunning 7 tests using 1 worker\n\n  \u2713  1 [chromium] \u203a tests/e2e/mts/card.spec.ts:73:1 \u203a MTS card exposes structured fields and non-advice copy (400ms)\n  \u2713  2 [chromium] \u203a tests/e2e/mts/card.spec.ts:96:1 \u203a MTS card degrades when source is unavailable (337ms)\n  \u2713  3 [chromium] \u203a tests/e2e/mts/friendliness.spec.ts:99:1 \u203a AT-0201: MTS \u4e3b\u89c6\u56fe\u65e0\u4eba\u8bdd\u524d\u679a\u4e3e token\uff0c\u4e14\u6709 ScoreBar (314ms)\n  \u2713  4 [chromium] \u203a tests/e2e/mts/friendliness.spec.ts:123:1 \u203a AT-0201: \u6765\u6e90\u964d\u7ea7 note \u4f7f\u7528 notice--warning \u800c\u975e data-notice (255ms)\n  \u2713  5 [chromium] \u203a tests/e2e/mts/friendliness.spec.ts:137:1 \u203a AT-0202: reason-list \u4e3b\u89c6\u56fe\u65e0\u88f8\u7406\u7531\u7801\uff0c\u5c55\u5f00\u540e\u53ef\u89c1\u539f\u59cb code (294ms)\n  \u2713  6 [chromium] \u203a tests/e2e/mts/friendliness.spec.ts:154:1 \u203a AT-0202: \u6765\u6e90\u964d\u7ea7\u65f6 invalidators \u4e3b\u89c6\u56fe\u4e0d\u76f4\u5448 SOURCE_DEGRADED (298ms)\n  \u2713  7 [chromium] \u203a tests/e2e/mts/friendliness.spec.ts:168:1 \u203a GAP-02: negative \u8bc4\u5206\u8272\u4e0e stale \u6765\u6e90\u8b66\u544a\u8272\u7269\u7406\u533a\u5206 (535ms)\n\n  7 passed (3.7s)\n",
+  "stderr": "[WebServer] (node:22641) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time\n[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)\n",
+  "artifact": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/traces/cmd/cmd-e2e-2026-07-22-05-13-04.json"
+}

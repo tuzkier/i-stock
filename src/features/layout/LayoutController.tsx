@@ -72,7 +72,7 @@ export function LayoutController({
         <div>
           <span className="eyebrow">{selected.market}</span>
           <h2>{formatSelected(selected)}</h2>
-          <div className="data-notice" data-testid="workbench-selection-summary">
+          <div className="selection-summary" data-testid="workbench-selection-summary">
             {selected.symbol} · {layoutLabel}视图 · 来源 {sourceStatus}
           </div>
         </div>

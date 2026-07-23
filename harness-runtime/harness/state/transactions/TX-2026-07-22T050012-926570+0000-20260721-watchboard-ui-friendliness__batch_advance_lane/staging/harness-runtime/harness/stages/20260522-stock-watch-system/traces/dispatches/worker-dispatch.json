@@ -1,0 +1,12 @@
+{
+  "dispatch_id": "dispatch-worker-20260524-013244",
+  "agent": "verification-engineer",
+  "mission_id": "20260522-stock-watch-system",
+  "execution_mode": "spawn_agent",
+  "created_at": "2026-05-24T01:32:44.847201+00:00",
+  "write_scope": [
+    "harness-runtime/harness/stages/20260522-stock-watch-system/verification-report.md",
+    "harness-runtime/harness/stages/20260522-stock-watch-system/contracts/verification-report.contract.yaml",
+    "harness-runtime/harness/traces/20260522-stock-watch-system/**"
+  ]
+}

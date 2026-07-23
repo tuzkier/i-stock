@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "stage": "interaction",
+  "operation": "advance_lane",
+  "from_stage": "interaction",
+  "to_stage": "solution",
+  "decision": "continue",
+  "gate_effect": "allow",
+  "contract_check": {
+    "status": "PASS",
+    "findings": []
+  },
+  "artifacts": {
+    "stage_artifact": null,
+    "contract_artifact": "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/prd.contract.yaml"
+  },
+  "control_reports": {
+    "status": "PASS",
+    "controls": [],
+    "findings": [
+      {
+        "level": "PASS",
+        "code": "control_reports_valid",
+        "message": "Control-plane reports allow Stage Gate to continue",
+        "path": ""
+      }
+    ]
+  },
+  "required_checkpoints": [],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [],
+    "approved_checkpoints": [],
+    "missing_checkpoints": [],
+    "approval_ids": {},
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260721-watchboard-ui-friendliness.yaml",
+    "primary_nodes": [
+      "REQ-WATCHBOARD-UI-FRIENDLINESS"
+    ],
+    "related_nodes": [],
+    "lane": "product-definition-lane",
+    "stage": "interaction",
+    "operation": "advance_lane"
+  },
+  "ai_interpretation": "interaction 在 专家确认 档 skippable_stages 内；delivery_mode=interactive_prototype 但本任务界面承载要求(UIC-01~07)与折叠交互归属已在 prd 用例模型/领域模型显式定义并交 solution/technical_analysis 承接，无需独立原型阶段。按阶段跳过仲裁：不产出 output_artifact，切片直接前进 solution，记 stage_skipped。"
+}

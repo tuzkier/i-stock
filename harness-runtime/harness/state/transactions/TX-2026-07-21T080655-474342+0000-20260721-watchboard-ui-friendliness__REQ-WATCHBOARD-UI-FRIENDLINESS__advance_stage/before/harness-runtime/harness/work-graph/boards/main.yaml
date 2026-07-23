@@ -1,0 +1,21 @@
+schema_version: 1
+generated: true
+generated_at: '2026-07-21T06:45:05.039346+00:00'
+lanes:
+  requirement-lane:
+  - REQ-ALIBABA-TRADE-SIGNALS
+  product-definition-lane:
+  - REQ-WATCHBOARD-UI-FRIENDLINESS
+  solution-lane: []
+  technical-analysis-lane: []
+  breakdown-lane:
+  - REQ-STOCK-WATCH-SYSTEM
+  development-lane: []
+  verification-lane: []
+  delivery-lane:
+  - TASK-STOCK-WATCH-T001
+  - TASK-STOCK-WATCH-T002
+  - TASK-STOCK-WATCH-T003
+  - TASK-STOCK-WATCH-T004
+  - TASK-STOCK-WATCH-T005
+  - TASK-STOCK-WATCH-T006

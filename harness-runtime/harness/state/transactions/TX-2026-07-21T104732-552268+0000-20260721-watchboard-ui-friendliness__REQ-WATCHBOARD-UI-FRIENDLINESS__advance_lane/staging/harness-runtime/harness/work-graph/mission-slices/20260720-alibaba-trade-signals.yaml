@@ -1,0 +1,39 @@
+mission_id: 20260720-alibaba-trade-signals
+objective: '推进 REQ-ALIBABA-TRADE-SIGNALS: 阿里巴巴 HK.09988 图表买卖信号标注与回测验证'
+control_plane:
+  lane: requirement-lane
+  stage: discovery
+lane_action:
+  lane: requirement-lane
+  stage: discovery
+  graph_operation: advance_lane
+  operation_profiles:
+    advance_lane:
+      to_lane: product-definition-lane
+      to_stage: prd
+  allowed_graph_operations:
+  - advance_lane
+  output_artifact: harness-runtime/harness/artifacts/20260720-alibaba-trade-signals/discovery/discovery-brief.md
+  required_execution_roles:
+  - discovery-analyst
+  required_review_roles:
+  - discovery-effectiveness-reviewer
+  to_lane: product-definition-lane
+  to_stage: prd
+work_graph:
+  primary_nodes:
+  - REQ-ALIBABA-TRADE-SIGNALS
+  related_nodes: []
+  selection:
+    relevance_score: 1350
+    reasons:
+    - primary_node
+    - relates_to_related_node
+related_candidates:
+  deferred: []
+  blocked: []
+operation: advance_lane
+acceptance_scenarios:
+- REQ-ALIBABA-TRADE-SIGNALS advanced from requirement-lane/discovery
+- graph operation applied by work-graph script
+- board/index/tree regenerated from nodes

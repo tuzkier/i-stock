@@ -1,0 +1,38 @@
+id: TASK-WATCHBOARD-UI-T005
+kind: task
+title: 顶部层级重排 + 唯一主源承载计数=1（GAP-D3）
+lane: delivery-lane
+stage: delivery
+status: ready
+parent_task_id: T005
+execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- AT-0501
+- AT-0502
+dependencies:
+- TASK-WATCHBOARD-UI-T001
+- TASK-WATCHBOARD-UI-T002
+- TASK-WATCHBOARD-UI-T003
+- TASK-WATCHBOARD-UI-T004
+inputs:
+- REQ-WATCHBOARD-UI-FRIENDLINESS
+outputs: []
+relations:
+  split_from: REQ-WATCHBOARD-UI-FRIENDLINESS
+updated_at: '2026-07-22T09:46:31.158421+00:00'
+trace:
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__batch_advance_lane__5
+specs:
+  consumes:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    requirement: 重复信息收敛唯一主源
+    scenario: 来源状态收敛到唯一权威主源
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/features/chart/ChartSurface.tsx
+      - src/styles.css
+      test_refs:
+      - tests/e2e/workbench/friendliness.spec.ts

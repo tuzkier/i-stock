@@ -13,7 +13,7 @@ import {
   type Time
 } from "lightweight-charts";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import type { ChartPayload, PriceBar, SourceHealthStatus } from "../../types";
+import type { ChartPayload, PriceBar, SourceHealthStatus, SourceStatus } from "../../types";
 import { lastFinite } from "../../lib/indicators";
 import {
   buildObservation,
@@ -22,6 +22,7 @@ import {
   type SecondaryIndicator
 } from "../../domain/observation";
 import { computeTradeSignalEvents, resolveTradeStrategy } from "../../domain/trade-signals";
+import { resolveSourceTone } from "../presentation/tone";
 
 type ChartSurfaceProps = {
   payload?: ChartPayload;
@@ -143,6 +144,8 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
   const changeValue = observation.changeSummary?.absolute;
   const changePercent = observation.changeSummary?.percent;
   const sourceSummary = payload?.notice ?? sourceHealth?.degradationReason ?? (error || (loading ? "加载中" : "等待可用数据"));
+  const resolvedStatus: SourceStatus = !payload ? (error ? "unavailable" : "not_loaded") : (sourceHealth?.status ?? "unavailable");
+  const sourceTone = resolveSourceTone(resolvedStatus);
 
   const indicatorTabs: Array<{ id: SecondaryIndicator; label: string }> = [
     { id: "MACD", label: "MACD" },
@@ -203,8 +206,8 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
         <strong data-testid="chart-source-status">{formatStatus(status)}</strong>
       </div>
 
-      {sourceSummary && (isDegraded || error || loading || !payload) && (
-        <div className="data-notice" data-testid="chart-degradation-note">
+      {sourceSummary && sourceTone !== "normal" && (
+        <div className={sourceTone === "warning" ? "notice--warning" : "notice--info"} data-testid="chart-degradation-note">
           {isDegraded ? `${status} · ${sourceSummary}` : sourceSummary}
         </div>
       )}
@@ -341,7 +344,7 @@ export function ChartSurface({ payload, loading = false, error = "" }: ChartSurf
         </section>
       </div>
 
-      <div className="quote-line" data-testid="chart-ohlc">
+      <div className="quote-line" data-testid="price-authority">
         <strong>{ohlcText}</strong>
         <span className={Number(changeValue ?? 0) >= 0 ? "up" : "down"}>
           {Number(changeValue ?? 0) >= 0 ? "▲" : "▼"} {formatNumber(changeValue)} / {formatNumber(changePercent)}%

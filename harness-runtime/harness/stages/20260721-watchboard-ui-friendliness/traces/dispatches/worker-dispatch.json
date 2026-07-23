@@ -1,0 +1,12 @@
+{
+  "dispatch_id": "dispatch-worker-20260722-050409",
+  "agent": "verification-engineer",
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "execution_mode": "spawn_agent",
+  "created_at": "2026-07-22T05:04:09.933845+00:00",
+  "write_scope": [
+    "harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/verify/verification-report.md",
+    "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/verification-report.contract.yaml",
+    "harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/**"
+  ]
+}

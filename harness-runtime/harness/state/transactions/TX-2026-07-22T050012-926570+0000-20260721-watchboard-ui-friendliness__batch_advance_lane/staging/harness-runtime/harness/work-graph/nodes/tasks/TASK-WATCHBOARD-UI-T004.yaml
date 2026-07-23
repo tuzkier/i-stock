@@ -1,0 +1,37 @@
+id: TASK-WATCHBOARD-UI-T004
+kind: task
+title: 侧栏条目结构 + 来源小圆点 + archived 弱化
+lane: development-lane
+stage: code-review
+status: ready
+parent_task_id: T004
+execution_brief_artifact: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/execution-brief.md
+execution_brief_contract: harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/execution-brief.contract.yaml
+atomic_task_ids:
+- AT-0401
+- AT-0402
+dependencies:
+- TASK-WATCHBOARD-UI-T001
+- TASK-WATCHBOARD-UI-T002
+- TASK-WATCHBOARD-UI-T003
+inputs:
+- REQ-WATCHBOARD-UI-FRIENDLINESS
+outputs: []
+relations:
+  split_from: REQ-WATCHBOARD-UI-FRIENDLINESS
+updated_at: '2026-07-22T02:40:54.938121+00:00'
+trace:
+  updated_by_mission: 20260721-watchboard-ui-friendliness
+  last_graph_operation: 20260721-watchboard-ui-friendliness__batch_advance_stage__4
+specs:
+  consumes:
+  - path: harness-runtime/harness/artifacts/20260721-watchboard-ui-friendliness/product/specs/watchboard-presentation/spec.md
+    requirement: 侧栏扫读优化
+    scenario: 侧栏条目主看信息突出
+    evidence:
+      implementation_refs:
+      - src/App.tsx
+      - src/styles.css
+      test_refs:
+      - tests/e2e/watchlist/friendliness.spec.ts
+      - tests/e2e/watchlist/t001-watchlist-archive-restore.spec.ts

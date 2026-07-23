@@ -1,0 +1,10 @@
+schema_version: 1
+generated: true
+root: REQ-BESPOKE-SIGNAL-STRATEGIES
+tree:
+- id: REQ-BESPOKE-SIGNAL-STRATEGIES
+  kind: requirement
+  title: 逐股实证量身定制买卖信号策略（6只全部重做+新增建滔积层板1888）
+  lane: requirement-lane
+  status: active
+  children: []

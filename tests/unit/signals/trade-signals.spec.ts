@@ -46,13 +46,18 @@ function downtrendThenRecoverBars(): PriceBar[] {
   return closes.map((close, index) => bar(index, close));
 }
 
-test("策略注册：三只标的各自解析到不同策略", () => {
+test("策略注册：六只标的各自解析到不同策略，含新增 1888", () => {
   assert.equal(resolveTradeStrategy("HK.09988")?.key, "alibaba");
   assert.equal(resolveTradeStrategy("0700.HK")?.key, "tencent");
   assert.equal(resolveTradeStrategy("HK.03690")?.key, "meituan");
   assert.equal(resolveTradeStrategy("HK.00981")?.key, "smic");
   assert.equal(resolveTradeStrategy("HK.01810")?.key, "xiaomi");
+  assert.equal(resolveTradeStrategy("HK.01888")?.key, "kingboard");
+  assert.equal(resolveTradeStrategy("1888.HK")?.key, "kingboard");
   assert.equal(resolveTradeStrategy("US.AAPL"), undefined);
+  // 强单边票（中芯 / 建滔）实证后改用趋势跟随，不再是均值回归；口径 = breakout_trail。
+  assert.equal(resolveTradeStrategy("HK.00981")?.config.kind, "breakout_trail");
+  assert.equal(resolveTradeStrategy("HK.01888")?.config.kind, "breakout_trail");
 });
 
 test("腾讯均值回归：新低触发买入，站上 SMA20/止损/超时触发卖出且严格交替", () => {
@@ -167,4 +172,35 @@ test("美团状态卡：空仓触发位同时约束 20 日高点与 SMA60 门控
     (state.levels.nextBuyTrigger as number) >= (state.levels.gateLevel as number),
     "触发位必须不低于门控线（需同时满足两个条件）"
   );
+});
+
+// 阶梯式上行序列：先攀升创新高（触发趋势跟随买入），末段回落跌破跟踪线（触发离场），供 1888 趋势跟随测试。
+function trendUpThenPullbackBars(): PriceBar[] {
+  const closes: number[] = [];
+  let price = 20;
+  for (let i = 0; i < 160; i += 1) {
+    price += i % 4 === 3 ? -0.8 : 1.4; // 净上行、带正常回撤
+    closes.push(price);
+  }
+  for (let i = 0; i < 40; i += 1) {
+    price -= 1.6; // 末段趋势反转，触发跟踪离场
+    closes.push(price);
+  }
+  return closes.map((close, index) => bar(index, close));
+}
+
+test("建滔 1888 趋势跟随：创新高突破买入、跌破跟踪线卖出，且回测暴露最大回撤", () => {
+  const bars = trendUpThenPullbackBars();
+  const events = computeTradeSignalEvents("HK.01888", bars);
+  assert.ok(events.length >= 2, "上行后反转序列应至少产生一买一卖");
+  assert.equal(events[0].side, "buy", "首个信号应为突破买入");
+  // 严格交替：买卖不连发同向
+  for (let i = 1; i < events.length; i += 1) {
+    assert.notEqual(events[i].side, events[i - 1].side, "信号必须严格交替");
+  }
+  const report = runTradeBacktest("HK.01888", bars);
+  assert.ok(report.buySignals > 0 && report.sellSignals > 0, "1888 必须输出买卖信号，非仅观察位");
+  assert.equal(typeof report.maxDrawdownPct, "number", "回测须暴露策略最大回撤");
+  assert.equal(typeof report.buyHoldMaxDrawdownPct, "number", "回测须暴露买入持有回撤基准");
+  assert.ok((report.maxDrawdownPct as number) <= 0, "最大回撤应为 ≤0 的口径");
 });

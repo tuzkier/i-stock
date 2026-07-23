@@ -1,0 +1,7 @@
+operation_id: 20260721-watchboard-ui-friendliness__REQ-WATCHBOARD-UI-FRIENDLINESS__advance_stage
+type: advance_stage
+node_id: REQ-WATCHBOARD-UI-FRIENDLINESS
+mission_id: 20260721-watchboard-ui-friendliness
+lane: requirement-lane
+from_stage: intake
+to_stage: discovery

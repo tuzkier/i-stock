@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "mission_id": "20260721-watchboard-ui-friendliness",
+  "stage": "delivery",
+  "operation": "advance_stage",
+  "from_stage": "delivery",
+  "to_stage": "retrospective",
+  "decision": "continue_with_warnings",
+  "gate_effect": "warn",
+  "authorized_exception": {
+    "original_decision": "cannot_continue",
+    "original_gate_effect": "block",
+    "blocked_by": "control_reports.control_report_blocks_gate (project_lint P001: changed_files includes .harness/common/skills/stage-gate/scripts/check_contracts.py)",
+    "reason": "P001 protects .harness/common/** from silent/accidental edits. The one flagged file was modified deliberately, in this same session, to fix a genuine unregistered-type gap (delivery_contract had no dispatch branch in check_contracts.py despite the shipped delivery.contract.yaml template declaring that type). The user was shown this exact tradeoff via AskUserQuestion twice: once approving the framework fix itself, and once specifically confirming how to handle the resulting P001 finding rather than having the agent silently weaken the lint policy. The user chose to record this as an authorized exception here and keep project-lint.yaml's protected_paths unchanged for future missions.",
+    "user_approval_ids": ["APR-20260722-008"],
+    "policy_unchanged": true,
+    "note": "project-lint.yaml protected_paths was NOT modified; this override applies only to this gate decision for this mission."
+  },
+  "contract_check": {
+    "status": "WARN",
+    "artifact": "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/delivery.contract.yaml",
+    "contract_type": "delivery_contract",
+    "findings": [
+      {
+        "level": "WARN",
+        "code": "schema_not_found",
+        "message": "No schema registered for delivery_contract / None"
+      }
+    ]
+  },
+  "artifacts": {
+    "stage_artifact": "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/delivery-package.md",
+    "contract_artifact": "harness-runtime/harness/stages/20260721-watchboard-ui-friendliness/contracts/delivery.contract.yaml"
+  },
+  "control_reports": {
+    "status": "FAIL",
+    "controls": [
+      {
+        "path": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/project-lint/project-lint-report.json",
+        "control": "project_lint",
+        "status": "FAIL",
+        "gate_effect": "block"
+      }
+    ],
+    "findings": [
+      {
+        "level": "FAIL",
+        "code": "control_report_blocks_gate",
+        "message": "project_lint gate_effect=block",
+        "path": "/Users/hanbin/Workspace/AI/MyInvestment/harness-runtime/harness/traces/20260721-watchboard-ui-friendliness/project-lint/project-lint-report.json"
+      }
+    ]
+  },
+  "required_checkpoints": [],
+  "human_checkpoints": [],
+  "approval_status": {
+    "required_checkpoints": [],
+    "approved_checkpoints": [
+      "acceptance-result"
+    ],
+    "missing_checkpoints": [],
+    "approval_ids": {
+      "acceptance-result": "APR-20260722-008"
+    },
+    "status": "PASS"
+  },
+  "work_graph": {
+    "mission_slice": "harness-runtime/harness/work-graph/mission-slices/20260721-watchboard-ui-friendliness.yaml",
+    "primary_nodes": [
+      "TASK-WATCHBOARD-UI-T001",
+      "TASK-WATCHBOARD-UI-T002",
+      "TASK-WATCHBOARD-UI-T003",
+      "TASK-WATCHBOARD-UI-T004",
+      "TASK-WATCHBOARD-UI-T005",
+      "TASK-WATCHBOARD-UI-T006",
+      "TASK-WATCHBOARD-UI-T007"
+    ],
+    "related_nodes": [
+      "REQ-WATCHBOARD-UI-FRIENDLINESS"
+    ],
+    "lane": "delivery-lane",
+    "stage": "delivery",
+    "operation": "advance_stage"
+  },
+  "ai_interpretation": "delivery 阶段完成：release-readiness-expert 产出 acceptance-result.md（29/29 验收条件通过）与 delivery-package.md，已通过新实现的 check_delivery 校验器（本次为修复 delivery_contract 类型未注册的框架缺口而新增，经用户批准）。用户在最终验收 Checkpoint 额外要求将本地开发服务器默认端口从 5173 改为 4271（已实施并独立验证监听成功，playwright.config.ts 的 E2E 专用端口 5174 未受影响），随后明确接受交付（approval_id=APR-20260722-008）。project_lint 本轮报 P001（changed_files 命中 .harness/common/** 保护路径）——这是用户刚刚明确批准的框架注册缺口修复（check_contracts.py 新增 delivery_contract 类型的调度分支）触发的预期联动，用户已明确指示在 gate 记录中标注为已授权例外并继续推进，而非静默弱化 project-lint.yaml 的保护策略本身。"
+}

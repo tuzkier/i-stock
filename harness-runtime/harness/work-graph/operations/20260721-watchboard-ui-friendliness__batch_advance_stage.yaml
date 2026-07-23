@@ -1,0 +1,39 @@
+operation_id: 20260721-watchboard-ui-friendliness__batch_advance_stage
+type: batch
+mission_id: 20260721-watchboard-ui-friendliness
+operations:
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T001
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T002
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T003
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T004
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T005
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T006
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective
+- type: advance_stage
+  node_id: TASK-WATCHBOARD-UI-T007
+  lane: delivery-lane
+  from_stage: delivery
+  to_stage: retrospective

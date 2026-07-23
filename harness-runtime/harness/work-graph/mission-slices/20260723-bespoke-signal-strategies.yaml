@@ -1,0 +1,30 @@
+mission_id: 20260723-bespoke-signal-strategies
+objective: 为6只自选股逐股实证量身定制买卖信号策略并新增建滔积层板1888，回测分档跑赢买入持有
+control_plane:
+  lane: requirement-lane
+  stage: intake
+lane_action:
+  lane: requirement-lane
+  stage: intake
+  graph_operation: advance_stage
+  operation_profiles:
+    advance_stage:
+      to_stage: discovery
+  allowed_graph_operations:
+  - advance_stage
+  output_artifact: harness-runtime/harness/missions/20260723-bespoke-signal-strategies/mission-contract.md
+  required_execution_roles:
+  - mission-framing-expert
+  required_review_roles:
+  - mission-contract-effectiveness-reviewer
+  to_stage: discovery
+work_graph:
+  primary_nodes:
+  - REQ-BESPOKE-SIGNAL-STRATEGIES
+  related_nodes: []
+  input_nodes: []
+  output_nodes: []
+operation: advance_stage
+acceptance_scenarios:
+- graph operation applied by work-graph script
+- board/index/tree regenerated from nodes

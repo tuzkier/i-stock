@@ -1321,3 +1321,17 @@ small,
 .my-position-block .mp-label { font-size: 11px; color: var(--tone-info); }
 .my-position-block .mp-body { font-size: 13px; color: #eef1f6; font-variant-numeric: tabular-nums; }
 .my-position-block .mp-none { color: #8d96a5; font-size: 12px; }
+
+/* 信号卡：统一三行操作位 */
+.unified-levels { display: flex; flex-direction: column; gap: 6px; margin: 6px 0; }
+.unified-levels .ul-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 10px; background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.unified-levels .ul-row > span { font-size: 12px; color: #8d96a5; }
+.unified-levels .ul-row > strong { font-size: 14px; font-variant-numeric: tabular-nums; text-align: right; }
+.unified-levels .ul-row .ul-note { display: block; font-size: 10.5px; color: #6c7482; font-weight: 400; font-style: normal; }
+.unified-levels .ul-row.ul-muted > strong { color: #6c7482; font-weight: 400; font-size: 12px; }
+.signal-more { margin-top: 4px; }
+.signal-more > summary { cursor: pointer; font-size: 12px; color: var(--tone-info); list-style: none; padding: 2px 0; }
+.signal-more > summary::-webkit-details-marker { display: none; }
+.signal-more > summary::before { content: "▸ "; }
+.signal-more[open] > summary::before { content: "▾ "; }
+.signal-more-body { padding-top: 6px; }

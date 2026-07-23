@@ -168,6 +168,9 @@ export function App() {
       dealsIncomplete?: boolean;
       chandelierStop?: number;
       chandelierBreached?: boolean;
+      fanTRealPhase?: "full" | "reduced";
+      fanTSellTrigger?: number;
+      fanTBuyBackTrigger?: number;
     }>
   >([]);
   useEffect(() => {
@@ -335,6 +338,47 @@ export function App() {
     () => (tradeSignal.status === "ready" ? buildFanTState(tradeSignal.symbol, bars) : undefined),
     [tradeSignal.status, tradeSignal.symbol, bars]
   );
+  // 统一操作位：每只票固定“止损 / 买入 / 反T”三行，优先以真实持仓为准，屏蔽策略差异。
+  const unifiedSignal = useMemo(() => {
+    const L = tradeSignal.levels;
+    let exitLabel = "止损/离场";
+    let exitValue: number | undefined;
+    let exitTag = "";
+    if (myPosition?.chandelierStop !== undefined) {
+      exitLabel = "止损参考·吊灯";
+      exitValue = myPosition.chandelierStop;
+      exitTag = myPosition.chandelierBreached ? "已破" : "";
+    } else if (tradeSignal.holding && L.takeProfit !== undefined) {
+      exitLabel = "止盈线";
+      exitValue = L.takeProfit;
+    } else if (tradeSignal.holding && L.stopLoss !== undefined) {
+      exitLabel = "止损线";
+      exitValue = L.stopLoss;
+    } else if (L.exitLine !== undefined) {
+      exitLabel = "离场线";
+      exitValue = L.exitLine;
+    }
+    let buyLabel = tradeSignal.buyTriggerDirection === "dip" ? "买入触发·跌破即买" : "买入触发·突破即买";
+    let buyValue = L.nextBuyTrigger;
+    if (tradeSignal.holding && L.addPositionTrigger !== undefined) {
+      buyLabel = "加仓触发·突破";
+      buyValue = L.addPositionTrigger;
+    }
+    let fantEnabled = false;
+    let fantText = "不适用（趋势/防守票不做反T）";
+    if (fanT?.enabled) {
+      fantEnabled = true;
+      const phase = myPosition?.fanTRealPhase ?? fanT.phase;
+      if (phase === "reduced") {
+        const v = myPosition?.fanTBuyBackTrigger ?? fanT.buyBackTrigger;
+        fantText = `已减档 → 买回触发 ${v === undefined ? "--" : formatNumber(v)}`;
+      } else {
+        const v = myPosition?.fanTSellTrigger ?? fanT.sellTrigger;
+        fantText = `满仓 → 高卖触发 ${v === undefined ? "--" : formatNumber(v)}`;
+      }
+    }
+    return { exitLabel, exitValue, exitTag, buyLabel, buyValue, fantEnabled, fantText };
+  }, [tradeSignal, myPosition, fanT]);
   const workspaceSourceStatus = getSourceStatus(activePayload, Boolean(error));
   const workspaceSourceTone = resolveSourceTone(workspaceSourceStatus);
   const sourceAuthorityClass =
@@ -670,102 +714,63 @@ export function App() {
                 )}
                 {tradeSignal.status === "ready" && (
                   <div className="trade-signal-details" data-testid="trade-signal-details">
-                        <div data-testid="trade-signal-levels">
-                          <p className="plan-group-title">卖出侧</p>
-                          <div className="level-grid">
-                            {tradeSignal.holding ? (
-                              <>
-                                {tradeSignal.levels.takeProfit !== undefined ? (
-                                  <div><span>止盈位（跌破即卖）</span><strong>{formatNumber(tradeSignal.levels.takeProfit)}</strong></div>
-                                ) : (
-                                  <div><span>止损位（跌破即卖）</span><strong>{formatNumber(tradeSignal.levels.stopLoss)}</strong></div>
-                                )}
-                                {tradeSignal.levels.sellTargetSma !== undefined && (
-                                  <div><span>目标位（站上即卖）</span><strong>{formatNumber(tradeSignal.levels.sellTargetSma)}</strong></div>
-                                )}
-                                {tradeSignal.holdBarsMax !== undefined && (
-                                  <div><span>剩余持有</span><strong>{Math.max(0, tradeSignal.holdBarsMax - (tradeSignal.holdBarsUsed ?? 0))} 根K线</strong></div>
-                                )}
-                                {tradeSignal.levels.sellWatchOne !== undefined && (
-                                  <div className="level-secondary"><span>阶段减仓观察一*</span><strong>{formatNumber(tradeSignal.levels.sellWatchOne)}</strong></div>
-                                )}
-                                {tradeSignal.levels.sellWatchTwo !== undefined && (
-                                  <div className="level-secondary"><span>阶段减仓观察二*</span><strong>{formatNumber(tradeSignal.levels.sellWatchTwo)}</strong></div>
-                                )}
-                              </>
-                            ) : myPosition ? (
-                              myPosition.chandelierStop !== undefined ? (
-                                <div>
-                                  <span>持仓者止损参考（吊灯）{myPosition.chandelierBreached ? "·已破" : ""}</span>
-                                  <strong>{formatNumber(myPosition.chandelierStop)}</strong>
-                                </div>
-                              ) : (
-                                <div><span>离场参考</span><strong>见「持仓」页</strong></div>
-                              )
-                            ) : (
-                              <div><span>离场线</span><strong>未持有</strong></div>
-                            )}
-                          </div>
-                          <p className="plan-group-title">买入侧</p>
-                          <div className="level-grid">
-                            {tradeSignal.holding ? (
-                              <>
-                                {tradeSignal.levels.addPositionTrigger !== undefined && (
-                                  <div><span>加仓触发位（突破）</span><strong>{formatNumber(tradeSignal.levels.addPositionTrigger)}</strong></div>
-                                )}
-                                {tradeSignal.levels.pullbackZoneLow !== undefined && (
-                                  <div className="level-secondary">
-                                    <span>回调加仓观察区*</span>
-                                    <strong>{formatNumber(tradeSignal.levels.pullbackZoneLow)} ~ {formatNumber(tradeSignal.levels.pullbackZoneHigh)}</strong>
-                                  </div>
-                                )}
-                                <div><span>信号成本参考</span><strong>{formatNumber(tradeSignal.levels.entryPrice)}</strong></div>
-                              </>
-                            ) : (
-                              <div>
-                                <span>{tradeSignal.buyTriggerDirection === "dip" ? "买入触发位（跌破即买）" : "突破买入触发位"}</span>
-                                <strong>{formatNumber(tradeSignal.levels.nextBuyTrigger)}</strong>
-                              </div>
-                            )}
-                            {tradeSignal.levels.gateLevel !== undefined && (
-                              <div><span>趋势门控 SMA60</span><strong>{formatNumber(tradeSignal.levels.gateLevel)}</strong></div>
-                            )}
-                            <div className="level-secondary"><span>ATR20</span><strong>{formatNumber(tradeSignal.levels.latestAtr)}</strong></div>
-                          </div>
-                          {fanT?.enabled && (
-                            <>
-                              <p className="plan-group-title">反T 波段（持仓高卖低买降成本）</p>
-                              <div className="level-grid" data-testid="fant-levels">
-                                <div>
-                                  <span>当前阶段</span>
-                                  <strong>{fanT.phase === "full" ? "满仓，等高卖" : "已卖出，等买回"}</strong>
-                                </div>
-                                {fanT.phase === "full" ? (
-                                  <div><span>高卖触发位（站上即卖）</span><strong>{formatNumber(fanT.sellTrigger)}</strong></div>
-                                ) : (
-                                  <>
-                                    <div><span>买回触发位（跌破即买）</span><strong>{formatNumber(fanT.buyBackTrigger)}</strong></div>
-                                    <div><span>追高认错位（涨过即买回）</span><strong>{formatNumber(fanT.chaseStop)}</strong></div>
-                                    <div><span>卖出参考价</span><strong>{formatNumber(fanT.soldRefPrice)}</strong></div>
-                                  </>
-                                )}
-                              </div>
-                              <p className="backtest-line" data-testid="fant-backtest-summary">
-                                反T 回测：{fanT.completedRounds} 回合 · 胜 {fanT.winRounds} · 累计价差 {formatNumber(fanT.totalSpreadPct, 1)}% · 最差单回合{" "}
-                                {fanT.worstSpreadPct === null ? "--" : `${formatNumber(fanT.worstSpreadPct, 1)}%`}（正价差 = 摊薄成本）
-                              </p>
-                            </>
+                    <div className="unified-levels" data-testid="trade-signal-levels">
+                      <div className="ul-row">
+                        <span>止损 / 离场</span>
+                        <strong>
+                          {unifiedSignal.exitValue === undefined ? "—" : formatNumber(unifiedSignal.exitValue)}
+                          <em className="ul-note">
+                            {unifiedSignal.exitLabel}
+                            {unifiedSignal.exitTag ? ` ·${unifiedSignal.exitTag}` : ""}
+                          </em>
+                        </strong>
+                      </div>
+                      <div className="ul-row">
+                        <span>{unifiedSignal.buyLabel}</span>
+                        <strong>{unifiedSignal.buyValue === undefined ? "—" : formatNumber(unifiedSignal.buyValue)}</strong>
+                      </div>
+                      <div className={`ul-row ${unifiedSignal.fantEnabled ? "" : "ul-muted"}`}>
+                        <span>反T 降成本</span>
+                        <strong>{unifiedSignal.fantText}</strong>
+                      </div>
+                    </div>
+
+                    <details className="signal-more">
+                      <summary>更多技术位与回测</summary>
+                      <div className="signal-more-body">
+                        <div className="level-grid">
+                          {tradeSignal.levels.sellTargetSma !== undefined && (
+                            <div><span>回归卖出目标（SMA）</span><strong>{formatNumber(tradeSignal.levels.sellTargetSma)}</strong></div>
                           )}
-                          <p className="backtest-line">
-                            * 号为 ATR 投影的阶段观察位（未经回测）；正式买卖以触发位与止损/止盈/目标线为准。
-                          </p>
+                          {tradeSignal.levels.gateLevel !== undefined && (
+                            <div><span>趋势门控 SMA60</span><strong>{formatNumber(tradeSignal.levels.gateLevel)}</strong></div>
+                          )}
+                          {tradeSignal.levels.pullbackZoneLow !== undefined && (
+                            <div><span>回调加仓观察区*</span><strong>{formatNumber(tradeSignal.levels.pullbackZoneLow)} ~ {formatNumber(tradeSignal.levels.pullbackZoneHigh)}</strong></div>
+                          )}
+                          {tradeSignal.levels.sellWatchOne !== undefined && (
+                            <div><span>阶段减仓观察一*</span><strong>{formatNumber(tradeSignal.levels.sellWatchOne)}</strong></div>
+                          )}
+                          {tradeSignal.holdBarsMax !== undefined && (
+                            <div><span>策略剩余持有</span><strong>{Math.max(0, tradeSignal.holdBarsMax - (tradeSignal.holdBarsUsed ?? 0))} 根K线</strong></div>
+                          )}
+                          <div><span>ATR20</span><strong>{formatNumber(tradeSignal.levels.latestAtr)}</strong></div>
                         </div>
+                        {fanT?.enabled && (
+                          <p className="backtest-line" data-testid="fant-backtest-summary">
+                            反T 回测：{fanT.completedRounds} 回合 · 胜 {fanT.winRounds} · 累计价差 {formatNumber(fanT.totalSpreadPct, 1)}% · 最差单回合{" "}
+                            {fanT.worstSpreadPct === null ? "--" : `${formatNumber(fanT.worstSpreadPct, 1)}%`}（正价差 = 摊薄成本）
+                          </p>
+                        )}
                         {tradeBacktest && (
                           <p className="backtest-line secondary" data-testid="trade-backtest-detail">
                             近 {tradeBacktest.barsUsed} 根日K：信号 买{tradeBacktest.buySignals}/卖{tradeBacktest.sellSignals} · 完成 {tradeBacktest.closedTrades} 笔 · vs 买入持有{" "}
                             {tradeBacktest.buyHoldReturnPct === null ? "--" : `${formatNumber(tradeBacktest.buyHoldReturnPct, 1)}%`}
                           </p>
                         )}
+                        <p className="backtest-line">* 号为 ATR 投影的阶段观察位（未经回测）；正式买卖以三行主操作位为准。</p>
+                      </div>
+                    </details>
                   </div>
                 )}
                 <p className="technical-reminder" data-testid="trade-signal-non-advice">
